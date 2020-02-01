@@ -12,17 +12,15 @@ from window import ReciterWindow
 from ayat import (ayat, suar_names, suar_lengths, pagebreaks_outer, pagebreaks_inner)
 
 w = None
-def showReciterWindow(sura, aya_start, aya_end, dark, numberayat, pagebreak=''):
+def showReciterWindow(sura, aya_start, aya_end, dark, numberayat, pagebreaks=''):
     global w
     if pagebreaks == 'single':
         def pb(s,a):
-            if a == 0: return ''
             if a in pagebreaks_outer[s]: return '\n'
             if a in pagebreaks_inner[s]: return '\n'
             return ''
     elif pagebreaks == 'double':
         def pb(s,a):
-            if a == 0: return ''
             if a in pagebreaks_outer[s]: return '\n\n'
             if a in pagebreaks_inner[s]: return '\n'
             return ''
@@ -32,6 +30,7 @@ def showReciterWindow(sura, aya_start, aya_end, dark, numberayat, pagebreak=''):
         correct_ayat = "\n".join([ pb(sura,a) + ayat[sura][a] + ' ' + str(a+1) for a in range(aya_start, aya_end) ])
     else:
         correct_ayat = "\n".join([ pb(sura,a) + ayat[sura][a] for a in range(aya_start, aya_end) ])
+    correct_ayat = correct_ayat.lstrip('\n')
     w = ReciterWindow(correct_ayat, dark)
     w.setWindowTitle("تسميع سورة " + suar_names[sura])
     w.setWindowState(Qt.WindowMaximized)
