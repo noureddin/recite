@@ -1,7 +1,7 @@
 # Recite
 Want to check your *verbatim* memorization of some text? Like the Quran or the digits of Pi?
 
-Recite is easy to use and extend. It's a Python3 (PyQt5) library and application that help you memorize and check what you memorized.
+Recite is easy to use and extend. It's a Python3 (PyQt5) library and application that help you memorize and check what you've memorized.
 
 ## Installation
 
@@ -19,81 +19,82 @@ Then, choose your preferred way to add `qmain.py` and/or `dmain.py` to your `$PA
 
 - Show the graphical dialog:
 
-    ./qmain.py
+        ./qmain.py
 
 - Recite an entire sura:
 
-    ./qmain.py 114  # recite an-Nas
+        ./qmain.py 114  # recite an-Nas
 
 - Recite a sura, starting from a specific aya:
 
-    ./qmain.py 114 2  # recite an-Nas, from the second aya
+        ./qmain.py 114 2  # recite an-Nas, from the second aya
 
 - Recite a sura, starting from a specific aya, till a specific aya:
 
-    ./qmain.py 114 2 4  # recite an-Nas, from the second aya to the forth
+        ./qmain.py 114 2 4  # recite an-Nas, from the second aya to the forth
 
-    ./qmain.py 114 0 4  # recite an-Nas, the first four ayat
+        ./qmain.py 114 0 4  # recite an-Nas, the first four ayat
 
 
 ### Options:
 
 - Dark mode: add `-d` or `--dark`. (Options do not combine!)
 
-    ./qmain.py 114 -d
+        ./qmain.py 114 -d
 
-- Recite the ayat with their numbers (ie, write «الم 1» [that is, the aya number after it] instead of «الم» for the first aya in the second sura): add `-n` or `--numberayat`.
+- Recite the ayat with their numbers (ie, write «الم 1» [that is, the aya number after the aya] instead of «الم» for the first aya in the second sura): add `-n` or `--numberayat`.
 
-    ./qmain.py 114 -d -n
+        ./qmain.py 114 -d -n
 
-- Add a blank line between every two pages (ie, typing an aya that is the last aya in a page, you have to have a blank line [press "Enter" twice] before the typing the following aya): add `-p` or `--single-pagebreaks`.
+- Add a blank line between every two pages (ie, after typing the last aya in a page, you have to have a blank line [press "Enter" twice] before typing the following aya): add `-p` or `--single-pagebreaks`.
 
-    ./qmain.py 114 -d -p
+        ./qmain.py 114 -d -p
 
-- Add a blank line between every two facing pages, but two blank lines between every two pages that are on the same paper (back-to-back): add `-pp` or `--double-pagebreaks`. If specified with `-p` (`--single-pagebreaks`), it takes precedence over it.
+- Add a blank line between every two facing pages, but two blank lines between every two pages that are on the same paper (back-to-back): add `-pp` or `--double-pagebreaks`. If specified with `-p` (`--single-pagebreaks`), `-pp` takes precedence.
 
-    ./qmain.py 114 -d -n -pp
+        ./qmain.py 114 -d -n -pp
 
+All these options are available in the (graphical) dialog, except the two pagebreaks' options (for now).
 
 ## Usage (starting the digits application: `dmain.py`)
 
 - Show the graphical dialog:
 
-    ./dmain.py
+        ./dmain.py
 
 - Recite the first 100,000 digits of Pi:
 
-    ./dmain.py pi
+        ./dmain.py pi
 
 - Skip the first 10 digits, and recite rest of the first 100,000 digits of *e*:
 
-    ./dmain.py e 10 
+        ./dmain.py e 10
 
 - Recite the first 100 digit of Tau:
 
-    ./dmain.py tau 0 100
+        ./dmain.py tau 0 100
 
 - Skip the first 10 digits, and recite the following 20 digits of Sqrt(2):
 
-    ./dmain.py sq2 10 20
+        ./dmain.py sq2 10 20
 
 ### Options:
 
-- Dark mode: add `-d` or `--dark`. (Options do not combine!)
+- Dark mode: add `-d` or `--dark`.
 
-    ./dmain.py tau -d
+        ./dmain.py tau -d
 
 
 ## Usage (the Window)
 
-Just start typing! You have all the usual text editing functionalities, including copy and paste, and all other system shortcuts for editing, like Ctrl+W to erase the previous word.
+Just start typing! You have all the usual text editing functionalities, including copy and paste, and all other system shortcuts for editing, like Ctrl+Backspace to erase the previous word.
 
 ### Special shortcuts
 
 - <kbd>Ctrl</kbd>+<kbd>+</kbd>: Zoom in; make the text bigger.
 - <kbd>Ctrl</kbd>+<kbd>-</kbd>: Zoom out; make the text smaller.
-- <kbd>Ctrl</kbd>+<kbd>*</kbd>: Make the background more transparent.
-- <kbd>Ctrl</kbd>+<kbd>/</kbd>: Make the background less transparent.
+- <kbd>Ctrl</kbd>+<kbd>*</kbd>: Make the background more opaque.
+- <kbd>Ctrl</kbd>+<kbd>/</kbd>: Make the background less opaque (more transparent).
 
 
 ## Usage (the library: `window.py`)
@@ -111,3 +112,12 @@ To be added later.
 - In Ayat, support reciting by page, "rub'", "hizb", or "juz'", not just suar. (That needs having supported the previous point.)
 - Support mistakes counting and reporting.
 - Support "How much I have recited correctly till now?", basically a msgbox with the len of the input text, if it's not wrong.
+
+
+## Disclaimer (about the Quran recitation application)
+
+The Quran needs to be taught *orally*; reading and writing are secondary. You have to learn the Quran from a good teacher, and recite it to a good teacher. This software will help you, but it's not sufficient alone in any way.
+
+This software makes you recite the Quran using the modern orthography (with some exceptions) and no vowel marks at all. That's basically because it's the convenient way to type the Quran on a computer. However, it's never enough alone; you have to listen to, read, and recite orally the Quran. Otherwise you may make some serious mistakes like confusing pronouns (I/you, in verbs, like «أنعمت» in [1:7](https://quran.com/1/7)) or grammatical cases (subject/object: Allah tested Ibrahim or vice versa, in [2:124](https://quran.com/2/124); who fears whom in [35:28](https://quran.com/35/28)).
+
+The only guaranteed way is to recite orally with a teacher. This software is just a help in memorizing, not a replacement for a real, human teacher.
