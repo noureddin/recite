@@ -12,7 +12,7 @@ from window import ReciterWindow
 from digits import (num_names, num_digits, digits_length)
 
 w = None
-def showReciterWindow(number, end, offset, dark):
+def showReciterWindow(number, end, offset, dark, igns):
     global w
     # to compensate for the decimal point,
     # offset and need to be incremented unless they're 0
@@ -20,7 +20,10 @@ def showReciterWindow(number, end, offset, dark):
     if end < 2: end  = 1
     else      : end += 1
     txt = num_digits[number][offset:end]
-    w = ReciterWindow(txt, dark)
+    if igns:
+        w = ReciterWindow(txt, dark, lambda t: t.translate(str.maketrans('','',' \n\t')))
+    else:
+        w = ReciterWindow(txt, dark)
     w.setWindowTitle("Reciting " + num_names[number])
     w.setWindowState(Qt.WindowMaximized)
     w.show()
@@ -43,6 +46,7 @@ def popArgValue(v):
 app = QApplication(sys.argv)
 
 dark = popArgValue('--dark') or popArgValue('-d')
+igns = popArgValue('--ignore-spaces') or popArgValue('-s')
 
 number = getArg(1)
 if number is not None:
@@ -52,7 +56,7 @@ if number is not None:
     offset = getIntArg(3)
     if offset is None or offset < 0 or offset >= digits_length:
         offset = 0
-    showReciterWindow(number, end, offset, dark)
+    showReciterWindow(number, end, offset, dark, igns)
 else:
     pass
     diag = DigitsDialog()

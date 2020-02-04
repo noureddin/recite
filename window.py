@@ -11,8 +11,9 @@ OPACITY_STEP = 5
 
 class ReciterWindow(QMainWindow):
 
-    def __init__(s, text, dark=False):
+    def __init__(s, text, dark=False, filterText=lambda t: t):
         super().__init__()
+        s.filterText = filterText
         #
         s.setWindowFlags(Qt.FramelessWindowHint)
         s.setAttribute(Qt.WA_NoSystemBackground)
@@ -54,8 +55,9 @@ class ReciterWindow(QMainWindow):
         s.updateColors()
 
     def updateColors(s):
-        n = len(s.t.toPlainText())
-        if s.t.toPlainText() != s.correct_text[:n]:
+        txt = s.filterText(s.t.toPlainText())
+        n = len(txt)
+        if txt != s.correct_text[:n]:
             s.t.setStyleSheet(s.clr['wrong'])
         elif n == s.correct_len:
             s.t.setStyleSheet(s.clr['correct'])
