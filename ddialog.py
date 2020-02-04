@@ -26,10 +26,10 @@ class DigitsDialog(QDialog):
         s.btns['pi'].setChecked(True)  # the default number
         #
         s.form = QFormLayout()
+        s.end = QSpinBox(minimum=0, maximum=digits_length, value=digits_length)
+        s.form.addRow("Recite how many digits?", s.end)
         s.offset = QSpinBox(minimum=0, maximum=digits_length, value=0)
         s.form.addRow("Skip first how many digits?", s.offset)
-        s.length = QSpinBox(minimum=0, maximum=digits_length, value=digits_length)
-        s.form.addRow("Recite how many digits?", s.length)
         #
         s.darkEntry = QCheckBox("Dark Mode")
         #
@@ -43,8 +43,8 @@ class DigitsDialog(QDialog):
                     break
             s.submit.emit(
                     dname,
+                    s.end.value(),
                     s.offset.value(),
-                    s.length.value(),
                     s.darkEntry.isChecked(),
             )
             s.accept()
