@@ -27,9 +27,9 @@ class DigitsDialog(QDialog):
         #
         s.form = QFormLayout()
         s.end = QSpinBox(minimum=0, maximum=digits_length, value=digits_length)
-        s.form.addRow("Recite how many digits?", s.end)
+        s.form.addRow("End by:", s.end)
         s.offset = QSpinBox(minimum=0, maximum=digits_length, value=0)
-        s.form.addRow("Skip first how many digits?", s.offset)
+        s.form.addRow("Start from:", s.offset)
         #
         s.darkEntry = QCheckBox("Dark Mode")
         s.ignsEntry = QCheckBox("Ignore Spaces")
