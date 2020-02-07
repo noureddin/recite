@@ -37,19 +37,30 @@ class DigitsDialog(QDialog):
         s.okbtn = QPushButton("Go!")
         s.okbtn.setDefault(True)
         def ok():
-            dname = None
-            for d in num_names.keys():
-                if s.btns[d].isChecked():
-                    dname = d
-                    break
-            s.submit.emit(
-                    dname,
-                    s.end.value(),
-                    s.offset.value(),
-                    s.darkEntry.isChecked(),
-                    s.ignsEntry.isChecked(),
-            )
-            s.accept()
+            end = s.end.value()
+            offset = s.offset.value()
+            if end <= offset:
+                msgBox = QMessageBox(
+                    text='<b>"End by" value must be bigger than "Start from" value!</b>',
+                    informativeText=f'You said to "End by" {end}, and "Start from" {offset}, '
+                                    f'but {end} ≥ {offset}.',
+                    icon=QMessageBox.Critical,
+                )
+                msgBox.exec()
+            else:
+                dname = None
+                for d in num_names.keys():
+                    if s.btns[d].isChecked():
+                        dname = d
+                        break
+                s.submit.emit(
+                        dname,
+                        end,
+                        offset,
+                        s.darkEntry.isChecked(),
+                        s.ignsEntry.isChecked(),
+                )
+                s.accept()
         s.okbtn.clicked.connect(ok)
         s.box.addLayout(s.form)
         s.box.addWidget(s.darkEntry,    alignment=Qt.AlignCenter)
