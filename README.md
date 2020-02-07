@@ -15,6 +15,8 @@ Second, clone this repo somewhere on your computer:
 
 Then, choose your preferred way to add `qmain.py` and/or `dmain.py` to your `$PATH`. I have two symlinks to them in `~/.bin`, which is in my `$PATH`.
 
+Optional: Install the great [Amiri Font](https://www.amirifont.org/)!
+
 ## Usage (starting the ayat application: `qmain.py`)
 
 - Show the graphical dialog:
@@ -34,6 +36,12 @@ Then, choose your preferred way to add `qmain.py` and/or `dmain.py` to your `$PA
         ./qmain.py 114 2 4  # recite an-Nas, from the second aya to the forth
 
         ./qmain.py 114 0 4  # recite an-Nas, the first four ayat
+
+In brief, it's `./dmain.py sura start end`.
+
+- If no `end`, it's ends at the sura's end.
+- If no `start`, it's starts from the beginning of the sura.
+- If no `sura`, it's shows the graphical dialog.
 
 
 ### Options:
@@ -66,17 +74,23 @@ All these options are available in the (graphical) dialog, except the two pagebr
 
         ./dmain.py pi
 
-- Skip the first 10 digits, and recite rest of the first 100,000 digits of *e*:
+- Recite the first 100 digits of Tau (99 after the decimal point):
 
-        ./dmain.py e 10
+        ./dmain.py tau 100
 
-- Recite the first 100 digit of Tau:
+- Recite the first 100 digits of *e*, skipping the first three (starting from the third digit after the decimal point; ie, skipping two digits after the decimal point):
 
-        ./dmain.py tau 0 100
+        ./dmain.py e 100 3
 
-- Skip the first 10 digits, and recite the following 20 digits of Sqrt(2):
+- Recite the third 10 digits of Sqrt(2):
 
-        ./dmain.py sq2 10 20
+        ./dmain.py sq2 30 20
+
+In brief, it's `./dmain.py number end start`.
+
+- If no `start`, it starts from the beginning of the number.
+- If no `end`, it ends after 100,000 digits (including the integral part).
+- If no `number`, it shows the graphical dialog.
 
 ### Options:
 
