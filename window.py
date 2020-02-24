@@ -38,6 +38,7 @@ class ReciterWindow(QMainWindow):
         QShortcut(QKeySequence('Ctrl+-'),  s).activated.connect(s.t.zoomOut)
         QShortcut(QKeySequence('Ctrl+*'),  s).activated.connect(s.moreOpaque)
         QShortcut(QKeySequence('Ctrl+/'),  s).activated.connect(s.lessOpaque)
+        QShortcut(QKeySequence('Ctrl+^'),  s).activated.connect(s.toggleDark)
         #
         s.t.textChanged.connect(s.updateColors)
         #
@@ -51,6 +52,11 @@ class ReciterWindow(QMainWindow):
     def moreOpaque(s):
         s.opacity += OPACITY_STEP
         if s.opacity > 255: s.opacity = 255
+        s.clr = getColors(s.dark, s.opacity)
+        s.updateColors()
+
+    def toggleDark(s):
+        s.dark = not s.dark
         s.clr = getColors(s.dark, s.opacity)
         s.updateColors()
 
