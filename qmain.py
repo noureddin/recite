@@ -9,42 +9,55 @@ from PyQt5.QtGui import *
 
 from qdialog import SuraAyatDialog
 from window import ReciterWindow
-from ayat import (ayat, suar_names, suar_lengths, pagebreaks_outer, pagebreaks_inner)
+from ayat import suar_lengths
+from qprepare import (prepare_text, prepare_title, wrongScore)
+
 
 w = None
 def showReciterWindow(sura, aya_start, aya_end, dark, numberayat, pagebreaks=''):
     global w
-    if pagebreaks == 'single':
-        def pb(s,a):
-            if a in pagebreaks_outer[s]: return '\n'
-            if a in pagebreaks_inner[s]: return '\n'
-            return ''
-    elif pagebreaks == 'double':
-        def pb(s,a):
-            if a in pagebreaks_outer[s]: return '\n\n'
-            if a in pagebreaks_inner[s]: return '\n'
-            return ''
-    else:
-        def pb(s,a): return ''
-    if numberayat:
-        correct_ayat = "\n".join([ pb(sura,a) + ayat[sura][a] + ' ' + str(a+1) for a in range(aya_start, aya_end) ])
-    else:
-        correct_ayat = "\n".join([ pb(sura,a) + ayat[sura][a] for a in range(aya_start, aya_end) ])
-    correct_ayat = correct_ayat.lstrip('\n')
-    w = ReciterWindow(correct_ayat, dark)
-    w.setWindowTitle("تسميع سورة " + suar_names[sura])
+    text = prepare_text(sura, aya_start, aya_end, numberayat, pagebreaks)
+    title = prepare_title(sura, aya_start, aya_end)
+    #
+    def updateReciterWindow(sura, aya_start, aya_end, dark, numberayat, pagebreaks=''):
+        text = prepare_text(sura, aya_start, aya_end, numberayat, pagebreaks)
+        title = prepare_title(sura, aya_start, aya_end)
+        w.setText(text=text, title=title, dark=dark)
+    #
+    def otherRecitation():
+        d = SuraAyatDialog()
+        d.rejected.connect(sys.exit)
+        d.submit.connect(updateReciterWindow)
+        d.open()
+    #
+    w = ReciterWindow(
+            text,
+            dark=dark,
+            title=title,
+            wrongScore=wrongScore,
+            rtl=True,
+            msgTxt='<b>بارك الله فيك، وفتح عليك.</b>',
+            msgInfo='لقد أتممت التسميع بدقة %.2f%%.',
+            msgOther='تسميع آخر',
+            msgRepeat='إعادة التسميع',
+            msgQuit='خروج',
+            otherRecitation=otherRecitation,
+        )
     w.setWindowState(Qt.WindowMaximized)
     w.show()
+
 
 def getIntArg(i):
     try: return int(sys.argv[i])
     except: return None
+
 
 def popArgValue(v):
     if v in sys.argv:
         sys.argv.remove(v)
         return True
     return False
+
 
 app = QApplication(sys.argv)
 

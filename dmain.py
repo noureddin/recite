@@ -10,21 +10,29 @@ from PyQt5.QtGui import *
 from ddialog import DigitsDialog
 from window import ReciterWindow
 from digits import (num_names, num_digits, digits_length)
+from dprepare import (prepare_text, prepare_title)
 
 w = None
 def showReciterWindow(number, end, offset, dark, igns):
     global w
-    # to compensate for the decimal point,
-    # offset and need to be incremented unless they're 0
-    if offset > 0: offset += 1
-    if end < 2: end  = 1
-    else      : end += 1
-    txt = num_digits[number][offset:end]
-    if igns:
-        w = ReciterWindow(txt, dark, lambda t: t.translate(str.maketrans('','',' \n\t')))
-    else:
-        w = ReciterWindow(txt, dark)
-    w.setWindowTitle("Reciting " + num_names[number])
+    text = prepare_text(number, end, offset)
+    title = prepare_title(number, end, offset)
+    filterText = ( lambda t: t.translate(str.maketrans('','',' \n\t')) ) if igns else None
+    #
+    def updateReciterWindow(number, end, offset, dark, igns):
+        text = prepare_text(number, end, offset)
+        title = prepare_title(number, end, offset)
+        w.setText(text=text, title=title, dark=dark)
+    #
+    def otherRecitation():
+        d = DigitsDialog()
+        d.rejected.connect(sys.exit)
+        d.submit.connect(updateReciterWindow)
+        d.darkEntry.setChecked(w.dark)
+        d.ignsEntry.setChecked(igns)
+        d.open()
+    #
+    w = ReciterWindow(text, dark=dark, title=title, filterText=filterText, otherRecitation=otherRecitation)
     w.setWindowState(Qt.WindowMaximized)
     w.show()
 
@@ -58,7 +66,6 @@ if number is not None:
         offset = 0
     showReciterWindow(number, end, offset, dark, igns)
 else:
-    pass
     diag = DigitsDialog()
     diag.rejected.connect(sys.exit)
     diag.submit.connect(showReciterWindow)

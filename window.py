@@ -11,10 +11,25 @@ OPACITY_STEP = 5
 
 class ReciterWindow(QMainWindow):
 
-    def __init__(s, text, dark=False, filterText=lambda t: t):
+    def __init__(s, text, dark=False, title='Recite', rtl=False, filterText=None, wrongScore=None,
+                 msgTxt='<b>Well done!</b>',
+                 msgInfo='Your accuracy is %.2f%%.',
+                 msgOther='Another Recitation',
+                 msgRepeat='Repeat Recitation',
+                 msgQuit='Quit',
+                 otherRecitation=None):
         super().__init__()
-        s.filterText = filterText
+        s.filterText = filterText if filterText is not None else lambda t: t
+        s.wrongScore = wrongScore if wrongScore is not None else lambda isPrevWrong,**kw: 0 if isPrevWrong else 1
+        s.rtl = rtl
+        s.msgTxt = msgTxt
+        s.msgInfo = msgInfo
+        s.msgOther = msgOther
+        s.msgRepeat = msgRepeat
+        s.msgQuit = msgQuit
+        s.otherRecitation = otherRecitation
         #
+        s.setWindowTitle(title)
         s.setWindowFlags(Qt.FramelessWindowHint)
         s.setAttribute(Qt.WA_NoSystemBackground)
         s.setAttribute(Qt.WA_TranslucentBackground)
@@ -30,6 +45,7 @@ class ReciterWindow(QMainWindow):
         s.opacity = 255
         s.dark = dark
         s.clr = getColors(s.dark, s.opacity)
+        s.mistakes = 0
         # see https://github.com/wereturtle/ghostwriter/issues/206 for QPlainTextEdit
         s.t.setFont(QFont("Amiri", 18))
         s.t.setStyleSheet(s.clr['normal'])
@@ -65,8 +81,63 @@ class ReciterWindow(QMainWindow):
         n = len(txt)
         if txt != s.correct_text[:n]:
             s.t.setStyleSheet(s.clr['wrong'])
+            #
+            nextCorrectChar = s.correct_text[n] if n < s.correct_len else ''
+            prevCorrectChar = s.correct_text[n-2] if n-2 >= 0 else ''
+            isPrevWrong = (prevCorrectChar != txt[-2]) if n > 1 else False
+            s.mistakes += s.wrongScore(
+                    currCharEntered = txt[-1],
+                    currCharExpected = s.correct_text[n-1],
+                    currCharNAttemps = 0, # XXX TODO XXX
+                    nextCorrectChar = nextCorrectChar,
+                    prevCorrectChar = prevCorrectChar,
+                    isPrevWrong = isPrevWrong,
+                )
         elif n == s.correct_len:
             s.t.setStyleSheet(s.clr['correct'])
+            s.successMessage()
         else:
             s.t.setStyleSheet(s.clr['normal'])
 
+    def successMessage(s):
+        # px = QPixmap(48,48)
+        # px.fill(Qt.transparent)
+        # painter = QPainter(px)
+        # painter.setRenderHint(QPainter.Antialiasing)
+        # painter.setFont(QFont('Emoji One', 35))
+        # painter.drawText(0,35, '🎉')
+        # painter.end()
+        # px.save('party.png')
+        px = QPixmap('party.png')
+        #
+        scorepercent = 100 * ( (s.correct_len - s.mistakes) / s.correct_len )
+        #
+        msgBox = QMessageBox(text=s.msgTxt, informativeText=s.msgInfo%scorepercent, iconPixmap=px)
+        if s.rtl:
+            msgBox.setLayoutDirection(Qt.RightToLeft)
+        other  = msgBox.addButton(s.msgOther,   QMessageBox.AcceptRole)  if s.otherRecitation else None
+        repeat = msgBox.addButton(s.msgRepeat, QMessageBox.AcceptRole)
+        quit   = msgBox.addButton(s.msgQuit,   QMessageBox.RejectRole)
+        # cancel = msgBox.addButton('لا شيء', QMessageBox.RejectRole)
+        # msgBox.setDefaultButton(other)  # pressing enter is automatic at an aya's end
+        msgBox.exec()
+        btn = msgBox.clickedButton()
+        if btn == other:
+            s.otherRecitation()
+        elif btn == repeat:
+            s.t.clear()
+            s.mistakes = 0
+        elif btn == quit:
+            s.close()
+        return
+
+    def setText(s, text, title=None, dark=None):
+        if dark is not None:
+            s.dark = dark
+            s.clr = getColors(s.dark, s.opacity)
+        if title is not None:
+            s.title = title
+        s.correct_text = text
+        s.correct_len = len(s.correct_text)
+        s.mistakes = 0
+        s.t.clear()
