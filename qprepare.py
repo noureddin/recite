@@ -3,7 +3,7 @@
 # vim: set et sw=4 ts=4:
 
 
-from ayat import (ayat, suar_names, pagebreaks_outer, pagebreaks_inner)
+from ayat import (ayat, suar_names, suar_lengths, pagebreaks_outer, pagebreaks_inner)
 
 
 # 0 <= wrongScore() <= 1; 0 means a wrong char is not counted, and 1 means it's considered very wrong.
@@ -58,7 +58,10 @@ def wrongScore(currCharEntered, currCharExpected, currCharNAttemps, nextCorrectC
     return 1  # everything else
 
 
-def prepare_text(sura, aya_start, aya_end, numberayat, pagebreaks=''):
+def prepare_text(start, end, numberayat, pagebreaks=''):
+    # start and end are (int,int), representing (sura,aya)-pair
+    # if sura is not the same in both, it's a recitation of multiple suar. basmala is needed in this case
+    if end[0] < start[0]: return ''
     if pagebreaks == 'single':
         def pb(s,a):
             if a in pagebreaks_outer[s]: return '\n'
@@ -77,7 +80,18 @@ def prepare_text(sura, aya_start, aya_end, numberayat, pagebreaks=''):
     else:
         def n(a): return ''
     #
-    correct_ayat = "\n".join([ pb(sura,a) + ayat[sura][a] + n(a) for a in range(aya_start, aya_end) ])
+    if start[0] == end[0]:
+        sura, aya_start, aya_end = start[0], start[1], end[1]
+        correct_ayat = "\n".join([ pb(sura,a) + ayat[sura][a] + n(a) for a in range(aya_start, aya_end) ])
+    else:
+        sura_start = "\nبسم الله الرحمن الرحيم\n"
+        sura, aya_start, aya_end = start[0], start[1], suar_lengths[start[0]]
+        correct_ayat = "\n".join([ pb(sura,a) + ayat[sura][a] + n(a) for a in range(aya_start, aya_end) ])
+        for sura in range(start[0]+1, end[0]):
+            aya_start, aya_end = 0, suar_lengths[sura]
+            correct_ayat += sura_start + "\n".join([ pb(sura,a) + ayat[sura][a] + n(a) for a in range(aya_start, aya_end) ])
+        sura, aya_start, aya_end = end[0], 0, end[1]
+        correct_ayat += sura_start + "\n".join([ pb(sura,a) + ayat[sura][a] + n(a) for a in range(aya_start, aya_end) ])
     correct_ayat = correct_ayat.lstrip('\n')
     return correct_ayat
 
