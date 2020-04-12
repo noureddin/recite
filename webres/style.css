@@ -1,0 +1,168 @@
+/* general */
+html { scroll-behavior: smooth; }
+::selection { background: rgba(0,0,255,0.1); }
+
+
+/* https://bits.theorem.co/css-pro-tips-responsive-font-sizes-and-when-to-use-which-units */
+html { font-size: calc(16px + 1vmin) }
+
+* {
+  font-family: Cortoba;
+  font-size: inherit; /* some widgets default to another value */
+}
+
+#txt { font-family: AmiriQuranWeb; }
+#endmsg { font-size: 120%; text-align: center; }
+dd * { font-family: KacstOne; }
+
+#aaya_beg, #aaya_end { font-family: KacstOne; }
+
+/* center everything */
+body { text-align: center; }
+#all {
+  display: inline-block;
+  width: 80vw;
+  min-width: 10em;
+  max-width: 35em;
+}
+
+/* suar/ayat selection */
+#aaya_beg, #aaya_end { width: 1.5em; }
+#sura_beg, #sura_end { width: 6.5em; }
+table { display: inline; }
+table, table * { margin: 0; padding: 0;  }
+td { padding: 0.4em; }
+td label { padding-left: 0.1em; }
+
+/* used for scroll buttons */
+justafterselect { margin-top: 1rem; }
+justbeforetoggle { margin-bottom: 1rem; }
+
+#txt {
+  text-align: right;
+  padding: 0 1em;
+  padding-bottom: 4rem;
+}
+
+#ok {
+  /* centered with https://stackoverflow.com/a/2006008 */
+  margin-left: -5rem; /* negative half of width */
+  width: 10rem;
+  left: 50vw;
+  /* sticky at bottom */
+  position: fixed;
+  bottom: 1rem;
+  transition: opacity 0.5s ease-in-out;
+}
+
+#up, #dn {
+  position: fixed;
+  right: 80vw;
+  bottom: 10vh;
+  visibility: hidden;
+  transition: opacity 1s 1s;
+  opacity: 0%;
+  z-index: 99;
+}
+
+#up *, #dn * {
+  transition: fill-opacity 0.5s;
+  fill-opacity: 50%;
+  fill: #1034A6;  /* Egyptian Blue, because I'm Egyptian ;) */
+}
+
+#up:hover *, #dn:hover * {
+  fill-opacity: 100%;
+}
+
+/* help */
+
+dd, dd * {
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+dt {
+  margin-top: 1rem;
+  margin-bottom: 0.2rem;
+}
+
+dd * { color: #008; }
+b { color: black; }
+a { color: blue; }
+a:visited { color: purple; }
+a:hover { text-shadow: 1pt 1pt 2pt lightblue; }
+a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
+
+#helptoggle { display: none; }  /* hide the checkbox */
+#helptoggle ~ label { user-select: none; }  /* it's easy to select it while clicking */
+
+#help { display: flex; flex-direction: column-reverse; }
+
+#helpcontent { margin: 0; }
+#help {
+  margin: 0;
+  margin-top: -1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+#helpcontentcontainer {
+  padding: 1rem;
+  background: rgba(255,255,255,0.4);
+  box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3);
+}
+
+#helpcontent {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 1s cubic-bezier(0, 1.0, 0, 1.0),
+              visibility 1s step-end;
+  visibility: hidden;
+}
+#helptoggle:checked ~ div #helpcontent {
+  max-height: 32766px;
+  transition: max-height 3s ease-in,
+              visibility 3s step-start;
+  visibility: visible;
+}
+
+#helptoggle ~ label:before {
+  content: "أظهر ";
+}
+
+#helptoggle:checked ~ label:before {
+  content: "أخفِ ";
+}
+
+#help label {
+  cursor: pointer;
+  font-weight: normal;
+  padding: 10px;
+  background: gold;
+  box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3);
+  border-radius: 0 0 1rem 1rem;
+  z-index: 2;
+}
+
+#help label:hover,
+#help label:focus {
+  background: yellow;
+}
+
+kbd { /* based on https://meta.superuser.com/q/4788 */
+  background-color: #e7e7e7;
+  border: 1px solid #888;
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.2),
+              0 0 0 2px #fff inset;
+  color: #000;
+  display: inline-block;
+  font-size: 12px;
+  margin: 0 0.1em;
+  padding: 0.1em 0.6em;
+  text-shadow: 0 1px 0 #fff;
+}            
+
+.roman {
+  direction: ltr;
+  font-size: 80%;
+}
