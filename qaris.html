@@ -1,0 +1,95 @@
+<table><tr><td>
+  <label for="qaris">تلاوة بصوت:</label>
+  <select id="qaris" oninput="init_recitation(this.value)">
+    <option value="" selected>بغير تلاوة صوتية</option>
+<<!!cat webres/qaris | while read value; do read title; echo "    <option value=\"$value\">$title</option>"; done>>
+  </select>
+</td></tr></table>
+
+<table><tr><td>
+    <audio id="player" controls preload></audio>
+</td></tr></table>
+
+__END__
+
+
+<!-- from: http://www.everyayah.com/data/recitations.js
+Abdul_Basit_Mujawwad_128kbps                    Abdul Basit Mujawwad
+Abdul_Basit_Murattal_192kbps                    Abdul Basit Murattal
+Abdul_Basit_Murattal_64kbps                     Abdul Basit Murattal
+Abdullaah_3awwaad_Al-Juhaynee_128kbps           Abdullaah 3awwaad Al-Juhaynee
+Abdullah_Basfar_192kbps                         Abdullah Basfar
+Abdullah_Basfar_32kbps                          Abdullah Basfar
+Abdullah_Basfar_64kbps                          Abdullah Basfar
+Abdullah_Matroud_128kbps                        Abdullah Matroud
+AbdulSamad_64kbps_QuranExplorer.Com             AbdulSamad QuranExplorer.Com
+Abdurrahmaan_As-Sudais_192kbps                  Abdurrahmaan As-Sudais
+Abdurrahmaan_As-Sudais_64kbps                   Abdurrahmaan As-Sudais
+Abu_Bakr_Ash-Shaatree_128kbps                   Abu Bakr Ash-Shaatree
+Abu_Bakr_Ash-Shaatree_64kbps                    Abu Bakr Ash-Shaatree
+ahmed_ibn_ali_al_ajamy_128kbps                  Ahmed Ibn Ali Al Ajamy
+Ahmed_ibn_Ali_al-Ajamy_128kbps_ketaballah.net   Ahmed ibn Ali al-Ajamy KetabAllah.Net
+Ahmed_ibn_Ali_al-Ajamy_64kbps_QuranExplorer.Com Ahmed ibn Ali al-Ajamy QuranExplorer.Com
+Ahmed_Neana_128kbps                             Ahmed Neana
+Akram_AlAlaqimy_128kbps                         Akram Al Alaqimy
+Alafasy_128kbps                                 Alafasy
+Alafasy_64kbps                                  Alafasy
+Ali_Hajjaj_AlSuesy_128kbps                      Ali_Hajjaj_AlSuesy
+Ali_Jaber_64kbps                                Ali Jaber
+Ayman_Sowaid_64kbps                             Ayman Sowaid
+aziz_alili_128kbps                              Aziz Alili
+English/Sahih_Intnl_Ibrahim_Walk_192kbps        (English) Translated by Sahih International Recited by Ibrahim Walk
+Fares Abbad                                     translations/urdu_farhat_hashmi
+Ghamadi_40kbps                                  Ghamadi
+Hani_Rifai_192kbps                              Hani Rifai
+Hani_Rifai_64kbps                               Hani Rifai
+Hudhaify_128kbps                                Hudhaify
+Hudhaify_32kbps                                 Hudhaify
+Hudhaify_64kbps                                 Hudhaify
+Husary_128kbps                                  Husary
+Husary_128kbps_Mujawwad                         Husary Mujawwad
+Husary_64kbps                                   Husary
+Husary_Muallim_128kbps                          Husary (Muallim)
+Husary_Mujawwad_64kbps                          Husary Mujawwad
+Ibrahim_Akhdar_32kbps                           Ibrahim Akhdar
+Ibrahim_Akhdar_64kbps                           Ibrahim Akhdar
+Karim_Mansoori_40kbps                           Karim Mansoori (Iran)
+Khaalid_Abdullaah_al-Qahtaanee_192kbps          Khalid Abdullah al-Qahtanee
+khalefa_al_tunaiji_64kbps                       Khalefa Al-Tunaiji
+MaherAlMuaiqly128kbps                           Maher Al Muaiqly
+Maher_AlMuaiqly_64kbps                          Maher Al Muaiqly
+mahmoud_ali_al_banna_32kbps                     Mahmoud Ali Al-Banna
+Menshawi_16kbps                                 Menshawi
+Menshawi_32kbps                                 Menshawi
+Minshawy_Mujawwad_192kbps                       Minshawy Mujawwad
+Minshawy_Mujawwad_64kbps                        Minshawy Mujawwad
+Minshawy_Murattal_128kbps                       Minshawy Murattal
+Mohammad_al_Tablaway_128kbps                    Mohammad al Tablaway
+Mohammad_al_Tablaway_64kbps                     Mohammad al Tablaway
+Muhammad_AbdulKareem_128kbps                    Muhammad AbdulKareem
+Muhammad_Ayyoub_128kbps                         Muhammad Ayyoub
+Muhammad_Ayyoub_32kbps                          Muhammad Ayyoub
+Muhammad_Ayyoub_64kbps                          Muhammad Ayyoub
+Muhammad_Jibreel_128kbps                        Muhammad Jibreel
+Muhammad_Jibreel_64kbps                         Muhammad Jibreel
+Muhsin_Al_Qasim_192kbps                         Muhsin Al Qasim
+MultiLanguage/Basfar_Walk_192kbps               MultiLanguage/Basfar Walk
+Mustafa_Ismail_48kbps                           Mustafa Ismail
+Nasser_Alqatami_128kbps                         Nasser_Alqatami
+Parhizgar_48kbps                                Parhizgar_64Kbps
+Sahl_Yassin_128kbps                             Sahl_Yassin
+Salaah_AbdulRahman_Bukhatir_128kbps             Salaah AbdulRahman Bukhatir
+Salah_Al_Budair_128kbps                         Salah Al Budair
+Saood_ash-Shuraym_128kbps                       Saood bin Ibraaheem Ash-Shuraym
+Saood_ash-Shuraym_64kbps                        Saood bin Ibraaheem Ash-Shuraym
+translations/azerbaijani/balayev                Balayev
+translations/besim_korkut_ajet_po_ajet          Besim Korkut (Bosnian)
+translations/Fooladvand_Hedayatfar_40Kbps       (Persian) Translated by Fooladvand Recited by Hedayatfar
+translations/Makarem_Kabiri_16Kbps              (Persian) Translated by Makarem Recited by Kabiri
+translations/urdu_shamshad_ali_khan_46kbps      (Urdu) Shamshad Ali Khan
+warsh/warsh_Abdul_Basit_128kbps                 (Warsh) Abdul Basit
+warsh/warsh_ibrahim_aldosary_128kbps            (Warsh) Ibrahim Al-Dosary
+warsh/warsh_yassin_al_jazaery_64kbps            (Warsh) Yassin Al-Jazaery
+Yaser_Salamah_128kbps                           Yaser Salamah
+Yasser_Ad-Dussary_128kbps                       Yasser_Ad-Dussary
+-->
