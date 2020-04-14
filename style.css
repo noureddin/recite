@@ -107,7 +107,12 @@ dt {
 }
 
 dd * { color: #008; }
-b { color: black; }
+b {
+  display: block;
+  color: black;
+  margin: 0.8rem 0 0.2rem 0;
+}
+
 a { color: blue; }
 a:visited { color: purple; }
 a:hover { text-shadow: 1pt 1pt 2pt lightblue; }

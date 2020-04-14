@@ -382,7 +382,7 @@ function start_reciting(ev) {
   let done = false
   let aaya_will_start = true
 
-  const get_next = function (ev) {
+  const word_fwd = function (ev) {
     if (words.length > 0) {
       let new_word = words.shift()
       el_txt.innerHTML += new_word
@@ -405,6 +405,29 @@ function start_reciting(ev) {
     scroll_to_bottom()
   }
 
+  const word_bck = function (ev) {
+    if (el_txt.innerHTML.length === 0) return
+    const last_word = el_txt.innerHTML.match(/(?:^| |<br>)([^< ]+(?: |<br>))$/)[1]
+    words.unshift(last_word)
+    el_txt.innerHTML = el_txt.innerHTML.substring(0, el_txt.innerHTML.length - last_word.length)
+  }
+
+  const aaya_fwd = function (ev) {
+    do {
+      word_fwd()
+      var last_char = el_txt.innerHTML[ el_txt.innerHTML.length - 1 ]
+    }
+    while (!( last_char === '>' ))
+  }
+
+  const aaya_bck = function (ev) {
+    do {
+      word_bck()
+      var last_char = el_txt.innerHTML[ el_txt.innerHTML.length - 1 ]
+    }
+    while (!( last_char === undefined || last_char === '>' ))
+  }
+
   const input_trigger = function(ev) {
     // this fn is connected to onkeyup and onmouseup. it handles three "events"
 
@@ -421,7 +444,7 @@ function start_reciting(ev) {
        ev.target.id === "aaya_end"? el_ok       :
        1).focus()
       if (ev.target.id === "aaya_end")
-        get_next()
+        word_fwd()
       return
     }
 
@@ -434,14 +457,39 @@ function start_reciting(ev) {
       return
     }
 
+    const kb_mod = ev.shiftKey || ev.ctrlKey || ev.altKey
+    const kb_fwd = ev.key === " " || ev.key === "Enter" || ev.key === "ArrowLeft"
+    const kb_bck = ev.key === "Backspace" || ev.key === "ArrowRight"
+    const not_on_input_field = !on_ayat && !on_suar
+
     // Enter or Space, and the target is not input or select, get the next word
     // (ie, on the #ok button, or in the page with no element focused)
     // or mouse-click on the ok button
-    if ( ((ev.key === " " || ev.key === "Enter") && (!on_ayat && !on_suar))
+    if ( (kb_fwd && !kb_mod && not_on_input_field)
       || (ev.type === "mouseup" && ev.target.id === "ok")
     ) {
-      get_next()
+      word_fwd()
+      return
     }
+
+    if ( (kb_bck && !kb_mod && not_on_input_field)
+    ) {
+      word_bck()
+      return
+    }
+
+    if ( (kb_fwd && kb_mod && not_on_input_field)
+    ) {
+      aaya_fwd()
+      return
+    }
+
+    if ( (kb_bck && kb_mod && not_on_input_field)
+    ) {
+      aaya_bck()
+      return
+    }
+
   }
 
   // both events are the "up" variants to disable repeating (holding down

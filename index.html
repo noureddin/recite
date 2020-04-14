@@ -150,7 +150,12 @@ dt {
 }
 
 dd * { color: #008; }
-b { color: black; }
+b {
+  display: block;
+  color: black;
+  margin: 0.8rem 0 0.2rem 0;
+}
+
 a { color: blue; }
 a:visited { color: purple; }
 a:hover { text-shadow: 1pt 1pt 2pt lightblue; }
@@ -344,15 +349,15 @@ body {
 </p></dd>
 <dt>
 ملاحظات متفرقة:
-</dt><dd><p>
+</dt><dd>
 <b>
-النص في هذه الصفحة برواية حفص عن عاصم.
-</b>
+النص في هذه الصفحة برواية حفص عن عاصم
+</b><p>
 حتى عند اختيار تلاوة صوتية براوية ورش عن نافع، يظل النص القرآني في الصفحة برواية حفص عن عاصم. ربما أضيف نص رواية ورش عن نافع في المستقبل.
-</p><p>
+</p>
 <b>
-خط القرآن ملوّن:
-</b>
+خط القرآن ملوّن
+</b><p>
 النص العثماني الأساسي بالأسود، والنقاط والتشكيل والحروف المزيدة بالأحمر، والهمزات بالأصفر البرتقالي، وعلامات الوقف بالأزرق. إن لم تظهر لك هذه الألوان فاستخدم
 <a href="https://www.mozilla.org/ar/firefox/new/">
 فَيَرفُكس</a> (أو نزّله
@@ -362,10 +367,10 @@ body {
 يدعماها (على وندوز
 <span class="roman">8.1</span>
 أو أعلى)، لكن كروم على الحاسوب لا يفعل؛ استخدم فيرفكس.
-</p><p>
+</p>
 <b>
-تستطيع استخدام لوحة المفاتيح وحدها، من غير المؤشر (الفأرة أو لوحة اللمس):
-</b>
+تستطيع استخدام لوحة المفاتيح وحدها، من غير المؤشر (الفأرة أو لوحة اللمس)
+</b><p>
 استخدم زر
 <span class="roman">Tab</span>
 للوصول إلى قائمة «من سورة». عندئذ زرّي «سهم لأعلى» و«سهم لأسفل» ينقلانك بين السور بالترتيب، وتستطيع أيضا كتابة جزء من بداية اسم السورة للوصول إليها سريعا، وزرّ المسافة يظهر لك القائمة. وبعد تحديد السورة، زر
@@ -376,15 +381,26 @@ body {
 والذي عنده زر
 <span class="roman">Enter</span>
 أو المسافة يظهر الكلمة التالية.
-</p><p>
+</p>
 <b>
-هذه الصفحة تعمل على الأجهزة المحمولة وشاشات باللمس.
-</b>
+يمكنك الانتقال إلى الأمام وإلى الخلف، بالكلمة وبالآية
+</b><p>
+حاليا يمكنك فعل هذا بلوحة المفاتيح فقط. أعمل على إضافة أزرارا لهذه الوظائف.
+</p>
+<ul style="text-align: right">
+<li><p>زر المسافة أو <kbd>Enter</kbd> أو سهم يسار: إظهار الكلمة التالية (مثل زر «سمّع!»).</p></li>
+<li><p>زر إظهار الكلمة التالية + <kbd>Shift</kbd> أو <kbd>Ctrl</kbd> أو <kbd>Alt</kbd>: إظهار الآية الحالية بالكامل.</p></li>
+<li><p>زر <kbd>Backspace</kbd> أو سهم يمين: إخفاء الكلمة الحالية.</p></li>
+<li><p>زر إخفاء الكلمة الحالية + <kbd>Shift</kbd> أو <kbd>Ctrl</kbd> أو <kbd>Alt</kbd>: إخفاء الآية الحالية بالكامل.</p></li>
+</ul>
+<b>
+هذه الصفحة تعمل على الأجهزة المحمولة وشاشات باللمس
+</b><p>
 إذا لم تعمل جيدا على جهازك، رجاءً أبلغني، موضّحًا نوع الجهاز وتفاصيل المشكلة.
-</p><p>
+</p>
 <b>
-هذا النص لم يُراجع رسميًا بعد؛
-</b>
+هذا النص لم يُراجع رسميًا بعد
+</b><p>
 إذا وجدت فيه أي خطأ، رجاءً أبلغني في أسرع وقت! هذا النص يستخدم النسخة الأخيرة (المؤرخة ٢٩-٠٨-٢٠١٩) من مشروع
 <a class="roman" href="https://github.com/khaledhosny/quran-data">Quran&nbsp;Data</a>.
 </p></dd>
@@ -765,7 +781,7 @@ function start_reciting(ev) {
   let done = false
   let aaya_will_start = true
 
-  const get_next = function (ev) {
+  const word_fwd = function (ev) {
     if (words.length > 0) {
       let new_word = words.shift()
       el_txt.innerHTML += new_word
@@ -788,6 +804,29 @@ function start_reciting(ev) {
     scroll_to_bottom()
   }
 
+  const word_bck = function (ev) {
+    if (el_txt.innerHTML.length === 0) return
+    const last_word = el_txt.innerHTML.match(/(?:^| |<br>)([^< ]+(?: |<br>))$/)[1]
+    words.unshift(last_word)
+    el_txt.innerHTML = el_txt.innerHTML.substring(0, el_txt.innerHTML.length - last_word.length)
+  }
+
+  const aaya_fwd = function (ev) {
+    do {
+      word_fwd()
+      var last_char = el_txt.innerHTML[ el_txt.innerHTML.length - 1 ]
+    }
+    while (!( last_char === '>' ))
+  }
+
+  const aaya_bck = function (ev) {
+    do {
+      word_bck()
+      var last_char = el_txt.innerHTML[ el_txt.innerHTML.length - 1 ]
+    }
+    while (!( last_char === undefined || last_char === '>' ))
+  }
+
   const input_trigger = function(ev) {
     // this fn is connected to onkeyup and onmouseup. it handles three "events"
 
@@ -804,7 +843,7 @@ function start_reciting(ev) {
        ev.target.id === "aaya_end"? el_ok       :
        1).focus()
       if (ev.target.id === "aaya_end")
-        get_next()
+        word_fwd()
       return
     }
 
@@ -817,14 +856,39 @@ function start_reciting(ev) {
       return
     }
 
+    const kb_mod = ev.shiftKey || ev.ctrlKey || ev.altKey
+    const kb_fwd = ev.key === " " || ev.key === "Enter" || ev.key === "ArrowLeft"
+    const kb_bck = ev.key === "Backspace" || ev.key === "ArrowRight"
+    const not_on_input_field = !on_ayat && !on_suar
+
     // Enter or Space, and the target is not input or select, get the next word
     // (ie, on the #ok button, or in the page with no element focused)
     // or mouse-click on the ok button
-    if ( ((ev.key === " " || ev.key === "Enter") && (!on_ayat && !on_suar))
+    if ( (kb_fwd && !kb_mod && not_on_input_field)
       || (ev.type === "mouseup" && ev.target.id === "ok")
     ) {
-      get_next()
+      word_fwd()
+      return
     }
+
+    if ( (kb_bck && !kb_mod && not_on_input_field)
+    ) {
+      word_bck()
+      return
+    }
+
+    if ( (kb_fwd && kb_mod && not_on_input_field)
+    ) {
+      aaya_fwd()
+      return
+    }
+
+    if ( (kb_bck && kb_mod && not_on_input_field)
+    ) {
+      aaya_bck()
+      return
+    }
+
   }
 
   // both events are the "up" variants to disable repeating (holding down
