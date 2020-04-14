@@ -537,6 +537,7 @@ const el_dn = Qid("dn")
 // global variables related to audio recitations
 var audio_base_url
 var ayat_recitations_list
+var current_audio_index
 
 function help_toggled() {
   setTimeout(scroll_to_top, 100)
@@ -614,11 +615,15 @@ function init_recitation(qari) {
   audio_base_url? show_el(el_player) : hide_el(el_player)
 }
 function play_recitation() {
+  if (!audio_base_url) return
+  el_player.src = audio_base_url + ayat_recitations_list[current_audio_index] + ".mp3"
   el_player.play()
 }
-function fetch_new_recitation() {
-  el_player.src = audio_base_url + ayat_recitations_list.shift() + ".mp3"
-  el_player.load()
+function fetch_recitation() {  // https://stackoverflow.com/a/31351186
+  if (!audio_base_url) return
+  if (current_audio_index >= ayat_recitations_list.length) return
+  let aud = new Audio()
+  aud.src = audio_base_url + ayat_recitations_list[current_audio_index] + ".mp3"
 }
 
 const spinner = '<center><svg style="height:2em;vertical-align:bottom" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle id="spinner" cx="50" cy="50" r="35" fill="none" stroke-width="10px" stroke="black" stroke-dasharray="40 30"/></svg></center>'
@@ -631,8 +636,7 @@ const ayat = ["بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّ
 const end_of_aaya_regex = "\u{06dd}"
 
 // because we split on '<SPC>'; see the splitting code
-const basmala_text = "\ufdfd<br><SPC>"  // "<center>\ufdfd</center><SPC>"
-const basmala_char = "\ufdfd"
+const basmala = "\ufdfd<br><SPC>"  // "<center>\ufdfd</center><SPC>"
 const first_aaya_regex = "\u{06dd}\u{0661}$"
 const faatiha_first_aaya = ayat[0]
 const tawba_first_aaya = ayat[ suar_lengths.slice(0,8).reduce((a,b)=>a+b, 0) ]
@@ -642,7 +646,7 @@ function add_basmala_if_needed(a) {
     && a !== faatiha_first_aaya
     && a !== tawba_first_aaya
   )
-    return basmala_text + a
+    return basmala + a
   else
     return a
 }
@@ -725,6 +729,8 @@ function validate_inputs(ev) {
 
 function start_reciting(ev) {
 
+  current_audio_index = 0
+
   el_aaya_beg.value = filter_aaya_input(el_aaya_beg.value)
   el_aaya_end.value = filter_aaya_input(el_aaya_end.value)
   el_txt.innerHTML = "" //spinner
@@ -779,19 +785,15 @@ function start_reciting(ev) {
   words = [].concat.apply([], words)  // flatten
 
   let done = false
-  let aaya_will_start = true
 
   const word_fwd = function (ev) {
     if (words.length > 0) {
       let new_word = words.shift()
       el_txt.innerHTML += new_word
-      if (aaya_will_start) {
-        fetch_new_recitation()
-        aaya_will_start = false
-      }
-      if (new_word.match(end_of_aaya_regex) || new_word.match(basmala_char)) {
+      if (new_word.match(/<br>$/)) {
         play_recitation()
-        aaya_will_start = true
+        current_audio_index += 1
+        fetch_recitation()
       }
     }
     else {
@@ -809,6 +811,9 @@ function start_reciting(ev) {
     const last_word = el_txt.innerHTML.match(/(?:^| |<br>)([^< ]+(?: |<br>))$/)[1]
     words.unshift(last_word)
     el_txt.innerHTML = el_txt.innerHTML.substring(0, el_txt.innerHTML.length - last_word.length)
+    if (last_word.match(/<br>$/)) {
+      current_audio_index -= 1
+    }
   }
 
   const aaya_fwd = function (ev) {
