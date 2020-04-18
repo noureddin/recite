@@ -53,6 +53,7 @@ justbeforetoggle { margin-bottom: 1rem; }
   position: fixed;
   bottom: 1rem;
   transition: opacity 0.5s ease-in-out;
+  touch-action: manipulation; /* disable double-tap zooming; https://stackoverflow.com/a/53236027 */
 }
 
 #qaris {
