@@ -761,12 +761,8 @@ function start_reciting(ev) {
   let words = ayat
               .slice(st-1,en)
               .map(a => add_basmala_if_needed(a))
-              .map(a => a  // glue non-word markers to the nearest word
-                        .replace(/ (\u06dd)/g, "&nbsp;$1")  // end of aaya
-                        .replace(/ (\u06e9)/g, "&nbsp;$1")  // place of sajda
-                        .replace(/(\u06de) /g, "$1&nbsp;")  // rub' el hizb
-                        .replace(/ /g, " <SPC>")
-                        + "<br>")
+              .map(a => a.replace(/ /g, " <SPC>") + "<br>")
+              // because split() removes the separator, but we need it
               .map(a => a.split("<SPC>", -1))
   words = [].concat.apply([], words)  // flatten
 
