@@ -1,0 +1,19 @@
+#!/bin/bash
+
+infiles="$HOME/git/quran-data/quran/???.txt"  # must not contain spaces
+
+outfile="$1"
+
+if [ -z "$outfile" ]; then
+    echo >&2 "Please give me a valid path to output to."
+    exit 1
+fi
+
+if [ -e "$outfile" ]; then
+    echo >&2 "The given path already exists; please remove it first."
+    exit 1
+fi
+
+for sura in $infiles; do
+    sed 's/^/"/ ; s/$/",/' $sura >> "$outfile"
+done
