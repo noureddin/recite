@@ -13,7 +13,28 @@ html { font-size: calc(16px + 1vmin) }
 
 #txt { font-family: AmiriQuranWeb; }
 #endmsg { font-size: 120%; text-align: center; }
-dd * { font-family: KacstOne; }
+
+.help-part {
+    font-weight: normal;
+    color: #c00;
+    font-size: 120%;
+}
+.help-part::after  { content: " :."; }
+.help-part::before { content: ".: "; }
+
+details * {
+  font-family: KacstOne;
+  color: #008;
+}
+
+summary {
+  /* font-family: Cortoba; */
+  color: #000;
+  /* display: inline; /1* so the marker is on the same line *1/ */
+  margin-right: -0.2em;
+}
+
+summary::marker { color: #c00; }
 
 #aaya_beg, #aaya_end { font-family: KacstOne; }
 
@@ -98,16 +119,25 @@ justbeforetoggle { margin-bottom: 1rem; }
 
 /* help */
 
-dd, dd * {
+.help-part {
+    margin-bottom: 0.4rem;
+}
+
+details, details * {
   margin: 0;
   margin-bottom: 0.5rem;
 }
-dt {
-  margin-top: 1rem;
-  margin-bottom: 0.2rem;
+
+/* to apply margin only when open */
+details > :last-child { margin-bottom: 0.8rem; }
+
+.details-content {
+    background-color: white;
+    box-shadow: 0 0 0.2em 0 black;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
 }
 
-dd * { color: #008; }
 b {
   display: block;
   color: black;
@@ -159,6 +189,10 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   content: "أخفِ ";
 }
 
+#helpcontent ul {
+    text-align: right;
+}
+
 #help label {
   cursor: pointer;
   font-weight: normal;
@@ -191,4 +225,15 @@ kbd { /* based on https://meta.superuser.com/q/4788 */
 .roman {
   direction: ltr;
   font-size: 80%;
+}
+
+summary { outline: none; } /* hide bounding box when click */
+
+/* https://stackoverflow.com/a/38215801 */
+details[open] > .details-content {
+  animation: fade-in .5s ease-in-out;
+}
+@keyframes fade-in {
+  0%    {opacity: 0;}
+  100%  {opacity: 1;}
 }
