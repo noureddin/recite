@@ -1,3 +1,26 @@
+/* tajweed */
+.L { color: firebrick;  } /* darkred;  madd lazem (6 vowels) */
+.W { color: red;        } /* red;      madd wajeb (4 or 5 vowels) */
+.J { color: #fe6c29;    } /* orange;   madd jaez (2 or 4 or 6 vowels) */
+.T { color: goldenrod;  } /* gold;     madd tabiei (2 vowels) */
+.N { color: green;      } /* green;    ghunna and ikhfaa */
+.X { color: #a7a195;    } /* darkgrey; silent */
+.R { color: #281dcf;    } /* darkblue; emphasis */
+.Q { color: dodgerblue; } /* blue;     qalqala */
+.A {
+    color: darkorange;
+    text-shadow:
+                  1px  1px  1px gold,
+                  1px -1px  1px gold,
+                 -1px  1px  1px gold,
+                 -1px -1px  1px gold,
+                  0    0    5px blue;
+}
+.D {
+    color: navy;
+    text-shadow: 0 0 10px rgba(0,0,255,0.5);
+}
+
 /* general */
 html { scroll-behavior: smooth; }
 ::selection { background: rgba(0,0,255,0.1); }
@@ -11,7 +34,7 @@ html { font-size: calc(16px + 1vmin) }
   font-size: inherit; /* some widgets default to another value */
 }
 
-#txt { font-family: AmiriQuranWeb; }
+#txt, .L,.W,.J,.T,.N,.X,.R,.Q, .A,.D { font-family: AmiriQuranWeb; }
 #endmsg { font-size: 120%; text-align: center; }
 
 .help-part {
@@ -75,6 +98,10 @@ justbeforetoggle { margin-bottom: 1rem; }
   bottom: 1rem;
   transition: opacity 0.5s ease-in-out;
   touch-action: manipulation; /* disable double-tap zooming; https://stackoverflow.com/a/53236027 */
+}
+
+#textclr_input {
+  width: 9.8em;
 }
 
 #qaris {
@@ -222,9 +249,10 @@ kbd { /* based on https://meta.superuser.com/q/4788 */
   text-shadow: 0 1px 0 #fff;
 }            
 
-.roman {
+.roman { font-size: 80%; }
+.roman, .roman * {
+  font-family: serif;
   direction: ltr;
-  font-size: 80%;
 }
 
 summary { outline: none; } /* hide bounding box when click */

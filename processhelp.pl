@@ -26,6 +26,9 @@ binmode STDOUT, ':encoding(UTF-8)';
 # in>> {English}
 # out> <span dir="ltr" class="roman">English</span>
 #
+# in>> *strong*
+# out> <strong>strong</strong>
+#
 # in>> [Example site](http://example.com/)
 # out> <a href="http://example.com/">Example site</a>
 #
@@ -46,13 +49,12 @@ binmode STDOUT, ':encoding(UTF-8)';
 # in>> - ccc
 # out> <ul><li>aaa</li><li>bbb</li><li>ccc</li></ul>
 
-
 # there are two levels of heading. the second is always the <summary>.
 
 my $full_example = <<~END_OF_EXAMPLE;
     :: FAQ
     = Why?
-    Because I said so.
+    Because *I* said so.
     
     And I wanted it like this way.
     So that I can rule the WORLD!!!
@@ -69,7 +71,7 @@ my $full_example = <<~END_OF_EXAMPLE;
 my $expected_html = <<~END_OF_HTML;
     <h2 class="help-part">FAQ</h2>
     <details><summary>Why?</summary><div class="details-content">
-    <p>Because I said so.</p>
+    <p>Because <strong>I</strong> said so.</p>
     <p>And I wanted it like this way.
     So that I can rule the WORLD!!!</p>
     <p>For more info, visit <span dir="ltr" class="roman"><a href="http://example.com">Example.com</a></span>.</p>
@@ -81,6 +83,8 @@ my $expected_html = <<~END_OF_HTML;
     </ul>
     </div></details>
     END_OF_HTML
+
+
 
 # indentation and spaces may be inserted.
 
@@ -99,6 +103,7 @@ sub process_all {
     process_postprocessing(
     process_para(
     process_part(
+    process_strong(
     process_ul(
     process_links(
     process_roman(
@@ -106,9 +111,10 @@ sub process_all {
     process_details(
     process_summary(
         $_[0]
-    )))))))))
+    ))))))))))
 }
 
+sub process_strong  { return $_[0] =~ s|   \* (.*?) \*   |<strong>$1</strong>|gxr }
 sub process_roman   { return $_[0] =~ s|   \{ (.*?) \}   |<span dir="ltr" class="roman">$1</span>|gxr }
 sub process_kbd     { return $_[0] =~ s| \{\{ (.*?) \}\} |<kbd>$1</kbd>|gxr }
 sub process_links   { return $_[0] =~ s| \[ (.*?) \] \( (.*?) \) |<a href="$2">$1</a>|gxr }
@@ -176,6 +182,11 @@ sub test_all {
         "Hi all, this is "                          ."{Noureddin}".   "! Nice to meet you."),
         'Hi all, this is <span dir="ltr" class="roman">Noureddin</span>! Nice to meet you.',
             'roman only';
+
+    is process_strong(
+        "test *abc* def"),
+        'test <strong>abc</strong> def',
+            'strong only';
 
     is process_links(
         "Go to [Example site](http://example.com/)."),

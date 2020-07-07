@@ -18,9 +18,15 @@
 <style>
 
 /* fonts */
+/* Amiri Quran and Amiri Quran Colored 0.112, SIL OFL 1.1; https://github.com/alif-type/amiri */
 @font-face {
-  /* Amiri Quran Colored 0.112, SIL OFL 1.1; https://github.com/alif-type/amiri */
   font-family: AmiriQuranWeb;
+  font-style: normal;
+  font-weight: 400;
+  src: url(data:application/x-font-woff;charset=utf-8;base64,<<!!base64 -w0 webres/AmiriQuran.woff>>) format('woff');
+}
+@font-face {
+  font-family: AmiriQuranColoredWeb;
   font-style: normal;
   font-weight: 400;
   src: url(data:application/x-font-woff;charset=utf-8;base64,<<!!base64 -w0 webres/AmiriQuranColored.woff>>) format('woff');
@@ -53,11 +59,12 @@
 }
 
 body {
-  background-image: url(data:image/png;charset=utf-8;base64,<<!!base64 -w0 webres/paper-bg-small.png>>);
-  background-repeat: repeat-x repeat-y;
+  background-color: #f9f4d6;
 }
 
 </style>
+<style id="textclr_style"></style>
+<style id="ayatnum_style"></style>
 </head>
 <body>
 <div id="all">
@@ -111,6 +118,18 @@ body {
   <input id="aaya_end" oninput="start_reciting(this)">
 </td></tr></table>
 
+<table><tr><td>
+  <label for="textclr_input">تلوين النص:</label>
+  <select id="textclr_input" onchange="chstyle()">
+    <option value="taj" selected>تبعا لقواعد التجويد</option>
+    <option value="bas">تلوين أجزاء الرسم</option>
+    <option value="no">بغير أي تلوين</option>
+  </select>
+</td><td>
+  <input id="ayatnum_input" type="checkbox" checked onchange="chstyle()">
+  <label for="ayatnum_input">تلوين أرقام الآيات؟</label>
+</td></tr></table>
+
 <<!!sed '/__END__/,$d' qaris.html>>
 
 <hr>
@@ -128,4 +147,4 @@ body {
 
 </body>
 </html>
-<!-- vim: set syn=off sw=2 ts=2 et colorcolumn=80: -->
+<!-- vim: set sw=2 ts=2 et colorcolumn=80: -->

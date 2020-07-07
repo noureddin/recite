@@ -14,6 +14,12 @@ var audio_base_url
 var ayat_recitations_list
 var current_audio_index
 
+
+function tajweed_colorize_aaya(a) {
+  return a.replace(/([A-Z])<([^>]+)>/g, '<span_class="$1">$2</span>')
+}
+
+
 function help_toggled() {
   setTimeout(scroll_to_top, 100)
   setTimeout(show_hide_buttons, 500)
@@ -106,7 +112,7 @@ const spinner = '<center><svg style="height:2em;vertical-align:bottom" viewBox="
 const party = '<<!!cat webres/party-popper.svg | tr -d "\n">>'
 const endmsg = `<div id="endmsg">بارك الله فيك وفتح عليك!<br>لقد أتممت التسميع الذي حددته. ${party}</div>`
 const suar_lengths = [7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6]
-const ayat = [<<!!cat webres/othmani-array | tr -d '\n' >>]
+const ayat = [<<!!cat webres/othmani-array-tajweed | tr -d '\n' >>]
 
 const end_of_aaya_regex = "\u{06dd}"
 
@@ -247,11 +253,16 @@ function start_reciting(ev) {
   })
   ayat_recitations_list = [].concat.apply([], ayat_recitations_list)  // flatten
 
+  // all spaces are a single space in html;
+  // let's make tab ('\t') separates the words,
+  // and newline (actually '<br>\n') separates the ayat.
+
   let words = ayat
               .slice(st-1,en)
+              .map(a => tajweed_colorize_aaya(a))
               .map(a => add_basmala_if_needed(a))
-              .map(a => a.replace(/ /g, " <SPC>") + "<br>")
-              // because split() removes the separator, but we need it
+              .map(a => a.replace(/ /g, "\t<SPC>") + "<br>\n")
+              .map(a => a.replace(/_/g, " "))  // for tajweed
               .map(a => a.split("<SPC>", -1))
   words = [].concat.apply([], words)  // flatten
 
@@ -261,7 +272,7 @@ function start_reciting(ev) {
     if (words.length > 0) {
       let new_word = words.shift()
       el_txt.innerHTML += new_word
-      if (new_word.match(/<br>$/)) {
+      if (new_word.match(/<br>\n$/)) {
         play_recitation()
         current_audio_index += 1
         fetch_recitation()
@@ -279,10 +290,10 @@ function start_reciting(ev) {
 
   const word_bck = function (ev) {
     if (el_txt.innerHTML.length === 0) return
-    const last_word = el_txt.innerHTML.match(/(?:^| |<br>)([^< ]+(?: |<br>))$/)[1]
+    const last_word = el_txt.innerHTML.match(/(?:^|\t|<br>\n)([^\n\t]+(?:\t|<br>\n))$/)[1]
     words.unshift(last_word)
     el_txt.innerHTML = el_txt.innerHTML.substring(0, el_txt.innerHTML.length - last_word.length)
-    if (last_word.match(/<br>$/)) {
+    if (last_word.match(/<br>\n$/)) {
       current_audio_index -= 1
     }
   }
@@ -292,7 +303,7 @@ function start_reciting(ev) {
       word_fwd()
       var last_char = el_txt.innerHTML[ el_txt.innerHTML.length - 1 ]
     }
-    while (!( last_char === '>' ))
+    while (!( last_char === '\n' ))
   }
 
   const aaya_bck = function (ev) {
@@ -300,7 +311,7 @@ function start_reciting(ev) {
       word_bck()
       var last_char = el_txt.innerHTML[ el_txt.innerHTML.length - 1 ]
     }
-    while (!( last_char === undefined || last_char === '>' ))
+    while (!( last_char === undefined || last_char === '\n' ))
   }
 
   const input_trigger = function(ev) {
@@ -322,6 +333,16 @@ function start_reciting(ev) {
         word_fwd()
       return
     }
+    // Enter on style inputs: set focus on ok, and get the next word
+    if (ev.key === "Enter" && (
+          ev.target.id == "ayatnum_input" ||
+          ev.target.id == "textclr_input"
+    )) {
+      el_ok.focus()
+      word_fwd()
+      return
+    }
+
 
     // Up or Down on an ayat-input, increase or decrease it
     if (on_ayat) {
@@ -335,7 +356,8 @@ function start_reciting(ev) {
     const kb_mod = ev.shiftKey || ev.ctrlKey || ev.altKey
     const kb_fwd = ev.key === " " || ev.key === "Enter" || ev.key === "ArrowLeft"
     const kb_bck = ev.key === "Backspace" || ev.key === "ArrowRight"
-    const not_on_input_field = !on_ayat && !on_suar
+    const not_on_input_field =  // not just ayat and suar
+      ev.target.nodeName != "INPUT" && ev.target.nodeName != "SELECT"
 
     // Enter or Space, and the target is not input or select, get the next word
     // (ie, on the #ok button, or in the page with no element focused)
@@ -374,11 +396,32 @@ function start_reciting(ev) {
   el_ok.onmouseup = input_trigger
 }
 
+function chstyle() {
+  const tval = Qid("textclr_input").value
+  const tsty = Qid("textclr_style")
+  const tpre = "#txt,.L,.W,.J,.T,.N,.X,.R,.Q { color: black; font-family:"
+  tsty.innerHTML =
+    tval == "taj"? "" :
+    tval == "bas"? tpre+" AmiriQuranColoredWeb; }" :
+                   tpre+" AmiriQuranWeb;        }"
+  //
+  const aval = Qid("ayatnum_input").checked
+  const asty = Qid("ayatnum_style")
+  const apre = ".A,.D { color: black; text-shadow: none;"
+  asty.innerHTML =
+    aval?          "" :
+    tval == "bas"? apre+"font-family: AmiriQuranColoredWeb; }" :
+                   apre+"}"
+}
+
+
 onload = function() {
   el_sura_beg.value = ""
   el_aaya_beg.value = ""
   el_sura_end.value = ""
   el_aaya_end.value = ""
+  chstyle()  // to update the style, as we don't reset these
+             // inputs, so they keep their values on refresh.
   let xyz = Qid("xyz")
   let mia_nomo = Q("body").innerHTML.match(/github[.]com\/([a-z0-9]+)\//)[1]
   xyz.innerHTML = mia_nomo + "_".charCodeAt(0) + String.fromCharCode(1<<6) + "moc.liamg".split("").reverse().join("")
