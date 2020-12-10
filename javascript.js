@@ -252,6 +252,9 @@ function start_reciting(ev) {
         s.unshift("001001")
   })
   ayat_recitations_list = [].concat.apply([], ayat_recitations_list)  // flatten
+  // basmala is added unconditionally
+  if (ayat_recitations_list[0] === "001001" && ayat_recitations_list[1] !== "001002")
+    ayat_recitations_list.shift()
 
   // all spaces are a single space in html;
   // let's make tab ('\t') separates the words,
