@@ -230,6 +230,7 @@ function selectors_changed(ev) {
     }
 
     el_txt.addEventListener('input', txt_changed, false) // https://stackoverflow.com/a/14029861
+    el_txt.focus()
   }
 
   el_ok.onmouseup = start_reciting
