@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf8">
+<!--
+    This code may not look great; I'm still trying to improve it.
+    If you have an advice, please let me know!
+    ---
+    One thing that makes this code look horrible, is that I wanted it to be
+    a self-contained Single-Page Application, taken in the literal sense(!).
+    I'm still trying to see how I can easily load only the needed ayat
+    on-demand, from other file(s), possibly asynchronously.
+    When I achieve that, I'll decompose this monstrous file into a number
+    of small files with cleanly-defined boundaries.
+-->
+<<!!# this file uses a small preprocessor to embed fonts and data; see index.html for the actual HTML file>>
+<title>راجع ما تحفظ من القرآن الكريم</title>
+<style>
+
+/* fonts */
+/* Amiri Quran 0.112, SIL OFL 1.1; https://github.com/alif-type/amiri */
+@font-face {
+  font-family: AmiriQuranWeb;
+  font-style: normal;
+  font-weight: 400;
+  src: url(data:application/x-font-woff;charset=utf-8;base64,<<!!base64 -w0 webres/AmiriQuran.woff>>) format('woff');
+}
+/* The following two fonts are from: https://sourceforge.net/projects/arabeyes/files/Fonts/ */
+/* They are under GNU GPL v2. Both are converted from TrueType to WOFF using */
+/* the WOFFjs-based WOFFer at: https://andrewsun.com/tools/woffer-woff-font-converter/ */
+@font-face {
+  font-family: KacstOne; /* version 5.0 */
+  font-style: normal;
+  font-weight: 400;
+  src: url(data:application/x-font-woff;charset=utf-8;base64,<<!!base64 -w0 webres/KacstOne.woff>>) format('woff');
+}
+@font-face {
+  font-family: Cortoba;  /* version 2.1 */
+  font-style: normal;
+  font-weight: 400;
+  src: url(data:application/x-font-woff;charset=utf-8;base64,<<!!base64 -w0 webres/ae_Cortoba.woff>>) format('woff');
+}
+
+<<!!cat style.css>>
+
+/* images */
+
+body {
+  background-color: #f9f4d6;
+}
+
+</style>
+</head>
+<body>
+<div id="all">
+
+<!-- I used to use sura_start, sura_end, aya_start, and aya_end, but changed -->
+<!--  them to sura_beg, sura_end, aaya_beg, and aaya_end to make them equal in -->
+<!--  length and show their parallelism, thus making the code a little easier. -->
+<!-- Also note that aaya is a more accurate transliteration than aya and ayah, -->
+<!--  and rhymes with sura, both have a stressed, long vowel in the first -->
+<!--  syllable, and a short unstressed vowel in the second syllable. -->
+
+<div id="selectors">
+
+<table><tr><td>
+  <label for="sura_beg">من سورة:</label>
+  <select id="sura_beg" oninput="selectors_changed(this)">
+    <option value="" selected>السورة</option>
+    <<!!bash -c 'i=0; cat webres/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$[i+1]; done | tr -d "\n"'>>
+  </select>
+</td><td>
+  <label for="aaya_beg">الآية:</label>
+  <input id="aaya_beg" oninput="selectors_changed(this)">
+</td></tr></table>
+
+<table><tr><td>
+  <label for="sura_end">إلى سورة:</label>
+  <select id="sura_end" oninput="selectors_changed(this)">
+    <option value="" selected>السورة</option>
+    <<!!bash -c 'i=0; cat webres/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$[i+1]; done | tr -d "\n"'>>
+  </select>
+</td><td>
+  <label for="aaya_end">الآية:</label>
+  <input id="aaya_end" oninput="selectors_changed(this)">
+</td></tr></table>
+
+<button disabled title="حدد ما تريد مراجعته أو تسميعه، ثم اضغط على هذا الزر." id="ok">ابدأ</button>
+
+</div>
+
+<div hidden id="header">
+<p id="title"></p>
+<button title="حدد ما تريد مراجعته أو تسميعه، ثم اضغط على هذا الزر." id="new">جديد</button>
+</div>
+
+<hr>
+
+<textarea hidden id="txt">
+</textarea>
+
+<div hidden id="endmsg">
+بارك الله فيك وفتح عليك!<br>لقد أتممت التسميع الذي حددته.
+<<!!cat webres/party-popper.svg | tr -d "\n">>
+</div>
+
+</div>
+
+<script>
+<<!!cat javascript.js>>
+</script>
+
+</body>
+</html>
+<!-- vim: set sw=2 ts=2 et colorcolumn=80: -->
