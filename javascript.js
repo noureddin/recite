@@ -182,10 +182,10 @@ function validate_inputs(ev) {
       set_aaya_end(suar_lengths[sura_end])
     }
   }
-  // if the changed field is sura_end, make aaya_end the last aya if empty,
+  // if the changed field is sura_end, make aaya_end the last aya,
   // and update sura_beg if empty or is after sura_end
   else if (ev.id == "sura_end") {
-    if (aaya_end === "")
+    // if (aaya_end === "")
       set_aaya_end(suar_lengths[sura_end])
     if (sura_beg === "" || (sura_end !== "" && +sura_end < +sura_beg)) {
       sura_beg = el_sura_beg.value = sura_end
