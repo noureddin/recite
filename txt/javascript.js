@@ -29,7 +29,7 @@ function enable_ok()  { el_ok.disabled = false; }
 
 
 const suar_lengths = [7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6]
-const suar_names = [<<!!sed "s/^/'/;s/$/',/" webres/suar-names>>]
+const suar_names = [<<!!sed "s/^/'/;s/$/',/" webres/suar-names | tr -d '\n' >>]
 const ayat = [<<!!cat webres/imlaai-ayat-array | tr -d '\n' >>]
 
 function filter_aaya_input(n) {  // remove non-numerals and convert numerals to Eastern Arabic
@@ -119,13 +119,14 @@ function selectors_changed(ev) {
     return
   }
 
-  let sura_beg = el_sura_beg.value
-  let sura_end = el_sura_end.value
-  let aaya_beg = defilter_aaya_input(el_aaya_beg.value)
-  let aaya_end = defilter_aaya_input(el_aaya_end.value)
+  const sura_beg = +el_sura_beg.value
+  const sura_end = +el_sura_end.value
+  const aaya_beg = +defilter_aaya_input(el_aaya_beg.value)
+  const aaya_end = +defilter_aaya_input(el_aaya_end.value)
 
-  let st = +suar_lengths.slice(0, sura_beg).reduce((a,b)=>a+b, 0) + +aaya_beg
-  let en = +suar_lengths.slice(0, sura_end).reduce((a,b)=>a+b, 0) + +aaya_end
+  const basmala_offset = sura_beg < 9? sura_beg : sura_beg - 1
+  const st = +suar_lengths.slice(0, sura_beg).reduce((a,b)=>a+b, 0) + aaya_beg + basmala_offset
+  const en = +suar_lengths.slice(0, sura_end).reduce((a,b)=>a+b, 0) + aaya_end + basmala_offset
   if (en <= st-1) { disable_ok(); return }  // should not happen!
   enable_ok()
 
@@ -150,7 +151,7 @@ function selectors_changed(ev) {
 
     // Up or Down on an ayat-input, increase or decrease it
     if (on_ayat) {
-      let el = Qid(ev.target.id)
+      const el = Qid(ev.target.id)
       if (ev.key === "ArrowUp")   el.value = 1 + +defilter_aaya_input(el.value)
       if (ev.key === "ArrowDown") el.value = 1 - +defilter_aaya_input(el.value)
       selectors_changed(el)  // handles the filtering
@@ -206,9 +207,10 @@ function selectors_changed(ev) {
 
     let done = false
 
-    let correct_text = ayat
+    const correct_text = ayat
                 .slice(st-1,en)
                 .join('\n')
+    // console.log(correct_text)
 
     const txt_changed = function() {
       if (done)  return
@@ -220,7 +222,7 @@ function selectors_changed(ev) {
         el_txt.style.backgroundColor = "lightGreen"
       }
       else if (correct_text.startsWith(el_txt.value)) {
-        el_txt.style.backgroundColor = "white"
+        el_txt.style.backgroundColor = ""
       }
       else {
         el_txt.style.backgroundColor = "pink"
@@ -240,16 +242,21 @@ const init_selectors = function() {
   el_aaya_beg.value = ""
   el_sura_end.value = ""
   el_aaya_end.value = ""
-  el_txt.value = ""
-  hide_el(el_txt)
-  hide_el(el_header)
+}
+
+const show_selectors = function() {
   show_el(el_selectors)
-  disable_ok()
+  hide_el(el_header)
+  hide_el(el_endmsg)
+  hide_el(el_txt)
+  el_txt.value = ""
+  el_txt.disabled = false
+  el_txt.style.backgroundColor = ""
 }
 
 onload = init_selectors
-el_new.onmouseup = init_selectors
-el_new.onclick = init_selectors
+el_new.onmouseup = show_selectors
+el_new.onclick = show_selectors
 
 
 // vim: set sw=2 ts=2 et colorcolumn=80:
