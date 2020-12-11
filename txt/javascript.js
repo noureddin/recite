@@ -244,6 +244,7 @@ const init_selectors = function() {
   el_aaya_beg.value = ""
   el_sura_end.value = ""
   el_aaya_end.value = ""
+  el_txt.value = ""
 }
 
 const show_selectors = function() {
