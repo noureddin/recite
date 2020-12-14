@@ -27,14 +27,20 @@ html { scroll-behavior: smooth; }
 
 
 /* https://bits.theorem.co/css-pro-tips-responsive-font-sizes-and-when-to-use-which-units */
-html { font-size: calc(16px + 1vmin) }
+/* html { font-size: calc(16px + 1vmin) } */
+/* https://getbootstrap.com/docs/4.0/layout/overview/#responsive-breakpoints */
+                             html { font-size: 1   em; }
+@media (min-width:  576px) { html { font-size: 1   em; } }
+@media (min-width:  768px) { html { font-size: 1.5 em; } }
+@media (min-width:  992px) { html { font-size: 1.5 em; } }
+@media (min-width: 1200px) { html { font-size: 1.5 em; } }
 
 * {
   font-family: Cortoba;
   font-size: inherit; /* some widgets default to another value */
 }
 
-#txt, .L,.W,.J,.T,.N,.X,.R,.Q, .A,.D { font-family: AmiriQuranWeb; }
+#txt, .L,.W,.J,.T,.N,.X,.R,.Q, .A,.D { font-family: AmiriQuranWeb; font-size: 1.5rem; }
 #endmsg { font-size: 120%; text-align: center; }
 
 .help-part {
@@ -235,15 +241,18 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   background: yellow;
 }
 
-kbd { /* based on https://meta.superuser.com/q/4788 */
+kbd {
+  font-family: serif;
+  direction: ltr;
+  font-size: 0.7rem;
+  /* based on https://meta.superuser.com/q/4788 */
   background-color: #e7e7e7;
   border: 1px solid #888;
-  border-radius: 3px;
+  border-radius: 0.5em;
   box-shadow: 0 1px 0 rgba(0,0,0,0.2),
               0 0 0 2px #fff inset;
   color: #000;
   display: inline-block;
-  font-size: 12px;
   margin: 0 0.1em;
   padding: 0.1em 0.6em;
   text-shadow: 0 1px 0 #fff;
