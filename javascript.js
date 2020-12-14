@@ -7,7 +7,7 @@
 function Q(selector) { return document.querySelector(selector) }
 function Qid(id)     { return document.getElementById(id) }
 
-<<!!bash -c 'for id in {sura,aaya}_{beg,end} player txt ok up dn; do echo "const el_$id = Qid(\"$id\")"; done'>>
+<<!!bash -c 'for id in {sura,aaya}_{beg,end} qaris player txt ok up dn; do echo "const el_$id = Qid(\"$id\")"; done'>>
 
 // global variables related to audio recitations
 var audio_base_url
@@ -64,13 +64,7 @@ function show_hide_buttons() {
   // true if ok is enabled and not overlapping or above suar/ayat-input.
   const ok_need_show =
     !el_ok.disabled &&
-    el_ok.getBoundingClientRect().top >=
-      Math.min(
-          sura_beg.getBoundingClientRect().bottom,
-          sura_end.getBoundingClientRect().bottom,
-          aaya_beg.getBoundingClientRect().bottom,
-          aaya_end.getBoundingClientRect().bottom,
-      )
+    el_ok.getBoundingClientRect().top >= el_qaris.getBoundingClientRect().bottom
 
   up_need_show? show_el(el_up) : hide_el(el_up)
   dn_need_show? show_el(el_dn) : hide_el(el_dn)
@@ -222,7 +216,7 @@ function start_reciting(ev) {
   }
 
   // if page was reloaded and #qaris retained its value, but oninput was not triggered
-  init_recitation(Qid("qaris").value)
+  init_recitation(el_qaris.value)
 
   let sura_beg = el_sura_beg.value
   let sura_end = el_sura_end.value

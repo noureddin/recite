@@ -564,6 +564,7 @@ const el_sura_beg = Qid("sura_beg")
 const el_sura_end = Qid("sura_end")
 const el_aaya_beg = Qid("aaya_beg")
 const el_aaya_end = Qid("aaya_end")
+const el_qaris = Qid("qaris")
 const el_player = Qid("player")
 const el_txt = Qid("txt")
 const el_ok = Qid("ok")
@@ -626,13 +627,7 @@ function show_hide_buttons() {
   // true if ok is enabled and not overlapping or above suar/ayat-input.
   const ok_need_show =
     !el_ok.disabled &&
-    el_ok.getBoundingClientRect().top >=
-      Math.min(
-          sura_beg.getBoundingClientRect().bottom,
-          sura_end.getBoundingClientRect().bottom,
-          aaya_beg.getBoundingClientRect().bottom,
-          aaya_end.getBoundingClientRect().bottom,
-      )
+    el_ok.getBoundingClientRect().top >= el_qaris.getBoundingClientRect().bottom
 
   up_need_show? show_el(el_up) : hide_el(el_up)
   dn_need_show? show_el(el_dn) : hide_el(el_dn)
@@ -784,7 +779,7 @@ function start_reciting(ev) {
   }
 
   // if page was reloaded and #qaris retained its value, but oninput was not triggered
-  init_recitation(Qid("qaris").value)
+  init_recitation(el_qaris.value)
 
   let sura_beg = el_sura_beg.value
   let sura_end = el_sura_end.value
