@@ -194,7 +194,7 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3);
 }
 
-#helpcontent {
+#helptoggle:not(checked) ~ div #helpcontent {
   overflow: hidden;
   max-height: 0;
   transition: max-height 1s cubic-bezier(0, 1.0, 0, 1.0),
