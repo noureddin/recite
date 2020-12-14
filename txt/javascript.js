@@ -124,10 +124,8 @@ function selectors_changed(ev) {
   const aaya_beg = +defilter_aaya_input(el_aaya_beg.value)
   const aaya_end = +defilter_aaya_input(el_aaya_end.value)
 
-  const basmala_beg_offset = sura_beg < 9? sura_beg : sura_beg - 1
-  const basmala_end_offset = sura_end < 9? sura_end : sura_end - 1
-  const st = +suar_lengths.slice(0, sura_beg).reduce((a,b)=>a+b, 0) + aaya_beg + basmala_beg_offset
-  const en = +suar_lengths.slice(0, sura_end).reduce((a,b)=>a+b, 0) + aaya_end + basmala_end_offset
+  const st = +suar_lengths.slice(0, sura_beg).reduce((a,b)=>a+b, 0) + aaya_beg
+  const en = +suar_lengths.slice(0, sura_end).reduce((a,b)=>a+b, 0) + aaya_end
   if (en <= st-1) { disable_ok(); return }  // should not happen!
   enable_ok()
 
@@ -210,6 +208,7 @@ function selectors_changed(ev) {
 
     const correct_text = ayat
                 .slice(st-1,en)
+                .map(a => a.startsWith('#')? a.replace('#', 'بسم الله الرحمن الرحيم\n') : a)
                 .join('\n')
     // console.log(correct_text)
 
