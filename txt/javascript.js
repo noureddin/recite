@@ -222,7 +222,7 @@ function selectors_changed(ev) {
         el_txt.style.backgroundColor = "lightGreen"
       }
       else if (correct_text.startsWith(el_txt.value)) {
-        el_txt.style.backgroundColor = ""
+        el_txt.style.backgroundColor = "white"
       }
       else {
         el_txt.style.backgroundColor = "pink"
@@ -253,7 +253,7 @@ const show_selectors = function() {
   hide_el(el_txt)
   el_txt.value = ""
   el_txt.disabled = false
-  el_txt.style.backgroundColor = ""
+  el_txt.style.backgroundColor = "white"
 }
 
 onload = init_selectors
