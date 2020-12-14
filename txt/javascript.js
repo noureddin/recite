@@ -220,6 +220,7 @@ function selectors_changed(ev) {
         el_txt.disabled = true
         show_el(el_endmsg)
         el_txt.style.backgroundColor = "lightGreen"
+        el_new.focus()
       }
       else if (correct_text.startsWith(el_txt.value)) {
         el_txt.style.backgroundColor = "white"
