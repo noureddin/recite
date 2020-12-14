@@ -7,7 +7,7 @@
 function Q(selector) { return document.querySelector(selector) }
 function Qid(id)     { return document.getElementById(id) }
 
-<<!!bash -c 'for id in {sura,aaya}_{beg,end} txt selectors ok header title new endmsg; do echo "const el_$id = Qid(\"$id\")"; done'>>
+<<!!bash -c 'for id in {sura,aaya}_{beg,end} txt selectors ok header title new repeat endmsg; do echo "const el_$id = Qid(\"$id\")"; done'>>
 
 function hide_el(el) { el.hidden = true;  el.style.visibility = "hidden";  el.style.opacity =   "0%" }
 function show_el(el) { el.hidden = false; el.style.visibility = "visible"; el.style.opacity = "100%" }
@@ -108,6 +108,12 @@ function validate_selectors(ev) {
   return sura_beg !== "" && sura_end !== "" && aaya_beg !== "" && aaya_end !== ""
 }
 
+const init_txt = function() {
+  el_txt.value = ""
+  el_txt.disabled = false
+  el_txt.style.backgroundColor = "white"
+}
+
 function selectors_changed(ev) {
 
   el_aaya_beg.value = filter_aaya_input(el_aaya_beg.value)
@@ -203,6 +209,7 @@ function selectors_changed(ev) {
     hide_el(el_selectors)
     show_el(el_txt)
     show_el(el_header)
+    el_repeat.disabled = true
 
     let done = false
 
@@ -221,6 +228,7 @@ function selectors_changed(ev) {
         show_el(el_endmsg)
         el_txt.style.backgroundColor = "lightGreen"
         el_new.focus()
+        el_repeat.disabled = false
       }
       else if (correct_text.startsWith(el_txt.value)) {
         el_txt.style.backgroundColor = "white"
@@ -232,19 +240,20 @@ function selectors_changed(ev) {
 
     el_txt.addEventListener('input', txt_changed, false) // https://stackoverflow.com/a/14029861
     el_txt.focus()
+
+    const repeat_reciting = function() {
+      done = false
+      init_txt()
+      hide_el(el_endmsg)
+    }
+    el_repeat.onmouseup = repeat_reciting
+    el_repeat.onclick   = repeat_reciting
+
   }
 
   el_ok.onmouseup = start_reciting
-  el_ok.onclick = start_reciting
+  el_ok.onclick   = start_reciting
 
-}
-
-const init_selectors = function() {
-  el_sura_beg.value = ""
-  el_aaya_beg.value = ""
-  el_sura_end.value = ""
-  el_aaya_end.value = ""
-  el_txt.value = ""
 }
 
 const show_selectors = function() {
@@ -252,14 +261,20 @@ const show_selectors = function() {
   hide_el(el_header)
   hide_el(el_endmsg)
   hide_el(el_txt)
-  el_txt.value = ""
-  el_txt.disabled = false
-  el_txt.style.backgroundColor = "white"
+  init_txt()
+}
+
+el_new.onmouseup = show_selectors
+el_new.onclick   = show_selectors
+
+const init_selectors = function() {
+  el_sura_beg.value = ""
+  el_aaya_beg.value = ""
+  el_sura_end.value = ""
+  el_aaya_end.value = ""
+  init_txt()
 }
 
 onload = init_selectors
-el_new.onmouseup = show_selectors
-el_new.onclick = show_selectors
-
 
 // vim: set sw=2 ts=2 et colorcolumn=80:

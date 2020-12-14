@@ -51,16 +51,21 @@ html, body, #all { height: 95%; } /* http://stackoverflow.com/questions/11089540
   width: 10rem;
 }
 
-#new {
-}
-
 #header {
   margin: -0.5em auto;
 }
 
 #title {
   display: inline-block;
-  margin-left: 2em;
+}
+
+#header div {
+  display: inline-block;
+}
+
+#header button {
+  margin-bottom: 1em;
+  margin-right: 0.5em;
 }
 
 #endmsg {
