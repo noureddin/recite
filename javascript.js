@@ -311,6 +311,14 @@ function start_reciting(ev) {
     do { var c = word_bck() } while (c !== 'a')
   }
 
+  const chunk_fwd = function (ev) {
+    do { var c = word_fwd() } while (c !== 'a' && c !== 'q')
+  }
+
+  const chunk_bck = function (ev) {
+    do { var c = word_bck() } while (c !== 'a' && c !== 'q')
+  }
+
   const input_trigger = function(ev) {
     // this fn is connected to onkeyup and onmouseup. it handles three "events"
 
@@ -359,30 +367,16 @@ function start_reciting(ev) {
     // Enter or Space, and the target is not input or select, get the next word
     // (ie, on the #ok button, or in the page with no element focused)
     // or mouse-click on the ok button
-    if ( (kb_fwd && !kb_mod && not_on_input_field)
-      || (ev.type === "mouseup" && ev.target.id === "ok")
-    ) {
-      word_fwd()
-      return
-    }
 
-    if ( (kb_bck && !kb_mod && not_on_input_field)
-    ) {
-      word_bck()
-      return
-    }
+    if (ev.type === "mouseup" && ev.target.id === "ok") { word_fwd(); return }
+    if (kb_fwd && !kb_mod && not_on_input_field)        { word_fwd(); return }
+    if (kb_bck && !kb_mod && not_on_input_field)        { word_bck(); return }
 
-    if ( (kb_fwd && kb_mod && not_on_input_field)
-    ) {
-      aaya_fwd()
-      return
-    }
+    if (kb_fwd && kb_mod && not_on_input_field) { aaya_fwd(); return }
+    if (kb_bck && kb_mod && not_on_input_field) { aaya_bck(); return }
 
-    if ( (kb_bck && kb_mod && not_on_input_field)
-    ) {
-      aaya_bck()
-      return
-    }
+    if (ev.key === "0" && not_on_input_field) { chunk_fwd(); return }
+    if (ev.key === "1" && not_on_input_field) { chunk_bck(); return }
 
   }
 
