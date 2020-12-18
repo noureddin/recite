@@ -108,24 +108,6 @@ const endmsg = `<div id="endmsg">بارك الله فيك وفتح عليك!<br>
 const suar_lengths = [7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6]
 const ayat = [<<!!cat webres/othmani-array-tajweed | tr -d '\n' >>]
 
-// const end_of_aaya_regex = "\u{06dd}"
-
-// because we split on '<SPC>'; see the splitting code
-const basmala = "\ufdfd<SPC><br>\n"  // "<center>\ufdfd</center><SPC>"
-const first_aaya_regex = "\u{06dd}\u{0661}$|A<\u{06dd}>D<\u{0661}>$"
-const faatiha_first_aaya = ayat[0]
-const tawba_first_aaya = ayat[ suar_lengths.slice(0,8).reduce((a,b)=>a+b, 0) ]
-
-function add_basmala_if_needed(a) {
-  if ( a.match(first_aaya_regex)
-    && a !== faatiha_first_aaya
-    && a !== tawba_first_aaya
-  )
-    return basmala + a
-  else
-    return a
-}
-
 function filter_aaya_input(n) {  // remove non-numerals and convert numerals to Eastern Arabic
   return n.toString()
       .replace(/[0٠]/g, "٠")
@@ -253,7 +235,14 @@ function start_reciting(ev) {
 
   let words = ayat
               .slice(st-1,en)
-              .map(a => add_basmala_if_needed(a))
+              .reduce((arr,aya) => {  // https://stackoverflow.com/a/38528645
+                  if (aya.startsWith('#')) {
+                    arr.push("\ufdfd")
+                    aya = aya.replace('#', '')
+                  }
+                  arr.push(aya)
+                  return arr
+                }, [])
               .map(a => tajweed_colorize_aaya(a))
               .map(a => a.replace(/ /g, "\t<SPC>") + "<br>\n")
               .map(a => a.replace(/_/g, " "))  // for tajweed
@@ -261,6 +250,24 @@ function start_reciting(ev) {
   words = [].concat.apply([], words)  // flatten
 
   let done = false
+
+  // both word_fwd & word_bck return the kind_of_portion, which is:
+  //   'a' on aaya boundary
+  //   'q' on waqf boundary
+  //   ''  otherwise
+
+  const kind_of_portion = function (last_two_chars) {
+    const last_one_char = last_two_chars.slice(-1)
+    return last_one_char  === ''  ? 'a' :  // start of text
+           last_one_char  === '\n'? 'a' :  // end of aaya
+           last_two_chars === '\u06DC\t'? 'q' :  // ARABIC SMALL HIGH SEEN
+           last_two_chars === '\u06D6\t'? 'q' :  // ARABIC SMALL HIGH LIGATURE SAD WITH LAM WITH ALEF MAKSURA
+           last_two_chars === '\u06D7\t'? 'q' :  // ARABIC SMALL HIGH LIGATURE QAF WITH LAM WITH ALEF MAKSURA
+           last_two_chars === '\u06D8\t'? 'q' :  // ARABIC SMALL HIGH MEEM INITIAL FORM
+           last_two_chars === '\u06DA\t'? 'q' :  // ARABIC SMALL HIGH JEEM
+           last_two_chars === '\u06DB\t'? 'q' :  // ARABIC SMALL HIGH THREE DOTS
+           ''
+  }
 
   const word_fwd = function (ev) {
     if (words.length > 0) {
@@ -271,6 +278,8 @@ function start_reciting(ev) {
         current_audio_index += 1
         fetch_recitation()
       }
+      scroll_to_bottom()
+      return kind_of_portion( new_word.slice(-2) )
     }
     else {
       if (!done && el_txt.innerHTML.length > 0) {
@@ -278,34 +287,28 @@ function start_reciting(ev) {
         done = true
         disable_ok()
       }
+      scroll_to_bottom()
+      return 'a'
     }
-    scroll_to_bottom()
   }
 
   const word_bck = function (ev) {
-    if (el_txt.innerHTML.length === 0) return
+    if (el_txt.innerHTML.length === 0) return 'a'
     const last_word = el_txt.innerHTML.match(/(?:^|\t|<br>\n)([^\n\t]+(?:\t|<br>\n))$/)[1]
     words.unshift(last_word)
     el_txt.innerHTML = el_txt.innerHTML.substring(0, el_txt.innerHTML.length - last_word.length)
     if (last_word.match(/<br>\n$/)) {
       current_audio_index -= 1
     }
+    return kind_of_portion( el_txt.innerHTML.slice(-2) )
   }
 
   const aaya_fwd = function (ev) {
-    do {
-      word_fwd()
-      var last_char = el_txt.innerHTML[ el_txt.innerHTML.length - 1 ]
-    }
-    while (!( last_char === '\n' ))
+    do { var c = word_fwd() } while (c !== 'a')
   }
 
   const aaya_bck = function (ev) {
-    do {
-      word_bck()
-      var last_char = el_txt.innerHTML[ el_txt.innerHTML.length - 1 ]
-    }
-    while (!( last_char === undefined || last_char === '\n' ))
+    do { var c = word_bck() } while (c !== 'a')
   }
 
   const input_trigger = function(ev) {
