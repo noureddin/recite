@@ -1,3 +1,7 @@
+* { color: #223333; }
+#txt { color: black; }
+button:disabled { color: darkgray; }
+
 /* general */
 html { scroll-behavior: smooth; }
 ::selection { background: rgba(0,0,255,0.1); }
