@@ -276,3 +276,11 @@ details[open] > .details-content {
   0%    {opacity: 0;}
   100%  {opacity: 1;}
 }
+
+button, select {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}

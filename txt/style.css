@@ -78,3 +78,10 @@ html, body, #all { height: 95%; } /* http://stackoverflow.com/questions/11089540
   margin-top: 0.5em;
 }
 
+button, select {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
