@@ -253,33 +253,44 @@ function start_reciting(ev) {
 
   // both word_fwd & word_bck return the kind_of_portion, which is:
   //   'a' on aaya boundary
-  //   'q' on waqf boundary
-  //   ''  otherwise
+  //   'j' on waqf boundary
+  //   'w' otherwise
 
   const kind_of_portion = function (last_two_chars) {
     const last_one_char = last_two_chars.slice(-1)
-    return last_one_char  === ''  ? 'a' :  // start of text
+    return last_one_char  === 'w' ? 'a' :  // start of text
            last_one_char  === '\n'? 'a' :  // end of aaya
-           last_two_chars === '\u06DC\t'? 'q' :  // ARABIC SMALL HIGH SEEN
-           last_two_chars === '\u06D6\t'? 'q' :  // ARABIC SMALL HIGH LIGATURE SAD WITH LAM WITH ALEF MAKSURA
-           last_two_chars === '\u06D7\t'? 'q' :  // ARABIC SMALL HIGH LIGATURE QAF WITH LAM WITH ALEF MAKSURA
-           last_two_chars === '\u06D8\t'? 'q' :  // ARABIC SMALL HIGH MEEM INITIAL FORM
-           last_two_chars === '\u06DA\t'? 'q' :  // ARABIC SMALL HIGH JEEM
-           last_two_chars === '\u06DB\t'? 'q' :  // ARABIC SMALL HIGH THREE DOTS
+           last_two_chars === '\u06DC\t'? 'j' :  // ARABIC SMALL HIGH SEEN
+           last_two_chars === '\u06D6\t'? 'j' :  // ARABIC SMALL HIGH LIGATURE SAD WITH LAM WITH ALEF MAKSURA
+           last_two_chars === '\u06D7\t'? 'j' :  // ARABIC SMALL HIGH LIGATURE QAF WITH LAM WITH ALEF MAKSURA
+           last_two_chars === '\u06D8\t'? 'j' :  // ARABIC SMALL HIGH MEEM INITIAL FORM
+           last_two_chars === '\u06DA\t'? 'j' :  // ARABIC SMALL HIGH JEEM
+           last_two_chars === '\u06DB\t'? 'j' :  // ARABIC SMALL HIGH THREE DOTS
            ''
   }
 
-  const word_fwd = function (ev) {
+  const audio_play_advance = function () {
+      play_recitation()
+      current_audio_index += 1
+      fetch_recitation()
+  }
+
+  const fwd = function (kind) {
+    let txt = ''
+    const isnt_the_kind =
+      kind === 'a'? k => k !== 'a' :
+      kind === 'j'? k => k !== 'a' && k !== 'j' :
+                    k => false
     if (words.length > 0) {
-      let new_word = words.shift()
-      el_txt.innerHTML += new_word
-      if (new_word.match(/<br>\n$/)) {
-        play_recitation()
-        current_audio_index += 1
-        fetch_recitation()
-      }
+      let new_word_kind = ''
+      do {
+        let new_word = words.shift()
+        txt += new_word
+        new_word_kind = kind_of_portion( new_word.slice(-2) )
+      } while (isnt_the_kind(new_word_kind))
+      if (new_word_kind === 'a') audio_play_advance()
+      el_txt.innerHTML += txt
       scroll_to_bottom()
-      return kind_of_portion( new_word.slice(-2) )
     }
     else {
       if (!done && el_txt.innerHTML.length > 0) {
@@ -288,9 +299,12 @@ function start_reciting(ev) {
         disable_ok()
       }
       scroll_to_bottom()
-      return 'a'
     }
   }
+
+  const word_fwd = () => fwd('w')
+  const aaya_fwd = () => fwd('a')
+  const jmla_fwd = () => fwd('j')
 
   const word_bck = function (ev) {
     if (el_txt.innerHTML.length === 0) return 'a'
@@ -303,20 +317,12 @@ function start_reciting(ev) {
     return kind_of_portion( el_txt.innerHTML.slice(-2) )
   }
 
-  const aaya_fwd = function (ev) {
-    do { var c = word_fwd() } while (c !== 'a')
-  }
-
   const aaya_bck = function (ev) {
     do { var c = word_bck() } while (c !== 'a')
   }
 
-  const chunk_fwd = function (ev) {
-    do { var c = word_fwd() } while (c !== 'a' && c !== 'q')
-  }
-
-  const chunk_bck = function (ev) {
-    do { var c = word_bck() } while (c !== 'a' && c !== 'q')
+  const jmla_bck = function (ev) {
+    do { var c = word_bck() } while (c !== 'a' && c !== 'j')
   }
 
   const input_trigger = function(ev) {
@@ -375,8 +381,8 @@ function start_reciting(ev) {
     if (kb_fwd && kb_mod && not_on_input_field) { aaya_fwd(); return }
     if (kb_bck && kb_mod && not_on_input_field) { aaya_bck(); return }
 
-    if (ev.key === "0" && not_on_input_field) { chunk_fwd(); return }
-    if (ev.key === "1" && not_on_input_field) { chunk_bck(); return }
+    if (ev.key === "0" && not_on_input_field) { jmla_fwd(); return }
+    if (ev.key === "1" && not_on_input_field) { jmla_bck(); return }
 
   }
 
