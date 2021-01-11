@@ -107,6 +107,18 @@ justbeforetoggle { margin-bottom: 1rem; }
   touch-action: manipulation; /* disable double-tap zooming; https://stackoverflow.com/a/53236027 */
 }
 
+#repeat {
+  /* centered with https://stackoverflow.com/a/2006008 */
+  margin-left: -5rem; /* negative half of width */
+  width: 10rem;
+  left: 50vw;
+  /* sticky at bottom */
+  position: fixed;
+  bottom: 1rem;
+  transition: opacity 0.5s ease-in-out;
+  touch-action: manipulation; /* disable double-tap zooming; https://stackoverflow.com/a/53236027 */
+}
+
 #textclr_input {
   width: 9.8em;
 }

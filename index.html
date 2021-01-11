@@ -157,6 +157,18 @@ justbeforetoggle { margin-bottom: 1rem; }
   touch-action: manipulation; /* disable double-tap zooming; https://stackoverflow.com/a/53236027 */
 }
 
+#repeat {
+  /* centered with https://stackoverflow.com/a/2006008 */
+  margin-left: -5rem; /* negative half of width */
+  width: 10rem;
+  left: 50vw;
+  /* sticky at bottom */
+  position: fixed;
+  bottom: 1rem;
+  transition: opacity 0.5s ease-in-out;
+  touch-action: manipulation; /* disable double-tap zooming; https://stackoverflow.com/a/53236027 */
+}
+
 #textclr_input {
   width: 9.8em;
 }
@@ -573,6 +585,8 @@ body {
 
 <button disabled title="حدد ما تريد مراجعته أو تسميعه، ثم اضغط على هذا الزر." id="ok">سمّع!</button>
 
+<button hidden title="اضغط لإعادة تسميع هذه الآيات نفسها" id="repeat">إعادة</button>
+
 </div>
 
 <script>
@@ -593,6 +607,7 @@ const el_qaris = Qid("qaris")
 const el_player = Qid("player")
 const el_txt = Qid("txt")
 const el_ok = Qid("ok")
+const el_repeat = Qid("repeat")
 const el_up = Qid("up")
 const el_dn = Qid("dn")
 
@@ -665,8 +680,8 @@ addEventListener('scroll',           show_hide_buttons, false)
 addEventListener('resize',           show_hide_buttons, false)
 
 // show_hide_buttons() is called to update #ok's visibility
-function disable_ok() { el_ok.disabled = true;  show_hide_buttons()  }
-function enable_ok()  { el_ok.disabled = false; show_hide_buttons()  }
+function disable_ok() { el_ok.disabled = true;  show_hide_buttons() }
+function enable_ok()  { el_ok.disabled = false; show_hide_buttons(); el_repeat.hidden = true }
 
 // smoothly scroll up to the suar-ayat selection (showing helptoggle)
 function scroll_to_select() { Qid("justbeforetoggle").scrollIntoView({block: "start"}) }
@@ -774,6 +789,7 @@ function validate_inputs(ev) {
 
 function start_reciting(ev) {
 
+  el_repeat.hidden = true
   current_audio_index = 0
 
   el_aaya_beg.value = filter_aaya_input(el_aaya_beg.value)
@@ -885,6 +901,7 @@ function start_reciting(ev) {
         el_txt.innerHTML += endmsg
         done = true
         disable_ok()
+        el_repeat.hidden = false
       }
       scroll_to_bottom()
     }
@@ -999,6 +1016,9 @@ function chstyle() {
                    apre+"}"
 }
 
+el_repeat.onmouseup = function (ev) {
+  start_reciting(ev)
+}
 
 onload = function() {
   el_sura_beg.value = ""

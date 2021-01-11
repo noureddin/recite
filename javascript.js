@@ -7,7 +7,7 @@
 function Q(selector) { return document.querySelector(selector) }
 function Qid(id)     { return document.getElementById(id) }
 
-<<!!bash -c 'for id in {sura,aaya}_{beg,end} qaris player txt ok up dn; do echo "const el_$id = Qid(\"$id\")"; done'>>
+<<!!bash -c 'for id in {sura,aaya}_{beg,end} qaris player txt ok repeat up dn; do echo "const el_$id = Qid(\"$id\")"; done'>>
 
 // global variables related to audio recitations
 var audio_base_url
@@ -77,8 +77,8 @@ addEventListener('scroll',           show_hide_buttons, false)
 addEventListener('resize',           show_hide_buttons, false)
 
 // show_hide_buttons() is called to update #ok's visibility
-function disable_ok() { el_ok.disabled = true;  show_hide_buttons()  }
-function enable_ok()  { el_ok.disabled = false; show_hide_buttons()  }
+function disable_ok() { el_ok.disabled = true;  show_hide_buttons() }
+function enable_ok()  { el_ok.disabled = false; show_hide_buttons(); el_repeat.hidden = true }
 
 // smoothly scroll up to the suar-ayat selection (showing helptoggle)
 function scroll_to_select() { Qid("justbeforetoggle").scrollIntoView({block: "start"}) }
@@ -186,6 +186,7 @@ function validate_inputs(ev) {
 
 function start_reciting(ev) {
 
+  el_repeat.hidden = true
   current_audio_index = 0
 
   el_aaya_beg.value = filter_aaya_input(el_aaya_beg.value)
@@ -297,6 +298,7 @@ function start_reciting(ev) {
         el_txt.innerHTML += endmsg
         done = true
         disable_ok()
+        el_repeat.hidden = false
       }
       scroll_to_bottom()
     }
@@ -411,6 +413,9 @@ function chstyle() {
                    apre+"}"
 }
 
+el_repeat.onmouseup = function (ev) {
+  start_reciting(ev)
+}
 
 onload = function() {
   el_sura_beg.value = ""
