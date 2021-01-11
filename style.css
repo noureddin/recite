@@ -1,14 +1,15 @@
 * { color: #223333; }
+#txt { color: #111; }
 
 /* tajweed */
-.L { color: firebrick;  } /* darkred;  madd lazem (6 vowels) */
-.W { color: red;        } /* red;      madd wajeb (4 or 5 vowels) */
-.J { color: #fe6c29;    } /* orange;   madd jaez (2 or 4 or 6 vowels) */
-.T { color: goldenrod;  } /* gold;     madd tabiei (2 vowels) */
-.N { color: green;      } /* green;    ghunna and ikhfaa */
-.X { color: #a7a195;    } /* darkgrey; silent */
-.R { color: #281dcf;    } /* darkblue; emphasis */
-.Q { color: dodgerblue; } /* blue;     qalqala */
+.L { color: maroon      } /* firebrick;  } /* darkred;  madd lazem (6 vowels) */
+.W { color: red         } /* red;        } /* red;      madd wajeb (4 or 5 vowels) */
+.J { color: orangered   } /* #fe6c29;    } /* orange;   madd jaez (2 or 4 or 6 vowels) */
+.T { color: #ff9900     } /* goldenrod;  } /* gold;     madd tabiei (2 vowels) */
+.N { color: #007600     } /* green;      } /* green;    ghunna and ikhfaa */
+.X { color: #8888aa     } /* #a7a195;    } /* darkgrey; silent */
+.R { color: #0000aa     } /* #281dcf;    } /* darkblue; emphasis */
+.Q { color: #0066ff     } /* dodgerblue; } /* blue;     qalqala */
 .A {
     color: darkorange;
     text-shadow:
