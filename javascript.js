@@ -301,6 +301,7 @@ function start_reciting(ev) {
         done = true
         disable_ok()
         el_repeat.hidden = false
+        el_repeat.focus()
       }
       scroll_to_bottom()
     }
@@ -415,9 +416,8 @@ function chstyle() {
                    apre+"}"
 }
 
-el_repeat.onmouseup = function (ev) {
-  start_reciting(ev)
-}
+el_repeat.onmouseup = start_reciting
+el_repeat.onclick   = start_reciting
 
 onload = function() {
   el_sura_beg.value = ""
