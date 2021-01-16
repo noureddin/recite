@@ -9,6 +9,10 @@ function Qid(id)     { return document.getElementById(id) }
 
 <<!!bash -c 'for id in {sura,aaya}_{beg,end} qaris player txt ok repeat up dn; do echo "const el_$id = Qid(\"$id\")"; done'>>
 
+// from: https://github.com/mathusummut/confetti.js
+// Copyright (c) 2018 MathuSum Mut. MIT License
+<<!!cat webres/confetti.min.js>>
+
 // global variables related to audio recitations
 var audio_base_url
 var ayat_recitations_list
@@ -302,6 +306,7 @@ function start_reciting(ev) {
         disable_ok()
         el_repeat.hidden = false
         el_repeat.focus()
+       	confetti.start(1200, 50, 150)
       }
       scroll_to_bottom()
     }
