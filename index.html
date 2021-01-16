@@ -374,6 +374,40 @@ button:disabled {
 .dark .A { color: #ff8c00     }
 .dark .D { color: #ffffff     }
 
+.letter-parts #txt,
+.letter-parts .L, .letter-parts .W,
+.letter-parts .J, .letter-parts .T,
+.letter-parts .N, .letter-parts .X,
+.letter-parts .R, .letter-parts .Q
+{ color: black; font-family: AmiriQuranColoredWeb }
+
+.dark.letter-parts #txt,
+.dark.letter-parts .L, .dark.letter-parts .W,
+.dark.letter-parts .J, .dark.letter-parts .T,
+.dark.letter-parts .N, .dark.letter-parts .X,
+.dark.letter-parts .R, .dark.letter-parts .Q
+{ color: #eee; font-family: AmiriQuranColoredWeb }
+
+.letter-nocolor #txt,
+.letter-nocolor .L, .letter-nocolor .W,
+.letter-nocolor .J, .letter-nocolor .T,
+.letter-nocolor .N, .letter-nocolor .X,
+.letter-nocolor .R, .letter-nocolor .Q
+{ color: black; font-family: AmiriQuranWeb }
+
+.dark.letter-nocolor #txt,
+.dark.letter-nocolor .L, .dark.letter-nocolor .W,
+.dark.letter-nocolor .J, .dark.letter-nocolor .T,
+.dark.letter-nocolor .N, .dark.letter-nocolor .X,
+.dark.letter-nocolor .R, .dark.letter-nocolor .Q
+{ color: #eee; font-family: AmiriQuranWeb }
+
+.ayat-nocolor .A, .ayat-nocolor .D
+{ color: black; text-shadow: none; font-family: AmiriQuranWeb }
+
+.dark.ayat-nocolor .A, .dark.ayat-nocolor .D
+{ color: #ccc; text-shadow: none; font-family: AmiriQuranWeb }
+
 
 
 /* images */
@@ -390,8 +424,6 @@ body {
 }
 
 </style>
-<style id="textclr_style"></style>
-<style id="ayatnum_style"></style>
 </head>
 <body>
 <div id="all">
@@ -1038,26 +1070,18 @@ function start_reciting(ev) {
   el_ok.onmouseup = input_trigger
 }
 
+function sync_class_with(cls, pred) {
+  pred? Q("body").classList.add(cls) : Q("body").classList.remove(cls)
+}
+
 function chstyle() {
   const tval = Qid("textclr_input").value
-  const tsty = Qid("textclr_style")
-  const tpre = "#txt,.L,.W,.J,.T,.N,.X,.R,.Q { color: black; font-family:"
-  tsty.innerHTML =
-    tval == "taj"? "" :
-    tval == "bas"? tpre+" AmiriQuranColoredWeb; }" :
-                   tpre+" AmiriQuranWeb;        }"
+  sync_class_with("letter-parts",   tval === "bas")
+  sync_class_with("letter-nocolor", tval === "no")
   //
-  const aval = Qid("ayatnum_input").checked
-  const asty = Qid("ayatnum_style")
-  const apre = ".A,.D { color: black; text-shadow: none;"
-  asty.innerHTML =
-    aval?          "" :
-    tval == "bas"? apre+"font-family: AmiriQuranColoredWeb; }" :
-                   apre+"}"
+  sync_class_with("ayat-nocolor", !Qid("ayatnum_input").checked)
   //
-  Qid("darkmode_input").checked
-    ? Q("body").classList.add("dark")
-    : Q("body").classList.remove("dark")
+  sync_class_with("dark", Qid("darkmode_input").checked)
 }
 
 el_repeat.onmouseup = start_reciting

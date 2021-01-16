@@ -403,26 +403,18 @@ function start_reciting(ev) {
   el_ok.onmouseup = input_trigger
 }
 
+function sync_class_with(cls, pred) {
+  pred? Q("body").classList.add(cls) : Q("body").classList.remove(cls)
+}
+
 function chstyle() {
   const tval = Qid("textclr_input").value
-  const tsty = Qid("textclr_style")
-  const tpre = "#txt,.L,.W,.J,.T,.N,.X,.R,.Q { color: black; font-family:"
-  tsty.innerHTML =
-    tval == "taj"? "" :
-    tval == "bas"? tpre+" AmiriQuranColoredWeb; }" :
-                   tpre+" AmiriQuranWeb;        }"
+  sync_class_with("letter-parts",   tval === "bas")
+  sync_class_with("letter-nocolor", tval === "no")
   //
-  const aval = Qid("ayatnum_input").checked
-  const asty = Qid("ayatnum_style")
-  const apre = ".A,.D { color: black; text-shadow: none;"
-  asty.innerHTML =
-    aval?          "" :
-    tval == "bas"? apre+"font-family: AmiriQuranColoredWeb; }" :
-                   apre+"}"
+  sync_class_with("ayat-nocolor", !Qid("ayatnum_input").checked)
   //
-  Qid("darkmode_input").checked
-    ? Q("body").classList.add("dark")
-    : Q("body").classList.remove("dark")
+  sync_class_with("dark", Qid("darkmode_input").checked)
 }
 
 el_repeat.onmouseup = start_reciting
