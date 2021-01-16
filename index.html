@@ -348,6 +348,33 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.dark #help,
+.dark input,
+.dark button,
+.dark select { filter: invert(1) hue-rotate(180deg) }
+.dark          { background-color: #111 }
+.dark label    {            color: #ccc }
+.dark #txt     {            color: #eee }
+.dark #endmsg  {            color: #ccc }
+
+.dark #help label:hover,
+.dark #help label:focus {
+  background: goldenrod;
+}
+
+/* tajweed */
+.dark .L { color: #bb4444     } /* firebrick;  } /* darkred;  madd lazem (6 vowels) */
+.dark .W { color: red         } /* red;        } /* red;      madd wajeb (4 or 5 vowels) */
+.dark .J { color: #ff6600     } /* #fe6c29;    } /* orange;   madd jaez (2 or 4 or 6 vowels) */
+.dark .T { color: #ffbb00     } /* goldenrod;  } /* gold;     madd tabiei (2 vowels) */
+.dark .N { color: #00ff00     } /* green;      } /* green;    ghunna and ikhfaa */
+.dark .X { color: #806666     } /* #a7a195;    } /* darkgrey; silent */
+.dark .R { color: #3366ff     } /* #281dcf;    } /* darkblue; emphasis */
+.dark .Q { color: #00ccff     } /* dodgerblue; } /* blue;     qalqala */
+.dark .A { color: #ff8c00     }
+.dark .D { color: #ffffff     }
+
+
 
 /* images */
 
@@ -514,6 +541,9 @@ body {
 </td><td>
   <input id="ayatnum_input" type="checkbox" checked onchange="chstyle()">
   <label for="ayatnum_input">تلوين أرقام الآيات؟</label>
+</td><td>
+  <input id="darkmode_input" type="checkbox" onchange="chstyle()">
+  <label for="darkmode_input">الوضع الليلي؟</label>
 </td></tr></table>
 
 <table><tr><td>
@@ -1024,6 +1054,10 @@ function chstyle() {
     aval?          "" :
     tval == "bas"? apre+"font-family: AmiriQuranColoredWeb; }" :
                    apre+"}"
+  //
+  Qid("darkmode_input").checked
+    ? Q("body").classList.add("dark")
+    : Q("body").classList.remove("dark")
 }
 
 el_repeat.onmouseup = start_reciting

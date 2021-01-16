@@ -419,6 +419,10 @@ function chstyle() {
     aval?          "" :
     tval == "bas"? apre+"font-family: AmiriQuranColoredWeb; }" :
                    apre+"}"
+  //
+  Qid("darkmode_input").checked
+    ? Q("body").classList.add("dark")
+    : Q("body").classList.remove("dark")
 }
 
 el_repeat.onmouseup = start_reciting
