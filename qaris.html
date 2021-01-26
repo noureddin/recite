@@ -1,14 +1,12 @@
 <table><tr><td>
   <label for="qaris">تلاوة بصوت:</label>
-  <select id="qaris" oninput="init_recitation(this.value)">
+  <select id="qaris" oninput="audio.update_qari(this.value)">
     <option value="" selected>بغير تلاوة صوتية</option>
-<<!!cat webres/qaris | while read value; do read title; echo "    <option value=\"$value\">$title</option>"; done>>
+<<!!cat res/qaris | while read value; do read title; echo "    <option value=\"$value\">$title</option>"; done>>
   </select>
 </td></tr></table>
 
-<table><tr><td>
-    <audio id="player" controls preload></audio>
-</td></tr></table>
+<audio id="player" controls preload></audio>
 
 __END__
 

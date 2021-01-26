@@ -1,28 +1,64 @@
-* { color: #223333; }
-#txt { color: #111; }
+/* general */
+html, body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
 
-/* tajweed */
-.L { color: maroon      } /* firebrick;  } /* darkred;  madd lazem (6 vowels) */
-.W { color: red         } /* red;        } /* red;      madd wajeb (4 or 5 vowels) */
-.J { color: orangered   } /* #fe6c29;    } /* orange;   madd jaez (2 or 4 or 6 vowels) */
-.T { color: #ff9900     } /* goldenrod;  } /* gold;     madd tabiei (2 vowels) */
-.N { color: #007600     } /* green;      } /* green;    ghunna and ikhfaa */
-.X { color: #8888aa     } /* #a7a195;    } /* darkgrey; silent */
-.R { color: #0000aa     } /* #281dcf;    } /* darkblue; emphasis */
-.Q { color: #0066ff     } /* dodgerblue; } /* blue;     qalqala */
-.A {
-    color: darkorange;
-    text-shadow:
-                  1px  1px  1px gold,
-                  1px -1px  1px gold,
-                 -1px  1px  1px gold,
-                 -1px -1px  1px gold,
-                  0    0    5px blue;
+body { text-align: center; } /* center everything */
+#body {
+  background-color: var(--background);
+  min-height: 100%;
+  min-width: 100%;
 }
-.D {
-    color: navy;
-    text-shadow: 0 0 10px rgba(0,0,255,0.5);
+#all {
+  display: inline-block;
+  width: 80vw;
+  min-width: 10em;
+  max-width: 35em;
 }
+
+#body {
+  /* general */
+  --uitext: #233; --txt: #111;
+  --txt-font: AmiriQuranWeb;
+  --background-rgb: 249, 246, 231; /* old: 249, 244, 214; */
+  --background: rgb(var(--background-rgb));
+  --background-translucent: rgba(var(--background-rgb), 0.66);
+  /* tajweed */
+  --L: maroon;  --W: red;     --J: orangered; --T: #ff9900;    --N: #007600;
+  --X: #8888aa; --R: #0000aa; --Q: #0066ff;   --A: darkorange; --D: navy;
+  /* ayat number color */
+  --A-shadow: 1px  1px  1px gold,
+              1px -1px  1px gold,
+             -1px  1px  1px gold,
+             -1px -1px  1px gold,
+              0    0    5px blue;
+  --D-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
+  /* help & options : tab label */
+  --tab: gold;
+  --tab-active: yellow;
+}
+
+#dark:checked ~ #body {
+  /* general */
+  --uitext: #ccc;  --txt: #eee;  --background-rgb: 13, 13, 13;
+  /* tajweed */
+  --L: #bb4444;  --W: red    ;  --J: #ff6600;  --T: #ffbb00;  --N: #00ff00;
+  --X: #806666;  --R: #3366ff;  --Q: #00ccff;  --A: #ff8c00;  --D: #ffffff;
+  /* ayat number color */
+  /* --A: #ff8c00; --D: #ffffff; */
+  /* help & options : tab label */
+  --tab-active: goldenrod;
+}
+
+:not(input, button, select) { color: var(--uitext); } /* are just inverted */
+#txt { color: var(--txt); }
+
+.L { color: var(--L) } .W { color: var(--W) } .J { color: var(--J) } .T { color: var(--T) }
+.N { color: var(--N) } .X { color: var(--X) } .R { color: var(--R) } .Q { color: var(--Q) }
+.A { color: var(--A); text-shadow: var(--A-shadow) }
+.D { color: var(--D); text-shadow: var(--D-shadow) }
 
 /* general */
 html { scroll-behavior: smooth; }
@@ -30,6 +66,7 @@ html { scroll-behavior: smooth; }
 
 /* https://bits.theorem.co/css-pro-tips-responsive-font-sizes-and-when-to-use-which-units */
 html { font-size: calc(16px + 0.5vw) }
+@media (max-width:  576px) { html { font-size: 16px; } }
 /* https://getbootstrap.com/docs/4.0/layout/overview/#responsive-breakpoints */
                              /* html { font-size: 1   em; } */
 /* @media (min-width:  576px) { html { font-size: 1   em; } } */
@@ -42,8 +79,132 @@ html { font-size: calc(16px + 0.5vw) }
   font-size: inherit; /* some widgets default to another value */
 }
 
-#txt, .L,.W,.J,.T,.N,.X,.R,.Q, .A,.D { font-family: AmiriQuranWeb; font-size: 1.5rem; }
-#endmsg { font-size: 120%; text-align: center; }
+#txt, #txt * { font-family: var(--txt-font); font-size: 1.5rem; }
+#txt {
+  text-align: right;
+  padding: 0 1em;
+  padding-bottom: 4rem;
+}
+#endmsg {
+  font-size: 1.6rem;
+  text-align: center;
+  color: var(--uitext);
+  margin: auto;
+  margin-top: -3rem;  /* counter padding-bottom for #txt */
+  padding-bottom: 2rem;
+}
+
+#selectors,
+#header {
+  padding: 0;
+  padding-top: 0.5rem;
+  position: sticky; top: 0;
+  background-color: var(--background-translucent);
+}
+
+#aaya_bgn, #aaya_end { font-family: KacstOne; }
+
+/* suar/ayat selection */
+#textclr_input { width: 9.8em }
+#qaris { width: calc(100% - 6.5em) }
+#aaya_bgn, #aaya_end { width: 1.5em; }
+#sura_bgn, #sura_end { width: 6.5em; }
+table { display: inline; }
+table, table * { margin: 0; padding: 0;  }
+td { padding: 0.4em; }
+td label { padding-left: 0.1em; }
+
+button {
+  --base-width: 10rem;
+  --width: var(--base-width);
+  width: var(--width);
+  transition: opacity 0.5s ease-in-out;
+  touch-action: manipulation; /* disable double-tap zooming; https://stackoverflow.com/a/53236027 */
+}
+
+#nextword {
+  --width: calc(0.5 * var(--base-width));
+}
+
+button, select, input, input[type=checkbox] + label {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+#dark:checked ~ #body kbd,
+#dark:checked ~ #body input,
+#dark:checked ~ #body button,
+#dark:checked ~ #body select { filter: invert(1) hue-rotate(180deg) }
+
+#dark:checked ~ #body .contentcontainer {
+  background: rgba(255,255,255,0.04);
+  /* box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3); */
+}
+
+body.letter-parts #txt {
+  --txt-font: AmiriQuranColoredWeb;
+  --L: var(--txt); --W: var(--txt); --J: var(--txt); --T: var(--txt);
+  --N: var(--txt); --X: var(--txt); --R: var(--txt); --Q: var(--txt);
+}
+
+body.letter-nocolor #txt {
+  --L: var(--txt); --W: var(--txt); --J: var(--txt); --T: var(--txt);
+  --N: var(--txt); --X: var(--txt); --R: var(--txt); --Q: var(--txt);
+}
+
+body.ayat-nocolor #txt {
+  --A: var(--txt); --A-shadow: none;
+  --D: var(--txt); --D-shadow: none;
+}
+
+body.letter-parts:not(.ayat-nocolor) #txt .A,
+body.letter-parts:not(.ayat-nocolor) #txt .D {
+  font-family: AmiriQuranWeb;
+}
+
+/* all help elements are affected by invert and hue-rotate */
+/* #dark:checked ~ #body .help-part      { color: #f66 } */
+/* #dark:checked ~ #body summary::marker { color: #f66 } */
+#dark:checked ~ #body .help-part      { color: #f22 }
+#dark:checked ~ #body summary::marker { color: #f22 }
+#dark:checked ~ #body details *       { color: #aaf }
+#dark:checked ~ #body strong          { color: #caf }
+#dark:checked ~ #body a               { color: #bbf }
+#dark:checked ~ #body kbd             { color: #000 }  /* inverted */
+#dark:checked ~ #body summary         { color: #fff }
+.tab + label    { color: #000 }
+
+#dark:checked ~ #body .details-content {
+    background-color: black;
+    box-shadow: none;
+}
+
+/* /1* tajweed *1/ */
+/* .L { color: maroon      } /1* firebrick;  } /1* darkred;  madd lazem (6 vowels) *1/ */
+/* .W { color: red         } /1* red;        } /1* red;      madd wajeb (4 or 5 vowels) *1/ */
+/* .J { color: orangered   } /1* #fe6c29;    } /1* orange;   madd jaez (2 or 4 or 6 vowels) *1/ */
+/* .T { color: #ff9900     } /1* goldenrod;  } /1* gold;     madd tabiei (2 vowels) *1/ */
+/* .N { color: #007600     } /1* green;      } /1* green;    ghunna and ikhfaa *1/ */
+/* .X { color: #8888aa     } /1* #a7a195;    } /1* darkgrey; silent *1/ */
+/* .R { color: #0000aa     } /1* #281dcf;    } /1* darkblue; emphasis *1/ */
+/* .Q { color: #0066ff     } /1* dodgerblue; } /1* blue;     qalqala *1/ */
+/* .A { */
+/*     color: darkorange; */
+/*     text-shadow: */
+/*                   1px  1px  1px gold, */
+/*                   1px -1px  1px gold, */
+/*                  -1px  1px  1px gold, */
+/*                  -1px -1px  1px gold, */
+/*                   0    0    5px blue; */
+/* } */
+/* .D { */
+/*     color: navy; */
+/*     text-shadow: 0 0 10px rgba(0,0,255,0.5); */
+/* } */
+
 
 .help-part {
     font-weight: normal;
@@ -67,66 +228,24 @@ summary {
 
 summary::marker { color: #c00; }
 
-#aaya_beg, #aaya_end { font-family: KacstOne; }
-
-/* center everything */
-body { text-align: center; }
-#all {
-  display: inline-block;
-  width: 80vw;
-  min-width: 10em;
-  max-width: 35em;
-}
-
-/* suar/ayat selection */
-#aaya_beg, #aaya_end { width: 1.5em; }
-#sura_beg, #sura_end { width: 6.5em; }
-table { display: inline; }
-table, table * { margin: 0; padding: 0;  }
-td { padding: 0.4em; }
-td label { padding-left: 0.1em; }
-
-/* used for scroll buttons */
-justafterselect { margin-top: 1rem; }
-justbeforetoggle { margin-bottom: 1rem; }
-
-#txt {
-  text-align: right;
-  padding: 0 1em;
-  padding-bottom: 4rem;
-}
-
-#ok {
+#nextword {
   /* centered with https://stackoverflow.com/a/2006008 */
-  margin-left: -5rem; /* negative half of width */
-  width: 10rem;
+  margin-left: calc(-0.5 * var(--width));
   left: 50vw;
   /* sticky at bottom */
   position: fixed;
   bottom: 1rem;
-  transition: opacity 0.5s ease-in-out;
-  touch-action: manipulation; /* disable double-tap zooming; https://stackoverflow.com/a/53236027 */
 }
 
-#repeat {
-  /* centered with https://stackoverflow.com/a/2006008 */
-  margin-left: -5rem; /* negative half of width */
-  width: 10rem;
-  left: 50vw;
-  /* sticky at bottom */
-  position: fixed;
-  bottom: 1rem;
-  transition: opacity 0.5s ease-in-out;
-  touch-action: manipulation; /* disable double-tap zooming; https://stackoverflow.com/a/53236027 */
-}
-
-#textclr_input {
-  width: 9.8em;
-}
-
-#qaris {
-  width: calc(100% - 6.5em);
-}
+/* #nextword, */
+/* #ok { */
+/*   /1* centered with https://stackoverflow.com/a/2006008 *1/ */
+/*   margin-left: -5rem; /1* negative half of width *1/ */
+/*   left: 50vw; */
+/*   /1* sticky at bottom *1/ */
+/*   position: fixed; */
+/*   bottom: 1rem; */
+/* } */
 
 #player {
   display: block;
@@ -142,26 +261,6 @@ justbeforetoggle { margin-bottom: 1rem; }
   opacity: 0;
   visibility: hidden;
   z-index: 3;  /* higher than the help toggle label */
-}
-
-#up, #dn {
-  position: fixed;
-  right: 80vw;
-  bottom: 10vh;
-  visibility: hidden;
-  transition: opacity 1s 1s;
-  opacity: 0%;
-  z-index: 99;
-}
-
-#up *, #dn * {
-  transition: fill-opacity 0.5s;
-  fill-opacity: 50%;
-  fill: #1034A6;  /* Egyptian Blue, because I'm Egyptian ;) */
-}
-
-#up:hover *, #dn:hover * {
-  fill-opacity: 100%;
 }
 
 /* help */
@@ -181,8 +280,10 @@ details > :last-child { margin-bottom: 0.8rem; }
 .details-content {
     background-color: white;
     box-shadow: 0 0 0.2em 0 black;
-    padding-top: 0.2rem;
+    padding-top:    0.2rem;
     padding-bottom: 0.2rem;
+    padding-left:  5%;
+    padding-right: 5%;
 }
 
 b {
@@ -196,8 +297,8 @@ a:visited { color: purple; }
 a:hover { text-shadow: 1pt 1pt 2pt lightblue; }
 a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
 
-#helptoggle { display: none; }  /* hide the checkbox */
-#helptoggle ~ label { user-select: none; }  /* it's easy to select it while clicking */
+.tab { display: none; }  /* hide the checkbox */
+.tab ~ label { user-select: none; }  /* it's easy to select it while clicking */
 
 #help { display: flex; flex-direction: column-reverse; }
 
@@ -208,8 +309,48 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   margin-bottom: 0.5rem;
 }
 
-#helpcontentcontainer {
-  padding: 1rem;
+.tab         + label:before { content: "أظهر " }
+.tab:checked + label:before { content: "أخفِ " }
+
+#helpcontent ul {
+    text-align: right;
+}
+
+  /* width: 80vw; */
+  /* min-width: 10em; */
+  /* max-width: 35em; */
+
+.tab + label {
+  font-weight: normal;
+  padding: 10px;
+  --width: 47%;
+  width: var(--width);
+  background: var(--tab);
+  color: black;
+  box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3);
+  border-radius: 0 0 1rem 1rem;
+  /* mask-image: radial-gradient(circle 10px at 0 0, transparent 0, transparent 20px, black 21px); */
+  /* clip-path: circle(50px at 0 100px); */
+  /* clip-path: path('M0,0 h250 a 50 50 0 0 1 50 50 Z'); /*a 250 250 0 0 1 100 100 v70 h-750 Z');*/
+  /* clip-path: path('h 661.90528 c 3.02658,-52.87421 46.75217,-94.21966 99.71289,-94.28516 Z'); */
+  /* mask-image: circle */
+  z-index: 2;
+  position: relative;
+  /* margin-top: -1rem; */
+}
+
+@media (max-width:  992px) { .tab + label { --width: 45% } }
+@media (max-width:  768px) { .tab + label { --width: 44% } }
+@media (max-width:  576px) { .tab + label { --width: 43% } }
+
+#helptoggle + label {
+  right: calc( 100% - var(--width) - 20px );
+  top:           calc( -1.74rem - 20px );
+  margin-bottom: calc( -1.74rem - 20px + 10px ); /* remove the space created by removing it */
+}
+
+.contentcontainer {
+  padding: 1rem 0.1rem 0rem 0.1rem;
   background: rgba(255,255,255,0.4);
   box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3);
 }
@@ -218,42 +359,60 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   overflow: hidden;
   max-height: 0;
   transition: max-height 1s cubic-bezier(0, 1.0, 0, 1.0),
-              visibility 1s step-end;
+              visibility 1s step-end,
+              padding  0.5s ease-in;
   visibility: hidden;
+  padding: 0.5rem 0.1rem 0rem 0.1rem;
 }
 #helptoggle:checked ~ div #helpcontent {
   max-height: 32766px;
   transition: max-height 3s ease-in,
-              visibility 3s step-start;
+              visibility 3s step-start,
+              padding  0.5s ease-out;
   visibility: visible;
+  padding: 1rem 0.1rem 0rem 0.1rem;
 }
 
-#helptoggle ~ label:before {
-  content: "أظهر ";
+#optiontoggle:not(checked) ~ #options {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.5s ease-out, /*cubic-bezier(0, 1.0, 0, 1.0),*/
+              visibility 0.5s step-end,
+              padding    0.5s ease-in;
+  visibility: hidden;
+  padding: 0;
+}
+#optiontoggle:checked ~ #options {
+  max-height: 10rem;
+  transition: max-height 1s ease-in,
+              visibility 1s step-start,
+              padding  0.5s ease-out;
+  visibility: visible;
+  padding: 1rem 0.1rem 0rem 0.1rem;
 }
 
-#helptoggle:checked ~ label:before {
-  content: "أخفِ ";
-}
+/* .labelcontainer { */
+/*   filter: drop-shadow(1px 3px 4px rgba(0, 0, 0, 0.3)); */
+/* } */
 
-#helpcontent ul {
-    text-align: right;
-}
+/* #help label::after { */
+/* 	width: 1rem; */
+/* 	height: 1rem; */
+/* 	background: transparent; */
+/* 	top: -10px; */
+/* 	right: 0; */
+/* 	position: relative; */
+/* 	content: ''; */
+/* 	border-top-left-radius: 100%; */
+/* 	box-shadow: 50px 0px 0px 50px white; */
+/* 	clip: path('V0,0 L10,10 Z'); */
+/* 	display: block; */
+/*     z-index: 99; */
+/* } */
 
-#help label {
-  cursor: pointer;
-  font-weight: normal;
-  padding: 10px;
-  background: gold;
-  color: black;
-  box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3);
-  border-radius: 0 0 1rem 1rem;
-  z-index: 2;
-}
-
-#help label:hover,
-#help label:focus {
-  background: yellow;
+.tab + label:hover,
+.tab + label:focus {
+  background: var(--tab-active);
 }
 
 kbd {
@@ -286,81 +445,7 @@ details[open] > .details-content {
   animation: fade-in .5s ease-in-out;
 }
 @keyframes fade-in {
-  0%    {opacity: 0;}
-  100%  {opacity: 1;}
+  0%    { opacity: 0; }
+  100%  { opacity: 1; }
 }
-
-button, select {
-  cursor: pointer;
-}
-
-button:disabled {
-  cursor: not-allowed;
-}
-
-.dark #help,
-.dark input,
-.dark button,
-.dark select { filter: invert(1) hue-rotate(180deg) }
-.dark          { background-color: #111 }
-.dark label    {            color: #ccc }
-.dark #txt     {            color: #eee }
-.dark #endmsg  {            color: #ccc }
-
-.dark #help label:hover,
-.dark #help label:focus {
-  background: goldenrod;
-}
-
-/* tajweed */
-.dark .L { color: #bb4444     } /* firebrick;  } /* darkred;  madd lazem (6 vowels) */
-.dark .W { color: red         } /* red;        } /* red;      madd wajeb (4 or 5 vowels) */
-.dark .J { color: #ff6600     } /* #fe6c29;    } /* orange;   madd jaez (2 or 4 or 6 vowels) */
-.dark .T { color: #ffbb00     } /* goldenrod;  } /* gold;     madd tabiei (2 vowels) */
-.dark .N { color: #00ff00     } /* green;      } /* green;    ghunna and ikhfaa */
-.dark .X { color: #806666     } /* #a7a195;    } /* darkgrey; silent */
-.dark .R { color: #3366ff     } /* #281dcf;    } /* darkblue; emphasis */
-.dark .Q { color: #00ccff     } /* dodgerblue; } /* blue;     qalqala */
-.dark .A { color: #ff8c00     }
-.dark .D { color: #ffffff     }
-
-.letter-parts #txt,
-.letter-parts .L, .letter-parts .W,
-.letter-parts .J, .letter-parts .T,
-.letter-parts .N, .letter-parts .X,
-.letter-parts .R, .letter-parts .Q
-{ color: black; font-family: AmiriQuranColoredWeb }
-
-.dark.letter-parts #txt,
-.dark.letter-parts .L, .dark.letter-parts .W,
-.dark.letter-parts .J, .dark.letter-parts .T,
-.dark.letter-parts .N, .dark.letter-parts .X,
-.dark.letter-parts .R, .dark.letter-parts .Q
-{ color: #eee; font-family: AmiriQuranColoredWeb }
-
-.letter-nocolor #txt,
-.letter-nocolor .L, .letter-nocolor .W,
-.letter-nocolor .J, .letter-nocolor .T,
-.letter-nocolor .N, .letter-nocolor .X,
-.letter-nocolor .R, .letter-nocolor .Q
-{ color: black; font-family: AmiriQuranWeb }
-
-.dark.letter-nocolor #txt,
-.dark.letter-nocolor .L, .dark.letter-nocolor .W,
-.dark.letter-nocolor .J, .dark.letter-nocolor .T,
-.dark.letter-nocolor .N, .dark.letter-nocolor .X,
-.dark.letter-nocolor .R, .dark.letter-nocolor .Q
-{ color: #eee; font-family: AmiriQuranWeb }
-
-.ayat-nocolor .A, .ayat-nocolor .D
-{ color: black; text-shadow: none; font-family: AmiriQuranWeb }
-
-.dark.ayat-nocolor .A, .dark.ayat-nocolor .D
-{ color: #ccc; text-shadow: none; font-family: AmiriQuranWeb }
-
-/* all help elements are affected by invert and hue-rotate */
-.dark .help-part      { color: #f66 }
-.dark summary::marker { color: #f66 }
-.dark details *       { color: #22f }
-.dark summary         { color: #000 } /* no change */
 

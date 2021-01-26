@@ -18,19 +18,17 @@
 <title>راجع ما تحفظ من القرآن الكريم</title>
 <style>
 
-/* fonts */
-/* Amiri Quran and Amiri Quran Colored 0.112, SIL OFL 1.1; https://github.com/alif-type/amiri */
 @font-face {
   font-family: AmiriQuranWeb;
   font-style: normal;
   font-weight: 400;
-  src: url(data:application/x-font-woff;charset=utf-8;base64,<<!!base64 -w0 webres/AmiriQuran.woff>>) format('woff');
+  src: url(data:application/x-font-woff;charset=utf-8;base64,<<!!base64 -w0 res/AmiriQuran.woff>>) format('woff');
 }
 @font-face {
   font-family: AmiriQuranColoredWeb;
   font-style: normal;
   font-weight: 400;
-  src: url(data:application/x-font-woff;charset=utf-8;base64,<<!!base64 -w0 webres/AmiriQuranColored.woff>>) format('woff');
+  src: url(data:application/x-font-woff;charset=utf-8;base64,<<!!base64 -w0 res/AmiriQuranColored.woff>>) format('woff');
 }
 /* The following two fonts are from: https://sourceforge.net/projects/arabeyes/files/Fonts/ */
 /* They are under GNU GPL v2. Both are converted from TrueType to WOFF using */
@@ -39,13 +37,13 @@
   font-family: KacstOne; /* version 5.0 */
   font-style: normal;
   font-weight: 400;
-  src: url(data:application/x-font-woff;charset=utf-8;base64,<<!!base64 -w0 webres/KacstOne.woff>>) format('woff');
+  src: url(data:application/x-font-woff;charset=utf-8;base64,<<!!base64 -w0 res/KacstOne.woff>>) format('woff');
 }
 @font-face {
   font-family: Cortoba;  /* version 2.1 */
   font-style: normal;
   font-weight: 400;
-  src: url(data:application/x-font-woff;charset=utf-8;base64,<<!!base64 -w0 webres/ae_Cortoba.woff>>) format('woff');
+  src: url(data:application/x-font-woff;charset=utf-8;base64,<<!!base64 -w0 res/ae_Cortoba.woff>>) format('woff');
 }
 
 <<!!cat style.css>>
@@ -59,63 +57,23 @@
   100% { stroke-dashoffset: -210; }
 }
 
-body {
-  background-color: #f9f6e7; /* #f9f4d6; /**/
-}
-
 </style>
 </head>
 <body>
-<div id="all">
-
-<!-- These 2 images are based on the Public Domain (CC0) image by ben, at -->
-<!--  Openclipart: https://openclipart.org/detail/179856/arrow-by-ben-179856 -->
-<!--  Modified a little by me, and minified by Nano: https://vecta.io/nano -->
-<a id="up" onmouseup="scroll_to_select()"><<!!cat webres/arrows-up-_minified.svg | tr -d '\n'>></a>
-<a id="dn" onmouseup="scroll_to_toggle()"><<!!cat webres/arrows-dn-_minified.svg | tr -d '\n'>></a>
+<input type="checkbox" id="dark" hidden disabled>
+<!-- this checkbox is tied to darkmode_input by js; it's used to avoid FOUC on reload. -->
+<!-- https://alexandersandberg.com/theme-switcher/ -->
+<div id="body"> <!-- encompasses the content and bg -->
+<div id="all">  <!-- encompasses the content only -->
 
 <section id="help">
-<input type="checkbox" id="helptoggle" onchange="help_toggled()">
-<label for="helptoggle"> شرح هذه الصفحة</label>
 
-<div id="helpcontentcontainer">
-<dl id="helpcontent">
+<input type="checkbox" id="helptoggle" class="tab" onchange="help_toggled()">
+<label for="helptoggle"> الشرح</label>
+<input type="checkbox" id="optiontoggle" class="tab" onchange="option_toggled()">
+<label for="optiontoggle"> الخيارات</label>
 
-<<!!perl processhelp.pl help.xmd>>
-
-</dl>
-<div id="justbeforetoggle"></div>
-</div>
-</section>
-
-<!-- I used to use sura_start, sura_end, aya_start, and aya_end, but changed -->
-<!--  them to sura_beg, sura_end, aaya_beg, and aaya_end to make them equal in -->
-<!--  length and show their parallelism, thus making the code a little easier. -->
-<!-- Also note that aaya is a more accurate transliteration than aya and ayah, -->
-<!--  and rhymes with sura, both have a stressed, long vowel in the first -->
-<!--  syllable, and a short unstressed vowel in the second syllable. -->
-
-<table><tr><td>
-  <label for="sura_beg">من سورة:</label>
-  <select id="sura_beg" oninput="start_reciting(this)">
-    <option value="" selected>السورة</option>
-    <<!!bash -c 'i=0; cat webres/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$[i+1]; done | tr -d "\n"'>>
-  </select>
-</td><td>
-  <label for="aaya_beg">الآية:</label>
-  <input id="aaya_beg" oninput="start_reciting(this)">
-</td></tr></table>
-
-<table><tr><td>
-  <label for="sura_end">إلى سورة:</label>
-  <select id="sura_end" oninput="start_reciting(this)">
-    <option value="" selected>السورة</option>
-    <<!!bash -c 'i=0; cat webres/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$[i+1]; done | tr -d "\n"'>>
-  </select>
-</td><td>
-  <label for="aaya_end">الآية:</label>
-  <input id="aaya_end" oninput="start_reciting(this)">
-</td></tr></table>
+<div id="options" class="contentcontainer">
 
 <table><tr><td>
   <label for="textclr_input">تلوين النص:</label>
@@ -134,15 +92,78 @@ body {
 
 <<!!sed '/__END__/,$d' qaris.html>>
 
+<div style="padding:0.5rem"></div>
+
+</div>
+
+<div class="contentcontainer">
+<dl id="helpcontent">
+
+<<!!perl processhelp.pl help.xmd>>
+
+<div style="padding:0.5rem"></div>
+
+</dl>
+</div>
+</section>
+
+<!-- I used to use sura_start, sura_end, aya_start, and aya_end, but changed -->
+<!--  them to sura_bgn, sura_end, aaya_bgn, and aaya_end to make them equal in -->
+<!--  length and show their parallelism, thus making the code a little easier. -->
+<!-- Also note that aaya is a more accurate transliteration than aya and ayah, -->
+<!--  and rhymes with sura, both have a stressed, long vowel in the first -->
+<!--  syllable, and a short unstressed vowel in the second syllable. -->
+
+<div id="selectors">
+
+<table><tr><td>
+  <label for="sura_bgn">من سورة:</label>
+  <select id="sura_bgn">
+    <option value="" selected>السورة</option>
+    <<!!bash -c 'i=0; cat res/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$[i+1]; done | tr -d "\n"'>>
+  </select>
+</td><td>
+  <label for="aaya_bgn">الآية:</label>
+  <input id="aaya_bgn">
+</td></tr></table>
+
+<table><tr><td>
+  <label for="sura_end">إلى سورة:</label>
+  <select id="sura_end">
+    <option value="" selected>السورة</option>
+    <<!!bash -c 'i=0; cat res/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$[i+1]; done | tr -d "\n"'>>
+  </select>
+</td><td>
+  <label for="aaya_end">الآية:</label>
+  <input id="aaya_end">
+</td></tr></table>
+
+<button disabled title="حدد ما تريد مراجعته أو تسميعه، ثم اضغط على هذا الزر." id="ok">ابدأ</button>
 <hr>
-<div id="justafterselect"></div>
+
+</div>
+
+<div hidden id="header">
+<!-- <p id="title"></p> -->
+<div>
+<button title="اضغط لبدء مراجعة جديدة" id="new">جديد</button>
+<button title="اضغط لإعادة هذا التسميع من البداية" id="repeat">إعادة</button>
+</div>
+<hr>
+</div>
+
 
 <div id="txt"></div>
 
-<button disabled title="حدد ما تريد مراجعته أو تسميعه، ثم اضغط على هذا الزر." id="ok">سمّع!</button>
+<div hidden id="endmsg">
+بارك الله فيك وفتح عليك!<br>لقد أتممت التسميع الذي حددته.
+<<!!cat res/party-popper.svg | tr -d "\n">>
+<!-- U+1F389 Party Popper, from NotoColorEmoji; https://github.com/googlefonts/noto-emoji/blob/master/svg/emoji_u1f389.svg -->
+</div>
 
-<button hidden title="اضغط لإعادة تسميع هذه الآيات نفسها" id="repeat">إعادة</button>
+<button hidden title="أظهر الكلمة التالية" id="nextword">&gt;</button>
 
+</div>
 </div>
 
 <script>

@@ -56,7 +56,7 @@ body {
 <div id="all">
 
 <!-- I used to use sura_start, sura_end, aya_start, and aya_end, but changed -->
-<!--  them to sura_beg, sura_end, aaya_beg, and aaya_end to make them equal in -->
+<!--  them to sura_bgn, sura_end, aaya_bgn, and aaya_end to make them equal in -->
 <!--  length and show their parallelism, thus making the code a little easier. -->
 <!-- Also note that aaya is a more accurate transliteration than aya and ayah, -->
 <!--  and rhymes with sura, both have a stressed, long vowel in the first -->
@@ -65,14 +65,14 @@ body {
 <div id="selectors">
 
 <table><tr><td>
-  <label for="sura_beg">من سورة:</label>
-  <select id="sura_beg" oninput="selectors_changed(this)">
+  <label for="sura_bgn">من سورة:</label>
+  <select id="sura_bgn" oninput="selectors_changed(this)">
     <option value="" selected>السورة</option>
     <<!!bash -c 'i=0; cat webres/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$[i+1]; done | tr -d "\n"'>>
   </select>
 </td><td>
-  <label for="aaya_beg">الآية:</label>
-  <input id="aaya_beg" oninput="selectors_changed(this)">
+  <label for="aaya_bgn">الآية:</label>
+  <input id="aaya_bgn" oninput="selectors_changed(this)">
 </td></tr></table>
 
 <table><tr><td>
@@ -94,7 +94,7 @@ body {
 <p id="title"></p>
 <div>
 <button title="اضغط لبدء مراجعة جديدة" id="new">جديد</button>
-<button title="اضغط لتكرار هذا التسميع من البداية" id="repeat">تكرار</button>
+<button title="اضغط لإعادة هذا التسميع من البداية" id="repeat">إعادة</button>
 </div>
 </div>
 
