@@ -1,0 +1,329 @@
+
+First, we remove any tajweed codes:
+
+    remove  :: [A-Z<>]+
+
+    remove
+        :: [
+            {Shadda} {Madda}
+            {WaqfLazem} {WaqfJaez} {WaqfAwla} {WaslAwla} {WaqfSplit}
+            {Imaalah} {Ishmaam} {Tasheel}
+            {Overline}
+        ]
+
+
+Before we remove the tashkeel, we need to work out the hamzas:
+
+    define tanween_fath
+        :: {Fathatan} or {OpenFathatan} or {Fatha} {HiMeem}
+
+    define tanween_kasr
+        :: {Kasratan} or {OpenKasratan} or {Kasra} {LoMeem}
+
+    define joining_letter
+        :: [ {Beh} {Teh}-{Khah} {Seen}-{Ghain} {Feh}-{Heh} {AlefMaksura} {Yeh} ]
+
+    define disjoining_letter
+        :: [ {AlefHamzaAbove}-{Alef} {TehMarbuta} {Dal}-{Zain} {Waw} ]
+
+    define alef
+        :: {Alef} or [ {Tatweel} {NBSP} ] {DaggerAlef}
+
+    replace ::   ( {Khah} {Fatha} {Tah} {Fatha}                # twice in S004 A092
+                or {Meem} {Damma} {Teh} {Fatha} {Kaf} {Fatha}  # Shadda is removed. in S012 A031
+                or {Meem} {Fatha} {Lam} {Jazm} {Jeem} {Fatha}
+            ) {Hamza} $tanween_fath {Alef}
+    by      :: $1أ
+
+    replace :: {Hamza} {Fatha} $alef \B  # not end of word
+    by      :: {AlefMadd}
+
+    replace :: {AlefHamzaAbove} {Fatha} {Hamza} {Kasra}
+    by      :: {AlefHamzaAbove}{AlefHamzaBelow}
+
+    replace :: {Hamza} {Kasra} (!{LoMeem}) \B  # not end of word
+    by      :: {YehHamza}
+
+    replace :: (<={Kasra}) {Hamza} (! {Fatha} {Alef} )
+            or (<= {Yeh} ) {Hamza} (! . [{HiMeem}{LoMeem}]? \b)
+    by      :: {YehHamza}
+
+    replace :: (<! {Alef} ) {Hamza} {Fatha} (!{Alef}) \B  # not end of word
+            or {Fatha} {Hamza} {Jazm} (!{Alef})
+    by      :: {AlefHamzaAbove}
+
+
+    replace :: {Sad} {HiSeen}
+    by      :: {Seen}
+
+    remove  :: {Yeh} {SilenceMarker}
+    remove  :: {Alef} {SilenceMarker} \B
+
+    remove  :: (<={AlefHamzaAbove} {Fatha} {Waw} {Fatha}) [ ]
+
+    > replace :: (<={Waw}) [{Hamza} {AlefHamzaAbove}]
+    > by      :: {Hamza}
+
+Then, we remove all tashkeel and waqf signs:
+
+    remove
+          :: [    {Fatha}        {Damma}        {Kasra}
+                {Fathatan}     {Dammatan}     {Kasratan}
+            {OpenFathatan} {OpenDammatan} {OpenKasratan}
+            {Madda} {Jazm} {SilenceMarker} {UprightZero}
+            {Shadda} {HiMeem} {LoMeem} {HiSeen} {LoSeen}
+        ]
+
+    replace :: (<=$joining_letter) {Hamza} {Alef}
+    by      :: {YehHamza}{Alef}
+
+    replace :: (<=$joining_letter) {Hamza} \B  # not end of word
+    by      :: {YehHamza}
+
+For now, we also remove ayat numbers, and the start of rub el hizb and place of sajdah, too:
+
+    remove  :: {NBSP} [ ٠-٩ {Ayah} ]+
+    remove  :: {Hizb} {NBSP}
+    remove  :: {NBSP} {Sajdah}
+
+    replace :: {AlefWasla}
+    by      :: {Alef}
+
+    remove  :: {Waw} {DaggerAlef} (={Alef})  # الربا in S002 A275-278, S003 A130, S004 A161
+    replace :: {Waw} {DaggerAlef}
+    by      :: {Alef}
+
+    remove  :: (<= {AlefHamzaBelow} {Lam} ) {Tatweel} {DaggerAlef} (={Heh})
+    replace :: {AlefHamzaAbove} {YehHamza} {Lam} {Tatweel} {DaggerAlef} {Heh}
+    by      :: أإله
+
+    replace :: \b ({Waw}? {Yeh}) {Tatweel} {DaggerAlef}
+    by      :: $1ا 
+    # this above ends in an space!
+
+    replace :: (: {NBSP} or {Tatweel} ) {DaggerAlef}
+    by      :: {Alef}
+
+    remove  :: (<={AlefMaksura}) {DaggerAlef} \b
+    replace ::    {AlefMaksura}  {DaggerAlef}
+    by      ::    {Alef}
+
+    replace :: (<= {Yeh} ) {LoYeh}
+    by      :: {Yeh}
+
+    replace :: {LoYeh} \B
+    by      :: {Yeh}
+
+    replace :: {LoWaw} \B
+    by      :: {Waw}
+
+    replace :: (<= {Yeh} ) {Tatweel} {HiYeh}
+    by      :: {Yeh}
+
+    replace :: {Tatweel} {HiYeh}
+    by      :: {Yeh}
+
+    replace :: {Tatweel} {HiWaw}
+    by      :: {Waw}
+
+    replace :: (<= {Waw} ) {LoWaw}
+    by      :: {Waw}
+
+    remove  :: [ {LoWaw} {LoYeh} ]
+
+    replace :: {HiNoon}
+    by      :: {Noon}
+
+Make ever Farsi Yeh into Arabic Yeh:
+
+    replace :: {Yeh}
+    by      :: {ArabicYeh}
+
+Special words:
+
+    replace :: لرحمان
+    by      :: لرحمن
+
+    replace :: أولائك
+    by      :: أولئك
+
+    replace :: ها (= ذا\b or ذه\b or ذان\b or ذين\b or ؤلاء\b or كذا )
+    by      :: ه
+
+    replace :: هاأنتم
+    by      :: ها أنتم
+
+    replace :: لاكن
+    by      :: لكن
+
+    replace :: ذالك
+    by      :: ذلك
+
+    replace :: اليل
+    by      :: الليل
+
+    replace :: يآت
+    by      :: يئات
+
+    replace :: \b (و?) الا(=[تئ]ي)
+    by      :: $1اللا
+
+    replace :: الذان
+    by      :: اللذان
+
+    replace :: (<= أرنا [ ]) الذين  # S041 A029
+    by      :: اللذين
+
+    replace :: هيأة
+    by      :: هيئة
+
+    replace :: بأييكم
+    by      :: بأيكم
+
+    replace :: ؤا\b
+    by      :: أ
+
+    replace :: لؤلأ \b  # exception for the above rule
+    by      :: لؤلؤا
+
+Temporary:
+
+    replace :: \b مئ (= ة | تان | تين)
+    by      :: مائ
+
+    remove  :: (<=تدعو)ا (=[ ] من)  # S070 A017
+
+    replace :: (<=\b[وف]) سأل
+    by      :: اسأل
+
+    replace :: لتخذت  # S018 A077
+    by      :: لاتخذت
+
+    replace :: (<=[ميتأن]) حي (=[ ] ا)
+    by      :: حيي
+
+    replace :: آعجمي
+    by      :: أأعجمي
+
+    replace :: ملإ\B
+    by      :: ملئ
+
+    replace :: ا[ئأ] \b
+    by      :: اء
+
+    replace :: أقصا
+    by      :: أقصى
+
+    replace :: الزنى
+    by      :: الزنا
+
+    replace :: رءا
+    by      :: رأى
+
+    replace :: رءيا
+    by      :: رؤيا
+
+    replace :: تراءا
+    by      :: تراءى
+
+    replace :: \b (=لأيكة)
+    by      :: ا
+
+    replace :: ونئا
+    by      :: ونأى
+
+    replace :: سوأة
+    by      :: سوءة
+
+    replace :: (<= يا [ ] حسرت) ى
+    by      :: ا
+
+    replace :: (<= يا [ ] ويلت) ى (=[ ] أعجزت)
+    by      :: ا
+
+    replace :: سأوريكم
+    by      :: سأريكم
+
+    replace :: أإ (=مة|نكم|ن\b|فكا)
+    by      :: أئ
+
+    replace :: (<= تبو) ءا \b
+    by      :: آ
+
+    replace :: أا
+    by      :: ءا
+
+    replace :: \b لدا (=[ ] الباب)  # S012 A025
+    by      :: لدى
+
+    replace :: تترا \b
+    by      :: تترى
+
+    replace :: (<=\b تبو|تنو)أ
+    by      :: ء
+
+    replace :: (<!{Alef}) {Hamza} {Alef} \B
+    by      :: {AlefMadd}
+
+    replace :: (<=\b {AlefHamzaAbove}) {Hamza}
+    by      :: {AlefHamzaAbove}
+
+    replace :: آأ \b
+    by      :: آء
+
+    replace :: تئو
+    by      :: تؤو
+
+    replace :: طغا
+    by      :: طغى
+
+    replace :: (<=[بف] اءو) \b
+    by      :: ا
+
+    remove  :: (<= ترجو | ندعو ) ا
+    remove  :: (<= بنو ) ا  (=[ ] إسرائيل )
+    remove  :: (<= ثمود ) ا \b
+
+    replace :: (جاءو | تبوءو) \b
+    by      :: $1ا
+
+    remove  :: (<= [أي] (: محو | دعو | تلو | عفو | رجو ) | أولو) ا \b
+
+    replace :: (<= وليعفو | .. وعتو \b )
+    by      :: ا
+
+    remove  :: (<= \b (      [أنتي] (: شكو | تلو | بلو | ربو ))) ا \b
+    remove  :: (<= \b ( [لو] [أنتي] (: شكو | تلو | بلو | ربو ))) ا \b
+
+    remove  :: (<= (: .صالو | كاشفو | ذائقو | ملاقو | مهلكو | مرسلو | باسطو | ناكسو | تاركو) ) ا \b
+
+    replace :: قواريرا [ ] من
+    by      :: قوارير من
+
+    replace :: أإنا [ ] لمخرجون  # S027 A67
+    by      :: أئنا لمخرجون
+
+    replace :: أإنا [ ] لتاركو  # S037 A36
+    by      :: أئنا لتاركو
+
+    replace :: (<! من [ ]) بعد [ ] ما
+    by      :: بعدما
+
+    remove  :: (<= سلاسل) ا
+
+    replace :: مالك [ ] لا
+    by      :: ما لك لا
+
+    replace :: \b سعو \b
+    by      :: سعوا
+
+    replace :: آتان \b
+    by      :: آتاني
+
+    replace :: مامنا
+    by      :: ما منا
+
+    replace :: امرأ [ ] هلك  # S004 A176
+    by      :: امرؤ هلك
+
+    remove  :: {Tatweel}
