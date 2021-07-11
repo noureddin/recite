@@ -1235,10 +1235,21 @@ function hizbs_to_ayat (sthizb, enhizb) {  // each is 1-240 or 1/1-60/4 or 1//1-
   return [st, en]
 }
 
+const _color_values = {
+  t: 'taj', taj: 'taj', tajweed: 'taj',
+  b: 'bas', bas: 'bas', basic: 'bas',
+  n: 'no',  no: 'no',   none: 'no',
+}
+
+function parse_color (color) {
+  return _color_values[ color.toLowerCase() ]
+}
+
 function _ligilumilo (href) {
   let a = 0; let b = 0
   let st; let en
   let dark
+  let color  // tajweed, bas, none
   // possible params:
   // - p: page. 1-604.
   // - s: sura, an entire sura. 1-114.
@@ -1260,6 +1271,7 @@ function _ligilumilo (href) {
       if      (i == 0)       { return }  // ignore the file portion
       else if (e[0] === 'dark'  || e[0] === 'd') { dark = true  }
       else if (e[0] === 'light' || e[0] === 'l') { dark = false }
+      else if (e[0] === 'color' || e[0] === 'c') { color = parse_color(e[1]) }
       else if (e[0] === 'a') { a = +e[1] }
       else if (e[0] === 'b') { b = +e[1] }
       else if (e[0] === 'p') { [st, en] = pages_to_ayat(...range_to_pair(e[1])) }
@@ -1270,17 +1282,20 @@ function _ligilumilo (href) {
       else if (e[0] === 'k') { [st, en] = rukus_to_ayat(...range_to_pair(e[1])) }
       else                   { [st, en] =  ayat_to_ayat(...range_to_pair(e[0])) }
     })
-  if (dark || dark === false) { Qid('darkmode_input').checked = dark; chstyle() }
-  if (st == null || en == null) { return [null, null, dark] }
+  if (st == null || en == null) { return [null, null, dark, color] }
   st -= b; en += a
   if (st <= 0)    { st = 1    }
   if (en >  6236) { en = 6236 }
-  return [st, en, dark]
+  return [st, en, dark, color]
 }
 
 function ligilumi () {
-  const [st, en, dark] = _ligilumilo(window.location.href)
-  if (dark || dark === false) { Qid('darkmode_input').checked = dark; chstyle() }
+  const [st, en, dark, color] = _ligilumilo(window.location.href)
+  // if (dark || dark === false) {
+  Qid('darkmode_input').checked = dark
+  Qid('textclr_input').value = color ||  'taj'  // the default
+  chstyle()
+  // }
   if (st == null || en == null) { return }
   recite(st, en, '', true)
 }
