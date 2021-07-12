@@ -179,6 +179,7 @@ function _ligilumilo (href) {
   let st; let en
   let dark
   let color  // tajweed, bas, none
+  let zz
   // possible params:
   // - p: page. 1-604.
   // - s: sura, an entire sura. 1-114.
@@ -200,6 +201,7 @@ function _ligilumilo (href) {
       else if (e[0] === 'dark'  || e[0] === 'd') { dark = true  }
       else if (e[0] === 'light' || e[0] === 'l') { dark = false }
       else if (e[0] === 'color' || e[0] === 'c') { color = parse_color(e[1]) }
+      else if (e[0] === 'zz') { zz = true }
       else if (e[0] === 'a') { a = +e[1] }
       else if (e[0] === 'b') { b = +e[1] }
       else if (e[0] === 'p') { [st, en] = pages_to_ayat(...range_to_pair(e[1])) }
@@ -214,18 +216,18 @@ function _ligilumilo (href) {
   st -= b; en += a
   if (st <= 0)    { st = 1    }
   if (en >  6236) { en = 6236 }
-  return [st, en, dark, color]
+  return [st, en, dark, color, zz]
 }
 
 function ligilumi () {
-  const [st, en, dark, color] = _ligilumilo(window.location.href)
+  const [st, en, dark, color, zz] = _ligilumilo(window.location.href)
   // if (dark || dark === false) {
   Qid('darkmode_input').checked = dark
   Qid('textclr_input').value = color || 'taj'  // the default
   chstyle()
   // }
   if (st == null || en == null) { return }
-  recite(st, en, '', true)
+  recite(st, en, '', true, zz)
 }
 
 // vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:

@@ -76,8 +76,12 @@ function init_audio (stpair, enpair, qari, preserve_url) {
   audio.fill(make_audio_list(stpair[0]-1, stpair[1], enpair[0]-1, enpair[1]))
 }
 
-function recite (st, en, qari, preserve_url) {
+function recite (st, en, qari, preserve_url, zz) {
 
+  el_zzback.style.display = zz? 'block' : 'none'
+  el_zzback.hidden = !zz
+  el_zzignore.hidden = !zz
+  el_new.hidden = !!zz  // only hide if ignore is shown
   const stpair = idx2aya(st-1)
   const enpair = idx2aya(en-1)
   sync_ui(stpair, enpair, qari, preserve_url)
@@ -205,6 +209,9 @@ const new_select = function () {
 
 el_new.onmouseup = new_select
 el_new.onclick   = new_select
+
+el_zzback.onclick   = () => parent.zz_done()
+el_zzignore.onclick = () => parent.zz_ignore()
 
 onload = function () {
   el_ok.disabled = true
