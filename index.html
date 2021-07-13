@@ -164,6 +164,7 @@ html { font-size: calc(16px + 0.5vw) }
   padding-top: 0.5rem;
   position: sticky; top: 0;
   background-color: var(--background-translucent);
+  z-index: 10;
 }
 
 #aaya_bgn, #aaya_end { font-family: KacstOne; }
@@ -307,6 +308,16 @@ summary::marker { color: #c00; }
   bottom: 1rem;
   right: calc(50vw - 0.5 * (5*0.33 + 0.67 + 5*0.1) * var(--btn-base-width));
   margin: 0 calc(0.1 * var(--btn-base-width));
+  transition: opacity 0.1s ease-in-out;
+}
+
+#mvbtns_disablehack {
+  position: fixed;
+  bottom: 1rem;
+  width: 100%;
+  height: 2em;
+  z-index: 1;
+  background-color: transparent;
 }
 
 /* #nextword, */
@@ -332,7 +343,7 @@ summary::marker { color: #c00; }
   transition: opacity 0.5s ease-in-out;
   opacity: 0;
   visibility: hidden;
-  z-index: 3;  /* higher than the help toggle label */
+  z-index: 30;  /* higher than the help toggle label */
 }
 
 /* help */
@@ -406,7 +417,7 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   /* clip-path: path('M0,0 h250 a 50 50 0 0 1 50 50 Z'); /*a 250 250 0 0 1 100 100 v70 h-750 Z');*/
   /* clip-path: path('h 661.90528 c 3.02658,-52.87421 46.75217,-94.21966 99.71289,-94.28516 Z'); */
   /* mask-image: circle */
-  z-index: 2;
+  z-index: 20;
   position: relative;
   /* margin-top: -1rem; */
 }
@@ -691,12 +702,11 @@ details[open] > .details-content {
 زر <kbd>Enter</kbd> ينقلك للخانة التالية، ثم&nbsp;للخانة للأخيرة، ثم&nbsp;إلى&nbsp;زر «سمّع!»، والذي عنده زر <kbd>Enter</kbd> أو&nbsp;المسافة يظهر الكلمة التالية.</p>
 </div></details>
 <details><summary>يمكنك الانتقال إلى&nbsp;الأمام وإلى الخلف، بالكلمة وبالآية وبالعبارة.</summary><div class="details-content">
-<p>حاليا يمكنك فعل هذا بلوحة المفاتيح فقط. أعمل على إضافة أزرار لهذه الوظائف.</p>
 <ul>
-<li><p>زر المسافة أو&nbsp;<kbd>Enter</kbd> أو&nbsp;سهم يسار: إظهار الكلمة التالية (مثل زر «سمّع!»).</p></li>
-<li><p>زر إظهار الكلمة التالية + <kbd>Shift</kbd> أو&nbsp;<kbd>Ctrl</kbd> أو&nbsp;<kbd>Alt</kbd>: إظهار الآية الحالية بالكامل.</p></li>
-<li><p>زر <kbd>Backspace</kbd> أو&nbsp;سهم يمين: إخفاء الكلمة الحالية.</p></li>
-<li><p>زر إخفاء الكلمة الحالية + <kbd>Shift</kbd> أو&nbsp;<kbd>Ctrl</kbd> أو&nbsp;<kbd>Alt</kbd>: إخفاء الآية الحالية بالكامل.</p></li>
+<li><p>زر المسافة أو&nbsp;<kbd>Enter</kbd> أو&nbsp;سهم يسار: إظهار الكلمة التالية (مثل زر <kbd>&#x276e;</kbd> بأسفل الشاشة).</p></li>
+<li><p>زر إظهار الكلمة التالية + <kbd>Shift</kbd> أو&nbsp;<kbd>Ctrl</kbd> أو&nbsp;<kbd>Alt</kbd>: إظهار الآية الحالية بالكامل (مثل زر <kbd>&#x276e;&#x276e;&#x276e;</kbd> بأسفل الشاشة).</p></li>
+<li><p>زر <kbd>Backspace</kbd> أو&nbsp;سهم يمين: إخفاء الكلمة الحالية (مثل زر <kbd>&#x276f;</kbd> بأسفل الشاشة).</p></li>
+<li><p>زر إخفاء الكلمة الحالية + <kbd>Shift</kbd> أو&nbsp;<kbd>Ctrl</kbd> أو&nbsp;<kbd>Alt</kbd>: إخفاء الآية الحالية بالكامل (مثل زر <kbd>&#x276f;&#x276f;&#x276f;</kbd> بأسفل الشاشة).</p></li>
 </ul>
 <hr>
 <p>«العبارة» المقصود بها تقسيم الآية بعلامات الوقف:</p>
@@ -707,8 +717,8 @@ details[open] > .details-content {
 </ul>
 <p>وتستخدم:</p>
 <ul>
-<li><p>زر الصفر للانتقال عبارة واحدة إلى&nbsp;الأمام.</p></li>
-<li><p>زر الواحد للانتقال عبارة واحدة إلى&nbsp;الخلف.</p></li>
+<li><p>زر الصفر للانتقال عبارة واحدة إلى&nbsp;الأمام (مثل زر <kbd>&#x276e;&#x276e;</kbd> بأسفل الشاشة).</p></li>
+<li><p>زر الواحد للانتقال عبارة واحدة إلى&nbsp;الخلف (مثل زر <kbd>&#x276f;&#x276f;</kbd> بأسفل الشاشة).</p></li>
 </ul>
 </div></details>
 <details><summary>هذا النص لم يُراجع رسميًا بعد.</summary><div class="details-content">
@@ -762,11 +772,11 @@ details[open] > .details-content {
 <div hidden id="header">
 <!-- <p id="title"></p> -->
 <div>
+<button id="zzignore" hidden>تجاهل</button>
 <button title="اضغط لبدء مراجعة جديدة" id="new">جديد</button>
 <button title="اضغط لإعادة هذا التسميع من البداية" id="repeat">إعادة</button>
-<button id="zzignore" hidden>تجاهل</button>
 </div>
-<hr>
+<hr id="end_of_header">
 </div>
 
 
@@ -779,6 +789,7 @@ details[open] > .details-content {
 <button id="zzback" hidden>عودة</button>
 </div>
 
+<div id="mvbtns_disablehack">&nbsp;</div>
 <div id="mvbtns" hidden>
 <button title="أخف آية (زري Ctrl+BackSpace)" id="prevaaya">&#x276e;&#x276e;&#x276e;</button>
 <button title="أخف عبارة - حتى علامة وقف أو نهاية آية (زر رقم الواحد)" id="prevjmla">&#x276e;&#x276e;</button>
@@ -819,8 +830,10 @@ const el_new = Qid("new")
 const el_repeat = Qid("repeat")
 const el_selectors = Qid("selectors")
 const el_header = Qid("header")
+const el_end_of_header = Qid("end_of_header")
 const el_zzback = Qid("zzback")
 const el_zzignore = Qid("zzignore")
+const el_mvbtns_disablehack = Qid("mvbtns_disablehack")
 const el_mvbtns = Qid("mvbtns")
 const el_nextword = Qid("nextword")
 const el_nextjmla = Qid("nextjmla")
@@ -952,6 +965,32 @@ function validate_aaya_sura_input (ev) {
 // Copyright (c) 2018 MathuSum Mut. MIT License
 var confetti={maxCount:150,speed:2,frameInterval:15,alpha:1,gradient:!1,start:null,stop:null,toggle:null,pause:null,resume:null,togglePause:null,remove:null,isPaused:null,isRunning:null};!function(){confetti.start=s,confetti.stop=w,confetti.toggle=function(){e?w():s()},confetti.pause=u,confetti.resume=m,confetti.togglePause=function(){i?m():u()},confetti.isPaused=function(){return i},confetti.remove=function(){stop(),i=!1,a=[]},confetti.isRunning=function(){return e};var t=window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame,n=["rgba(30,144,255,","rgba(107,142,35,","rgba(255,215,0,","rgba(255,192,203,","rgba(106,90,205,","rgba(173,216,230,","rgba(238,130,238,","rgba(152,251,152,","rgba(70,130,180,","rgba(244,164,96,","rgba(210,105,30,","rgba(220,20,60,"],e=!1,i=!1,o=Date.now(),a=[],r=0,l=null;function d(t,e,i){return t.color=n[Math.random()*n.length|0]+(confetti.alpha+")"),t.color2=n[Math.random()*n.length|0]+(confetti.alpha+")"),t.x=Math.random()*e,t.y=Math.random()*i-i,t.diameter=10*Math.random()+5,t.tilt=10*Math.random()-10,t.tiltAngleIncrement=.07*Math.random()+.05,t.tiltAngle=Math.random()*Math.PI,t}function u(){i=!0}function m(){i=!1,c()}function c(){if(!i)if(0===a.length)l.clearRect(0,0,window.innerWidth,window.innerHeight),null;else{var n=Date.now(),u=n-o;(!t||u>confetti.frameInterval)&&(l.clearRect(0,0,window.innerWidth,window.innerHeight),function(){var t,n=window.innerWidth,i=window.innerHeight;r+=.01;for(var o=0;o<a.length;o++)t=a[o],!e&&t.y<-15?t.y=i+100:(t.tiltAngle+=t.tiltAngleIncrement,t.x+=Math.sin(r)-.5,t.y+=.5*(Math.cos(r)+t.diameter+confetti.speed),t.tilt=15*Math.sin(t.tiltAngle)),(t.x>n+20||t.x<-20||t.y>i)&&(e&&a.length<=confetti.maxCount?d(t,n,i):(a.splice(o,1),o--))}(),function(t){for(var n,e,i,o,r=0;r<a.length;r++){if(n=a[r],t.beginPath(),t.lineWidth=n.diameter,i=n.x+n.tilt,e=i+n.diameter/2,o=n.y+n.tilt+n.diameter/2,confetti.gradient){var l=t.createLinearGradient(e,n.y,i,o);l.addColorStop("0",n.color),l.addColorStop("1.0",n.color2),t.strokeStyle=l}else t.strokeStyle=n.color;t.moveTo(e,n.y),t.lineTo(i,o),t.stroke()}}(l),o=n-u%confetti.frameInterval),requestAnimationFrame(c)}}function s(t,n,o){var r=window.innerWidth,u=window.innerHeight;window.requestAnimationFrame=window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||function(t){return window.setTimeout(t,confetti.frameInterval)};var m=document.getElementById("confetti-canvas");null===m?((m=document.createElement("canvas")).setAttribute("id","confetti-canvas"),m.setAttribute("style","display:block;z-index:999999;pointer-events:none;position:fixed;top:0"),document.body.prepend(m),m.width=r,m.height=u,window.addEventListener("resize",function(){m.width=window.innerWidth,m.height=window.innerHeight},!0),l=m.getContext("2d")):null===l&&(l=m.getContext("2d"));var s=confetti.maxCount;if(n)if(o)if(n==o)s=a.length+o;else{if(n>o){var f=n;n=o,o=f}s=a.length+(Math.random()*(o-n)+n|0)}else s=a.length+n;else o&&(s=a.length+o);for(;a.length<s;)a.push(d({},r,u));e=!0,i=!1,c(),t&&window.setTimeout(w,t)}function w(){e=!1}}();
 
+
+// based on https://stackoverflow.com/a/7557433
+// return:
+//    0 if at least half the element's height is in viewport;
+//   +1 if at least half the element's height is out of view, under the screen;
+//   -1 if at least half the element's height is out of view, above the screen.
+function is_element_out_of_sight (el) {
+  let rect = el.getBoundingClientRect()
+  let winheight = window.innerHeight || document.documentElement.clientHeight
+  return rect.bottom <= rect.height/2          ? -1 :
+         rect.top >= winheight - rect.height/2 ? +1 :
+                                                  0
+}
+
+function show_or_hide_mvbtns () {
+  const mvbtns_need_show =
+  !el_mvbtns.hidden &&
+    el_mvbtns.getBoundingClientRect().top >=
+      el_end_of_header.getBoundingClientRect().bottom
+  //
+  el_mvbtns.style.opacity = mvbtns_need_show? '100' : '0'
+  el_mvbtns_disablehack.hidden = mvbtns_need_show
+  
+}
+
+addEventListener('scroll', show_or_hide_mvbtns, false)
 
 const audio = (function () {  // {{{
   const el_player = Qid('player')
@@ -1359,8 +1398,14 @@ function show_done () {
   return false
 }
 
-function help_toggled ()   { setTimeout(scroll_to_top, 100) }
-function option_toggled () {}  // TODO: scroll to top of options
+function help_toggled () {
+  setTimeout(scroll_to_top, 100)
+  setTimeout(show_or_hide_mvbtns, 500)
+}
+function option_toggled () {
+  // TODO: scroll to top of options
+  show_or_hide_mvbtns()
+}
 
 function scroll_to_top ()    { window.scrollTo({ top: 0 }) }
 function scroll_to_bottom () { window.scrollTo({ top: document.body.scrollHeight }) }
@@ -1384,8 +1429,8 @@ function init_audio (stpair, enpair, qari, preserve_url) {
 
 function recite (st, en, qari, preserve_url, zz) {
 
-  el_zzback.hidden = !zz
   el_zzback.style.display = zz? 'block' : 'none'
+  el_zzback.hidden = !zz
   el_zzignore.hidden = !zz
   el_new.hidden = !!zz  // only hide if ignore is shown
   const stpair = idx2aya(st-1)
@@ -1394,6 +1439,7 @@ function recite (st, en, qari, preserve_url, zz) {
   init_audio(stpair, enpair, qari, preserve_url)
 
   hide_selectors()
+  show_or_hide_mvbtns()
   el_txt.focus()
 
   let words = make_words_list(st, en)

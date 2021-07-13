@@ -53,8 +53,14 @@ function show_done () {
   return false
 }
 
-function help_toggled ()   { setTimeout(scroll_to_top, 100) }
-function option_toggled () {}  // TODO: scroll to top of options
+function help_toggled () {
+  setTimeout(scroll_to_top, 100)
+  setTimeout(show_or_hide_mvbtns, 500)
+}
+function option_toggled () {
+  // TODO: scroll to top of options
+  show_or_hide_mvbtns()
+}
 
 function scroll_to_top ()    { window.scrollTo({ top: 0 }) }
 function scroll_to_bottom () { window.scrollTo({ top: document.body.scrollHeight }) }
@@ -88,6 +94,7 @@ function recite (st, en, qari, preserve_url, zz) {
   init_audio(stpair, enpair, qari, preserve_url)
 
   hide_selectors()
+  show_or_hide_mvbtns()
   el_txt.focus()
 
   let words = make_words_list(st, en)
