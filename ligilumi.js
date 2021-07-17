@@ -193,7 +193,7 @@ function _ligilumilo (href) {
   // TODO: acolor & anocolor: ayat-colors
   // TODO: audio
   href
-    .split(/[#&]/)
+    .split(/[?&]/)
     .map(p => p.split('='))
     //.reduce((obj, cur, i) => { i == 0? {} : (obj[cur[0]] = cur[1], obj), {})
     .forEach((e, i) => {

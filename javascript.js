@@ -3,6 +3,8 @@
 <<!!cat a.js>>
 <<!!cat ligilumi.js>>
 
+let most_recent_parameters = []
+
 function start_reciting () {
   hide_selectors()
   el_nextword.focus()
@@ -10,6 +12,10 @@ function start_reciting () {
   const st = start_(sura_bgn_val()) + aaya_bgn_val()
   const en = start_(sura_end_val()) + aaya_end_val()
   recite(st, en, el_qaris.value)
+}
+
+function restart_reciting () {
+  recite(...most_recent_parameters)
 }
 
 function input_trigger_x (ev) {
@@ -69,7 +75,7 @@ function hide_el (el) { el.style.visibility = 'hidden';  el.style.opacity =   '0
 function show_el (el) { el.style.visibility = 'visible'; el.style.opacity = '100%' }
 
 function sync_ui (stpair, enpair, qari, preserve_url) {
-  if (!preserve_url) { window.location.hash = stpair.join('/') + '-' + enpair.join('/') }
+  if (!preserve_url) { window.location.search = stpair.join('/') + '-' + enpair.join('/') }
   //
   el_sura_bgn.value = stpair[0]-1; el_aaya_bgn.value = filter_aaya_input(stpair[1])
   el_sura_end.value = enpair[0]-1; el_aaya_end.value = filter_aaya_input(enpair[1])
@@ -84,6 +90,7 @@ function init_audio (stpair, enpair, qari, preserve_url) {
 
 function recite (st, en, qari, preserve_url, zz) {
 
+  most_recent_parameters = [st, en, qari, preserve_url, zz]
   el_zzback.style.display = zz? 'block' : 'none'
   el_zzback.hidden = !zz
   el_zzignore.hidden = !zz
@@ -182,8 +189,8 @@ function recite (st, en, qari, preserve_url, zz) {
 el_ok.onclick  = start_reciting
 // el_ok.onmouseup  = input_trigger
 
-el_repeat.onmouseup = start_reciting
-el_repeat.onclick   = start_reciting
+el_repeat.onmouseup = restart_reciting
+el_repeat.onclick   = restart_reciting
 
 function init_inputs () {
   el_sura_bgn.value   = el_aaya_bgn.value   = el_sura_end.value   = el_aaya_end.value   = ''
