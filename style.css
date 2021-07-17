@@ -364,6 +364,9 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   position: relative;
   /* margin-top: -1rem; */
 }
+#dark:checked ~ #body .tab + label {
+  box-shadow: 1px 3px 4px rgba(255, 255, 255, 0.3);
+}
 
 @media (max-width:  992px) { .tab + label { --width: 45% } }
 @media (max-width:  768px) { .tab + label { --width: 44% } }
