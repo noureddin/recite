@@ -99,6 +99,8 @@ body { text-align: center; } /* center everything */
               0    0    5px blue;
   --D-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
   /* help & options : tab label */
+  --tab-txt: #000;
+  --tab-active-txt: var(--tab-txt);
   --tab: gold;
   --tab-active: yellow;
 }
@@ -113,7 +115,10 @@ body { text-align: center; } /* center everything */
   /* ayat number color */
   /* --A: #ff8c00; --D: #ffffff; */
   /* help & options : tab label */
-  --tab-active: goldenrod;
+  --tab-txt: #ddb;
+  --tab-active-txt: white;
+  --tab: #A1761B;  /* a very dark goldenrod; from: https://colorcodes.io/yellow/goldenrod-color-codes/ */
+  --tab-active: darkgoldenrod;
 }
 
 :not(input, button, select) { color: var(--uitext); } /* are just inverted */
@@ -246,7 +251,6 @@ body.letter-parts:not(.ayat-nocolor) #txt .D {
 #dark:checked ~ #body a               { color: #bbf }
 #dark:checked ~ #body kbd             { color: #000 }  /* inverted */
 #dark:checked ~ #body summary         { color: #fff }
-.tab + label    { color: #000 }
 
 #dark:checked ~ #body .details-content {
     background-color: black;
@@ -409,7 +413,7 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   --width: 47%;
   width: var(--width);
   background: var(--tab);
-  color: black;
+  color: var(--tab-txt);
   box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3);
   border-radius: 0 0 1rem 1rem;
   /* mask-image: radial-gradient(circle 10px at 0 0, transparent 0, transparent 20px, black 21px); */
@@ -496,6 +500,7 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
 .tab + label:hover,
 .tab + label:focus {
   background: var(--tab-active);
+  color: var(--tab-active-txt);
 }
 
 kbd {
