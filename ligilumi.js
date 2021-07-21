@@ -174,7 +174,7 @@ function parse_color (color) {
   return _color_values[ color.toLowerCase() ]
 }
 
-function _ligilumilo (href) {
+function _ligilumilo (params) {
   let a = 0; let b = 0
   let st; let en
   let dark
@@ -192,13 +192,13 @@ function _ligilumilo (href) {
   // TODO: m for manzil & k for ruku & (maybe) t for thumn (1/8 of hizb)
   // TODO: acolor & anocolor: ayat-colors
   // TODO: audio
-  href
-    .split(/[?&]/)
+  params
+    .slice(1)
+    .split(/&/)
     .map(p => p.split('='))
     //.reduce((obj, cur, i) => { i == 0? {} : (obj[cur[0]] = cur[1], obj), {})
     .forEach((e, i) => {
-      if      (i == 0)       { return }  // ignore the file portion
-      else if (e[0] === 'dark'  || e[0] === 'd') { dark = true  }
+           if (e[0] === 'dark'  || e[0] === 'd') { dark = true  }
       else if (e[0] === 'light' || e[0] === 'l') { dark = false }
       else if (e[0] === 'color' || e[0] === 'c') { color = parse_color(e[1]) }
       else if (e[0] === 'zz') { zz = true }
@@ -220,12 +220,10 @@ function _ligilumilo (href) {
 }
 
 function ligilumi () {
-  const [st, en, dark, color, zz] = _ligilumilo(window.location.href)
-  // if (dark || dark === false) {
+  const [st, en, dark, color, zz] = _ligilumilo(window.location.hash || window.location.search)
   Qid('darkmode_input').checked = dark
   Qid('textclr_input').value = color || 'taj'  // the default
   chstyle()
-  // }
   if (st == null || en == null) { return }
   recite(st, en, '', true, zz)
 }

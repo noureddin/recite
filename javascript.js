@@ -54,6 +54,7 @@ function show_done () {
     setTimeout(() => el_ok.focus(), 500)
     // // el_repeat.focus()
     // el_new.focus()
+    if (!el_zzback.hidden) { el_zzback.focus() }
     return true
   }
   return false
@@ -75,7 +76,7 @@ function hide_el (el) { el.style.visibility = 'hidden';  el.style.opacity =   '0
 function show_el (el) { el.style.visibility = 'visible'; el.style.opacity = '100%' }
 
 function sync_ui (stpair, enpair, qari, preserve_url) {
-  if (!preserve_url) { window.location.search = stpair.join('/') + '-' + enpair.join('/') }
+  if (!preserve_url) { window.location.hash = stpair.join('/') + '-' + enpair.join('/') }
   //
   el_sura_bgn.value = stpair[0]-1; el_aaya_bgn.value = filter_aaya_input(stpair[1])
   el_sura_end.value = enpair[0]-1; el_aaya_end.value = filter_aaya_input(enpair[1])
@@ -178,12 +179,15 @@ function recite (st, en, qari, preserve_url, zz) {
   // the key, even for a few additional milliseconds by accident), which
   // prints a lot of words
   document.onkeyup = input_trigger
+  document.ondblclick = (ev) => { if (ev.target === el_txt || ev.target === Qid('body')) { word_fwd() } }
   el_nextaaya.onclick = aaya_fwd
   el_nextjmla.onclick = jmla_fwd
   el_nextword.onclick = word_fwd
   el_prevword.onclick = word_bck
   el_prevjmla.onclick = jmla_bck
   el_prevaaya.onclick = aaya_bck
+
+  if (zz) { parent.zz_show() }
 }
 
 el_ok.onclick  = start_reciting
@@ -215,18 +219,22 @@ const show_selectors = function () {
   el_mvbtns.hidden = true
 }
 
+const clear_screen = function () {
+  el_txt.innerHTML = ''
+  el_endmsg.hidden = true
+}
+
 const new_select = function () {
   show_selectors()
   validate_aaya_sura_input({})
-  el_txt.innerHTML = ''
-  el_endmsg.hidden = true
+  clear_screen()
 }
 
 el_new.onmouseup = new_select
 el_new.onclick   = new_select
 
-el_zzback.onclick   = () => parent.zz_done()
-el_zzignore.onclick = () => parent.zz_ignore()
+el_zzback.onclick   = () => { clear_screen(); parent.zz_done()   }
+el_zzignore.onclick = () => { clear_screen(); parent.zz_ignore() }
 
 onload = function () {
   el_ok.disabled = true
