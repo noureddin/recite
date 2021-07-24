@@ -10,7 +10,7 @@ const say = console.log
 function Q (selector) { return document.querySelector(selector) }
 function Qid (id)     { return document.getElementById(id) }
 
-<<!!bash -c 'for id in {sura,aaya}_{bgn,end} qaris player txt endmsg ok new repeat selectors header end_of_header zzback zzignore mvbtns_disablehack mvbtns {next,prev}{word,jmla,aaya}; do echo "const el_$id = Qid(\"$id\")"; done'>>
+<<!!bash -c 'for id in {sura,aaya}_{bgn,end} qaris player txt endmsg ok new repeat selectors header end_of_header zzback zzignore mvbtns_disablehack mvbtns_container mvbtns {next,prev}{word,jmla,aaya}; do echo "const el_$id = Qid(\"$id\")"; done'>>
 
 const suar_length = [7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6]
 // const suar_name = [<<!!sed "s/^/'/;s/$/',/" res/suar-names | tr -d '\n' >>]
@@ -148,6 +148,7 @@ function is_element_out_of_sight (el) {
 }
 
 function show_or_hide_mvbtns () {
+  if (el_mvbtns.classList.contains('sidebtns')) { return }
   const mvbtns_need_show =
   !el_mvbtns.hidden &&
     el_mvbtns.getBoundingClientRect().top >=
@@ -269,6 +270,22 @@ function chstyle () {
   //
   // sync_class_with('dark', Qid('darkmode_input').checked)
   Qid('dark').checked = Qid('darkmode_input').checked
+  // mvbtns
+  const mv = Qid('mvbtns_input').value
+  if (mv === 'bottom') {
+    [ el_mvbtns, el_mvbtns_container ].forEach(el => {
+      [ 'sidebtns', 'rightside' ].forEach(cls => {
+        el.classList.remove(cls)
+      })
+    })
+  }
+  else if (mv === 'right') {
+    [ el_mvbtns, el_mvbtns_container ].forEach(el => {
+      [ 'sidebtns', 'rightside' ].forEach(cls => {
+        el.classList.add(cls)
+      })
+    })
+  }
 }
 
 function decode_contact () {

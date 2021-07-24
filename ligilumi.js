@@ -174,11 +174,20 @@ function parse_color (color) {
   return _color_values[ color.toLowerCase() ]
 }
 
+function parse_mv (mv) {
+  mv = mv.toLowerCase()
+  if (mv == ''
+   || mv == 'b') { return 'bottom' }
+  if (mv == 'r') { return 'right' }
+  if (mv == 'l') { return 'left' }
+}
+
 function _ligilumilo (params) {
   let a = 0; let b = 0
   let st; let en
   let dark
   let color  // tajweed, bas, none
+  let mv  // accepts: b, r, l; contains: bottom, right, left
   let zz
   // possible params:
   // - p: page. 1-604.
@@ -201,6 +210,7 @@ function _ligilumilo (params) {
            if (e[0] === 'dark'  || e[0] === 'd') { dark = true  }
       else if (e[0] === 'light' || e[0] === 'l') { dark = false }
       else if (e[0] === 'color' || e[0] === 'c') { color = parse_color(e[1]) }
+      else if (e[0] === 'mvbtns' || e[0] === 'mv' || e[0] === 'm') { mv = parse_mv(e[1]) }
       else if (e[0] === 'zz') { zz = true }
       else if (e[0] === 'a') { a = +e[1] }
       else if (e[0] === 'b') { b = +e[1] }
@@ -216,13 +226,14 @@ function _ligilumilo (params) {
   st -= b; en += a
   if (st <= 0)    { st = 1    }
   if (en >  6236) { en = 6236 }
-  return [st, en, dark, color, zz]
+  return [st, en, dark, color, mv, zz]
 }
 
 function ligilumi () {
-  const [st, en, dark, color, zz] = _ligilumilo(window.location.hash || window.location.search)
+  const [st, en, dark, color, mv, zz] = _ligilumilo(window.location.hash || window.location.search)
   Qid('darkmode_input').checked = dark
   Qid('textclr_input').value = color || 'taj'  // the default
+  Qid('mvbtns_input').value = mv || 'bottom'  // the default
   chstyle()
   if (st == null || en == null) { return }
   recite(st, en, '', true, zz)

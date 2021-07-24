@@ -254,6 +254,20 @@ summary::marker { color: #c00; }
   transition: opacity 0.1s ease-in-out;
 }
 
+#mvbtns.sidebtns {
+  position: static;
+  transform: rotate(-90deg);
+}
+
+#mvbtns_container.sidebtns {
+  position: fixed;
+  top: 50vh;
+}
+#mvbtns_container.sidebtns.rightside {
+  margin: 0;
+  margin-right: calc(-2vw - 0.5 * (5*0.33 + 0.67 + 5*0.1) * var(--btn-base-width));
+}
+
 #mvbtns_disablehack {
   position: fixed;
   bottom: 1rem;

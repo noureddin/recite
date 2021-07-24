@@ -105,6 +105,12 @@
 
 <<!!sed '/__END__/,$d' qaris.html>>
 
+<label for="mvbtns_input">موضع أزار الانتقال</label>
+<select id="mvbtns_input" onchange="chstyle()">
+  <option value="bottom" selected>بالأسفل</option>
+  <option value="right">على الجانب الأيمن</option>
+</select>
+
 <div style="padding:0.5rem"></div>
 
 </div>
@@ -177,6 +183,7 @@
 </div>
 
 <div id="mvbtns_disablehack">&nbsp;</div>
+<div id="mvbtns_container">
 <div id="mvbtns" hidden>
 <button title="أخف آية (زري Ctrl+BackSpace)" id="prevaaya">&#x276e;&#x276e;&#x276e;</button>
 <button title="أخف عبارة - حتى علامة وقف أو نهاية آية (زر رقم الواحد)" id="prevjmla">&#x276e;&#x276e;</button>
@@ -184,6 +191,7 @@
 <button title="أظهر كلمة (زر Space أو Enter أو سهم يسار)" id="nextword">&#x276f;</button>
 <button title="أظهر عبارة - حتى علامة وقف أو نهاية آية (زر رقم الصفر)" id="nextjmla">&#x276f;&#x276f;</button>
 <button title="أظهر آية (زري Ctrl+Space أو Ctrl+Enter)" id="nextaaya">&#x276f;&#x276f;&#x276f;</button>
+</div>
 </div>
 
 </div>

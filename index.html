@@ -315,6 +315,20 @@ summary::marker { color: #c00; }
   transition: opacity 0.1s ease-in-out;
 }
 
+#mvbtns.sidebtns {
+  position: static;
+  transform: rotate(-90deg);
+}
+
+#mvbtns_container.sidebtns {
+  position: fixed;
+  top: 50vh;
+}
+#mvbtns_container.sidebtns.rightside {
+  margin: 0;
+  margin-right: calc(-2vw - 0.5 * (5*0.33 + 0.67 + 5*0.1) * var(--btn-base-width));
+}
+
 #mvbtns_disablehack {
   position: fixed;
   bottom: 1rem;
@@ -646,6 +660,12 @@ details[open] > .details-content {
 
 
 
+<label for="mvbtns_input">موضع أزار الانتقال</label>
+<select id="mvbtns_input" onchange="chstyle()">
+  <option value="bottom" selected>بالأسفل</option>
+  <option value="right">على الجانب الأيمن</option>
+</select>
+
 <div style="padding:0.5rem"></div>
 
 </div>
@@ -798,6 +818,7 @@ details[open] > .details-content {
 </div>
 
 <div id="mvbtns_disablehack">&nbsp;</div>
+<div id="mvbtns_container">
 <div id="mvbtns" hidden>
 <button title="أخف آية (زري Ctrl+BackSpace)" id="prevaaya">&#x276e;&#x276e;&#x276e;</button>
 <button title="أخف عبارة - حتى علامة وقف أو نهاية آية (زر رقم الواحد)" id="prevjmla">&#x276e;&#x276e;</button>
@@ -805,6 +826,7 @@ details[open] > .details-content {
 <button title="أظهر كلمة (زر Space أو Enter أو سهم يسار)" id="nextword">&#x276f;</button>
 <button title="أظهر عبارة - حتى علامة وقف أو نهاية آية (زر رقم الصفر)" id="nextjmla">&#x276f;&#x276f;</button>
 <button title="أظهر آية (زري Ctrl+Space أو Ctrl+Enter)" id="nextaaya">&#x276f;&#x276f;&#x276f;</button>
+</div>
 </div>
 
 </div>
@@ -842,6 +864,7 @@ const el_end_of_header = Qid("end_of_header")
 const el_zzback = Qid("zzback")
 const el_zzignore = Qid("zzignore")
 const el_mvbtns_disablehack = Qid("mvbtns_disablehack")
+const el_mvbtns_container = Qid("mvbtns_container")
 const el_mvbtns = Qid("mvbtns")
 const el_nextword = Qid("nextword")
 const el_nextjmla = Qid("nextjmla")
@@ -988,6 +1011,7 @@ function is_element_out_of_sight (el) {
 }
 
 function show_or_hide_mvbtns () {
+  if (el_mvbtns.classList.contains('sidebtns')) { return }
   const mvbtns_need_show =
   !el_mvbtns.hidden &&
     el_mvbtns.getBoundingClientRect().top >=
@@ -1109,6 +1133,22 @@ function chstyle () {
   //
   // sync_class_with('dark', Qid('darkmode_input').checked)
   Qid('dark').checked = Qid('darkmode_input').checked
+  // mvbtns
+  const mv = Qid('mvbtns_input').value
+  if (mv === 'bottom') {
+    [ el_mvbtns, el_mvbtns_container ].forEach(el => {
+      [ 'sidebtns', 'rightside' ].forEach(cls => {
+        el.classList.remove(cls)
+      })
+    })
+  }
+  else if (mv === 'right') {
+    [ el_mvbtns, el_mvbtns_container ].forEach(el => {
+      [ 'sidebtns', 'rightside' ].forEach(cls => {
+        el.classList.add(cls)
+      })
+    })
+  }
 }
 
 function decode_contact () {
@@ -1297,11 +1337,20 @@ function parse_color (color) {
   return _color_values[ color.toLowerCase() ]
 }
 
+function parse_mv (mv) {
+  mv = mv.toLowerCase()
+  if (mv == ''
+   || mv == 'b') { return 'bottom' }
+  if (mv == 'r') { return 'right' }
+  if (mv == 'l') { return 'left' }
+}
+
 function _ligilumilo (params) {
   let a = 0; let b = 0
   let st; let en
   let dark
   let color  // tajweed, bas, none
+  let mv  // accepts: b, r, l; contains: bottom, right, left
   let zz
   // possible params:
   // - p: page. 1-604.
@@ -1324,6 +1373,7 @@ function _ligilumilo (params) {
            if (e[0] === 'dark'  || e[0] === 'd') { dark = true  }
       else if (e[0] === 'light' || e[0] === 'l') { dark = false }
       else if (e[0] === 'color' || e[0] === 'c') { color = parse_color(e[1]) }
+      else if (e[0] === 'mvbtns' || e[0] === 'mv' || e[0] === 'm') { mv = parse_mv(e[1]) }
       else if (e[0] === 'zz') { zz = true }
       else if (e[0] === 'a') { a = +e[1] }
       else if (e[0] === 'b') { b = +e[1] }
@@ -1339,13 +1389,14 @@ function _ligilumilo (params) {
   st -= b; en += a
   if (st <= 0)    { st = 1    }
   if (en >  6236) { en = 6236 }
-  return [st, en, dark, color, zz]
+  return [st, en, dark, color, mv, zz]
 }
 
 function ligilumi () {
-  const [st, en, dark, color, zz] = _ligilumilo(window.location.hash || window.location.search)
+  const [st, en, dark, color, mv, zz] = _ligilumilo(window.location.hash || window.location.search)
   Qid('darkmode_input').checked = dark
   Qid('textclr_input').value = color || 'taj'  // the default
+  Qid('mvbtns_input').value = mv || 'bottom'  // the default
   chstyle()
   if (st == null || en == null) { return }
   recite(st, en, '', true, zz)
