@@ -49,8 +49,8 @@ body { text-align: center; } /* center everything */
   --faint-btn: #555;
   --uitext: #ccc;  --txt: #eee;  --background-rgb: 13, 13, 13;
   /* tajweed */
-  --L: #bb4444;  --W: red    ;  --J: #ff6600;  --T: #ffbb00;  --N: #00ff00;
-  --X: #806666;  --R: #3366ff;  --Q: #00ccff;  --A: #ff8c00;  --D: #ffffff;
+  --L: #bb5555;  --W: red    ;  --J: #ff6600;  --T: #ffbb00;  --N: #00ff00;
+  --X: #808080;  --R: #4477ff;  --Q: #00d6ff;  --A: #ff8c00;  --D: #ffffff;
   /* ayat number color */
   /* --A: #ff8c00; --D: #ffffff; */
   /* help & options : tab label */
