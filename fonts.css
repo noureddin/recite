@@ -33,16 +33,3 @@
   src: url('woff/ae_Cortoba.woff2') format('woff2'),
        url('woff/ae_Cortoba.woff')  format('woff');
 }
-
-/* FreeSerif 2012, from GNU Freefont. GPLv3+. */
-/* Copyright 2002, 2003, 2005, 2008, 2009, 2010, 2012 GNU Freefont contributors. */
-/* Modified Feb. 2021 by Noureddin <noureddin95@gmail.com> to remove all characters except U+276E & U+276F. */
-/* Modified and exported to WOFF using FontForge */
-/* and converted to WOFF2 using: https://everythingfonts.com/woff-to-woff2 */
-@font-face {
-  font-family: FreeSerifAngles;
-  font-style: normal;
-  font-weight: 400;
-  src: url('woff/FreeSerif-angles.woff2') format('woff2'),
-       url('woff/FreeSerif-angles.woff')  format('woff');
-}

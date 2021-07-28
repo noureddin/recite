@@ -130,16 +130,17 @@ button {
   touch-action: manipulation; /* disable double-tap zooming; https://stackoverflow.com/a/53236027 */
 }
 
-#mvbtns * {
+#mvbtns button {
   --width: calc(0.33 * var(--btn-base-width));
-  color: var(--faint-btn);
-  letter-spacing: -0.5em;
-  padding: 0; padding-left: 0.5em;
+  fill: var(--faint-btn);
 }
-#nextword {
+
+#mvbtns #nextword {
   --width: calc(0.67 * var(--btn-base-width));
-  color: initial;
+  fill: #000;  /* inverted in darkmode; thus becomes #fff */
 }
+
+#mvbtns svg { width: 1em; height: 1em; }
 
 button, select, input, input[type=checkbox] + label {
   cursor: pointer;
