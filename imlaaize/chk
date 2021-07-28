@@ -1,4 +1,0 @@
-#!/bin/bash
-pad() { (leafpad "$@" & &>/dev/null) &>/dev/null; }
-chk() { pad <(sed -n $1's/[A-Z<>]//g;'$1'p;'$1'q' othmani-array-tajweed; sed -n $1'p;'$1'q' imlaai-ayat-array ; sed -n $1'p;'$1'q' t ); }
-chk $1
