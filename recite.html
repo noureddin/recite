@@ -17,59 +17,8 @@
 <<!!# this file uses a small preprocessor to embed fonts and data; see index.html for the actual HTML file>>
 <title>راجع ما تحفظ من القرآن الكريم</title>
 <style>
-
-@font-face {
-  font-family: AmiriQuranWeb;
-  font-style: normal;
-  font-weight: 400;
-  src: url(data:application/x-font-woff2;charset=utf-8;base64,<<!!base64 -w0 woff/AmiriQuran.woff2>>) format('woff2');
-}
-@font-face {
-  font-family: AmiriQuranColoredWeb;
-  font-style: normal;
-  font-weight: 400;
-  src: url(data:application/x-font-woff2;charset=utf-8;base64,<<!!base64 -w0 woff/AmiriQuranColored.woff2>>) format('woff2');
-}
-/* The following two fonts are from: https://sourceforge.net/projects/arabeyes/files/Fonts/ */
-/* They are under GNU GPL v2. Both are converted from TrueType to WOFF using */
-/* the WOFFjs-based WOFFer at: https://andrewsun.com/tools/woffer-woff-font-converter/ */
-/* and to WOFF2 using: https://everythingfonts.com/ttf-to-woff2 */
-@font-face {
-  font-family: KacstOne; /* version 5.0 */
-  font-style: normal;
-  font-weight: 400;
-  src: url(data:application/x-font-woff2;charset=utf-8;base64,<<!!base64 -w0 woff/KacstOne.woff2>>) format('woff2');
-}
-@font-face {
-  font-family: Cortoba;  /* version 2.1 */
-  font-style: normal;
-  font-weight: 400;
-  src: url(data:application/x-font-woff2;charset=utf-8;base64,<<!!base64 -w0 woff/ae_Cortoba.woff2>>) format('woff2');
-}
-
-/* FreeSerif 2012, from GNU Freefont. GPLv3+. */
-/* Copyright 2002, 2003, 2005, 2008, 2009, 2010, 2012 GNU Freefont contributors. */
-/* Modified Feb. 2021 by Noureddin <noureddin95@gmail.com> to remove all characters except U+276E & U+276F. */
-/* Modified and exported to WOFF using FontForge */
-/* and converted to WOFF2 using: https://everythingfonts.com/woff-to-woff2 */
-@font-face {
-  font-family: FreeSerifAngles;
-  font-style: normal;
-  font-weight: 400;
-  src: url(data:application/x-font-woff2;charset=utf-8;base64,<<!!base64 -w0 woff/FreeSerif-angles.woff2>>) format('woff2');
-}
-
+<<!!cat fonts.css>>
 <<!!cat style.css>>
-
-/* images */
-
-/* spinner is currently unused; may be used later */
-#spinner { animation: spin 1.6s infinite linear; }
-@keyframes spin {
-    0% { stroke-dashoffset:    0; }
-  100% { stroke-dashoffset: -210; }
-}
-
 </style>
 </head>
 <body>
