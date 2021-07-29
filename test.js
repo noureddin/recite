@@ -1,4 +1,3 @@
-<<!!cat ligilumi.js>>
 // ligilumi: reading url parameters {{{
 function test_ligilumi () {
   let fail=0, all=0, st, en, d
@@ -61,6 +60,12 @@ function test_ligilumi () {
     ['#k=43',           8+286+9,       293+20],
     ['#114/1-114/6',    6231,          6236],
     ['#k=556',          6231,          6236],
+    ['#',               null,          null],
+    ['?',               null,          null],
+    ['',                null,          null],
+    ['#d',              null,          null],
+    ['?d',              null,          null],
+    ['d',               null,          null],
   ]
   .forEach((t) => {
     [st, en, d] = _ligilumilo(t[0])

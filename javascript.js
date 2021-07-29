@@ -2,6 +2,8 @@
 
 <<!!cat a.js>>
 <<!!cat ligilumi.js>>
+<<!!#cat test.js>>
+// remove the '#' in the previous line to perform the tests
 
 let most_recent_parameters = []
 

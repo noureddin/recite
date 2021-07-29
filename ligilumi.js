@@ -40,7 +40,7 @@ function _aya2idx (aya) {  // 1-6236 or 1/7
 }
 
 function ayat_to_ayat (staya, enaya) {  // each is 1-6236 or 1/7 (sura/aya)
-  if (staya == null) { return [null, null] }
+  if (!staya) { return [null, null] }
   let st = _aya2idx(staya)
   let en = _aya2idx(enaya)
   if (st == null || en == null) { return [null, null] }
@@ -198,12 +198,10 @@ function _ligilumilo (params) {
   // - b: before, a number of ayat to add before whatever you select. 0-inf.
   // - a: after,  a number of ayat to add before whatever you select. 0-inf.
   // - dark & light: dark mode
-  // TODO: m for manzil & k for ruku & (maybe) t for thumn (1/8 of hizb)
-  // TODO: acolor & anocolor: ayat-colors
   // TODO: audio
   params
-    .slice(1)
-    .split(/&/)
+    .slice(1)  // remove the first character (`?` or `#`)
+    .split('&')
     .map(p => p.split('='))
     //.reduce((obj, cur, i) => { i == 0? {} : (obj[cur[0]] = cur[1], obj), {})
     .forEach((e, i) => {
