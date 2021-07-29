@@ -262,7 +262,7 @@ summary::marker { color: #c00; }
 
 #mvbtns_container.sidebtns {
   position: fixed;
-  top: 50vh;
+  top: 45vh;
 }
 #mvbtns_container.sidebtns.rightside {
   margin: 0;
