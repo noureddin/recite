@@ -28,8 +28,8 @@ body { text-align: center; } /* center everything */
   --background: rgb(var(--background-rgb));
   --background-translucent: rgba(var(--background-rgb), 0.66);
   /* tajweed */
-  --L: maroon;  --W: red;     --J: orangered; --T: #ff9900;    --N: #007600;
-  --X: #8888aa; --R: #0000aa; --Q: #0066ff;   --A: darkorange; --D: navy;
+  --L: #aa5555; --W: red;     --J: orangered; --T: #ff9900;    --N: #009000;
+  --X: #9595a0; --R: #2222e0; --Q: #00a5e7;   --A: darkorange; --D: navy;
   /* ayat number color */
   --A-shadow: 1px  1px  1px gold,
               1px -1px  1px gold,
