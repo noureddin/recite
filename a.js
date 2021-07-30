@@ -272,20 +272,12 @@ function chstyle () {
   Qid('dark').checked = Qid('darkmode_input').checked
   // mvbtns
   const mv = Qid('mvbtns_input').value
-  if (mv === 'bottom') {
-    [ el_mvbtns, el_mvbtns_container ].forEach(el => {
-      [ 'sidebtns', 'rightside' ].forEach(cls => {
-        el.classList.remove(cls)
-      })
-    })
-  }
-  else if (mv === 'right') {
-    [ el_mvbtns, el_mvbtns_container ].forEach(el => {
-      [ 'sidebtns', 'rightside' ].forEach(cls => {
-        el.classList.add(cls)
-      })
-    })
-  }
+  const mv_cls =
+    mv === 'right' ? 'sidebtns rightside' :
+    mv === 'left'  ? 'sidebtns leftside'  :
+                     ''  /* no class for 'bottom' */
+  el_mvbtns.setAttribute('class', mv_cls)
+  el_mvbtns_container.setAttribute('class', mv_cls)
 }
 
 function decode_contact () {
