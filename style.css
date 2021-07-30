@@ -116,12 +116,19 @@ html { font-size: calc(16px + 0.5vw) }
 #aaya_bgn, #aaya_end { font-family: KacstOne; }
 
 /* suar/ayat selection */
+#selectors > div label:first-child { /* من سورة and إلى سورة */
+  display: inline-block;
+  width: 4em;
+}
+#selectors > div {
+  display: inline-block;
+  max-width: 15em;
+  min-width: 40%;
+  margin: 0.1rem 0;
+}
 #aaya_bgn, #aaya_end { width: 1.5em; }
-#sura_bgn, #sura_end { width: 6.5em; }
-table { display: inline; }
-table, table * { margin: 0; padding: 0;  }
-td { padding: 0.4em; }
-td label { padding-left: 0.1em; }
+/* #sura_bgn, #sura_end { width: 6.5em; } */
+#sura_bgn, #sura_end { width: 35%; }
 
 #options > * { margin-top: 0.5rem; }
 #options > :first-child { margin-top: 0; }
@@ -304,15 +311,14 @@ summary::marker { color: #c00; }
   background-color: transparent;
 }
 
-/* #nextword, */
-/* #ok { */
-/*   /1* centered with https://stackoverflow.com/a/2006008 *1/ */
-/*   margin-left: -5rem; /1* negative half of width *1/ */
-/*   left: 50vw; */
-/*   /1* sticky at bottom *1/ */
-/*   position: fixed; */
-/*   bottom: 1rem; */
-/* } */
+#ok {
+  display: block;
+  margin: 1rem auto; /* center */
+}
+
+#header button {
+  margin: 0.2rem;
+}
 
 #player {
   display: block;

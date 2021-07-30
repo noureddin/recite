@@ -101,27 +101,25 @@
 
 <div id="selectors">
 
-<table><tr><td>
-  <label for="sura_bgn">من سورة:</label>
-  <select id="sura_bgn">
-    <option value="" selected>السورة</option>
-    <<!!bash -c 'i=0; cat res/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$[i+1]; done | tr -d "\n"'>>
-  </select>
-</td><td>
-  <label for="aaya_bgn">الآية:</label>
-  <input id="aaya_bgn">
-</td></tr></table>
+  <div>
+    <label for="sura_bgn">من سورة:</label>
+    <select id="sura_bgn">
+      <option value="" selected>السورة</option>
+      <<!!bash -c 'i=0; cat res/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$[i+1]; done | tr -d "\n"'>>
+    </select>
+    <label for="aaya_bgn">الآية:</label>
+    <input id="aaya_bgn">
+  </div>
 
-<table><tr><td>
-  <label for="sura_end">إلى سورة:</label>
-  <select id="sura_end">
-    <option value="" selected>السورة</option>
-    <<!!bash -c 'i=0; cat res/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$[i+1]; done | tr -d "\n"'>>
-  </select>
-</td><td>
-  <label for="aaya_end">الآية:</label>
-  <input id="aaya_end">
-</td></tr></table>
+  <div>
+    <label for="sura_end">إلى سورة:</label>
+    <select id="sura_end">
+      <option value="" selected>السورة</option>
+      <<!!bash -c 'i=0; cat res/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$[i+1]; done | tr -d "\n"'>>
+    </select>
+    <label for="aaya_end">الآية:</label>
+    <input id="aaya_end">
+  </div>
 
 <button disabled title="حدد ما تريد مراجعته أو تسميعه، ثم اضغط على هذا الزر." id="ok">ابدأ</button>
 <hr>
