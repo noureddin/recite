@@ -280,6 +280,12 @@ summary::marker { color: #c00; }
   margin-right: min(23rem, calc(50vw - 3rem));
 }
 
+@media (max-width: 550px) { 
+  #mvbtns_container.sidebtns.leftside {
+    margin-right: calc(95vw - 16.5rem);
+  }
+}
+
 #mvbtns_disablehack {
   position: fixed;
   bottom: 1rem;
