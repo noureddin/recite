@@ -1,10 +1,10 @@
-<table><tr><td>
+<div>
   <label for="qaris">تلاوة بصوت:</label>
   <select id="qaris" oninput="audio.update_qari(this.value)">
     <option value="" selected>بغير تلاوة صوتية</option>
 <<!!cat res/qaris | while read value; do read title; echo "    <option value=\"$value\">$title</option>"; done>>
   </select>
-</td></tr></table>
+</div>
 
 <audio id="player" controls preload></audio>
 

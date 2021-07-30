@@ -172,15 +172,25 @@ html { font-size: calc(16px + 0.5vw) }
 #aaya_bgn, #aaya_end { font-family: KacstOne; }
 
 /* suar/ayat selection */
-#textclr_input { width: 9.8em }
-#qaris { width: calc(100% - 6.5em) }
-#mvbtns_input { width: calc(100% - 10em) }
 #aaya_bgn, #aaya_end { width: 1.5em; }
 #sura_bgn, #sura_end { width: 6.5em; }
 table { display: inline; }
 table, table * { margin: 0; padding: 0;  }
 td { padding: 0.4em; }
 td label { padding-left: 0.1em; }
+
+#options > * { margin-top: 0.5rem; }
+#options > :first-child { margin-top: 0; }
+
+.option_pair {
+  display: inline-block;
+  margin: 0 0.25rem;
+}
+
+/* #textclr_input { width: 9.8em } */
+#textclr_input { width: calc(100% - 6.3em) }
+#mvbtns_input  { width: calc(100% - 9.2em) }
+#qaris         { width: calc(100% - 6.5em) }
 
 button {
   --width: var(--btn-base-width);
@@ -586,25 +596,31 @@ details[open] > .details-content {
 
 <div id="options" class="contentcontainer">
 
-<table><tr><td>
-  <label for="textclr_input">تلوين النص:</label>
-  <select id="textclr_input" onchange="chstyle()">
-    <option value="taj" selected>تبعا لقواعد التجويد</option>
-    <option value="bas">تلوين أجزاء الرسم</option>
-    <option value="no">بغير أي تلوين</option>
-  </select>
-</td><td>
-  <input id="ayatnum_input" type="checkbox" checked onchange="chstyle()">
-  <label for="ayatnum_input">تلوين أرقام الآيات؟</label>
-</td><td>
-  <input id="darkmode_input" type="checkbox" onchange="chstyle()">
-  <label for="darkmode_input">الوضع الليلي؟</label>
-</td></tr></table>
+  <div>
+    <div class="option_pair">
+      <input id="ayatnum_input" type="checkbox" checked onchange="chstyle()">
+      <label for="ayatnum_input">تلوين أرقام الآيات؟</label>
+    </div>
+    <div class="option_pair">
+      <input id="darkmode_input" type="checkbox" onchange="chstyle()">
+      <label for="darkmode_input">الوضع الليلي؟</label>
+    </div>
+  </div>
 
-<table><tr><td>
-  <label for="qaris">تلاوة بصوت:</label>
-  <select id="qaris" oninput="audio.update_qari(this.value)">
-    <option value="" selected>بغير تلاوة صوتية</option>
+  <div>
+    <label for="textclr_input">تلوين النص:</label>
+    <select id="textclr_input" onchange="chstyle()">
+      <option value="taj" selected>تبعا لقواعد التجويد</option>
+      <option value="bas">تلوين أجزاء الرسم</option>
+      <option value="no">بغير أي تلوين</option>
+    </select>
+  </div>
+
+  <!-- from: http://www.everyayah.com/data/recitations.js -->
+  <div>
+    <label for="qaris">تلاوة بصوت:</label>
+    <select id="qaris" oninput="audio.update_qari(this.value)">
+      <option value="" selected>بغير تلاوة صوتية</option>
     <option value="warsh/warsh_ibrahim_aldosary_128kbps">إبراهيم الدوسري (ورش) (جودة فائقة)</option>
     <option value="Abu_Bakr_Ash-Shaatree_64kbps">أبو بكر الشاطري (جودة عالية)</option>
     <option value="Abu_Bakr_Ash-Shaatree_128kbps">أبو بكر الشاطري (جودة فائقة)</option>
@@ -655,19 +671,19 @@ details[open] > .details-content {
     <option value="Yaser_Salamah_128kbps">ياسر سلامة (جودة فائقة)</option>
     <option value="warsh/warsh_yassin_al_jazaery_64kbps">ياسين الجزائري (ورش) (جودة عالية)</option>
 
-  </select>
-</td></tr></table>
+    </select>
+  </div>
+  <audio id="player" controls preload></audio>
 
-<audio id="player" controls preload></audio>
+  <div>
+    <label for="mvbtns_input">موضع أزار الانتقال:</label>
+    <select id="mvbtns_input" onchange="chstyle()">
+      <option value="bottom" selected>أسفل</option>
+      <option value="right">يمين</option>
+      <option value="left">يسار</option>
+    </select>
+  </div>
 
-
-
-<label for="mvbtns_input">موضع أزار الانتقال:</label>
-<select id="mvbtns_input" onchange="chstyle()">
-  <option value="bottom" selected>أسفل</option>
-  <option value="right">يمين</option>
-  <option value="left">يسار</option>
-</select>
 
 <div style="padding:0.5rem"></div>
 
