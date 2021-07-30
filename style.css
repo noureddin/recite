@@ -98,7 +98,10 @@ html { font-size: calc(16px + 0.5vw) }
   text-align: center;
   color: var(--uitext);
   margin: auto;
-  margin-top: -3rem;  /* counter padding-bottom for #txt */
+  /* margin-top: -3rem;  /1* counter padding-bottom for #txt *1/ */
+  /* the negative margin-top is commented out because I find it better to have
+   * more space between #txt and #endmsg, especially after making #endmsg show
+   * with the last word, not after it. */
   padding-bottom: 2rem;
 }
 

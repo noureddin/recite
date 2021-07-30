@@ -110,24 +110,20 @@ function recite (st, en, qari, preserve_url, zz) {
   let words = make_words_list(st, en)
 
   const fwd = function (kind) {
-    let txt = ''
+    if (words.length === 0) { return }
     const isnt_the_kind =
       kind === 'a'? (k) => k !== 'a' :
       kind === 'j'? (k) => k !== 'a' && k !== 'j' :
                     (k) => false
-    if (words.length > 0) {
-      let new_word_kind
-      do {
-        let new_word = words.shift()
-        txt += new_word
-        new_word_kind = kind_of_portion( new_word.slice(-2) )
-      } while (isnt_the_kind(new_word_kind))
-      if (new_word_kind === 'a') { audio.play_next() }
-      el_txt.innerHTML += txt
-    }
-    else {
-      show_done()
-    }
+    let new_word_kind, txt = ''
+    do {
+      let new_word = words.shift()
+      txt += new_word
+      new_word_kind = kind_of_portion( new_word.slice(-2) )
+    } while (isnt_the_kind(new_word_kind))
+    if (new_word_kind === 'a') { audio.play_next() }
+    el_txt.innerHTML += txt
+    if (words.length === 0) { show_done() }
     scroll_to_bottom()
   }
 
