@@ -3,6 +3,7 @@ html, body {
   padding: 0;
   margin: 0;
   height: 100%;
+  --all-width: clamp(10rem, 80vw, 35rem);
 }
 
 body { text-align: center; } /* center everything */
@@ -13,9 +14,7 @@ body { text-align: center; } /* center everything */
 }
 #all {
   display: inline-block;
-  width: 80vw;
-  min-width: 10em;
-  max-width: 35em;
+  width: var(--all-width);
 }
 
 #body {
@@ -377,22 +376,22 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   margin-bottom: 0.5rem;
 }
 
-.tab         + label:before { content: "أظهر " }
-.tab:checked + label:before { content: "أخفِ " }
+#optiontoggle         + label:before { content: "أظهر " }
+#optiontoggle:checked + label:before { content: "أخفِ "  }
 
 #helpcontent ul {
     text-align: right;
 }
 
-  /* width: 80vw; */
-  /* min-width: 10em; */
-  /* max-width: 35em; */
-
 .tab + label {
-  font-weight: normal;
-  padding: 10px;
-  --width: 47%;
-  width: var(--width);
+  font-weight: normal; /* bold */
+  --label-gap: 0.5rem;
+  --small-width: 1rem;
+  --big-width: calc(var(--all-width) - 15px - var(--label-gap) - 2*var(--small-width));
+  --padding: 10px;
+  --height: 1.7rem;
+  padding: var(--padding);
+  height: var(--height);
   background: var(--tab);
   color: var(--tab-txt);
   box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3);
@@ -410,17 +409,19 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   box-shadow: 1px 3px 4px rgba(255, 255, 255, 0.3);
 }
 
-@media (max-width:  992px) { .tab + label { --width: 45% } }
-@media (max-width:  768px) { .tab + label { --width: 44% } }
-@media (max-width:  576px) { .tab + label { --width: 43% } }
+#optiontoggle + label {
+  width: var(--big-width);
+}
 
 #helptoggle + label {
-  right: calc( 100% - var(--width) - 20px );
-  top:           calc( -1.74rem - 20px );
-  margin-bottom: calc( -1.74rem - 20px + 10px ); /* remove the space created by removing it */
+  width: var(--small-width);
+  right: calc(var(--big-width) + var(--label-gap) + 2*var(--padding));
+  top: calc(-1*var(--height) - 2*var(--padding));
+  margin-bottom: calc(-1*var(--height) - 1*var(--padding)); /* remove the space created by removing it; subtracted one padding not two to make room below */
 }
 
 .contentcontainer {
+  width: var(--all-width);
   padding: 1rem 0.1rem 0rem 0.1rem;
   background: rgba(255,255,255,0.4);
   box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3);
