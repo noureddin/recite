@@ -119,6 +119,7 @@ html { font-size: calc(16px + 0.5vw) }
 /* suar/ayat selection */
 #textclr_input { width: 9.8em }
 #qaris { width: calc(100% - 6.5em) }
+#mvbtns_input { width: calc(100% - 10em) }
 #aaya_bgn, #aaya_end { width: 1.5em; }
 #sura_bgn, #sura_end { width: 6.5em; }
 table { display: inline; }
