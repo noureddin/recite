@@ -156,10 +156,10 @@ function show_or_hide_mvbtns () {
   //
   el_mvbtns.style.opacity = mvbtns_need_show? '100' : '0'
   el_mvbtns_disablehack.hidden = mvbtns_need_show
-  
 }
 
 addEventListener('scroll', show_or_hide_mvbtns, false)
+addEventListener('resize', show_or_hide_mvbtns, false)
 
 const audio = (function () {  // {{{
   const el_player = Qid('player')

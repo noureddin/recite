@@ -19,7 +19,7 @@ body { text-align: center; } /* center everything */
 
 #body {
   /* general */
-  --btn-base-width: 10rem;
+  --btn-base-width: min(35vw, 10rem);
   --faint-btn: #666;
   --uitext: #233; --txt: #111;
   --txt-font: AmiriQuranWeb;
@@ -151,7 +151,8 @@ button {
 }
 
 #mvbtns button {
-  --width: calc(0.33 * var(--btn-base-width));
+  --width:  calc(0.33 * var(--btn-base-width));
+  margin: 0 calc(0.01 * var(--btn-base-width));
   fill: var(--faint-btn);
 }
 
@@ -264,16 +265,17 @@ summary {
 summary::marker { color: #c00; }
 
 #mvbtns {
-  /* /1* centered with https://stackoverflow.com/a/2006008 *1/ */
-  /* margin-left: calc(-0.5 * 4 * var(--width)); */
-  /* left: 50vw; */
-  /* sticky at bottom */
   position: fixed;
   bottom: 1rem;
-  right: calc(50vw - 0.5 * (5*0.33 + 0.67 + 5*0.1) * var(--btn-base-width));
-  margin: 0 calc(0.1 * var(--btn-base-width));
+  right: calc(50vw - 0.5 * var(--mvbtns-width));
+  margin: 0;
   transition: opacity 0.1s ease-in-out;
 }
+
+/* that 0.xx third number is empirically fonud; in all three declarations. */
+                            #body { --mvbtns-width: calc((5*0.33 + 0.67 + 0.26) * var(--btn-base-width)) }
+@media (max-width: 500px) { #body { --mvbtns-width: calc((5*0.33 + 0.67 + 0.30) * var(--btn-base-width)) } }
+@media (max-width: 350px) { #body { --mvbtns-width: calc((5*0.33 + 0.67 + 0.37) * var(--btn-base-width)) } }
 
 #mvbtns.sidebtns {
   position: static;

@@ -68,7 +68,7 @@ function help_toggled () {
 }
 function option_toggled () {
   // TODO: scroll to top of options
-  show_or_hide_mvbtns()
+  setTimeout(show_or_hide_mvbtns, 500)
 }
 
 function scroll_to_top ()    { window.scrollTo({ top: 0 }) }
