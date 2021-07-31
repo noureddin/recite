@@ -333,30 +333,22 @@ summary::marker { color: #c00; }
 @media (max-width: 350px) { #body { --mvbtns-width: calc((5*0.33 + 0.67 + 0.37) * var(--btn-base-width)) } }
 
 #mvbtns.sidebtns {
-  position: static;
-  transform: rotate(-90deg);
-}
-
-#mvbtns_container.sidebtns {
+  --btn-base-width: min(35vh, 10rem);
   position: fixed;
-  top: 45vh;
-  z-index: 11;
+  width: 100vh;
   margin: 0;
-}
-#mvbtns_container.sidebtns.rightside {
-  margin-right: calc(-2vw - 0.5 * (5*0.33 + 0.67 + 5*0.1) * var(--btn-base-width));
-}
-
-/* remember: #all { width: 80vw; min-width: 10em; max-width: 35em; } */
-#mvbtns_container.sidebtns.leftside {
-  width: calc((5*0.33 + 0.67 + 5*0.1) * var(--btn-base-width));
-  margin-right: min(23rem, calc(50vw - 3rem));
+  top: 0;
+  transform-origin: top right;
+  transform: rotate(-90deg);
+  z-index: 11;
 }
 
-@media (max-width: 550px) { 
-  #mvbtns_container.sidebtns.leftside {
-    margin-right: calc(95vw - 16.5rem);
-  }
+#mvbtns.sidebtns.rightside {
+  right: calc(0.25 * var(--btn-base-width));
+}
+
+#mvbtns.sidebtns.leftside {
+  right: calc(100vw - 0.05 * var(--btn-base-width));
 }
 
 #mvbtns_disablehack {
@@ -843,18 +835,18 @@ details[open] > .details-content {
 <button id="zzback" hidden>عودة</button>
 </div>
 
-<!-- these svg arrows were designed in Inkscape by me and optimized with https://vecta.io/nano -->
 <div id="mvbtns_disablehack">&nbsp;</div>
-<div id="mvbtns_container">
+
+<!-- these svg arrows were designed in Inkscape by me and optimized with https://vecta.io/nano -->
 <div id="mvbtns" hidden>
-<button title="أخف آية (زري Ctrl+BackSpace)" id="prevaaya"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M195.826 237.711h-39.765l60.864-105.419-60.864-105.419h39.765l60.864 105.419zm-68.792 0H87.269l60.864-105.419-60.864-105.42h39.765l60.864 105.419zm-68.792 0H18.477l60.864-105.419-60.864-105.42h39.765l60.864 105.419z"/></svg></button>
-<button title="أخف عبارة - حتى علامة وقف أو نهاية آية (زر رقم الواحد)" id="prevjmla"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M161.43 237.711h-39.765l60.864-105.419-60.864-105.419h39.765l60.864 105.419zm-68.792 0H52.873l60.864-105.419-60.864-105.42h39.765l60.864 105.419z"/></svg></button>
-<button title="أخف كلمة (زر BackSpace أو سهم يمين)" id="prevword"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M127.034 237.711H87.269l60.864-105.419L87.269 26.872h39.765l60.864 105.419z"/></svg></button>
-<button title="أظهر كلمة (زر Space أو Enter أو سهم يسار)" id="nextword"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M137.549 237.711h39.765l-60.864-105.419 60.864-105.419h-39.765L76.686 132.292z"/></svg></button>
-<button title="أظهر عبارة - حتى علامة وقف أو نهاية آية (زر رقم الصفر)" id="nextjmla"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M103.154 237.711h39.765L82.055 132.292l60.864-105.419h-39.765L42.29 132.292zm68.791 0h39.765l-60.864-105.419 60.864-105.42h-39.765l-60.864 105.419z"/></svg></button>
-<button title="أظهر آية (زري Ctrl+Space أو Ctrl+Enter)" id="nextaaya"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M68.758 237.711h39.765L47.659 132.292l60.864-105.419H68.758L7.894 132.292zm68.791 0h39.765L116.45 132.292l60.864-105.419h-39.765L76.685 132.292zm68.792 0h39.765l-60.864-105.419 60.864-105.419h-39.765l-60.864 105.419z"/></svg></button>
+  <button title="أخف آية (زري Ctrl+BackSpace)" id="prevaaya"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M195.826 237.711h-39.765l60.864-105.419-60.864-105.419h39.765l60.864 105.419zm-68.792 0H87.269l60.864-105.419-60.864-105.42h39.765l60.864 105.419zm-68.792 0H18.477l60.864-105.419-60.864-105.42h39.765l60.864 105.419z"/></svg></button>
+  <button title="أخف عبارة - حتى علامة وقف أو نهاية آية (زر رقم الواحد)" id="prevjmla"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M161.43 237.711h-39.765l60.864-105.419-60.864-105.419h39.765l60.864 105.419zm-68.792 0H52.873l60.864-105.419-60.864-105.42h39.765l60.864 105.419z"/></svg></button>
+  <button title="أخف كلمة (زر BackSpace أو سهم يمين)" id="prevword"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M127.034 237.711H87.269l60.864-105.419L87.269 26.872h39.765l60.864 105.419z"/></svg></button>
+  <button title="أظهر كلمة (زر Space أو Enter أو سهم يسار)" id="nextword"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M137.549 237.711h39.765l-60.864-105.419 60.864-105.419h-39.765L76.686 132.292z"/></svg></button>
+  <button title="أظهر عبارة - حتى علامة وقف أو نهاية آية (زر رقم الصفر)" id="nextjmla"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M103.154 237.711h39.765L82.055 132.292l60.864-105.419h-39.765L42.29 132.292zm68.791 0h39.765l-60.864-105.419 60.864-105.42h-39.765l-60.864 105.419z"/></svg></button>
+  <button title="أظهر آية (زري Ctrl+Space أو Ctrl+Enter)" id="nextaaya"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M68.758 237.711h39.765L47.659 132.292l60.864-105.419H68.758L7.894 132.292zm68.791 0h39.765L116.45 132.292l60.864-105.419h-39.765L76.685 132.292zm68.792 0h39.765l-60.864-105.419 60.864-105.419h-39.765l-60.864 105.419z"/></svg></button>
 </div>
-</div>
+
 
 </div>
 </div>
@@ -891,7 +883,6 @@ const el_end_of_header = Qid("end_of_header")
 const el_zzback = Qid("zzback")
 const el_zzignore = Qid("zzignore")
 const el_mvbtns_disablehack = Qid("mvbtns_disablehack")
-const el_mvbtns_container = Qid("mvbtns_container")
 const el_mvbtns = Qid("mvbtns")
 const el_nextword = Qid("nextword")
 const el_nextjmla = Qid("nextjmla")
@@ -1167,7 +1158,6 @@ function chstyle () {
     mv === 'left'  ? 'sidebtns leftside'  :
                      ''  /* no class for 'bottom' */
   el_mvbtns.setAttribute('class', mv_cls)
-  el_mvbtns_container.setAttribute('class', mv_cls)
 }
 
 function decode_contact () {

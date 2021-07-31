@@ -278,30 +278,22 @@ summary::marker { color: #c00; }
 @media (max-width: 350px) { #body { --mvbtns-width: calc((5*0.33 + 0.67 + 0.37) * var(--btn-base-width)) } }
 
 #mvbtns.sidebtns {
-  position: static;
-  transform: rotate(-90deg);
-}
-
-#mvbtns_container.sidebtns {
+  --btn-base-width: min(35vh, 10rem);
   position: fixed;
-  top: 45vh;
-  z-index: 11;
+  width: 100vh;
   margin: 0;
-}
-#mvbtns_container.sidebtns.rightside {
-  margin-right: calc(-2vw - 0.5 * (5*0.33 + 0.67 + 5*0.1) * var(--btn-base-width));
-}
-
-/* remember: #all { width: 80vw; min-width: 10em; max-width: 35em; } */
-#mvbtns_container.sidebtns.leftside {
-  width: calc((5*0.33 + 0.67 + 5*0.1) * var(--btn-base-width));
-  margin-right: min(23rem, calc(50vw - 3rem));
+  top: 0;
+  transform-origin: top right;
+  transform: rotate(-90deg);
+  z-index: 11;
 }
 
-@media (max-width: 550px) { 
-  #mvbtns_container.sidebtns.leftside {
-    margin-right: calc(95vw - 16.5rem);
-  }
+#mvbtns.sidebtns.rightside {
+  right: calc(0.25 * var(--btn-base-width));
+}
+
+#mvbtns.sidebtns.leftside {
+  right: calc(100vw - 0.05 * var(--btn-base-width));
 }
 
 #mvbtns_disablehack {
