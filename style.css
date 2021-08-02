@@ -281,6 +281,7 @@ summary::marker { color: #c00; }
   --btn-base-width: min(35vh, 10rem);
   position: fixed;
   width: 100vh;
+  height: 2em;
   margin: 0;
   top: 0;
   transform-origin: top right;
