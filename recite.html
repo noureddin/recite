@@ -3,19 +3,8 @@
 <head>
 <meta charset="utf8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<!--
-    This code may not look great; I'm still trying to improve it.
-    If you have an advice, please let me know!
-    ---
-    One thing that makes this code look horrible, is that I wanted it to be
-    a self-contained Single-Page Application, taken in the literal sense(!).
-    I'm still trying to see how I can easily load only the needed ayat
-    on-demand, from other file(s), possibly asynchronously.
-    When I achieve that, I'll decompose this monstrous file into a number
-    of small files with cleanly-defined boundaries.
--->
-<<!!# this file uses a small preprocessor to embed fonts and data; see index.html for the actual HTML file>>
-<title>راجع ما تحفظ من القرآن الكريم</title>
+<<!!# this file uses a small preprocessor to embed fonts and data; see index.html for the generated HTML file>>
+<<!!sh meta.sh>>
 <style>
 <<!!cat fonts.css>>
 <<!!cat style.css>>
@@ -105,7 +94,7 @@
     <label for="sura_bgn">من سورة:</label>
     <select id="sura_bgn">
       <option value="" selected>السورة</option>
-      <<!!bash -c 'i=0; cat res/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$[i+1]; done | tr -d "\n"'>>
+      <<!!sh -c 'i=0; cat res/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$((i + 1)); done | tr -d "\n"'>>
     </select>
     <label for="aaya_bgn">الآية:</label>
     <input id="aaya_bgn">
@@ -115,7 +104,7 @@
     <label for="sura_end">إلى سورة:</label>
     <select id="sura_end">
       <option value="" selected>السورة</option>
-      <<!!bash -c 'i=0; cat res/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$[i+1]; done | tr -d "\n"'>>
+      <<!!sh -c 'i=0; cat res/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$((i + 1)); done | tr -d "\n"'>>
     </select>
     <label for="aaya_end">الآية:</label>
     <input id="aaya_end">
