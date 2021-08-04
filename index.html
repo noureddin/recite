@@ -433,8 +433,8 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   margin-bottom: 0.5rem;
 }
 
-#optiontoggle         + label:before { content: "أظهر " }
-#optiontoggle:checked + label:before { content: "أخفِ "  }
+#optiontoggle         + label:before { content: "أظهر" }
+#optiontoggle:checked + label:before { content: "أخفِ"  }
 
 #helpcontent ul {
     text-align: right;
@@ -446,7 +446,8 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   --small-width: 1rem;
   --big-width: calc(var(--all-width) - 15px - var(--label-gap) - 2*var(--small-width));
   --padding: 10px;
-  --height: 1.7rem;
+  --height: 1.3rem;
+  line-height: 1.2;
   padding: var(--padding);
   height: var(--height);
   background: var(--tab);
@@ -595,7 +596,7 @@ details[open] > .details-content {
 <input type="checkbox" id="helptoggle" class="tab" onchange="help_toggled()">
 <label for="helptoggle">؟</label>
 <input type="checkbox" id="optiontoggle" class="tab" onchange="option_toggled()">
-<label for="optiontoggle"> الخيارات</label>
+<label for="optiontoggle">&nbsp;الخيارات</label>
 
 <div id="options" class="contentcontainer">
 
