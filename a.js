@@ -147,20 +147,6 @@ function is_element_out_of_sight (el) {
                                                   0
 }
 
-function show_or_hide_mvbtns () {
-  if (el_mvbtns.classList.contains('sidebtns')) { return }
-  const mvbtns_need_show =
-  !el_mvbtns.hidden &&
-    el_mvbtns.getBoundingClientRect().top >=
-      el_end_of_header.getBoundingClientRect().bottom
-  //
-  el_mvbtns.style.opacity = mvbtns_need_show? '100' : '0'
-  el_mvbtns_disablehack.hidden = mvbtns_need_show
-}
-
-addEventListener('scroll', show_or_hide_mvbtns, false)
-addEventListener('resize', show_or_hide_mvbtns, false)
-
 const audio = (function () {  // {{{
   const el_player = Qid('player')
   let list
