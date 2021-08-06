@@ -80,8 +80,10 @@ body { text-align: center; } /* center everything */
   --uitext: #233; --txt: #111;
   --txt-font: AmiriQuranWeb;
   --background-rgb: 249, 246, 231; /* old: 249, 244, 214; */
+  --content-rgb:    252, 250, 241;
   --background: rgb(var(--background-rgb));
   --background-translucent: rgba(var(--background-rgb), 0.66);
+  --details-bg: white; --details-shadow: black;
   /* tajweed */
   --L: #aa5555; --W: red;     --J: orangered; --T: #ff9900;    --N: #009000;
   --X: #9595a0; --R: #2222e0; --Q: #00a5e7;   --A: darkorange; --D: navy;
@@ -102,7 +104,8 @@ body { text-align: center; } /* center everything */
 #dark:checked ~ #body {
   /* general */
   --faint-btn: #555;
-  --uitext: #ccc;  --txt: #eee;  --background-rgb: 13, 13, 13;
+  --uitext: #ccc;  --txt: #eee;  --background-rgb: 13, 13, 13; --content-rgb: 23, 23, 23;
+  --details-bg: black; --details-shadow: white;
   /* tajweed */
   --L: #bb5555;  --W: red    ;  --J: #ff6600;  --T: #ffbb00;  --N: #00ff00;
   --X: #808080;  --R: #4477ff;  --Q: #00d6ff;  --A: #ff8c00;  --D: #ffffff;
@@ -232,11 +235,6 @@ button:disabled {
 #dark:checked ~ #body button,
 #dark:checked ~ #body select { filter: invert(1) hue-rotate(180deg) }
 
-#dark:checked ~ #body .contentcontainer {
-  background: rgba(255,255,255,0.04);
-  /* box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3); */
-}
-
 body.letter-parts #txt {
   --txt-font: AmiriQuranColoredWeb;
   --L: var(--txt); --W: var(--txt); --J: var(--txt); --T: var(--txt);
@@ -268,11 +266,6 @@ body.letter-parts:not(.ayat-nocolor) #txt .D {
 #dark:checked ~ #body a               { color: #bbf }
 #dark:checked ~ #body kbd             { color: #000 }  /* inverted */
 #dark:checked ~ #body summary         { color: #fff }
-
-#dark:checked ~ #body .details-content {
-    background-color: black;
-    box-shadow: none;
-}
 
 /* /1* tajweed *1/ */
 /* .L { color: maroon      } /1* firebrick;  } /1* darkred;  madd lazem (6 vowels) *1/ */
@@ -402,8 +395,10 @@ details, details * {
 details > :last-child  { margin-bottom: 0.8rem; }
 
 .details-content {
-    background-color: white;
-    box-shadow: 0 0 0.2em 0 black;
+    background-color: var(--details-bg);
+    box-shadow: 0 0 0.2em 0 var(--details-shadow);
+    width: calc(var(--all-width) - 10%);  /* minus 2 times side padding */
+    margin-right: -0.1em;  /* half blur radius */
     padding-top:    0.4rem;
     padding-bottom: 0.2rem;
     padding-left:  5%;
@@ -481,7 +476,7 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   width: calc(var(--all-width) - 0.2rem);  /* minus 2 times side padding */
   padding: 0.1rem;
   padding-bottom: 1rem;
-  background: rgba(255,255,255,0.4);
+  background: rgb(var(--content-rgb));
   box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3);
   margin: 0;
   margin-top: -1.1rem;
