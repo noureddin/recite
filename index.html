@@ -132,13 +132,6 @@ html { scroll-behavior: smooth; }
 
 /* https://bits.theorem.co/css-pro-tips-responsive-font-sizes-and-when-to-use-which-units */
 html { font-size: calc(16px + 0.5vw) }
-/* @media (max-width:  576px) { html { font-size: 16px; } } */
-/* https://getbootstrap.com/docs/4.0/layout/overview/#responsive-breakpoints */
-                             /* html { font-size: 1   em; } */
-/* @media (min-width:  576px) { html { font-size: 1   em; } } */
-/* @media (min-width:  768px) { html { font-size: 1.5 em; } } */
-/* @media (min-width:  992px) { html { font-size: 1.5 em; } } */
-/* @media (min-width: 1200px) { html { font-size: 1.5 em; } } */
 
 * {
   font-family: Cortoba;
@@ -260,39 +253,15 @@ body.letter-parts:not(.ayat-nocolor) #txt .D {
 }
 
 /* all help elements are affected by invert and hue-rotate */
-/* #dark:checked ~ #body .help-part      { color: #f66 } */
-/* #dark:checked ~ #body summary::marker { color: #f66 } */
-#dark:checked ~ #body .help-part      { color: #f22 }
-#dark:checked ~ #body summary::marker { color: #f22 }
+#dark:checked ~ #body .help-part      { color: #f66 }
+#dark:checked ~ #body summary::marker { color: #f66 }
+/* #dark:checked ~ #body .help-part      { color: #f22 } */
+/* #dark:checked ~ #body summary::marker { color: #f22 } */
 #dark:checked ~ #body details *       { color: #aaf }
 #dark:checked ~ #body strong          { color: #caf }
 #dark:checked ~ #body a               { color: #bbf }
 #dark:checked ~ #body kbd             { color: #000 }  /* inverted */
 #dark:checked ~ #body summary         { color: #fff }
-
-/* /1* tajweed *1/ */
-/* .L { color: maroon      } /1* firebrick;  } /1* darkred;  madd lazem (6 vowels) *1/ */
-/* .W { color: red         } /1* red;        } /1* red;      madd wajeb (4 or 5 vowels) *1/ */
-/* .J { color: orangered   } /1* #fe6c29;    } /1* orange;   madd jaez (2 or 4 or 6 vowels) *1/ */
-/* .T { color: #ff9900     } /1* goldenrod;  } /1* gold;     madd tabiei (2 vowels) *1/ */
-/* .N { color: #007600     } /1* green;      } /1* green;    ghunna and ikhfaa *1/ */
-/* .X { color: #8888aa     } /1* #a7a195;    } /1* darkgrey; silent *1/ */
-/* .R { color: #0000aa     } /1* #281dcf;    } /1* darkblue; emphasis *1/ */
-/* .Q { color: #0066ff     } /1* dodgerblue; } /1* blue;     qalqala *1/ */
-/* .A { */
-/*     color: darkorange; */
-/*     text-shadow: */
-/*                   1px  1px  1px gold, */
-/*                   1px -1px  1px gold, */
-/*                  -1px  1px  1px gold, */
-/*                  -1px -1px  1px gold, */
-/*                   0    0    5px blue; */
-/* } */
-/* .D { */
-/*     color: navy; */
-/*     text-shadow: 0 0 10px rgba(0,0,255,0.5); */
-/* } */
-
 
 .help-part {
     font-weight: normal;
@@ -308,9 +277,7 @@ details * {
 }
 
 summary {
-  /* font-family: Cortoba; */
   color: #000;
-  /* display: inline; /1* so the marker is on the same line *1/ */
   margin-right: -0.2em;
 }
 
@@ -418,8 +385,6 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
 
 #help {
   margin: 0;
-  /* margin-top: -1.5rem; */
-  /* margin-bottom: 0.5rem; */
 }
 
 #optiontoggle         + label:before { content: "أظهر" }
@@ -443,14 +408,8 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   color: var(--tab-txt);
   box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3);
   border-radius: 0 0 1rem 1rem;
-  /* mask-image: radial-gradient(circle 10px at 0 0, transparent 0, transparent 20px, black 21px); */
-  /* clip-path: circle(50px at 0 100px); */
-  /* clip-path: path('M0,0 h250 a 50 50 0 0 1 50 50 Z'); /*a 250 250 0 0 1 100 100 v70 h-750 Z');*/
-  /* clip-path: path('h 661.90528 c 3.02658,-52.87421 46.75217,-94.21966 99.71289,-94.28516 Z'); */
-  /* mask-image: circle */
   z-index: 20;
   position: relative;
-  /* margin-top: -1rem; */
 }
 #dark:checked ~ #body .tab + label {
   box-shadow: 1px 3px 4px rgba(255, 255, 255, 0.3);
@@ -500,7 +459,7 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
 #optiontoggle:not(checked) ~ #options {
   overflow: hidden;
   max-height: 0;
-  transition: max-height 0.55s ease-out, /*cubic-bezier(0, 1.0, 0, 1.0),*/
+  transition: max-height 0.55s ease-out,
               visibility 0.55s step-end;
   visibility: hidden;
 }
@@ -510,25 +469,6 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
               visibility 0.5s step-start;
   visibility: visible;
 }
-
-/* .labelcontainer { */
-/*   filter: drop-shadow(1px 3px 4px rgba(0, 0, 0, 0.3)); */
-/* } */
-
-/* #help label::after { */
-/* 	width: 1rem; */
-/* 	height: 1rem; */
-/* 	background: transparent; */
-/* 	top: -10px; */
-/* 	right: 0; */
-/* 	position: relative; */
-/* 	content: ''; */
-/* 	border-top-left-radius: 100%; */
-/* 	box-shadow: 50px 0px 0px 50px white; */
-/* 	clip: path('V0,0 L10,10 Z'); */
-/* 	display: block; */
-/*     z-index: 99; */
-/* } */
 
 .tab + label:hover,
 .tab + label:focus {
