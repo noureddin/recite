@@ -343,12 +343,12 @@ details, details * {
 }
 
 /* to apply margin only when open */
-details > :last-child { margin-bottom: 0.8rem; }
+details > :last-child  { margin-bottom: 0.8rem; }
 
 .details-content {
     background-color: white;
     box-shadow: 0 0 0.2em 0 black;
-    padding-top:    0.2rem;
+    padding-top:    0.4rem;
     padding-bottom: 0.2rem;
     padding-left:  5%;
     padding-right: 5%;
@@ -370,11 +370,10 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
 
 #help { display: flex; flex-direction: column-reverse; }
 
-#helpcontent { margin: 0; }
 #help {
   margin: 0;
-  margin-top: -1.5rem;
-  margin-bottom: 0.5rem;
+  /* margin-top: -1.5rem; */
+  /* margin-bottom: 0.5rem; */
 }
 
 #optiontoggle         + label:before { content: "أظهر" }
@@ -388,9 +387,9 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   font-weight: normal; /* bold */
   --label-gap: 0.5rem;
   --small-width: 1rem;
-  --big-width: calc(var(--all-width) - 15px - var(--label-gap) - 2*var(--small-width));
   --padding: 10px;
   --height: 1.3rem;
+  --big-width: calc(var(--all-width) - 4*var(--padding) - var(--label-gap) - var(--small-width));  /* 2 paddings for each button */
   line-height: 1.2;
   padding: var(--padding);
   height: var(--height);
@@ -423,46 +422,46 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
 }
 
 .contentcontainer {
-  width: var(--all-width);
-  padding: 1rem 0.1rem 0rem 0.1rem;
+  width: calc(var(--all-width) - 0.2rem);  /* minus 2 times side padding */
+  padding: 0.1rem;
+  padding-bottom: 1rem;
   background: rgba(255,255,255,0.4);
   box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3);
+  margin: 0;
+  margin-top: -1.1rem;
 }
 
-#helptoggle:not(checked) ~ div #helpcontent {
+#help summary {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+#helptoggle:not(checked) ~ #helpcontent {
   overflow: hidden;
   max-height: 0;
   transition: max-height 1s cubic-bezier(0, 1.0, 0, 1.0),
-              visibility 1s step-end,
-              padding  0.5s ease-in;
+              visibility 1s step-end;
   visibility: hidden;
-  padding: 0.5rem 0.1rem 0rem 0.1rem;
 }
-#helptoggle:checked ~ div #helpcontent {
+#helptoggle:checked ~ #helpcontent {
   max-height: 32766px;
   transition: max-height 3s ease-in,
-              visibility 3s step-start,
-              padding  0.5s ease-out;
+              visibility 3s step-start;
   visibility: visible;
-  padding: 1rem 0.1rem 0rem 0.1rem;
 }
 
 #optiontoggle:not(checked) ~ #options {
   overflow: hidden;
   max-height: 0;
   transition: max-height 0.55s ease-out, /*cubic-bezier(0, 1.0, 0, 1.0),*/
-              visibility 0.55s step-end,
-              padding    0.5s  ease-in;
+              visibility 0.55s step-end;
   visibility: hidden;
-  padding: 0;
 }
 #optiontoggle:checked ~ #options {
   max-height: 15rem;
   transition: max-height 0.5s ease-in,
-              visibility 0.5s step-start,
-              padding    0.5s ease-out;
+              visibility 0.5s step-start;
   visibility: visible;
-  padding: 1rem 0.1rem 0rem 0.1rem;
 }
 
 /* .labelcontainer { */
