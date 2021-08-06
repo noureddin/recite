@@ -150,13 +150,14 @@ button {
 }
 
 #mvbtns button {
-  --width:  calc(0.33 * var(--btn-base-width));
-  margin: 0 calc(0.01 * var(--btn-base-width));
+  --width: calc(var(--all-width) / 7.5);
+  margin: 0;
   fill: var(--faint-btn);
 }
 
 #mvbtns #nextword {
-  --width: calc(0.67 * var(--btn-base-width));
+  /* --width: calc(0.50 * var(--btn-base-width)); */
+  width: calc(2*var(--width));
   fill: #000;  /* inverted in darkmode; thus becomes #fff */
 }
 
@@ -231,16 +232,15 @@ summary::marker { color: #c00; }
   position: fixed;
   bottom: 1rem;
   height: 2em;
-  right: calc(50vw - 0.5 * var(--mvbtns-width));
+  /* right: calc(50vw - 0.5 * var(--mvbtns-width)); */
+  right: calc(50vw - var(--all-width) / 2);
   margin: 0;
   transition: opacity 0.1s ease-in-out;
   z-index: 1;
 }
 
-/* that 0.xx third number is empirically fonud; in all three declarations. */
-                            #body { --mvbtns-width: calc((5*0.33 + 0.67 + 0.26) * var(--btn-base-width)) }
-@media (max-width: 500px) { #body { --mvbtns-width: calc((5*0.33 + 0.67 + 0.30) * var(--btn-base-width)) } }
-@media (max-width: 350px) { #body { --mvbtns-width: calc((5*0.33 + 0.67 + 0.37) * var(--btn-base-width)) } }
+@media (max-width: 432px) { #mvbtns:not(.sidebtns) { right: calc(50vw - var(--all-width) / 1.95) } }
+@media (max-width: 324px) { #mvbtns:not(.sidebtns) { right: calc(50vw - var(--all-width) / 1.9) } }
 
 #mvbtns.sidebtns {
   --btn-base-width: min(35vh, 10rem);
