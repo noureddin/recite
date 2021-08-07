@@ -65,7 +65,7 @@ html { font-size: calc(16px + 0.5vw) }
   font-size: inherit; /* some widgets default to another value */
 }
 
-#aaya_beg, #aaya_end { font-family: KacstOne; }
+#aaya_bgn, #aaya_end { font-family: KacstOne; }
 
 /* center everything */
 body { text-align: center; }
@@ -77,8 +77,8 @@ body { text-align: center; }
 }
 
 /* suar/ayat selection */
-#aaya_beg, #aaya_end { width: 1.5em; }
-#sura_beg, #sura_end { width: 6.5em; }
+#aaya_bgn, #aaya_end { width: 1.5em; }
+#sura_bgn, #sura_end { width: 6.5em; }
 table { display: inline; }
 table, table * { margin: 0; padding: 0;  }
 td { padding: 0.4em; }
@@ -207,9 +207,9 @@ body {
 function Q(selector) { return document.querySelector(selector) }
 function Qid(id)     { return document.getElementById(id) }
 
-const el_sura_beg = Qid("sura_beg")
+const el_sura_bgn = Qid("sura_bgn")
 const el_sura_end = Qid("sura_end")
-const el_aaya_beg = Qid("aaya_beg")
+const el_aaya_bgn = Qid("aaya_bgn")
 const el_aaya_end = Qid("aaya_end")
 const el_txt = Qid("txt")
 const el_selectors = Qid("selectors")
@@ -224,16 +224,16 @@ const el_endmsg = Qid("endmsg")
 function hide_el(el) { el.hidden = true;  el.style.visibility = "hidden";  el.style.opacity =   "0%" }
 function show_el(el) { el.hidden = false; el.style.visibility = "visible"; el.style.opacity = "100%" }
 
-function update_aaya_input_if_empty(beg_or_end) {
-  const el_aaya = Qid("aaya_"+beg_or_end)
-  const el_sura = Qid("sura_"+beg_or_end)
+function update_aaya_input_if_empty(bgn_or_end) {
+  const el_aaya = Qid("aaya_"+bgn_or_end)
+  const el_sura = Qid("sura_"+bgn_or_end)
   if (el_aaya.value === "" && el_sura.value !== "") {
     el_aaya.value = 1
     selectors_changed(el_aaya)  // handles the filtering
   }
 }
 
-el_aaya_beg.addEventListener('focusout', e => update_aaya_input_if_empty("beg"))
+el_aaya_bgn.addEventListener('focusout', e => update_aaya_input_if_empty("bgn"))
 el_aaya_end.addEventListener('focusout', e => update_aaya_input_if_empty("end"))
 
 function disable_ok() { el_ok.disabled = true;  }
@@ -276,48 +276,48 @@ function defilter_aaya_input(n) {  // convert numerals to ASCII
 // return true if the input is valid
 function validate_selectors(ev) {
 
-  let sura_beg = el_sura_beg.value
+  let sura_bgn = el_sura_bgn.value
   let sura_end = el_sura_end.value
-  let aaya_beg = defilter_aaya_input(el_aaya_beg.value)
+  let aaya_bgn = defilter_aaya_input(el_aaya_bgn.value)
   let aaya_end = defilter_aaya_input(el_aaya_end.value)
 
-  const set_aaya_beg = n => el_aaya_beg.value = filter_aaya_input(aaya_beg = +n)
+  const set_aaya_bgn = n => el_aaya_bgn.value = filter_aaya_input(aaya_bgn = +n)
   const set_aaya_end = n => el_aaya_end.value = filter_aaya_input(aaya_end = +n)
 
-  // if the changed field is sura_beg, make aaya_beg 1 if empty,
-  // and update sura_end if empty or is before sura_beg
-  if (ev.id == "sura_beg") {
-    if (aaya_beg === "")
-      set_aaya_beg(1)
-    if (sura_end === "" || +sura_end < +sura_beg) {
-      sura_end = el_sura_end.value = sura_beg
+  // if the changed field is sura_bgn, make aaya_bgn 1 if empty,
+  // and update sura_end if empty or is before sura_bgn
+  if (ev.id == "sura_bgn") {
+    if (aaya_bgn === "")
+      set_aaya_bgn(1)
+    if (sura_end === "" || +sura_end < +sura_bgn) {
+      sura_end = el_sura_end.value = sura_bgn
       set_aaya_end(suar_lengths[sura_end])
     }
   }
   // if the changed field is sura_end, make aaya_end the last aya;
-  // and update sura_beg if empty or is after sura_end
+  // and update sura_bgn if empty or is after sura_end
   else if (ev.id == "sura_end") {
     // if (aaya_end === "")
       set_aaya_end(suar_lengths[sura_end])
-    if (sura_beg === "" || (sura_end !== "" && +sura_end < +sura_beg)) {
-      sura_beg = el_sura_beg.value = sura_end
-      set_aaya_beg(1)
+    if (sura_bgn === "" || (sura_end !== "" && +sura_end < +sura_bgn)) {
+      sura_bgn = el_sura_bgn.value = sura_end
+      set_aaya_bgn(1)
     }
   }
 
   // make sure ayat are within limits:
 
   // ayat upper-limits:
-  if (aaya_beg > suar_lengths[sura_beg]) set_aaya_beg(suar_lengths[sura_beg])
+  if (aaya_bgn > suar_lengths[sura_bgn]) set_aaya_bgn(suar_lengths[sura_bgn])
   if (aaya_end > suar_lengths[sura_end]) set_aaya_end(suar_lengths[sura_end])
 
   // ayat lower-limits:
-  if (aaya_beg === "0") set_aaya_beg(1)
+  if (aaya_bgn === "0") set_aaya_bgn(1)
   if (aaya_end === "0") set_aaya_end(1)
   // a negative sign is not allowed to be entered
   // empty aaya-input is handled separately in a focusout handler
 
-  return sura_beg !== "" && sura_end !== "" && aaya_beg !== "" && aaya_end !== ""
+  return sura_bgn !== "" && sura_end !== "" && aaya_bgn !== "" && aaya_end !== ""
 }
 
 const init_txt = function() {
@@ -328,7 +328,7 @@ const init_txt = function() {
 
 function selectors_changed(ev) {
 
-  el_aaya_beg.value = filter_aaya_input(el_aaya_beg.value)
+  el_aaya_bgn.value = filter_aaya_input(el_aaya_bgn.value)
   el_aaya_end.value = filter_aaya_input(el_aaya_end.value)
   el_txt.placeholder = "اكتب هنا"
 
@@ -337,12 +337,12 @@ function selectors_changed(ev) {
     return
   }
 
-  const sura_beg = +el_sura_beg.value
+  const sura_bgn = +el_sura_bgn.value
   const sura_end = +el_sura_end.value
-  const aaya_beg = +defilter_aaya_input(el_aaya_beg.value)
+  const aaya_bgn = +defilter_aaya_input(el_aaya_bgn.value)
   const aaya_end = +defilter_aaya_input(el_aaya_end.value)
 
-  const st = +suar_lengths.slice(0, sura_beg).reduce((a,b)=>a+b, 0) + aaya_beg
+  const st = +suar_lengths.slice(0, sura_bgn).reduce((a,b)=>a+b, 0) + aaya_bgn
   const en = +suar_lengths.slice(0, sura_end).reduce((a,b)=>a+b, 0) + aaya_end
   if (en <= st-1) { disable_ok(); return }  // should not happen!
   enable_ok()
@@ -350,15 +350,15 @@ function selectors_changed(ev) {
   const input_trigger = function(ev) {
     // this fn is connected to onkeyup and onmouseup. it handles three "events"
 
-    const on_ayat = ev.target.id === "aaya_beg" || ev.target.id === "aaya_end"
-    const on_suar = ev.target.id === "sura_beg" || ev.target.id === "sura_end"
+    const on_ayat = ev.target.id === "aaya_bgn" || ev.target.id === "aaya_end"
+    const on_suar = ev.target.id === "sura_bgn" || ev.target.id === "sura_end"
 
     // Enter on suar/ayat selection: set focus on the next element:
-    //   sura_beg > aaya_beg > sura_end > aaya_end > ok
+    //   sura_bgn > aaya_bgn > sura_end > aaya_end > ok
     // also, on the last element, get the next (ie first) word
     if (ev.key === "Enter" && (on_ayat || on_suar)) {
-      (ev.target.id === "sura_beg"? el_aaya_beg :
-       ev.target.id === "aaya_beg"? el_sura_end :
+      (ev.target.id === "sura_bgn"? el_aaya_bgn :
+       ev.target.id === "aaya_bgn"? el_sura_end :
        ev.target.id === "sura_end"? el_aaya_end :
        ev.target.id === "aaya_end"? el_ok       :
        1).focus()
@@ -377,19 +377,19 @@ function selectors_changed(ev) {
 
   }
 
-  el_sura_beg.onkeyup = input_trigger
-  el_aaya_beg.onkeyup = input_trigger
+  el_sura_bgn.onkeyup = input_trigger
+  el_aaya_bgn.onkeyup = input_trigger
   el_sura_end.onkeyup = input_trigger
   el_aaya_end.onkeyup = input_trigger
 
   const make_title = function() {
-    const sura_beg_val = el_sura_beg.value
+    const sura_bgn_val = el_sura_bgn.value
     const sura_end_val = el_sura_end.value
-    const aaya_beg_val = +defilter_aaya_input(el_aaya_beg.value)
+    const aaya_bgn_val = +defilter_aaya_input(el_aaya_bgn.value)
     const aaya_end_val = +defilter_aaya_input(el_aaya_end.value)
-    const sura_beg_txt = suar_names[el_sura_beg.value]
+    const sura_bgn_txt = suar_names[el_sura_bgn.value]
     const sura_end_txt = suar_names[el_sura_end.value]
-    const aaya_beg_txt = filter_aaya_input(el_aaya_beg.value)
+    const aaya_bgn_txt = filter_aaya_input(el_aaya_bgn.value)
     const aaya_end_txt = filter_aaya_input(el_aaya_end.value)
     ////////////////////////////////////////////////////////////////////
     // handled cases:
@@ -397,11 +397,11 @@ function selectors_changed(ev) {
     // - one or more complete suar (no partial sura)
     // - one partial sura
     // - anything else
-    if (sura_beg_val === sura_end_val && aaya_beg_val === aaya_end_val) {
-      return "تسميع سورة "+sura_beg_txt+" الآية "+aaya_beg_txt+"."
+    if (sura_bgn_val === sura_end_val && aaya_bgn_val === aaya_end_val) {
+      return "تسميع سورة "+sura_bgn_txt+" الآية "+aaya_bgn_txt+"."
     }
-    if (aaya_beg_val === 1 && aaya_end_val == suar_lengths[sura_end_val]) {
-      const suar = suar_names.slice(sura_beg_val, +sura_end_val+1)
+    if (aaya_bgn_val === 1 && aaya_end_val == suar_lengths[sura_end_val]) {
+      const suar = suar_names.slice(sura_bgn_val, +sura_end_val+1)
       const names = suar.join(" و")
       if (suar.length === 1)
         return "تسميع سورة "+names+" كاملة."
@@ -409,10 +409,10 @@ function selectors_changed(ev) {
         return "تسميع سورتي "+names+" كاملتين."
       return "تسميع سور "+names+" كاملة."
     }
-    if (sura_beg_val == sura_end_val) {
-      return "تسميع سورة "+sura_beg_txt+" من الآية "+aaya_beg_txt+" إلى الآية "+aaya_end_txt+"."
+    if (sura_bgn_val == sura_end_val) {
+      return "تسميع سورة "+sura_bgn_txt+" من الآية "+aaya_bgn_txt+" إلى الآية "+aaya_end_txt+"."
     }
-    return "تسميع من سورة "+sura_beg_txt+" الآية "+aaya_beg_txt+" إلى سورة "+sura_end_txt+" الآية "+aaya_end_txt+"."
+    return "تسميع من سورة "+sura_bgn_txt+" الآية "+aaya_bgn_txt+" إلى سورة "+sura_end_txt+" الآية "+aaya_end_txt+"."
   }
 
   const start_reciting = function(ev) {
@@ -480,8 +480,8 @@ el_new.onmouseup = show_selectors
 el_new.onclick   = show_selectors
 
 const init_selectors = function() {
-  el_sura_beg.value = ""
-  el_aaya_beg.value = ""
+  el_sura_bgn.value = ""
+  el_aaya_bgn.value = ""
   el_sura_end.value = ""
   el_aaya_end.value = ""
   init_txt()

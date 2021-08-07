@@ -21,7 +21,7 @@ html { font-size: calc(16px + 0.5vw) }
   font-size: inherit; /* some widgets default to another value */
 }
 
-#aaya_beg, #aaya_end { font-family: KacstOne; }
+#aaya_bgn, #aaya_end { font-family: KacstOne; }
 
 /* center everything */
 body { text-align: center; }
@@ -33,8 +33,8 @@ body { text-align: center; }
 }
 
 /* suar/ayat selection */
-#aaya_beg, #aaya_end { width: 1.5em; }
-#sura_beg, #sura_end { width: 6.5em; }
+#aaya_bgn, #aaya_end { width: 1.5em; }
+#sura_bgn, #sura_end { width: 6.5em; }
 table { display: inline; }
 table, table * { margin: 0; padding: 0;  }
 td { padding: 0.4em; }
