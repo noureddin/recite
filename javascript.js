@@ -215,6 +215,7 @@ const show_selectors = function () {
   el_header.hidden = true
   el_ok.hidden = false
   el_mvbtns.hidden = true
+  validate_aaya_sura_input({}) /* to enable #ok for easier repeating */
 }
 
 const clear_screen = function () {
@@ -224,7 +225,6 @@ const clear_screen = function () {
 
 const new_select = function () {
   show_selectors()
-  validate_aaya_sura_input({})
   clear_screen()
 }
 
