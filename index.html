@@ -1373,7 +1373,10 @@ function show_done () {
     setTimeout(() => el_ok.focus(), 500)
     // // el_repeat.focus()
     // el_new.focus()
-    if (!el_zzback.hidden) { el_zzback.focus() }
+    if (!el_zzback.hidden) {
+      el_zzback.focus();
+      el_selectors.hidden = true /* show_selectors() does more than this */
+    }
     return true
   }
   return false
