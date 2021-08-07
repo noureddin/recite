@@ -10,10 +10,10 @@ const say = console.log
 function Q (selector) { return document.querySelector(selector) }
 function Qid (id)     { return document.getElementById(id) }
 
-<<!!bash -c 'for id in {sura,aaya}_{bgn,end} qaris player txt endmsg ok new repeat selectors header end_of_header zzback zzignore mvbtns_disablehack mvbtns {next,prev}{word,jmla,aaya}; do echo "const el_$id = Qid(\"$id\")"; done'>>
+<<!!bash -c 'for id in {sura,aaya}_{bgn,end} qaris player title txt endmsg ok new repeat selectors header end_of_header zzback zzignore mvbtns_disablehack mvbtns {next,prev}{word,jmla,aaya}; do echo "const el_$id = Qid(\"$id\")"; done'>>
 
 const suar_length = [7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6]
-// const suar_name = [<<!!sed "s/^/'/;s/$/',/" res/suar-names | tr -d '\n' >>]
+const suar_name = [<<!!sed "s/^/'/;s/$/',/" res/suar-names | tr -d '\n' >>]
 // both rubs and pages are based on http://tanzil.net/res/text/metadata/quran-data.js
 // but changed from sura-aya pairs to aya indexes (0-6235)
 const rubs = [0,32,50,66,81,98,112,130,148,164,183,195,209,225,239,249,259,269,278,289,307,325,344,367,385,405,425,445,463,478,493,504,516,528,550,566,580,592,606,627,640,655,669,680,695,709,719,735,750,765,777,801,824,847,862,883,899,915,929,939,954,984,1000,1018,1041,1070,1095,1109,1124,1142,1160,1181,1200,1220,1235,1253,1268,1280,1294,1309,1327,1345,1356,1374,1389,1416,1434,1453,1478,1496,1513,1533,1556,1580,1602,1625,1648,1672,1696,1711,1725,1741,1759,1777,1802,1851,1901,1930,1951,1975,1990,2011,2029,2051,2078,2098,2127,2156,2171,2190,2214,2238,2271,2308,2348,2402,2430,2458,2483,2511,2533,2565,2595,2613,2632,2654,2673,2708,2747,2791,2811,2825,2843,2855,2875,2907,2932,2983,3042,3112,3159,3185,3214,3240,3263,3280,3302,3327,3340,3365,3385,3409,3439,3462,3490,3513,3533,3550,3563,3583,3592,3615,3629,3651,3674,3700,3732,3764,3809,3870,3932,3990,4021,4065,4089,4110,4133,4153,4173,4198,4226,4242,4264,4284,4298,4322,4348,4381,4430,4484,4510,4530,4554,4577,4600,4612,4625,4656,4705,4758,4809,4854,4901,4979,5053,5090,5104,5117,5136,5156,5177,5191,5217,5229,5241,5271,5323,5393,5447,5494,5551,5609,5672,5758,5829,5884,5948,6023,6090,6154,6236]
@@ -271,6 +271,47 @@ function decode_contact () {
   xyz.innerHTML = mia_nomo + '_'.charCodeAt(0) + String.fromCharCode(1<<6) + 'moc.liamg'.split('').reverse().join('')
   xyz.href = xyz.innerHTML.slice(13,17) + 'to' + String.fromCharCode('xyz'.charCodeAt(1<<1)^0O100) + xyz.innerHTML
   // if you know a better way, please let me know!
+}
+
+function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {
+  // both aaya are 1-based, but both sura are 0-based.
+  sura_bgn = +sura_bgn
+  aaya_bgn = +aaya_bgn
+  sura_end = +sura_end
+  aaya_end = +aaya_end
+  const s_bgn_len = suar_length[sura_bgn - 1]
+  const s_end_len = suar_length[sura_end - 1]
+  const s_bgn_txt = suar_name[sura_bgn - 1]
+  const s_end_txt = suar_name[sura_end - 1]
+  // converts to Eastern Arabic numerals, and state the first and last in words
+  const a_bgn_txt = aaya_bgn === 1? 'الأولى' : aaya_bgn === s_bgn_len? 'الأخيرة' : filter_aaya_input(aaya_bgn)
+  const a_end_txt = aaya_end === 1? 'الأولى' : aaya_end === s_end_len? 'الأخيرة' : filter_aaya_input(aaya_end)
+  //
+  if (sura_bgn === sura_end) {
+    // if exactly one aaya
+    if (aaya_bgn === aaya_end) {
+      return `تسميع الآية ${a_bgn_txt} من سورة ${s_bgn_txt}`
+    }
+    // if one complete sura
+    if (aaya_bgn === 1 && aaya_end === s_end_len) {
+      return `تسميع سورة ${s_bgn_txt} كاملة`
+    }
+    // otherwise: one partial sura
+    return `تسميع سورة ${s_bgn_txt} من الآية ${a_bgn_txt} حتى الآية ${a_end_txt}`
+  }
+  // more than one sura:
+  // if multiple complete suar
+  if (aaya_bgn === 1 && aaya_end === s_end_len) {
+    const names = suar_name.slice(sura_bgn, sura_end + 1).join(" و")
+    // if exactly two
+    if (sura_end === sura_bgn + 1) {
+      return `تسميع سورتي ${names} كاملتين`
+    }
+    // otherwise: more than two (one is handled previously)
+    return `تسميع سور ${names} كاملة`
+  }
+  // otherwise
+  return `تسميع من سورة ${s_bgn_txt} الآية ${a_bgn_txt} حتى سورة ${s_end_txt} الآية ${a_end_txt}`
 }
 
 // vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:

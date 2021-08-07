@@ -76,7 +76,36 @@ function test_ligilumi () {
     all += 1
   })
   console.log('ligilumi test finished;', fail, 'failed out of', all)
-}
-test_ligilumi()/**/ // }}}
+}/**/ // }}}
+
+// make_title: human readable version of the range to recite {{{
+function test_make_title () {
+  let fail=0, all=0, out
+  // Remember:
+  // all numbers are 1-based.
+  [
+    [[1,1,1,1], 'تسميع الآية الأولى من سورة الفاتحة'],
+    [[1,7,1,7], 'تسميع الآية الأخيرة من سورة الفاتحة'],
+    [[1,4,1,4], 'تسميع الآية ٤ من سورة الفاتحة'],
+    [[1,1,1,3], 'تسميع سورة الفاتحة من الآية الأولى حتى الآية ٣'],
+    [[1,6,1,7], 'تسميع سورة الفاتحة من الآية ٦ حتى الآية الأخيرة'],
+    [[2,1,2,286], 'تسميع سورة البقرة كاملة'],
+    [[1,1,2,286], 'تسميع سورتي الفاتحة والبقرة كاملتين'],
+    [[1,1,3,200], 'تسميع سور الفاتحة والبقرة وآل عمران كاملة'],
+    [[1,1,3,199], 'تسميع من سورة الفاتحة الآية الأولى حتى سورة آل عمران الآية ١٩٩'],
+  ]
+  .forEach((t) => {
+    out = make_title(...t[0])
+    if (out !== t[1]) {
+      console.log('make_title', t[0], ' got', out, ' exp', t[1])
+      fail += 1
+    }
+    all += 1
+  })
+  console.log('make_title test finished;', fail, 'failed out of', all)
+}/**/ // }}}
+
+test_ligilumi()
+test_make_title()
 
 // vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:

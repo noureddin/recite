@@ -28,6 +28,7 @@ body { text-align: center; } /* center everything */
   --background: rgb(var(--background-rgb));
   --background-translucent: rgba(var(--background-rgb), 0.66);
   --details-bg: white; --details-shadow: black;
+  --title-rgb: 0, 0, 0;
   /* tajweed */
   --L: #aa5555; --W: red;     --J: orangered; --T: #ff9900;    --N: #009000;
   --X: #9595a0; --R: #2222e0; --Q: #00a5e7;   --A: darkorange; --D: navy;
@@ -50,6 +51,7 @@ body { text-align: center; } /* center everything */
   --faint-btn: #555;
   --uitext: #ccc;  --txt: #eee;  --background-rgb: 13, 13, 13; --content-rgb: 23, 23, 23;
   --details-bg: black; --details-shadow: white;
+  --title-rgb: 255, 255, 255;
   /* tajweed */
   --L: #bb5555;  --W: red    ;  --J: #ff6600;  --T: #ffbb00;  --N: #00ff00;
   --X: #808080;  --R: #4477ff;  --Q: #00d6ff;  --A: #ff8c00;  --D: #ffffff;
@@ -110,6 +112,13 @@ html { font-size: calc(16px + 0.5vw) }
   margin-top: -3.1rem;
   padding-top: 3.1rem;
   z-index: 2;
+}
+
+#title {
+  display: inline-block;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: rgba(var(--title-rgb), 0.67);
 }
 
 #aaya_bgn, #aaya_end { font-family: KacstOne; }

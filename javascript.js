@@ -78,30 +78,34 @@ function scroll_to_bottom () { window.scrollTo({ top: document.body.scrollHeight
 function hide_el (el) { el.style.visibility = 'hidden';  el.style.opacity =   '0%' }
 function show_el (el) { el.style.visibility = 'visible'; el.style.opacity = '100%' }
 
-function sync_ui (stpair, enpair, qari, preserve_url) {
+function sync_ui (stpair, enpair, qari, title, preserve_url) {
   if (!preserve_url) { window.location.hash = stpair.join('/') + '-' + enpair.join('/') }
+  document.querySelector('title').innerHTML = title + ' | رسايت'
   //
   el_sura_bgn.value = stpair[0]-1; el_aaya_bgn.value = filter_aaya_input(stpair[1])
   el_sura_end.value = enpair[0]-1; el_aaya_end.value = filter_aaya_input(enpair[1])
   //
-  el_qaris.value = qari  // if set thru url parameters
+  el_qaris.value = qari  // if set thru url parameters; TODO
 }
 
-function init_audio (stpair, enpair, qari, preserve_url) {
+function init_audio (stpair, enpair, qari) {
   audio.init(qari)
   audio.fill(make_audio_list(stpair[0]-1, stpair[1], enpair[0]-1, enpair[1]))
 }
 
-function recite (st, en, qari, preserve_url, zz) {
+function recite (st, en, qari, zz) {
 
-  most_recent_parameters = [st, en, qari, preserve_url, zz]
+  const preserve_url = !!window.location.search || !!window.location.hash
+  most_recent_parameters = [st, en, qari, zz]
   el_zzback.style.display = zz? 'block' : 'none'
   el_zzback.hidden = !zz
   el_zzignore.hidden = !zz
   el_new.hidden = !!zz  // only hide if ignore is shown
   const stpair = idx2aya(st-1)
   const enpair = idx2aya(en-1)
-  sync_ui(stpair, enpair, qari, preserve_url)
+  const title = make_title(...stpair, ...enpair)
+  el_title.innerHTML = title
+  sync_ui(stpair, enpair, qari, title, preserve_url)
   init_audio(stpair, enpair, qari, preserve_url)
 
   hide_selectors()

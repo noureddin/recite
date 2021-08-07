@@ -231,7 +231,7 @@ function ligilumi () {
   Qid('mvbtns_input').value = mv || 'bottom'  // the default
   chstyle()
   if (st == null || en == null) { return }
-  recite(st, en, '', true, zz)
+  recite(st, en, '', zz)
 }
 
 // vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:
