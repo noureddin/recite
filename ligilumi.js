@@ -230,6 +230,7 @@ function _ligilumilo (params) {
 function ligilumi () {
   const [st, en, dark, color, mv, _txt, zz] = _ligilumilo(window.location.hash || window.location.search)
   const txt = _txt != null? _txt : Qid('quizmode').value === 'txt'
+  Qid('quizmode').value = txt? 'txt' : ''
   Qid('darkmode_input').checked = dark
   Qid('textclr_input').value = color || 'taj'  // the default
   Qid('mvbtns_input').value = mv || 'bottom'  // the default
