@@ -28,12 +28,33 @@ function make_audio_list (sura_bgn, aaya_bgn, sura_end, aaya_end) {
   )
 }
 
+function load_zip(basename, callback) {
+  const filename = 'res/' + basename + '.zip'
+  JSZipUtils.getBinaryContent(filename, function(err, data) {
+    if (err) { throw err /* or handle err */ }
+    JSZip.loadAsync(data).then(function (zip) {
+      return zip.file(basename).async("string")
+    }).then(function (str) {
+      callback(str.split("\n"))
+    })
+  })
+}
+
+var imla
+
+function load_imla (callback) {
+  if (imla == null) {
+    load_zip('imla', (arr) => { imla = arr; callback() })
+  }
+  else {
+    callback()
+  }
+}
+
 function imalaai_ayat (st, en) {
 
-  const ayat = [<<!!cat res/imlaai-ayat-array | tr -d '\n' >>]
-
   return (
-    ayat
+    imla
       .slice(st-1,en)
       .map(a => a.startsWith('#')? a.replace('#', 'بسم الله الرحمن الرحيم\n') : a)
       .join('\n')

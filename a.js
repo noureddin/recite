@@ -134,6 +134,8 @@ function validate_aaya_sura_input (ev) {
 // Copyright (c) 2018 MathuSum Mut. MIT License
 <<!!cat res/confetti.min.js>>
 
+<<!!cat res/jszip-utils.min.js>>
+
 // based on https://stackoverflow.com/a/7557433
 // return:
 //    0 if at least half the element's height is in viewport;

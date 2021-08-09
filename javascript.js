@@ -1,10 +1,3 @@
-'use strict';
-
-<<!!cat a.js>>
-<<!!cat ligilumi.js>>
-<<!!#cat test.js>>
-// remove the '#' in the previous line to perform the tests
-
 let most_recent_parameters = []
 
 function start_reciting () {
@@ -95,6 +88,11 @@ function init_audio (stpair, enpair, qari) {
 }
 
 function recite (st, en, qari, txt, zz) {
+  if (txt) { load_imla(() => { _recite(st, en, qari, txt, zz) }) }
+  else { _recite(st, en, qari, txt, zz) }
+}
+
+function _recite (st, en, qari, txt, zz) {
   most_recent_parameters = [st, en, qari, txt, zz]
 
   const preserve_url = !!window.location.search || !!window.location.hash
@@ -288,7 +286,5 @@ onload = function () {
   decode_contact()
   ligilumi()
 }
-
-<<!!cat z.js>>
 
 // vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:
