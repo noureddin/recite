@@ -91,7 +91,7 @@ html { font-size: calc(16px + 0.5vw) }
   padding-bottom: 4rem;
 }
 #endmsg {
-  font-size: 1.6rem;
+  font-size: min(5vw, 2rem);
   text-align: center;
   color: var(--uitext);
   margin: auto;
@@ -166,6 +166,7 @@ html { font-size: calc(16px + 0.5vw) }
   line-height: 1.7;  /* Amiri Quran is too high to make space for Quranic signs */
   width: 90%;
   height: calc(100vh - 10rem);
+  margin-bottom: 0.5rem;
 }
 
 button {
