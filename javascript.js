@@ -121,6 +121,7 @@ function recite (st, en, qari, txt, zz) {
 
       if (el_txt_txt.value === correct_text) {
         show_done()
+        scroll_to_bottom()
         el_txt_txt.disabled = true
         el_txt_txt.classList = 'done'
         el_new.focus()
