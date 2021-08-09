@@ -1419,14 +1419,14 @@ function input_trigger_x (ev) {
 function show_done () {
   if (el_endmsg.hidden && el_txt.innerHTML.length > 0) {
     el_endmsg.hidden = false
-    show_selectors()
     confetti.start(1200, 50, 150)
-    setTimeout(() => el_ok.focus(), 500)
-    // // el_repeat.focus()
-    // el_new.focus()
-    if (!el_zzback.hidden) {
-      el_zzback.focus();
-      el_selectors.hidden = true /* show_selectors() does more than this */
+    if (el_zzback.hidden) {  /* not zz-mode */
+      show_selectors()
+      setTimeout(() => el_ok.focus(), 500)
+    }
+    else {  /* zz-mode */
+      el_mvbtns.hidden = true
+      setTimeout(() => el_zzback.focus(), 500)
     }
     return true
   }
