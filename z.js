@@ -33,22 +33,38 @@ function load_zip(basename, callback) {
   JSZipUtils.getBinaryContent(filename, function(err, data) {
     if (err) { throw err /* or handle err */ }
     JSZip.loadAsync(data).then(function (zip) {
-      return zip.file(basename).async("string")
+      return zip.file(basename).async('string')
     }).then(function (str) {
-      callback(str.split("\n"))
+      callback(str.split('\n'))
     })
   })
 }
 
 var imla
+var othm = Array(6236)
 
 function load_imla (callback) {
   if (imla == null) {
     load_zip('imla', (arr) => { imla = arr; callback() })
-  }
-  else {
-    callback()
-  }
+  } else { callback() }
+}
+
+// othmani is split into two parts: until Surat Mariam (Sura 19), and then from Surat Ta-Ha.
+// this is *not* arbitrary: it makes both parts almost the same size in bytes.
+const FIRST_AAYA_OF_TAHA = 2349
+function is_in_first_half  (st, en) { return (st-1 <  FIRST_AAYA_OF_TAHA || en <  FIRST_AAYA_OF_TAHA) }
+function is_in_second_half (st, en) { return (st-1 >= FIRST_AAYA_OF_TAHA || en >= FIRST_AAYA_OF_TAHA) }
+
+function load_othm1 (callback) {
+  if (othm[0] == null) {  /* checking an arbitrary aaya in the 1st half */
+    load_zip('othm1', (arr) => { othm = [...arr, ...othm.slice(FIRST_AAYA_OF_TAHA)]; callback() })
+  } else { callback() }
+}
+
+function load_othm2 (callback) {
+  if (othm[6000] == null) {  /* checking an arbitrary aaya in the 2nd half */
+    load_zip('othm2', (arr) => { othm = [...othm.slice(0,FIRST_AAYA_OF_TAHA-1), ...arr]; callback() })
+  } else { callback() }
 }
 
 function imalaai_ayat (st, en) {
@@ -70,12 +86,11 @@ function make_words_list (st, en) {
   // let's make tab ('\t') separates the words,
   // and newline (actually '<br>\n') separates the ayat.
 
-  const ayat = [<<!!cat res/othmani-array-tajweed | tr -d '\n' >>]
-
-  const basmala = ayat[0].replace(/\xa0.*/, '').replace(/ /g, '\xa0')  // '\ufdfd'
+  const basmala = 'بِسۡمِ ٱللَّهِ ٱX<ل>R<رَّ>حۡمَT<ـٰ>نِ ٱX<ل>R<رَّ>حِJ<ی>مِ A<۝>D<١>'  /* othm[0] */
+      .replace(/\xa0.*/, '').replace(/ /g, '\xa0')  // '\ufdfd'
 
   return (
-    ayat
+    othm
       .slice(st-1, en)
       .reduce((arr, aya) => {  // https://stackoverflow.com/a/38528645
         if (aya.startsWith('#')) {
@@ -88,10 +103,6 @@ function make_words_list (st, en) {
       // for quran-data
       .map(a => a.replace(/\xa0(?=\u0670)/g, ''))
       .map(a => a.replace(/أ\u064eو\u064e /g, 'أ\u064eو\u064e'))
-      // // for hafs font
-      // .map(a => a.replace(/ـ(?=\u0670)/g, ''))  // tatweel
-      // .map(a => a.replace(/\u06cc/g, 'ي'))  // farsi yeh
-      // .map(a => a.replace(/[A-Z<>]+/g, ''))
       // continuing
       .map(a => tajweed_colorize_aaya(a))
       .map(a => a.replace(/ /g, '\t<SPC>') + '<br>\n')

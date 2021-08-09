@@ -88,8 +88,15 @@ function init_audio (stpair, enpair, qari) {
 }
 
 function recite (st, en, qari, txt, zz) {
-  if (txt) { load_imla(() => { _recite(st, en, qari, txt, zz) }) }
-  else { _recite(st, en, qari, txt, zz) }
+  const start = () => { _recite(st, en, qari, txt, zz) }
+  if (txt) { load_imla(start) }
+  else {  /* othmani, which is split into two parts */
+    const n1 = is_in_first_half(st, en)
+    const n2 = is_in_second_half(st, en)
+    if (n1 && n2) { load_othm1(() => { load_othm2(start) }) }  // TODO: parallize
+    else if (n1) { load_othm1(start) }
+    else if (n2) { load_othm2(start) }
+  }
 }
 
 function _recite (st, en, qari, txt, zz) {
