@@ -28,6 +28,18 @@ function make_audio_list (sura_bgn, aaya_bgn, sura_end, aaya_end) {
   )
 }
 
+function imalaai_ayat (st, en) {
+
+  const ayat = [<<!!cat res/imlaai-ayat-array | tr -d '\n' >>]
+
+  return (
+    ayat
+      .slice(st-1,en)
+      .map(a => a.startsWith('#')? a.replace('#', 'بسم الله الرحمن الرحيم\n') : a)
+      .join('\n')
+  )
+}
+
 function make_words_list (st, en) {
 
   // const st = +suar_length.slice(0, sura_bgn).reduce((a,b)=>a+b, 0) + +aaya_bgn

@@ -185,6 +185,7 @@ function _ligilumilo (params) {
   let dark
   let color  // tajweed, bas, none
   let mv  // accepts: b, r, l; contains: bottom, right, left
+  let txt  // true if TXT mode, otherwise: normal quizzing mode
   let zz
   // possible params:
   // - p: page. 1-604.
@@ -206,6 +207,8 @@ function _ligilumilo (params) {
       else if (e[0] === 'light' || e[0] === 'l') { dark = false }
       else if (e[0] === 'color' || e[0] === 'c') { color = parse_color(e[1]) }
       else if (e[0] === 'mvbtns' || e[0] === 'mv' || e[0] === 'm') { mv = parse_mv(e[1]) }
+      else if (e[0] === 'txt') { txt = true }
+      else if (e[0] === 'enter') { txt = false }
       else if (e[0] === 'zz') { zz = true }
       else if (e[0] === 'a') { a = +e[1] }
       else if (e[0] === 'b') { b = +e[1] }
@@ -217,21 +220,22 @@ function _ligilumilo (params) {
       else if (e[0] === 'k') { [st, en] = rukus_to_ayat(...range_to_pair(e[1])) }
       else                   { [st, en] =  ayat_to_ayat(...range_to_pair(e[0])) }
     })
-  if (st == null || en == null) { return [null, null, dark, color] }
+  if (st == null || en == null) { return [null, null, dark, color, mv, txt, zz] }
   st -= b; en += a
   if (st <= 0)    { st = 1    }
   if (en >  6236) { en = 6236 }
-  return [st, en, dark, color, mv, zz]
+  return [st, en, dark, color, mv, txt, zz]
 }
 
 function ligilumi () {
-  const [st, en, dark, color, mv, zz] = _ligilumilo(window.location.hash || window.location.search)
+  const [st, en, dark, color, mv, _txt, zz] = _ligilumilo(window.location.hash || window.location.search)
+  const txt = _txt != null? _txt : Qid('quizmode').value === 'txt'
   Qid('darkmode_input').checked = dark
   Qid('textclr_input').value = color || 'taj'  // the default
   Qid('mvbtns_input').value = mv || 'bottom'  // the default
   chstyle()
   if (st == null || en == null) { return }
-  recite(st, en, '', zz)
+  recite(st, en, '', txt, zz)
 }
 
 // vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:

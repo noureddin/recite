@@ -66,6 +66,14 @@
     </select>
   </div>
 
+  <div>
+    <label for="quizmode">وضع التسميع:</label>
+    <select id="quizmode" onchange="">
+      <option value="" selected>عثماني (بدون كتابة) &mdash; تغييره يتطلب إعادة التسميع</option>
+      <option value="txt">إملائي (كتابة) &mdash; تغييره يتطلب إعادة التسميع</option>
+    </select>
+  </div>
+
 </div>
 
 <dl class="contentcontainer" id="helpcontent">
@@ -121,6 +129,9 @@
 </div>
 
 <div id="txt"></div>
+
+<textarea hidden id="txt_txt" placeholder="اكتب هنا">
+</textarea>
 
 <div hidden id="endmsg">
 بارك الله فيك وفتح عليك!<br>لقد أتممت التسميع الذي حددته.
