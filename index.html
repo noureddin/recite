@@ -1439,7 +1439,13 @@ function start_reciting () {
 }
 
 function restart_reciting () {
-  recite(...most_recent_parameters)
+  // qari and txt can change.
+  // Remember: most_recent_parameters = [st, en, qari, txt, zz]
+  let [st, en, qari, txt, zz] = most_recent_parameters 
+  qari = el_qaris.value
+  txt = el_quizmode.value === 'txt'
+  hide_selectors(txt)  // handles the change of quiz mode
+  recite(st, en, qari, txt, zz)
 }
 
 function input_trigger_x (ev) {
@@ -1703,11 +1709,13 @@ const hide_selectors = function (txt) {
     el_txt_txt.classList = ''
     el_txt_txt.hidden = false
     el_txt.hidden = true
+    el_mvbtns.hidden = true
   }
   else {
     el_txt.hidden = false
     el_txt.innerHTML = ''
     el_mvbtns.hidden = false
+    el_txt_txt.hidden = true
   }
 }
 
