@@ -1553,6 +1553,13 @@ function _recite (st, en, qari, txt, zz) {
       else if (correct_text.startsWith(el_txt_txt.value)) {
         el_txt_txt.classList = ''
       }
+      else if (el_txt_txt.value.slice(-1) === '\n'
+          && correct_text.startsWith(el_txt_txt.value.slice(0,-1) + '\xA0\u06dd'))
+      {
+        let x = el_txt_txt.value.length + 3
+        while (correct_text.slice(x, x+1) !== '\n') { ++x }
+        el_txt_txt.value = correct_text.slice(0, x+1)
+      }
       else {
         el_txt_txt.classList = 'wrong'
       }
