@@ -304,13 +304,12 @@ function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {
   // more than one sura:
   // if multiple complete suar
   if (aaya_bgn === 1 && aaya_end === s_end_len) {
-    const names = suar_name.slice(sura_bgn, sura_end + 1).join(" و")
     // if exactly two
     if (sura_end === sura_bgn + 1) {
-      return `تسميع سورتي ${names} كاملتين`
+      return `تسميع سورتي ${s_bgn_txt} و${s_end_txt} كاملتين`
     }
     // otherwise: more than two (one is handled previously)
-    return `تسميع سور ${names} كاملة`
+    return `تسميع السور من ${s_bgn_txt} حتى ${s_end_txt}`
   }
   // otherwise
   return `تسميع من سورة ${s_bgn_txt} الآية ${a_bgn_txt} حتى سورة ${s_end_txt} الآية ${a_end_txt}`
