@@ -120,33 +120,49 @@ function _recite (st, en, qari, txt, zz) {
   if (txt) {
     el_txt_txt.focus()
     let correct_text = imalaai_ayat(st, en)
+    let pasted = false
 
     const txt_changed = function () {
+      const current_aaya_index = el_txt_txt.value.split('\n').length - 2
+
       if (!el_endmsg.hidden) { return }
 
-      if (el_txt_txt.value === correct_text) {
-        show_done()
-        scroll_to_bottom()
-        el_txt_txt.disabled = true
-        el_txt_txt.classList = 'done'
-        el_new.focus()
+      if (pasted) {
+        el_txt_txt.value = el_txt_txt.value.replace(/ \u06dd/g, '\xa0\u06dd')
+        // because NBSP is copied as normal, ASCII space
+        pasted = false
       }
-      else if (correct_text.startsWith(el_txt_txt.value)) {
+
+      if (correct_text.startsWith(el_txt_txt.value)) {
         el_txt_txt.classList = ''
+        if (el_txt_txt.value.slice(-1) === '\n') {  // most likely basmala
+          audio.play_index(current_aaya_index)
+        }
       }
+
       else if (el_txt_txt.value.slice(-1) === '\n'
           && correct_text.startsWith(el_txt_txt.value.slice(0,-1) + '\xA0\u06dd'))
       {
-        let x = el_txt_txt.value.length + 3
+        let x = el_txt_txt.value.length + 2
         while (correct_text.slice(x, x+1) !== '\n') { ++x }
         el_txt_txt.value = correct_text.slice(0, x+1)
+        audio.play_index(current_aaya_index)
+        if (el_txt_txt.value === correct_text) {
+          show_done()
+          scroll_to_bottom()
+          el_txt_txt.disabled = true
+          el_txt_txt.classList = 'done'
+          el_new.focus()
+        }
       }
+
       else {
         el_txt_txt.classList = 'wrong'
       }
     }
 
     el_txt_txt.addEventListener('input', txt_changed, false) // https://stackoverflow.com/a/14029861
+    el_txt_txt.addEventListener('paste', (e) => { pasted = true })
     el_txt_txt.focus()
 
   }

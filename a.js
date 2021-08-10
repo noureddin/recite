@@ -177,6 +177,7 @@ const audio = (function () {  // {{{
 
   function advance  () { cur_idx += 1; fetch() }
   function init_idx () { cur_idx = 0;  fetch() }
+  function set_idx  (i){ cur_idx = i;  fetch() }
   function back     () { if (cur_idx >= 1) { cur_idx -= 1 } }
 
   function show_or_hide_player () {
@@ -214,6 +215,14 @@ const audio = (function () {  // {{{
 
     back: function () {
       back()
+    },
+
+    play_index: function (i) {
+      if (invalid_state()) { return }
+      set_idx(i)
+      show_or_hide_player()
+      play()
+      advance()
     },
 
   }
