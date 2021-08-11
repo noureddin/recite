@@ -193,9 +193,19 @@ function _ligilumilo (params) {
   // - j: juz,  an entire juz.  1-30.
   // - h: hizb, an entire hizb. 1-60  or 1/1-30/2.
   // - r: rub,  an entire rub.  1-240 or 1/1-60/4 or 1//1-30//8.
+  // - k: ruku,  an entire ruku.
+  // - ### => number of aaya in the Quran (1-6236)
+  // - ##/### => number of sura and number of aaya in it
+  //
+  // all previous parameters can be paired; e.g., r=1-2 means to the end of the 2nd rub.
+  //
   // - b: before, a number of ayat to add before whatever you select. 0-inf.
   // - a: after,  a number of ayat to add before whatever you select. 0-inf.
   // - dark & light: dark mode
+  // - color or c: text colors: t/taj/tajweed (default); b/bas/basic; n/no/none.
+  // - mvbtns or mv or m: its placement: b, r, l.
+  // - txt & enter: imlaai (typing) or othmani (no-typing; default)
+  // - zz: enable ZZ-integration
   // TODO: audio
   params
     .slice(1)  // remove the first character (`?` or `#`)

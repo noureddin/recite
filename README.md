@@ -1,16 +1,81 @@
 # Recite (the Web version)
 
-This is the web version of [Recite](https://github.com/noureddin/recite).
-Currently available for Quran only, in the Othmani script, with a no-typing interface,
-and in Arabic only.
+This is the web version of [Recite](https://github.com/noureddin/recite/tree/master), for the Quran only, but with much, much more features.
 
 Use it at: [noureddin.github.io/recite](https://noureddin.github.io/recite).
 
 ---
 
-An Imlaai-style type-only version, like the desktop one, is in the `txt/` directory.
+## Features
 
-Use it at: [noureddin.github.io/recite/txt](https://noureddin.github.io/recite/txt).
+1. Two quiz modes:
+
+    1. no-typing Othmani script, and
+    2. typing-only Imlaai script.
+
+
+2. Opt-in audio recitation after completing every ayah, in either mode.
+
+3. Night mode, in addition to the default light mode.
+
+4. The ability to quiz yourself on any number of consecutive ayat, including for example a number of complete suar, an entire juz that starts in a sura and ends in another, etc.
+
+5. Tajweed&ndash;color-coding in the No-typing Othmani mode, or with no colorization.
+
+6. The ability to use only the keyboard, only the mouse, only the touch-pad, or even only the touch screen.
+
+7. Being responsive and so adapts to virtually any device, from a large TV to a mobile phone.
+
+8. (For geeks) URL parameters to "pre-configure" the preferences and even what to recite. (Detailed below.)
+
+### URL Parameters (for advanced users)
+
+> `https://noureddin.github.io/recite/?PARAMS`
+
+Examples of `PARAMS`:
+
+- `s=1`: the entire first sura
+- `s=2`: the entire second sura
+- `s=1-2`: the first and second suar
+- `s=-3`: the first three suar (`1` is optional here)
+- `s=78-`: all the suar from An-Naba' (sura 78) till the end of the Quran
+- `p=1`: the entire first page (in Mushaf Medina)
+- `p=2`: the entire second page (in Mushaf Medina)
+- `p=1-3`: the first three pages (in Mushaf Medina)
+- `j=1`: the entire first juz
+- `j=30`: the entire last juz
+- `r=1-4`: the first four rubs (in the entire Quran)
+- `r=10//1`: the first rub in the 10th juz
+- `r=10//1-10//2`: the first two rubs in the 10th juz
+- `r=10//7-10//8`: the last two rubs in the 10th juz
+- `h=1`: the entire first hizb (half-juz)
+- `1/1-1/3`: from the first ayah of first sura, till the third ayah of the first sura
+- `2/1-4/3`: from the first ayah of second sura, till the third ayah of the fourth sura
+
+Any of these parameters can have `a=` to add ayat from *after* the specified region, or `b=` to add ayat from *before* the specified region. Examples:
+
+- `p=1-3&a=1`: the first three pages (in Mushaf Medina), and one ayah after them 
+- `j=15&a=36`: the entire 15th juz, and 36 ayah after it
+- `j=2&b=5`: the entire second juz, and five ayat before it
+
+Other parameters you can add to pre-configure the preferences:
+
+- `d` or `dark`: select the dark mode by default
+- `l` or `light`: de-select the dark mode (the default; use only to annul a previous `d`)
+- `c=` or `color=`: select the text colorization; it takes the following values:
+
+    1. `t`, `taj`, or `tajweed`: Tajweed&ndash;color-coding (the default)
+    2. `b`, `bas`, or `basic`: colorize different parts of the letters differently
+    3. `n`, `no`, or `none`: no colorization at all
+
+- `m=` or `mv=` or `mvbtns=`: select the placement of the recitation buttons; it takes the following values:
+
+    1. `b`: bottom (the default)
+    2. `r`: right
+    3. `l`: left
+
+- `txt`: select the typing Imlaai mode by default
+- `enter`: select the no-typing Othmani mode (the default; use only to annul a previous `txt`)
 
 ---
 
