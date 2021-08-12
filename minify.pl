@@ -9,7 +9,7 @@ sub slurp { local $/; open my $f, '<', shift; return scalar <>; }
 
 sub minify_js { my $t = shift;
     # remove comments
-    $t =~ s| \h* //.* ||gx;
+    $t =~ s| \h* (?<!:) //.* ||gx;
     $t =~ s| /\* .*? \*/ ||gsx;
     # collapse multiple newlines (even if they contain spaces) and indentation
     $t =~ s| \h* \n \s+ |\n|gx;
@@ -23,12 +23,12 @@ sub minify_js { my $t = shift;
     $t =~ s| (\W)|$1|g;
     # remove newlines aronud braces
     $t =~ s| \n? ([{}]) \n? |$1|gx;
-    # a semicolon is not need before a closing brace (semis are separators not terminators)
+    # a semicolon is not needed before a closing brace (semis are separators not terminators)
     $t =~ s|;\}|\}|g;
     # a special rule for multi-line conditional operator
     $t =~ s| \n? ([?:]) \n? |$1|gx;
-    # replace \n by ; (for html)
-    $t =~ s|\n|;|g;
+    # # replace \n by ; (for html)
+    # $t =~ s|\n|;|g;
     # remove leading and trailing spaces
     $t =~ s|\A\s+||g;
     $t =~ s|[\s;]+\Z||g;
@@ -44,7 +44,7 @@ sub minify_css { my $t = shift;
     $t =~ s|(\W) (\W)|$1$2|g;
     $t =~ s|(\W) |$1|g;
     $t =~ s| (\W)|$1|g; # TODO: what about selectors? .x .y is diff from .x.y!
-    # a semicolon is not need before a closing brace (semis are separators not terminators)
+    # a semicolon is not needed before a closing brace (semis are separators not terminators)
     $t =~ s|;\}|\}|g;
     # remove leading and trailing spaces
     $t =~ s|\A\s+||g;
