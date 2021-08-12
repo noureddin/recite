@@ -292,7 +292,7 @@ function decode_contact () {
 }
 
 function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {
-  // both aaya are 1-based, but both sura are 0-based.
+  // all numbers are 1-based
   sura_bgn = +sura_bgn
   aaya_bgn = +aaya_bgn
   sura_end = +sura_end

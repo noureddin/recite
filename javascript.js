@@ -278,6 +278,7 @@ const hide_selectors = function (txt) {
   el_header.hidden = false
   el_endmsg.hidden = true
   el_ok.hidden = true
+  el_title.style.display = 'inline-block'
   if (txt) {
     el_txt_txt.value = ""
     el_txt_txt.disabled = false
@@ -299,6 +300,7 @@ const show_selectors = function () {
   el_header.hidden = true
   el_ok.hidden = false
   el_mvbtns.hidden = true
+  el_title.style.display = 'none'
   validate_aaya_sura_input({}) /* to enable #ok for easier repeating */
 }
 

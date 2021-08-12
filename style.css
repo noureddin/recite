@@ -108,17 +108,20 @@ html { font-size: calc(16px + 0.5vw) }
   padding-top: 0.5rem;
   position: sticky;
   background-color: var(--background-translucent);
-  top:        -2.8rem;
-  margin-top: -3.1rem;
-  padding-top: 3.1rem;
+  top:        -4.8rem;
+  margin-top: -5.1rem;
+  padding-top: 5.1rem;
   z-index: 2;
 }
 
 #title {
-  display: inline-block;
+  display: none;
   margin-top: 0;
   margin-bottom: 0.5rem;
-  color: rgba(var(--title-rgb), 0.67);
+  color: rgb(var(--title-rgb));
+  position: relative; z-index: 3;  /* above #header */
+  font-family: KacstOne;
+  font-size: max(0.5rem, 2.8vw);  /* to keep #header in place, covering the area under the curve (of the tab labels), even with the longest title of 29/69-112/4 in KacstOne */
 }
 
 #aaya_bgn, #aaya_end { font-family: KacstOne; }

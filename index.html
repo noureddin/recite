@@ -164,17 +164,20 @@ html { font-size: calc(16px + 0.5vw) }
   padding-top: 0.5rem;
   position: sticky;
   background-color: var(--background-translucent);
-  top:        -2.8rem;
-  margin-top: -3.1rem;
-  padding-top: 3.1rem;
+  top:        -4.8rem;
+  margin-top: -5.1rem;
+  padding-top: 5.1rem;
   z-index: 2;
 }
 
 #title {
-  display: inline-block;
+  display: none;
   margin-top: 0;
   margin-bottom: 0.5rem;
-  color: rgba(var(--title-rgb), 0.67);
+  color: rgb(var(--title-rgb));
+  position: relative; z-index: 3;  /* above #header */
+  font-family: KacstOne;
+  font-size: max(0.5rem, 2.8vw);  /* to keep #header in place, covering the area under the curve (of the tab labels), even with the longest title of 29/69-112/4 in KacstOne */
 }
 
 #aaya_bgn, #aaya_end { font-family: KacstOne; }
@@ -755,6 +758,8 @@ details[open] > .details-content {
 <!--  and rhymes with sura, both have a stressed, long vowel in the first -->
 <!--  syllable, and a short unstressed vowel in the second syllable. -->
 
+<p id="title"></p>
+
 <div id="selectors">
 
   <div>
@@ -783,7 +788,6 @@ details[open] > .details-content {
 </div>
 
 <div hidden id="header">
-<p id="title"></p>
 <div>
 <button id="zzignore" hidden>تجاهل</button>
 <button title="اضغط لبدء مراجعة جديدة" id="new">جديد</button>
@@ -1145,7 +1149,7 @@ function decode_contact () {
 }
 
 function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {
-  // both aaya are 1-based, but both sura are 0-based.
+  // all numbers are 1-based
   sura_bgn = +sura_bgn
   aaya_bgn = +aaya_bgn
   sura_end = +sura_end
@@ -1723,6 +1727,7 @@ const hide_selectors = function (txt) {
   el_header.hidden = false
   el_endmsg.hidden = true
   el_ok.hidden = true
+  el_title.style.display = 'inline-block'
   if (txt) {
     el_txt_txt.value = ""
     el_txt_txt.disabled = false
@@ -1744,6 +1749,7 @@ const show_selectors = function () {
   el_header.hidden = true
   el_ok.hidden = false
   el_mvbtns.hidden = true
+  el_title.style.display = 'none'
   validate_aaya_sura_input({}) /* to enable #ok for easier repeating */
 }
 
