@@ -255,6 +255,10 @@ function valid_inputs (sura_bgn, aaya_bgn, sura_end, aaya_end) {  // {{{
   )
 }  // }}}
 
+function chquizmode () {
+  if (!el_zzignore.hidden) { parent.zz_set_quizmode(el_quizmode.value) }
+}
+
 function chstyle () {
   const sync_class_with = (cls, pred) =>
     pred ? Q('body').classList.add(cls) : Q('body').classList.remove(cls)
@@ -262,11 +266,13 @@ function chstyle () {
   const tval = Qid('textclr_input').value
   sync_class_with('letter-parts',   tval === 'bas')
   sync_class_with('letter-nocolor', tval === 'no')
+  if (!el_zzignore.hidden) { parent.zz_set_tajweed(tval.slice(0,1)) }
   //
   sync_class_with('ayat-nocolor', !Qid('ayatnum_input').checked)
   //
   // sync_class_with('dark', Qid('darkmode_input').checked)
-  Qid('dark').checked = Qid('darkmode_input').checked
+  let dark = Qid('dark').checked = Qid('darkmode_input').checked
+  if (!el_zzignore.hidden) { parent.zz_set_dark(dark) }
   // mvbtns
   const mv = Qid('mvbtns_input').value
   const mv_cls =
@@ -274,6 +280,7 @@ function chstyle () {
     mv === 'left'  ? 'sidebtns leftside'  :
                      ''  /* no class for 'bottom' */
   el_mvbtns.setAttribute('class', mv_cls)
+  if (!el_zzignore.hidden) { parent.zz_set_mvbtns(mv.slice(0,1)) }
 }
 
 function decode_contact () {
