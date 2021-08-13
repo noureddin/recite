@@ -30,7 +30,7 @@ body { text-align: center; } /* center everything */
   --details-bg: white; --details-shadow: black;
   --title-rgb: 0, 0, 0;
   /* tajweed */
-  --L: #aa5555; --W: red;     --J: orangered; --T: #ff9900;    --N: #009000;
+  --L: #bb6666; --W: red;     --J: orangered; --T: #ff9900;    --N: #009000;
   --X: #9595a0; --R: #2222e0; --Q: #00a5e7;   --A: darkorange; --D: navy;
   /* ayat number color */
   --A-shadow: 1px  1px  1px gold,
