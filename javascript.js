@@ -240,8 +240,8 @@ function _recite (st, en, qari, txt, zz) {
       if (kb_fwd && kb_mod && not_on_input_field) { aaya_fwd(); return }
       if (kb_bck && kb_mod && not_on_input_field) { aaya_bck(); return }
 
-      if (ev.key === '0' && not_on_input_field) { jmla_fwd(); return }
-      if (ev.key === '1' && not_on_input_field) { jmla_bck(); return }
+      if (ev.key === '0' && !kb_mod && not_on_input_field) { jmla_fwd(); return }
+      if (ev.key === '1' && !kb_mod && not_on_input_field) { jmla_bck(); return }
 
     }
 
