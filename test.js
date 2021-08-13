@@ -80,7 +80,7 @@ function test_ligilumi () {
 
 // make_title: human readable version of the range to recite {{{
 function test_make_title () {
-  let fail=0, all=0, out
+  let fail=0, all=0, out, cls
   // Remember: all numbers here are 1-based.
   [
     [[1,1,1,1], 'تسميع الآية الأولى من سورة الفاتحة'],
@@ -96,7 +96,8 @@ function test_make_title () {
     [[1,1,3,199], 'تسميع من سورة الفاتحة الآية الأولى حتى سورة آل عمران الآية ١٩٩'],
   ]
   .forEach((t) => {
-    out = make_title(...t[0])
+    [out, cls] = make_title(...t[0])
+    out = out.replace(/\xa0/g, ' ')  // NBSP
     if (out !== t[1]) {
       console.log('make_title', t[0], ' got', out, ' exp', t[1])
       fail += 1

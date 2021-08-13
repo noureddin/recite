@@ -292,6 +292,15 @@ function decode_contact () {
 }
 
 function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {
+
+  //// the longest strings (some are impossible):
+  // return ["تسميع الآية الأخيرة من سورة العنكبوت", 'oneaaya']
+  // return ["تسميع سورة العنكبوت كاملة", 'onesura']
+  // return ["تسميع سورة العنكبوت من الآية الأخيرة حتى الآية الأخيرة", 'manyaaya']
+  // return ["تسميع سورتي العنكبوت والعنكبوت كاملتين", 'twosura']
+  // return ["تسميع السور من العنكبوت حتى العنكبوت", 'manysura']
+  // return ["تسميع من سورة العنكبوت الآية الأخيرة حتى سورة العنكبوت الآية الأخيرة", 'manymany']
+
   const nbsp = '\xa0'
   // all numbers are 1-based
   sura_bgn = +sura_bgn
@@ -309,27 +318,27 @@ function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {
   if (sura_bgn === sura_end) {
     // if exactly one aaya
     if (aaya_bgn === aaya_end) {
-      return `تسميع الآية${nbsp}${a_bgn_txt} من${nbsp}سورة${nbsp}${s_bgn_txt}`
+      return [`تسميع الآية${nbsp}${a_bgn_txt} من${nbsp}سورة${nbsp}${s_bgn_txt}`, '']
     }
     // if one complete sura
     if (aaya_bgn === 1 && aaya_end === s_end_len) {
-      return `تسميع سورة ${s_bgn_txt} كاملة`
+      return [`تسميع سورة ${s_bgn_txt} كاملة`, '']
     }
     // otherwise: one partial sura
-    return `تسميع سورة${nbsp}${s_bgn_txt} من${nbsp}الآية${nbsp}${a_bgn_txt} حتى${nbsp}الآية${nbsp}${a_end_txt}`
+    return [`تسميع سورة${nbsp}${s_bgn_txt} من${nbsp}الآية${nbsp}${a_bgn_txt} حتى${nbsp}الآية${nbsp}${a_end_txt}`, '']
   }
   // more than one sura:
   // if multiple complete suar
   if (aaya_bgn === 1 && aaya_end === s_end_len) {
     // if exactly two
     if (sura_end === sura_bgn + 1) {
-      return `تسميع سورتي ${s_bgn_txt} و${s_end_txt} كاملتين`
+      return [`تسميع سورتي ${s_bgn_txt} و${s_end_txt} كاملتين`, '']
     }
     // otherwise: more than two (one is handled previously)
-    return `تسميع السور من${nbsp}${s_bgn_txt} حتى${nbsp}${s_end_txt}`
+    return [`تسميع السور من${nbsp}${s_bgn_txt} حتى${nbsp}${s_end_txt}`, '']
   }
   // otherwise
-  return `تسميع من${nbsp}سورة${nbsp}${s_bgn_txt} الآية${nbsp}${a_bgn_txt} حتى${nbsp}سورة${nbsp}${s_end_txt} الآية${nbsp}${a_end_txt}`
+  return [`تسميع من${nbsp}سورة${nbsp}${s_bgn_txt} الآية${nbsp}${a_bgn_txt} حتى${nbsp}سورة${nbsp}${s_end_txt} الآية${nbsp}${a_end_txt}`, 'manymany']
 }
 
 // vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:
