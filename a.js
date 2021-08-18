@@ -300,6 +300,7 @@ function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {
   // return ["تسميع سورتي العنكبوت والعنكبوت كاملتين", 'twosura']
   // return ["تسميع السور من العنكبوت حتى العنكبوت", 'manysura']
   // return ["تسميع من سورة العنكبوت الآية الأخيرة حتى سورة العنكبوت الآية الأخيرة", 'manymany']
+  // return ["تسميع الآيتين الأخيرة والأخيرة من سورة العنكبوت", 'twoaaya']
 
   const nbsp = '\xa0'
   // all numbers are 1-based
@@ -319,6 +320,10 @@ function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {
     // if exactly one aaya
     if (aaya_bgn === aaya_end) {
       return [`تسميع الآية${nbsp}${a_bgn_txt} من${nbsp}سورة${nbsp}${s_bgn_txt}`, '']
+    }
+    // if exactly two ayat
+    if (aaya_end === aaya_bgn + 1) {
+      return [`تسميع الآيتين${nbsp}${a_bgn_txt} و${a_end_txt} من${nbsp}سورة${nbsp}${s_bgn_txt}`, '']
     }
     // if one complete sura
     if (aaya_bgn === 1 && aaya_end === s_end_len) {

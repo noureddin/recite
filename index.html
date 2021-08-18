@@ -185,11 +185,6 @@ html { font-size: calc(16px + 0.5vw) }
 /* I used KacstOne. The longest sura name in that font is sura 29. The longest "aaya" is the last one: "الأخيرة" */
 /* I also don't want to make it too small if the title is short; hence the adaptive font-size to content. */
 
-/* #title.oneaaya  {} /1* "تسميع الآية الأخيرة من سورة العنكبوت" *1/ */
-/* #title.onesura  {} /1* "تسميع سورة العنكبوت كاملة" *1/ */
-/* #title.manyaaya {} /1* "تسميع سورة العنكبوت من الآية الأخيرة حتى الآية الأخيرة" *1/ */
-/* #title.twosura  {} /1* "تسميع سورتي العنكبوت والعنكبوت كاملتين" *1/ */
-/* #title.manysura {} /1* "تسميع السور من العنكبوت حتى العنكبوت" *1/ */
 #title.manymany { font-size: clamp(0.5rem, 2.8vw, 1.25rem) } /* "تسميع من سورة العنكبوت الآية الأخيرة حتى سورة العنكبوت الآية الأخيرة" */
 
 
@@ -1170,6 +1165,7 @@ function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {
   // return ["تسميع سورتي العنكبوت والعنكبوت كاملتين", 'twosura']
   // return ["تسميع السور من العنكبوت حتى العنكبوت", 'manysura']
   // return ["تسميع من سورة العنكبوت الآية الأخيرة حتى سورة العنكبوت الآية الأخيرة", 'manymany']
+  // return ["تسميع الآيتين الأخيرة والأخيرة من سورة العنكبوت", 'twoaaya']
 
   const nbsp = '\xa0'
   // all numbers are 1-based
@@ -1189,6 +1185,10 @@ function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {
     // if exactly one aaya
     if (aaya_bgn === aaya_end) {
       return [`تسميع الآية${nbsp}${a_bgn_txt} من${nbsp}سورة${nbsp}${s_bgn_txt}`, '']
+    }
+    // if exactly two ayat
+    if (aaya_end === aaya_bgn + 1) {
+      return [`تسميع الآيتين${nbsp}${a_bgn_txt} و${a_end_txt} من${nbsp}سورة${nbsp}${s_bgn_txt}`, '']
     }
     // if one complete sura
     if (aaya_bgn === 1 && aaya_end === s_end_len) {
