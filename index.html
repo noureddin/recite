@@ -1698,22 +1698,15 @@ function _recite (st, en, qari, txt, zz) {
       const kb_mod = ev.shiftKey || ev.ctrlKey || ev.altKey
       const kb_fwd = ev.key === ' ' || ev.key === 'Enter' || ev.key === 'ArrowLeft'
       const kb_bck = ev.key === 'Backspace' || ev.key === 'ArrowRight'
-      const not_on_input_field =  // not just ayat and suar
-        ev.target.nodeName !== 'INPUT' && ev.target.nodeName !== 'SELECT'
+      const on_input_field =  // not just ayat and suar; also buttons like #mvbtns
+        ev.target.nodeName === 'INPUT' || ev.target.nodeName === 'SELECT' || ev.target.nodeName === 'BUTTON'
 
-      // Enter or Space, and the target is not input or select, get the next word
-      // (ie, on the #ok button, or in the page with no element focused)
-      // or mouse-click on the ok button
+      if (on_input_field) { return }
 
-      if (ev.type === 'mouseup' && ev.target.id === 'ok') { word_fwd(); return }
-      if (kb_fwd && !kb_mod && not_on_input_field)        { word_fwd(); return }
-      if (kb_bck && !kb_mod && not_on_input_field)        { word_bck(); return }
-
-      if (kb_fwd && kb_mod && not_on_input_field) { aaya_fwd(); return }
-      if (kb_bck && kb_mod && not_on_input_field) { aaya_bck(); return }
-
-      if (ev.key === '0' && !kb_mod && not_on_input_field) { jmla_fwd(); return }
-      if (ev.key === '1' && !kb_mod && not_on_input_field) { jmla_bck(); return }
+      if      (kb_fwd) { if (kb_mod) { aaya_fwd() } else { word_fwd() } }
+      else if (kb_bck) { if (kb_mod) { aaya_bck() } else { word_bck() } }
+      else if (ev.key === '0' && !kb_mod) { jmla_fwd() }
+      else if (ev.key === '1' && !kb_mod) { jmla_bck() }
 
     }
 
@@ -1734,7 +1727,6 @@ function _recite (st, en, qari, txt, zz) {
 }
 
 el_ok.onclick  = start_reciting
-// el_ok.onmouseup  = input_trigger
 
 el_repeat.onmouseup = restart_reciting
 el_repeat.onclick   = restart_reciting
