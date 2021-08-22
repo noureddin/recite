@@ -171,8 +171,8 @@ function _recite (st, en, qari, txt, zz) {
       }
     }
 
-    el_txt_txt.addEventListener('input', txt_changed, false) // https://stackoverflow.com/a/14029861
-    el_txt_txt.addEventListener('paste', (e) => { pasted = true })
+    el_txt_txt.oninput = txt_changed // https://stackoverflow.com/a/14029861
+    el_txt_txt.onpaste = (e) => { pasted = true }
     el_txt_txt.focus()
 
   }
