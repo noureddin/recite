@@ -497,3 +497,8 @@ details[open] > .details-content {
 }
 
 #zzback { display: block; margin: 1em auto; }
+
+#end_of_header {
+  margin: 0;
+  margin-top: 0.2em
+}
