@@ -159,7 +159,7 @@ html { font-size: calc(16px + 0.5vw) }
 
 /* #textclr_input { width: 9.8em } */
 #textclr_input { width: calc(100% - 6.3em) }
-#mvbtns_input  { width: calc(100% - 9.2em) }
+#mvbtns_input  { width: calc(100% - 9.5em) }
 #qaris         { width: calc(100% - 6.5em) }
 #quizmode      { width: calc(100% - 7.4em) }
 
