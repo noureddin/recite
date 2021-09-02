@@ -1907,7 +1907,6 @@ function make_words_list (st, en) {
         return arr
       }, [])
       // for quran-data
-      .map(a => a.replace(/\xa0(?=\u0670)/g, ''))
       .map(a => a.replace(/أ\u064eو\u064e /g, 'أ\u064eو\u064e'))
       // continuing
       .map(a => tajweed_colorize_aaya(a))
