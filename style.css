@@ -106,7 +106,7 @@ html { font-size: calc(16px + 0.5vw) }
 #header {
   padding: 0;
   padding-top: 0.5rem;
-  position: sticky;
+  position: var(--sticky);  /* static (default) in txt/imlaai; sticky in uthmani */
   background-color: var(--background-translucent);
   top:        -4.8rem;
   margin-top: -5.1rem;
@@ -177,7 +177,7 @@ html { font-size: calc(16px + 0.5vw) }
   font-family: AmiriQuranWeb;
   line-height: 1.7;  /* Amiri Quran is too high to make space for Quranic signs */
   width: min(90%, 70vw);
-  height: calc(100vh - 12rem);
+  /* height: 95vh; */ /* set thru JS */
   margin: auto;
   margin-bottom: 0.5rem;
   border-radius: 0.25rem;
@@ -496,7 +496,7 @@ details[open] > .details-content {
   100%  { opacity: 1; }
 }
 
-#zzback { display: block; margin: 1em auto; }
+#zzback { display: block; margin: auto; margin-top: 0.5em; }
 
 #end_of_header {
   margin: 0;

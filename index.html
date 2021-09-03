@@ -162,7 +162,7 @@ html { font-size: calc(16px + 0.5vw) }
 #header {
   padding: 0;
   padding-top: 0.5rem;
-  position: sticky;
+  position: var(--sticky);  /* static (default) in txt/imlaai; sticky in uthmani */
   background-color: var(--background-translucent);
   top:        -4.8rem;
   margin-top: -5.1rem;
@@ -233,7 +233,7 @@ html { font-size: calc(16px + 0.5vw) }
   font-family: AmiriQuranWeb;
   line-height: 1.7;  /* Amiri Quran is too high to make space for Quranic signs */
   width: min(90%, 70vw);
-  height: calc(100vh - 12rem);
+  /* height: 95vh; */ /* set thru JS */
   margin: auto;
   margin-bottom: 0.5rem;
   border-radius: 0.25rem;
@@ -552,7 +552,7 @@ details[open] > .details-content {
   100%  { opacity: 1; }
 }
 
-#zzback { display: block; margin: 1em auto; }
+#zzback { display: block; margin: auto; margin-top: 0.5em; }
 
 #end_of_header {
   margin: 0;
@@ -1537,6 +1537,10 @@ function show_done () {
       el_mvbtns.hidden = true
       setTimeout(() => el_zzback.focus(), 500)
     }
+    if (!el_txt_txt.hidden) {
+      el_txt_txt.style.height = el_zzback.hidden? 'calc(100vh - 12rem)' : 'calc(100vh - 15rem)'
+      el_txt_txt.scroll({ top: el_txt_txt.scrollHeight })  // scroll to bottom
+    }
     return true
   }
   return false
@@ -1750,19 +1754,25 @@ const hide_selectors = function (txt) {
   el_ok.hidden = true
   el_title.style.display = 'inline-block'
   if (txt) {
+    el_txt_txt.style.height = '95vh'
     el_txt_txt.value = ""
     el_txt_txt.disabled = false
     el_txt_txt.classList = ''
     el_txt_txt.hidden = false
     el_txt.hidden = true
     el_mvbtns.hidden = true
+    Qid('end_of_header').style.color = 'transparent'  // to keep some space
+    document.documentElement.style.setProperty('--sticky', '')
   }
   else {
     el_txt.hidden = false
     el_txt.innerHTML = ''
     el_mvbtns.hidden = false
     el_txt_txt.hidden = true
+    Qid('end_of_header').style.color = ''
+    document.documentElement.style.setProperty('--sticky', 'sticky')
   }
+  scroll_to_bottom()
 }
 
 const show_selectors = function () {

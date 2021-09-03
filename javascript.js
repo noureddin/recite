@@ -60,6 +60,10 @@ function show_done () {
       el_mvbtns.hidden = true
       setTimeout(() => el_zzback.focus(), 500)
     }
+    if (!el_txt_txt.hidden) {
+      el_txt_txt.style.height = el_zzback.hidden? 'calc(100vh - 12rem)' : 'calc(100vh - 15rem)'
+      el_txt_txt.scroll({ top: el_txt_txt.scrollHeight })  // scroll to bottom
+    }
     return true
   }
   return false
@@ -273,19 +277,25 @@ const hide_selectors = function (txt) {
   el_ok.hidden = true
   el_title.style.display = 'inline-block'
   if (txt) {
+    el_txt_txt.style.height = '95vh'
     el_txt_txt.value = ""
     el_txt_txt.disabled = false
     el_txt_txt.classList = ''
     el_txt_txt.hidden = false
     el_txt.hidden = true
     el_mvbtns.hidden = true
+    Qid('end_of_header').style.color = 'transparent'  // to keep some space
+    document.documentElement.style.setProperty('--sticky', '')
   }
   else {
     el_txt.hidden = false
     el_txt.innerHTML = ''
     el_mvbtns.hidden = false
     el_txt_txt.hidden = true
+    Qid('end_of_header').style.color = ''
+    document.documentElement.style.setProperty('--sticky', 'sticky')
   }
+  scroll_to_bottom()
 }
 
 const show_selectors = function () {
