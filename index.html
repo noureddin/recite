@@ -1626,7 +1626,7 @@ function _recite (st, en, qari, txt, zz) {
 
       if (correct_text.startsWith(el_txt_txt.value)) {
         el_txt_txt.classList = ''
-        if (el_txt_txt.value.slice(-1) === '\n') {  // most likely basmala
+        if (el_txt_txt.value.slice(-1) === '\n') {  // basmala, or BS+Enter to repeat the same aaya
           audio.play_index(current_aaya_index)
         }
       }
@@ -1639,6 +1639,7 @@ function _recite (st, en, qari, txt, zz) {
         el_txt_txt.value = correct_text.slice(0, x+1)
         audio.play_index(current_aaya_index)
         if (el_txt_txt.value === correct_text) {
+          el_txt_txt.value = el_txt_txt.value.slice(0,-1)  // remove the last newline
           show_done()
           scroll_to_bottom()
           el_txt_txt.disabled = true
