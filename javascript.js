@@ -147,7 +147,7 @@ function _recite (st, en, qari, txt, zz) {
         pasted = false
       }
 
-      if (correct_text.startsWith(el_txt_txt.value)) {
+      if (correct_text.startsWith(txtfilter(el_txt_txt.value))) {
         el_txt_txt.classList = ''
         if (el_txt_txt.value.slice(-1) === '\n') {  // basmala, or BS+Enter to repeat the same aaya
           audio.play_index(current_aaya_index)

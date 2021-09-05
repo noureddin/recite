@@ -162,6 +162,7 @@ html { font-size: calc(16px + 0.5vw) }
 #mvbtns_input  { width: calc(100% - 9.5em) }
 #qaris         { width: calc(100% - 6.5em) }
 #quizmode      { width: calc(100% - 7.4em) }
+#feedbackrate  { width: calc(100% - 19em)  }
 
 #txt_txt { background: var(--background); color: var(--txt) }
 
@@ -450,7 +451,7 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   visibility: hidden;
 }
 #optiontoggle:checked ~ #options {
-  max-height: 15rem;
+  max-height: 17rem;
   transition: max-height 0.5s ease-in,
               visibility 0.5s step-start;
   visibility: visible;

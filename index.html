@@ -218,6 +218,7 @@ html { font-size: calc(16px + 0.5vw) }
 #mvbtns_input  { width: calc(100% - 9.5em) }
 #qaris         { width: calc(100% - 6.5em) }
 #quizmode      { width: calc(100% - 7.4em) }
+#feedbackrate  { width: calc(100% - 19em)  }
 
 #txt_txt { background: var(--background); color: var(--txt) }
 
@@ -506,7 +507,7 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   visibility: hidden;
 }
 #optiontoggle:checked ~ #options {
-  max-height: 15rem;
+  max-height: 17rem;
   transition: max-height 0.5s ease-in,
               visibility 0.5s step-start;
   visibility: visible;
@@ -671,6 +672,14 @@ details[open] > .details-content {
     <select id="quizmode" onchange="chquizmode()">
       <option value="" selected>عثماني (بدون كتابة) &mdash; تغييره يتطلب إعادة التسميع</option>
       <option value="txt">إملائي (كتابة) &mdash; تغييره يتطلب إعادة التسميع</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="feedbackrate">سرعة الإعلان عن الخطأ في الوضع الإملائي:</label>
+    <select id="feedbackrate" onchange="chfeedbackrate()">
+      <option value="" selected>كل حرف</option>
+      <option value="word">كل كلمة</option>
     </select>
   </div>
 
@@ -861,6 +870,7 @@ const el_title = Qid("title")
 const el_txt = Qid("txt")
 const el_txt_txt = Qid("txt_txt")
 const el_quizmode = Qid("quizmode")
+const el_feedbackrate = Qid("feedbackrate")
 const el_endmsg = Qid("endmsg")
 const el_ok = Qid("ok")
 const el_new = Qid("new")
@@ -1127,6 +1137,16 @@ function valid_inputs (sura_bgn, aaya_bgn, sura_end, aaya_end) {  // {{{
 
 function chquizmode () {
   if (!el_zzignore.hidden) { parent.zz_set_quizmode(el_quizmode.value) }
+}
+
+function txtfilter_byword   (val) { return val.replace(/\S*$/, '') }  // only check after space or enter
+function txtfilter_byletter (val) { return val }
+
+window.txtfilter = txtfilter_byletter  // the default
+
+function chfeedbackrate () {
+  window.txtfilter = el_feedbackrate.value === "word"? txtfilter_byword : txtfilter_byletter
+  if (!el_zzignore.hidden) { parent.zz_set_feedbackrate(el_feedbackrate.value) }
 }
 
 function chstyle () {
@@ -1624,7 +1644,7 @@ function _recite (st, en, qari, txt, zz) {
         pasted = false
       }
 
-      if (correct_text.startsWith(el_txt_txt.value)) {
+      if (correct_text.startsWith(txtfilter(el_txt_txt.value))) {
         el_txt_txt.classList = ''
         if (el_txt_txt.value.slice(-1) === '\n') {  // basmala, or BS+Enter to repeat the same aaya
           audio.play_index(current_aaya_index)
