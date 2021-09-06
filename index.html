@@ -1830,6 +1830,14 @@ onload = function () {
   decode_contact()
   ligilumi()
   el_txt_txt.spellcheck = false
+  // fix help opening
+  document.querySelectorAll('details').forEach(el => {
+    el.addEventListener('toggle', ev => {
+      if (el.open) {
+        el.scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"})
+      }
+    })
+  })
 }
 
 // vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:
