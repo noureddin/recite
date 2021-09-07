@@ -116,6 +116,7 @@ function recite (st, en, qari, txt, zz) {
   sync_ui(stpair, enpair, qari, title, preserve_url)
   init_audio(stpair, enpair, qari, preserve_url)
 
+  if (zz) { parent.zz_show() }
   hide_selectors(txt)
 
   const start = () => { _recite(st, en, qari, txt, zz) }
@@ -256,7 +257,6 @@ function _recite (st, en, qari, txt, zz) {
     el_prevaaya.onclick = aaya_bck
 
   }
-  if (zz) { parent.zz_show() }
 }
 
 el_ok.onclick  = start_reciting
