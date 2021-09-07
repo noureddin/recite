@@ -1488,7 +1488,10 @@ function ligilumi () {
   Qid('textclr_input').value = color || 'taj'  // the default
   Qid('mvbtns_input').value = mv || 'bottom'  // the default
   Qid('feedbackrate').value = byword? 'word' : ''
-  chstyle()
+  chstyle()  // dark, color, mv
+  chfeedbackrate() // byword
+  // chquizmode() for txt is currently not needed
+  // if no aayat are selected, only change the provided preferences 
   if (st == null || en == null) { return }
   recite(st, en, '', txt, zz)
 }
