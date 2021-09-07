@@ -58,15 +58,22 @@
 html, body {
   padding: 0;
   margin: 0;
-  height: 100%;
+  overflow: hidden;
   --all-width: clamp(10rem, 80vw, 35rem);
 }
 
-body { text-align: center; } /* center everything */
+body {
+  text-align: center; /* center everything */
+
+}
 #body {
   background-color: var(--background);
-  min-height: 100%;
-  min-width: 100%;
+  height: 100vh;
+  width: 100vw;
+  direction: rtl;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 #all {
   display: inline-block;
@@ -129,7 +136,7 @@ body { text-align: center; } /* center everything */
 .D { color: var(--D); text-shadow: var(--D-shadow) }
 
 /* general */
-html { scroll-behavior: smooth; }
+#body { scroll-behavior: smooth; }
 ::selection { background: rgba(0,0,255,0.1); }
 
 /* https://bits.theorem.co/css-pro-tips-responsive-font-sizes-and-when-to-use-which-units */
@@ -860,6 +867,7 @@ const say = console.log
 function Q (selector) { return document.querySelector(selector) }
 function Qid (id)     { return document.getElementById(id) }
 
+const el_body = Qid("body")
 const el_sura_bgn = Qid("sura_bgn")
 const el_sura_end = Qid("sura_end")
 const el_aaya_bgn = Qid("aaya_bgn")
@@ -1015,19 +1023,6 @@ var confetti={maxCount:150,speed:2,frameInterval:15,alpha:1,gradient:!1,start:nu
 
 !function(e){"object"==typeof exports?module.exports=e():"function"==typeof define&&define.amd?define(e):"undefined"!=typeof window?window.JSZipUtils=e():"undefined"!=typeof global?global.JSZipUtils=e():"undefined"!=typeof self&&(self.JSZipUtils=e())}(function(){return function o(i,f,u){function s(n,e){if(!f[n]){if(!i[n]){var t="function"==typeof require&&require;if(!e&&t)return t(n,!0);if(a)return a(n,!0);throw new Error("Cannot find module '"+n+"'")}var r=f[n]={exports:{}};i[n][0].call(r.exports,function(e){var t=i[n][1][e];return s(t||e)},r,r.exports,o,i,f,u)}return f[n].exports}for(var a="function"==typeof require&&require,e=0;e<u.length;e++)s(u[e]);return s}({1:[function(e,t,n){"use strict";var u={};function r(){try{return new window.XMLHttpRequest}catch(e){}}u._getBinaryFromXHR=function(e){return e.response||e.responseText};var s="undefined"!=typeof window&&window.ActiveXObject?function(){return r()||function(){try{return new window.ActiveXObject("Microsoft.XMLHTTP")}catch(e){}}()}:r;u.getBinaryContent=function(t,n){var e,r,o,i;"function"==typeof(n=n||{})?(i=n,n={}):"function"==typeof n.callback&&(i=n.callback),i||"undefined"==typeof Promise?(r=function(e){i(null,e)},o=function(e){i(e,null)}):e=new Promise(function(e,t){r=e,o=t});try{var f=s();f.open("GET",t,!0),"responseType"in f&&(f.responseType="arraybuffer"),f.overrideMimeType&&f.overrideMimeType("text/plain; charset=x-user-defined"),f.onreadystatechange=function(e){if(4===f.readyState)if(200===f.status||0===f.status)try{r(u._getBinaryFromXHR(f))}catch(e){o(new Error(e))}else o(new Error("Ajax error for "+t+" : "+this.status+" "+this.statusText))},n.progress&&(f.onprogress=function(e){n.progress({path:t,originalEvent:e,percent:e.loaded/e.total*100,loaded:e.loaded,total:e.total})}),f.send()}catch(e){o(new Error(e),null)}return e},t.exports=u},{}]},{},[1])(1)});
 
-
-// based on https://stackoverflow.com/a/7557433
-// return:
-//    0 if at least half the element's height is in viewport;
-//   +1 if at least half the element's height is out of view, under the screen;
-//   -1 if at least half the element's height is out of view, above the screen.
-function is_element_out_of_sight (el) {
-  let rect = el.getBoundingClientRect()
-  let winheight = window.innerHeight || document.documentElement.clientHeight
-  return rect.bottom <= rect.height/2          ? -1 :
-         rect.top >= winheight - rect.height/2 ? +1 :
-                                                  0
-}
 
 const audio = (function () {  // {{{
   const el_player = Qid('player')
@@ -1580,8 +1575,8 @@ function option_toggled () {
   // TODO: scroll to top of options
 }
 
-function scroll_to_top ()    { window.scrollTo({ top: 0 }) }
-function scroll_to_bottom () { window.scrollTo({ top: document.body.scrollHeight }) }
+function scroll_to_top ()    { el_body.scrollTo({ top: 0 }) }
+function scroll_to_bottom () { el_body.scrollTo({ top: el_body.scrollHeight }) }
 
 function hide_el (el) { el.style.visibility = 'hidden';  el.style.opacity =   '0%' }
 function show_el (el) { el.style.visibility = 'visible'; el.style.opacity = '100%' }

@@ -2,15 +2,22 @@
 html, body {
   padding: 0;
   margin: 0;
-  height: 100%;
+  overflow: hidden;
   --all-width: clamp(10rem, 80vw, 35rem);
 }
 
-body { text-align: center; } /* center everything */
+body {
+  text-align: center; /* center everything */
+
+}
 #body {
   background-color: var(--background);
-  min-height: 100%;
-  min-width: 100%;
+  height: 100vh;
+  width: 100vw;
+  direction: rtl;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 #all {
   display: inline-block;
@@ -73,7 +80,7 @@ body { text-align: center; } /* center everything */
 .D { color: var(--D); text-shadow: var(--D-shadow) }
 
 /* general */
-html { scroll-behavior: smooth; }
+#body { scroll-behavior: smooth; }
 ::selection { background: rgba(0,0,255,0.1); }
 
 /* https://bits.theorem.co/css-pro-tips-responsive-font-sizes-and-when-to-use-which-units */

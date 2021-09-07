@@ -76,8 +76,8 @@ function option_toggled () {
   // TODO: scroll to top of options
 }
 
-function scroll_to_top ()    { window.scrollTo({ top: 0 }) }
-function scroll_to_bottom () { window.scrollTo({ top: document.body.scrollHeight }) }
+function scroll_to_top ()    { el_body.scrollTo({ top: 0 }) }
+function scroll_to_bottom () { el_body.scrollTo({ top: el_body.scrollHeight }) }
 
 function hide_el (el) { el.style.visibility = 'hidden';  el.style.opacity =   '0%' }
 function show_el (el) { el.style.visibility = 'visible'; el.style.opacity = '100%' }
