@@ -26,29 +26,13 @@
 
 <div id="options" class="contentcontainer">
 
-  <br>
-  <div>
-    <div class="option_pair">
-      <input id="ayatnum_input" type="checkbox" checked onchange="chstyle()">
-      <label for="ayatnum_input">تلوين أرقام الآيات؟</label>
-    </div>
-    <div class="option_pair">
-      <input id="darkmode_input" type="checkbox" onchange="chstyle()">
-      <label for="darkmode_input">الوضع الليلي؟</label>
-    </div>
-  </div>
-
-  <div>
-    <label for="textclr_input">تلوين النص:</label>
-    <select id="textclr_input" onchange="chstyle()">
-      <option value="taj" selected>تبعا لقواعد التجويد</option>
-      <option value="bas">تلوين أجزاء الرسم</option>
-      <option value="no">بغير أي تلوين</option>
-    </select>
+  <div class="option">
+    <label for="darkmode_input">الوضع الليلي؟</label>
+    <input id="darkmode_input" type="checkbox" onchange="chstyle()">
   </div>
 
   <!-- from: http://www.everyayah.com/data/recitations.js -->
-  <div>
+  <div class="option">
     <label for="qaris">تلاوة بصوت:</label>
     <select id="qaris" oninput="audio.update_qari(this.value)">
       <option value="" selected>بغير تلاوة صوتية</option>
@@ -57,29 +41,55 @@
   </div>
   <audio id="player" controls preload></audio>
 
-  <div>
-    <label for="mvbtns_input">موضع أزار التسميع:</label>
-    <select id="mvbtns_input" onchange="chstyle()">
-      <option value="bottom" selected>أسفل</option>
-      <option value="right">يمين</option>
-      <option value="left">يسار</option>
-    </select>
-  </div>
+  <hr id="guide">
 
-  <div>
-    <label for="quizmode">وضع التسميع:</label>
+  <div class="option">
+    <label for="quizmode">وضع التسميع (تغييره يتطلب إعادة التسميع):</label>
     <select id="quizmode" onchange="chquizmode()">
-      <option value="" selected>عثماني (بدون كتابة) &mdash; تغييره يتطلب إعادة التسميع</option>
-      <option value="txt">إملائي (كتابة) &mdash; تغييره يتطلب إعادة التسميع</option>
+      <option value="" selected>عثماني (بدون كتابة)</option>
+      <option value="txt">إملائي (كتابة)</option>
     </select>
   </div>
 
-  <div>
-    <label for="feedbackrate">سرعة الإعلان عن الخطأ في الوضع الإملائي:</label>
-    <select id="feedbackrate" onchange="chfeedbackrate()">
-      <option value="" selected>كل حرف</option>
-      <option value="word">كل كلمة</option>
-    </select>
+  <div class="mode_options" id="uthm_options">
+    <span id="uthm_options_title" class="mode_options_title">خيارات وضع التسميع العثماني (بدون كتابة):</span>
+
+    <div class="option">
+      <label for="mvbtns_input">موضع أزار التسميع:</label>
+      <select id="mvbtns_input" onchange="chstyle()">
+        <option value="bottom" selected>أسفل</option>
+        <option value="right">يمين</option>
+        <option value="left">يسار</option>
+      </select>
+    </div>
+
+    <div class="option">
+      <label for="textclr_input">تلوين النص:</label>
+      <select id="textclr_input" onchange="chstyle()">
+        <option value="taj" selected>تبعا لقواعد التجويد</option>
+        <option value="bas">تلوين أجزاء الرسم</option>
+        <option value="no">بغير أي تلوين</option>
+      </select>
+    </div>
+
+    <div class="option">
+      <label for="ayatnum_input">تلوين أرقام الآيات؟</label>
+      <input id="ayatnum_input" type="checkbox" checked onchange="chstyle()">
+    </div>
+
+  </div>
+
+  <div class="mode_options" id="imla_options" style="display:none">
+    <span id="imla_options_title" class="mode_options_title">خيارات وضع التسميع الإملائي (كتابة):</span>
+
+    <div class="option">
+      <label for="feedbackrate">سرعة الإعلان عن الخطأ في الوضع الإملائي:</label>
+      <select id="feedbackrate" onchange="chfeedbackrate()">
+        <option value="" selected>كل حرف</option>
+        <option value="word">كل كلمة</option>
+      </select>
+    </div>
+
   </div>
 
 </div>

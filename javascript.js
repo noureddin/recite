@@ -328,6 +328,7 @@ el_zzignore.onclick = () => { clear_screen(); parent.zz_ignore() }
 onload = function () {
   el_ok.disabled = true
   init_inputs()
+  chquizmode()
   chstyle()  // to update the style, as we don't reset these
              // inputs, so they keep their values on refresh.
   decode_contact()

@@ -212,20 +212,54 @@ html { font-size: calc(16px + 0.5vw) }
 /* #sura_bgn, #sura_end { width: 6.5em; } */
 #sura_bgn, #sura_end { width: 35%; }
 
-#options > * { margin-top: 0.5rem; }
-#options > :first-child { margin-top: 0; }
+#options .option { margin-top: 0.5em; }
+#options .option:first-child { margin-top: 1.5em; }
 
-.option_pair {
-  display: inline-block;
-  margin: 0 0.25rem;
+#options .mode_options_title {
+  display: block;
+  text-align: right;
+  padding-right: 2em;
+  margin-top: 0.3em;
+  font-family: Cortoba;
+  font-weight: normal;
 }
 
-/* #textclr_input { width: 9.8em } */
-#textclr_input { width: calc(100% - 6.3em) }
-#mvbtns_input  { width: calc(100% - 9.5em) }
-#qaris         { width: calc(100% - 6.5em) }
-#quizmode      { width: calc(100% - 7.4em) }
-#feedbackrate  { width: calc(100% - 19em)  }
+#guide { display: none }  /* used for debugging */
+
+/* #options * { margin-top: 0 !important } */
+/* .mode_options_title { display: none !important } */
+/* #guide { */
+/*   display: block; */
+/*   width: 0; */
+/*   height: 10rem; */
+/*   color: red; */
+/*   position: absolute; */
+/*   top: 0; */
+/*   left: 15%; */
+/* } */
+
+#options {
+  /* text-align: right; */
+  padding: 0.5em 1em;
+  box-sizing: border-box;
+  width: var(--all-width);
+}
+
+#options * {
+  font-family: KacstOne;
+  font-weight: bold;
+  line-height: 1.7;
+}
+
+#mode_options {
+  padding: 0; margin: 0;
+}
+
+#qaris         { width: calc(100% -  6.80em) }
+#quizmode      { width: calc(100% - 19.10em) }
+#mvbtns_input  { width: calc(100% -  9.40em) }
+#textclr_input { width: calc(100% -  6.50em) }
+#feedbackrate  { width: calc(100% - 18.35em) }
 
 #txt_txt { background: var(--background); color: var(--txt) }
 
@@ -435,6 +469,8 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
 
 #help {
   margin: 0;
+  box-sizing: border-box;
+  width: var(--all-width);
 }
 
 #optiontoggle         + label:before { content: "أظهر" }
@@ -514,8 +550,8 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   visibility: hidden;
 }
 #optiontoggle:checked ~ #options {
-  max-height: 17rem;
-  transition: max-height 0.5s ease-in,
+  max-height: 21rem;
+  transition: max-height 0.5s linear,
               visibility 0.5s step-start;
   visibility: visible;
 }
@@ -585,29 +621,13 @@ details[open] > .details-content {
 
 <div id="options" class="contentcontainer">
 
-  <br>
-  <div>
-    <div class="option_pair">
-      <input id="ayatnum_input" type="checkbox" checked onchange="chstyle()">
-      <label for="ayatnum_input">تلوين أرقام الآيات؟</label>
-    </div>
-    <div class="option_pair">
-      <input id="darkmode_input" type="checkbox" onchange="chstyle()">
-      <label for="darkmode_input">الوضع الليلي؟</label>
-    </div>
-  </div>
-
-  <div>
-    <label for="textclr_input">تلوين النص:</label>
-    <select id="textclr_input" onchange="chstyle()">
-      <option value="taj" selected>تبعا لقواعد التجويد</option>
-      <option value="bas">تلوين أجزاء الرسم</option>
-      <option value="no">بغير أي تلوين</option>
-    </select>
+  <div class="option">
+    <label for="darkmode_input">الوضع الليلي؟</label>
+    <input id="darkmode_input" type="checkbox" onchange="chstyle()">
   </div>
 
   <!-- from: http://www.everyayah.com/data/recitations.js -->
-  <div>
+  <div class="option">
     <label for="qaris">تلاوة بصوت:</label>
     <select id="qaris" oninput="audio.update_qari(this.value)">
       <option value="" selected>بغير تلاوة صوتية</option>
@@ -665,29 +685,55 @@ details[open] > .details-content {
   </div>
   <audio id="player" controls preload></audio>
 
-  <div>
-    <label for="mvbtns_input">موضع أزار التسميع:</label>
-    <select id="mvbtns_input" onchange="chstyle()">
-      <option value="bottom" selected>أسفل</option>
-      <option value="right">يمين</option>
-      <option value="left">يسار</option>
-    </select>
-  </div>
+  <hr id="guide">
 
-  <div>
-    <label for="quizmode">وضع التسميع:</label>
+  <div class="option">
+    <label for="quizmode">وضع التسميع (تغييره يتطلب إعادة التسميع):</label>
     <select id="quizmode" onchange="chquizmode()">
-      <option value="" selected>عثماني (بدون كتابة) &mdash; تغييره يتطلب إعادة التسميع</option>
-      <option value="txt">إملائي (كتابة) &mdash; تغييره يتطلب إعادة التسميع</option>
+      <option value="" selected>عثماني (بدون كتابة)</option>
+      <option value="txt">إملائي (كتابة)</option>
     </select>
   </div>
 
-  <div>
-    <label for="feedbackrate">سرعة الإعلان عن الخطأ في الوضع الإملائي:</label>
-    <select id="feedbackrate" onchange="chfeedbackrate()">
-      <option value="" selected>كل حرف</option>
-      <option value="word">كل كلمة</option>
-    </select>
+  <div class="mode_options" id="uthm_options">
+    <span id="uthm_options_title" class="mode_options_title">خيارات وضع التسميع العثماني (بدون كتابة):</span>
+
+    <div class="option">
+      <label for="mvbtns_input">موضع أزار التسميع:</label>
+      <select id="mvbtns_input" onchange="chstyle()">
+        <option value="bottom" selected>أسفل</option>
+        <option value="right">يمين</option>
+        <option value="left">يسار</option>
+      </select>
+    </div>
+
+    <div class="option">
+      <label for="textclr_input">تلوين النص:</label>
+      <select id="textclr_input" onchange="chstyle()">
+        <option value="taj" selected>تبعا لقواعد التجويد</option>
+        <option value="bas">تلوين أجزاء الرسم</option>
+        <option value="no">بغير أي تلوين</option>
+      </select>
+    </div>
+
+    <div class="option">
+      <label for="ayatnum_input">تلوين أرقام الآيات؟</label>
+      <input id="ayatnum_input" type="checkbox" checked onchange="chstyle()">
+    </div>
+
+  </div>
+
+  <div class="mode_options" id="imla_options" style="display:none">
+    <span id="imla_options_title" class="mode_options_title">خيارات وضع التسميع الإملائي (كتابة):</span>
+
+    <div class="option">
+      <label for="feedbackrate">سرعة الإعلان عن الخطأ في الوضع الإملائي:</label>
+      <select id="feedbackrate" onchange="chfeedbackrate()">
+        <option value="" selected>كل حرف</option>
+        <option value="word">كل كلمة</option>
+      </select>
+    </div>
+
   </div>
 
 </div>
@@ -1131,7 +1177,17 @@ function valid_inputs (sura_bgn, aaya_bgn, sura_end, aaya_end) {  // {{{
 }  // }}}
 
 function chquizmode () {
+  const show = (id) => Qid(id).style.display = 'block'
+  const hide = (id) => Qid(id).style.display = 'none'
   if (!el_zzignore.hidden) { parent.zz_set_quizmode(el_quizmode.value) }
+  if (el_quizmode.value) {  /* imlaai */
+    hide('uthm_options')
+    show('imla_options')
+  }
+  else {  /* uthmani */
+    hide('imla_options')
+    show('uthm_options')
+  }
 }
 
 function txtfilter_byword   (val) { return val.replace(/\S*$/, '') }  // only check after space or enter
@@ -1827,6 +1883,7 @@ el_zzignore.onclick = () => { clear_screen(); parent.zz_ignore() }
 onload = function () {
   el_ok.disabled = true
   init_inputs()
+  chquizmode()
   chstyle()  // to update the style, as we don't reset these
              // inputs, so they keep their values on refresh.
   decode_contact()

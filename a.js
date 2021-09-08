@@ -243,7 +243,17 @@ function valid_inputs (sura_bgn, aaya_bgn, sura_end, aaya_end) {  // {{{
 }  // }}}
 
 function chquizmode () {
+  const show = (id) => Qid(id).style.display = 'block'
+  const hide = (id) => Qid(id).style.display = 'none'
   if (!el_zzignore.hidden) { parent.zz_set_quizmode(el_quizmode.value) }
+  if (el_quizmode.value) {  /* imlaai */
+    hide('uthm_options')
+    show('imla_options')
+  }
+  else {  /* uthmani */
+    hide('imla_options')
+    show('uthm_options')
+  }
 }
 
 function txtfilter_byword   (val) { return val.replace(/\S*$/, '') }  // only check after space or enter
