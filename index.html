@@ -246,20 +246,23 @@ html { font-size: calc(16px + 0.5vw) }
 }
 
 #options * {
-  font-family: KacstOne;
+  font-family: KacstOne, serif;  /* serif for latin, like in qaris */
   font-weight: bold;
   line-height: 1.7;
 }
+
+.option > * { margin: 0 }
+/* to make no unclickable space between the label and input. */
 
 #mode_options {
   padding: 0; margin: 0;
 }
 
 #qaris         { width: calc(100% -  6.80em) }
-#quizmode      { width: calc(100% - 19.10em) }
+#quizmode      { width: calc(100% -  7.35em) }
 #mvbtns_input  { width: calc(100% -  9.40em) }
-#textclr_input { width: calc(100% -  6.50em) }
-#feedbackrate  { width: calc(100% - 18.35em) }
+#textclr_input { width: calc(100% -  6.45em) }
+#feedbackrate  { width: calc(100% -  9.25em) }
 
 #imla_txt { background: var(--background); color: var(--txt) }
 
@@ -622,14 +625,12 @@ details[open] > .details-content {
 <div id="options" class="contentcontainer">
 
   <div class="option">
-    <label for="darkmode_input">الوضع الليلي؟</label>
-    <input id="darkmode_input" type="checkbox" onchange="chstyle()">
+    <label for="darkmode_input">الوضع الليلي؟&ensp;</label><input id="darkmode_input" type="checkbox" onchange="chstyle()">
   </div>
 
   <!-- from: http://www.everyayah.com/data/recitations.js -->
   <div class="option">
-    <label for="qaris">تلاوة بصوت:</label>
-    <select id="qaris" oninput="audio.update_qari(this.value)">
+    <label for="qaris">تلاوة بصوت:&ensp;</label><select id="qaris" oninput="audio.update_qari(this.value)">
       <option value="" selected>بغير تلاوة صوتية</option>
     <option value="warsh/warsh_ibrahim_aldosary_128kbps">إبراهيم الدوسري (ورش) (جودة فائقة)</option>
     <option value="Abu_Bakr_Ash-Shaatree_64kbps">أبو بكر الشاطري (جودة عالية)</option>
@@ -688,10 +689,9 @@ details[open] > .details-content {
   <hr id="guide">
 
   <div class="option">
-    <label for="quizmode">وضع التسميع (تغييره يتطلب إعادة التسميع):</label>
-    <select id="quizmode" onchange="chquizmode()">
-      <option value="uthm" selected>عثماني (بدون كتابة)</option>
-      <option value="imla">إملائي (كتابة)</option>
+    <label for="quizmode">وضع التسميع:&ensp;</label><select id="quizmode" onchange="chquizmode()">
+      <option value="uthm" selected>عثماني (بدون كتابة) &mdash; تغييره يتطلب إعادة التسميع</option>
+      <option value="imla">إملائي (كتابة) &mdash; تغييره يتطلب إعادة التسميع</option>
     </select>
   </div>
 
@@ -699,8 +699,7 @@ details[open] > .details-content {
     <span id="uthm_options_title" class="mode_options_title">خيارات وضع التسميع العثماني (بدون كتابة):</span>
 
     <div class="option">
-      <label for="mvbtns_input">موضع أزار التسميع:</label>
-      <select id="mvbtns_input" onchange="chstyle()">
+      <label for="mvbtns_input">موضع أزار التسميع:&ensp;</label><select id="mvbtns_input" onchange="chstyle()">
         <option value="bottom" selected>أسفل</option>
         <option value="right">يمين</option>
         <option value="left">يسار</option>
@@ -708,8 +707,7 @@ details[open] > .details-content {
     </div>
 
     <div class="option">
-      <label for="textclr_input">تلوين النص:</label>
-      <select id="textclr_input" onchange="chstyle()">
+      <label for="textclr_input">تلوين النص:&ensp;</label><select id="textclr_input" onchange="chstyle()">
         <option value="taj" selected>تبعا لقواعد التجويد</option>
         <option value="bas">تلوين أجزاء الرسم</option>
         <option value="no">بغير أي تلوين</option>
@@ -717,8 +715,7 @@ details[open] > .details-content {
     </div>
 
     <div class="option">
-      <label for="ayatnum_input">تلوين أرقام الآيات؟</label>
-      <input id="ayatnum_input" type="checkbox" checked onchange="chstyle()">
+      <label for="ayatnum_input">تلوين أرقام الآيات؟&ensp;</label><input id="ayatnum_input" type="checkbox" checked onchange="chstyle()">
     </div>
 
   </div>
@@ -727,10 +724,9 @@ details[open] > .details-content {
     <span id="imla_options_title" class="mode_options_title">خيارات وضع التسميع الإملائي (كتابة):</span>
 
     <div class="option">
-      <label for="feedbackrate">سرعة الإعلان عن الخطأ في الوضع الإملائي:</label>
-      <select id="feedbackrate" onchange="chfeedbackrate()">
-        <option value="" selected>كل حرف</option>
-        <option value="word">كل كلمة</option>
+      <label for="feedbackrate">مراجعة الأخطاء كل:&ensp;</label><select id="feedbackrate" onchange="chfeedbackrate()">
+        <option value="" selected>حرف</option>
+        <option value="word">كلمة</option>
       </select>
     </div>
 

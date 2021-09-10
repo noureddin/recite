@@ -190,20 +190,23 @@ html { font-size: calc(16px + 0.5vw) }
 }
 
 #options * {
-  font-family: KacstOne;
+  font-family: KacstOne, serif;  /* serif for latin, like in qaris */
   font-weight: bold;
   line-height: 1.7;
 }
+
+.option > * { margin: 0 }
+/* to make no unclickable space between the label and input. */
 
 #mode_options {
   padding: 0; margin: 0;
 }
 
 #qaris         { width: calc(100% -  6.80em) }
-#quizmode      { width: calc(100% - 19.10em) }
+#quizmode      { width: calc(100% -  7.35em) }
 #mvbtns_input  { width: calc(100% -  9.40em) }
-#textclr_input { width: calc(100% -  6.50em) }
-#feedbackrate  { width: calc(100% - 18.35em) }
+#textclr_input { width: calc(100% -  6.45em) }
+#feedbackrate  { width: calc(100% -  9.25em) }
 
 #imla_txt { background: var(--background); color: var(--txt) }
 
