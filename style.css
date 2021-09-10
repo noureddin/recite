@@ -72,7 +72,7 @@ body {
 }
 
 :not(input, button, select) { color: var(--uitext); } /* are just inverted */
-#txt { color: var(--txt); }
+#uthm_txt { color: var(--txt); }
 
 .L { color: var(--L) } .W { color: var(--W) } .J { color: var(--J) } .T { color: var(--T) }
 .N { color: var(--N) } .X { color: var(--X) } .R { color: var(--R) } .Q { color: var(--Q) }
@@ -91,8 +91,8 @@ html { font-size: calc(16px + 0.5vw) }
   font-size: inherit; /* some widgets default to another value */
 }
 
-#txt, #txt * { font-family: var(--txt-font); font-size: 1.5rem; }
-#txt {
+#uthm_txt, #uthm_txt * { font-family: var(--txt-font); font-size: 1.5rem; }
+#uthm_txt {
   text-align: right;
   padding: 0 1em;
   padding-bottom: 4rem;
@@ -113,7 +113,7 @@ html { font-size: calc(16px + 0.5vw) }
 #header {
   padding: 0;
   padding-top: 0.5rem;
-  position: var(--sticky);  /* static (default) in txt/imlaai; sticky in uthmani */
+  position: var(--sticky);  /* static (default) in imlaai; sticky in uthmani */
   background-color: var(--background-translucent);
   top:        -4.8rem;
   margin-top: -5.1rem;
@@ -205,14 +205,14 @@ html { font-size: calc(16px + 0.5vw) }
 #textclr_input { width: calc(100% -  6.50em) }
 #feedbackrate  { width: calc(100% - 18.35em) }
 
-#txt_txt { background: var(--background); color: var(--txt) }
+#imla_txt { background: var(--background); color: var(--txt) }
 
-                      #txt_txt.done  { background: lightgreen }
-                      #txt_txt.wrong { background: pink }
-#dark:checked ~ #body #txt_txt.done  { background: #004400 }
-#dark:checked ~ #body #txt_txt.wrong { background: #441014 }
+                      #imla_txt.done  { background: lightgreen }
+                      #imla_txt.wrong { background: pink }
+#dark:checked ~ #body #imla_txt.done  { background: #004400 }
+#dark:checked ~ #body #imla_txt.wrong { background: #441014 }
 
-#txt_txt {
+#imla_txt {
   font-size: 1.5rem;
   text-align: right;
   padding: 0 1em;
@@ -259,24 +259,24 @@ button:disabled {
 #dark:checked ~ #body button,
 #dark:checked ~ #body select { filter: invert(1) hue-rotate(180deg) }
 
-body.letter-parts #txt {
+body.letter-parts #uthm_txt {
   --txt-font: AmiriQuranColoredWeb;
   --L: var(--txt); --W: var(--txt); --J: var(--txt); --T: var(--txt);
   --N: var(--txt); --X: var(--txt); --R: var(--txt); --Q: var(--txt);
 }
 
-body.letter-nocolor #txt {
+body.letter-nocolor #uthm_txt {
   --L: var(--txt); --W: var(--txt); --J: var(--txt); --T: var(--txt);
   --N: var(--txt); --X: var(--txt); --R: var(--txt); --Q: var(--txt);
 }
 
-body.ayat-nocolor #txt {
+body.ayat-nocolor #uthm_txt {
   --A: var(--txt); --A-shadow: none;
   --D: var(--txt); --D-shadow: none;
 }
 
-body.letter-parts:not(.ayat-nocolor) #txt .A,
-body.letter-parts:not(.ayat-nocolor) #txt .D {
+body.letter-parts:not(.ayat-nocolor) #uthm_txt .A,
+body.letter-parts:not(.ayat-nocolor) #uthm_txt .D {
   font-family: AmiriQuranWeb;
 }
 

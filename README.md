@@ -10,7 +10,7 @@ Use it at: [noureddin.github.io/recite](https://noureddin.github.io/recite).
 
 1. Two quiz modes:
 
-    1. no-typing Othmani script, and
+    1. no-typing Uthmani script, and
     2. typing-only Imlaai script.
 
 
@@ -20,13 +20,15 @@ Use it at: [noureddin.github.io/recite](https://noureddin.github.io/recite).
 
 4. The ability to quiz yourself on any number of consecutive ayat, including for example a number of complete suar, an entire juz that starts in a sura and ends in another, etc.
 
-5. Tajweed&ndash;color-coding in the No-typing Othmani mode, or with no colorization.
+5. Tajweed&ndash;color-coding in the No-typing Uthmani mode, or with no colorization.
 
 6. The ability to use only the keyboard, only the mouse, only the touch-pad, or even only the touch screen.
 
 7. Being responsive and so adapts to virtually any device, from a large TV to a mobile phone.
 
 8. (For geeks) URL parameters to "pre-configure" the preferences and even what to recite. (Detailed below.)
+
+9. (For developers) Easy to embed in other web apps. (It'll be detailed later, but check [Zikr-uz-Zikr](https://github.com/noureddin/zz).)
 
 ### URL Parameters (for advanced users)
 
@@ -60,26 +62,31 @@ Any of these parameters can have `a=` to add ayat from *after* the specified reg
 
 Other parameters you can add to pre-configure the preferences:
 
-- `d` or `dark`: select the dark mode by default
-- `l` or `light`: de-select the dark mode (the default; use only to annul a previous `d`)
-- `c=` or `color=`: select the text colorization; it takes the following values:
+- `d`, or `dark`: select the dark mode by default
+- `l`, or `light`: de-select the dark mode (the default; use only to annul a previous `d`)
+- `c=`, or `color=`: select the text colorization; it takes the following values:
 
     1. `t`, `taj`, or `tajweed`: Tajweed&ndash;color-coding (the default)
     2. `b`, `bas`, or `basic`: colorize different parts of the letters differently
     3. `n`, `no`, or `none`: no colorization at all
 
-- `m=` or `mv=` or `mvbtns=`: select the placement of the recitation buttons; it takes the following values:
+- `m=`, `mv=`, or `mvbtns=`: select the placement of the recitation buttons; it takes the following values:
 
     1. `b`: bottom (the default)
     2. `r`: right
     3. `l`: left
 
-- `txt`: select the typing Imlaai mode by default
-- `enter`: select the no-typing Othmani mode (the default; use only to annul a previous `txt`)
+- `q=`, `qz=`, or `quizmode`: select the quizmode; it takes the following values:
+
+    1. `u`, `uthm`, or `uthmani`: select the no-typing Uthmani mode (the default; use only to annul a previous `quizmode=imlaai`)
+    2. `i`, `imla`, or `imlaai`: select the typing Imlaai mode
+
+
+Please note that all these parameters only change the default; all of them are still changeable from the preferences window.
 
 ---
 
-Many thanks for [Khaled Hosny](https://github.com/khaledhosny/) for his work on [Quran Data](https://github.com/alif-type/quran-data) and [Amiri Font](https://www.amirifont.org/).
+Many thanks for [Khaled Hosny](https://github.com/khaledhosny/) for his work on [Quran Data](https://github.com/aliftype/quran-data) and [Amiri Font](https://www.amirifont.org/).
 
 Thanks for my friends [Ezz El Din](https://github.com/EzzEddin) and [Ahmad Hassan](https://github.com/Ahmad-AbdulAziz) for testing these applications with me and giving me invaluable feedback.
 

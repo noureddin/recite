@@ -10,7 +10,7 @@ const say = console.log
 function Q (selector) { return document.querySelector(selector) }
 function Qid (id)     { return document.getElementById(id) }
 
-<<!!bash -c 'for id in body {sura,aaya}_{bgn,end} qaris player title txt txt_txt quizmode feedbackrate endmsg ok new repeat selectors header end_of_header zzback zzignore mvbtns_disablehack mvbtns {next,prev}{word,jmla,aaya}; do echo "const el_$id = Qid(\"$id\")"; done'>>
+<<!!bash -c 'for id in body {sura,aaya}_{bgn,end} qaris player title uthm_txt imla_txt quizmode feedbackrate endmsg ok new repeat selectors header end_of_header zzback zzignore mvbtns_disablehack mvbtns {next,prev}{word,jmla,aaya}; do echo "const el_$id = Qid(\"$id\")"; done'>>
 
 const suar_length = [7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6]
 const suar_name = [<<!!sed "s/^/'/;s/$/',/" res/suar-names | tr -d '\n' >>]
@@ -246,7 +246,7 @@ function chquizmode () {
   const show = (id) => Qid(id).style.display = 'block'
   const hide = (id) => Qid(id).style.display = 'none'
   if (!el_zzignore.hidden) { parent.zz_set_quizmode(el_quizmode.value) }
-  if (el_quizmode.value) {  /* imlaai */
+  if (el_quizmode.value === 'imla') {
     hide('uthm_options')
     show('imla_options')
   }
@@ -256,13 +256,13 @@ function chquizmode () {
   }
 }
 
-function txtfilter_byword   (val) { return val.replace(/\S*$/, '') }  // only check after space or enter
-function txtfilter_byletter (val) { return val }
+function imlafilter_byword   (val) { return val.replace(/\S*$/, '') }  // only check after space or enter
+function imlafilter_byletter (val) { return val }
 
-window.txtfilter = txtfilter_byletter  // the default
+window.imlafilter = imlafilter_byletter  // the default
 
 function chfeedbackrate () {
-  window.txtfilter = el_feedbackrate.value === "word"? txtfilter_byword : txtfilter_byletter
+  window.imlafilter = el_feedbackrate.value === "word"? imlafilter_byword : imlafilter_byletter
   if (!el_zzignore.hidden) { parent.zz_set_feedbackrate(el_feedbackrate.value) }
 }
 

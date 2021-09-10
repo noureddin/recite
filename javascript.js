@@ -1,23 +1,23 @@
 let most_recent_parameters = []
 
 function start_reciting () {
-  const txt = el_quizmode.value === 'txt'
-  hide_selectors(txt)
+  const quizmode = el_quizmode.value
+  hide_selectors(quizmode)
   el_nextword.focus()
   if (!valid_inputs(sura_bgn_val(), aaya_bgn_val(), sura_end_val(), aaya_end_val())) { return }
   const st = start_(sura_bgn_val()) + aaya_bgn_val()
   const en = start_(sura_end_val()) + aaya_end_val()
-  recite(st, en, el_qaris.value, txt)
+  recite(st, en, el_qaris.value, quizmode)
 }
 
 function restart_reciting () {
-  // qari and txt can change.
-  // Remember: most_recent_parameters = [st, en, qari, txt, zz]
-  let [st, en, qari, txt, zz] = most_recent_parameters 
+  // qari and quizmode can change.
+  // Remember: most_recent_parameters = [st, en, qari, quizmode, zz]
+  let [st, en, qari, quizmode, zz] = most_recent_parameters 
   qari = el_qaris.value
-  txt = el_quizmode.value === 'txt'
-  hide_selectors(txt)  // handles the change of quiz mode
-  recite(st, en, qari, txt, zz)
+  quizmode = el_quizmode.value
+  hide_selectors(quizmode)  // handles the change of quiz mode
+  recite(st, en, qari, quizmode, zz)
 }
 
 function input_trigger_x (ev) {
@@ -60,9 +60,9 @@ function show_done () {
       el_mvbtns.hidden = true
       setTimeout(() => el_zzback.focus(), 500)
     }
-    if (!el_txt_txt.hidden) {
-      el_txt_txt.style.height = el_zzback.hidden? 'calc(100vh - 12rem)' : 'calc(100vh - 15rem)'
-      el_txt_txt.scroll({ top: el_txt_txt.scrollHeight })  // scroll to bottom
+    if (!el_imla_txt.hidden) {
+      el_imla_txt.style.height = el_zzback.hidden? 'calc(100vh - 12rem)' : 'calc(100vh - 15rem)'
+      el_imla_txt.scroll({ top: el_imla_txt.scrollHeight })  // scroll to bottom
     }
     return true
   }
@@ -98,8 +98,8 @@ function init_audio (stpair, enpair, qari) {
   audio.fill(make_audio_list(stpair[0]-1, stpair[1], enpair[0]-1, enpair[1]))
 }
 
-function recite (st, en, qari, txt, zz) {
-  most_recent_parameters = [st, en, qari, txt, zz]
+function recite (st, en, qari, quizmode, zz) {
+  most_recent_parameters = [st, en, qari, quizmode, zz]
 
   const preserve_url = !!window.location.search || !!window.location.hash
 
@@ -117,73 +117,73 @@ function recite (st, en, qari, txt, zz) {
   init_audio(stpair, enpair, qari, preserve_url)
 
   if (zz) { parent.zz_show() }
-  hide_selectors(txt)
+  hide_selectors(quizmode)
 
-  const start = () => { _recite(st, en, qari, txt, zz) }
-  if (txt) { load_imla(start) }
-  else {  /* othmani, which is split into two parts */
+  const start = () => { _recite(st, en, qari, quizmode, zz) }
+  if (quizmode === 'imla') { load_imla(start) }
+  else {  /* uthmani, which is split into two parts */
     const n1 = is_in_first_half(st, en)
     const n2 = is_in_second_half(st, en)
-    if (n1 && n2) { load_othm1(() => { load_othm2(start) }) }  // TODO: parallize
-    else if (n1) { load_othm1(start) }
-    else if (n2) { load_othm2(start) }
+    if (n1 && n2) { load_uthm1(() => { load_uthm2(start) }) }  // TODO: parallize
+    else if (n1) { load_uthm1(start) }
+    else if (n2) { load_uthm2(start) }
   }
 }
 
-function _recite (st, en, qari, txt, zz) {
+function _recite (st, en, qari, quizmode, zz) {
 
-  if (txt) {
-    el_txt_txt.focus()
-    let correct_text = imalaai_ayat(st, en)
+  if (quizmode === 'imla') {
+    el_imla_txt.focus()
+    let correct_text = imlaai_ayat(st, en)
     let pasted = false
 
     const txt_changed = function () {
-      const current_aaya_index = el_txt_txt.value.split('\n').length - 2
+      const current_aaya_index = el_imla_txt.value.split('\n').length - 2
 
       if (!el_endmsg.hidden) { return }
 
       if (pasted) {
-        el_txt_txt.value = el_txt_txt.value.replace(/ \u06dd/g, '\xa0\u06dd')
-        // because NBSP is copied as normal, ASCII space
+        el_imla_txt.value = el_imla_txt.value.replace(/ \u06dd/g, '\xa0\u06dd')
+        // because NBSP is copied as a normal, ASCII space
         pasted = false
       }
 
-      if (correct_text.startsWith(txtfilter(el_txt_txt.value))) {
-        el_txt_txt.classList = ''
-        if (el_txt_txt.value.slice(-1) === '\n') {  // basmala, or BS+Enter to repeat the same aaya
+      if (correct_text.startsWith(imlafilter(el_imla_txt.value))) {
+        el_imla_txt.classList = ''
+        if (el_imla_txt.value.slice(-1) === '\n') {  // basmala, or BS+Enter to repeat the same aaya
           audio.play_index(current_aaya_index)
         }
       }
 
-      else if (el_txt_txt.value.slice(-1) === '\n'
-          && correct_text.startsWith(el_txt_txt.value.slice(0,-1) + '\xA0\u06dd'))
+      else if (el_imla_txt.value.slice(-1) === '\n'
+          && correct_text.startsWith(el_imla_txt.value.slice(0,-1) + '\xA0\u06dd'))
       {
-        let x = el_txt_txt.value.length + 2
+        let x = el_imla_txt.value.length + 2
         while (correct_text.slice(x, x+1) !== '\n') { ++x }
-        el_txt_txt.value = correct_text.slice(0, x+1)
+        el_imla_txt.value = correct_text.slice(0, x+1)
         audio.play_index(current_aaya_index)
-        if (el_txt_txt.value === correct_text) {
-          el_txt_txt.value = el_txt_txt.value.slice(0,-1)  // remove the last newline
+        if (el_imla_txt.value === correct_text) {
+          el_imla_txt.value = el_imla_txt.value.slice(0,-1)  // remove the last newline
           show_done()
           scroll_to_bottom()
-          el_txt_txt.disabled = true
-          el_txt_txt.classList = 'done'
+          el_imla_txt.disabled = true
+          el_imla_txt.classList = 'done'
           el_new.focus()
         }
       }
 
       else {
-        el_txt_txt.classList = 'wrong'
+        el_imla_txt.classList = 'wrong'
       }
     }
 
-    el_txt_txt.oninput = txt_changed // https://stackoverflow.com/a/14029861
-    el_txt_txt.onpaste = (e) => { pasted = true }
-    el_txt_txt.focus()
+    el_imla_txt.oninput = txt_changed // https://stackoverflow.com/a/14029861
+    el_imla_txt.onpaste = (e) => { pasted = true }
+    el_imla_txt.focus()
 
   }
   else {
-    el_txt.focus()
+    el_uthm_txt.focus()
 
     let words = make_words_list(st, en)
 
@@ -200,7 +200,7 @@ function _recite (st, en, qari, txt, zz) {
         new_word_kind = kind_of_portion( new_word.slice(-2) )
       } while (isnt_the_kind(new_word_kind))
       if (new_word_kind === 'a') { audio.play_next() }
-      el_txt.innerHTML += txt
+      el_uthm_txt.innerHTML += txt
       if (words.length === 0) { show_done() }
       scroll_to_bottom()
     }
@@ -210,13 +210,13 @@ function _recite (st, en, qari, txt, zz) {
     const jmla_fwd = () => fwd('j')
 
     const word_bck = function (ev) {
-      if (el_txt.innerHTML.length === 0) { return 'a' }
+      if (el_uthm_txt.innerHTML.length === 0) { return 'a' }
       if (!el_endmsg.hidden) { return 'a' }
-      const last_word = el_txt.innerHTML.match(/(?:^|\t|<br>\n)([^\n\t]+(?:\t|<br>\n))$/)[1]
+      const last_word = el_uthm_txt.innerHTML.match(/(?:^|\t|<br>\n)([^\n\t]+(?:\t|<br>\n))$/)[1]
       words.unshift(last_word)
-      el_txt.innerHTML = el_txt.innerHTML.substring(0, el_txt.innerHTML.length - last_word.length)
+      el_uthm_txt.innerHTML = el_uthm_txt.innerHTML.substring(0, el_uthm_txt.innerHTML.length - last_word.length)
       if (last_word.match(/<br>\n$/)) { audio.back() }
-      return kind_of_portion( el_txt.innerHTML.slice(-2) )
+      return kind_of_portion( el_uthm_txt.innerHTML.slice(-2) )
     }
 
     const aaya_bck = function (ev) {
@@ -248,7 +248,7 @@ function _recite (st, en, qari, txt, zz) {
     // the key, even for a few additional milliseconds by accident), which
     // prints a lot of words
     document.onkeyup = input_trigger
-    document.ondblclick = (ev) => { if (ev.target === el_txt || ev.target === Qid('body')) { word_fwd() } }
+    document.ondblclick = (ev) => { if (ev.target === el_uthm_txt || ev.target === Qid('body')) { word_fwd() } }
     el_nextaaya.onclick = aaya_fwd
     el_nextjmla.onclick = jmla_fwd
     el_nextword.onclick = word_fwd
@@ -271,28 +271,28 @@ function init_inputs () {
   el_sura_bgn.onkeyup = el_aaya_bgn.onkeyup = el_sura_end.onkeyup = el_aaya_end.onkeyup = input_trigger_x
 }
 
-const hide_selectors = function (txt) {
+const hide_selectors = function (quizmode) {
   el_selectors.hidden = true
   el_header.hidden = false
   el_endmsg.hidden = true
   el_ok.hidden = true
   el_title.style.display = 'inline-block'
-  if (txt) {
-    el_txt_txt.style.height = '95vh'
-    el_txt_txt.value = ""
-    el_txt_txt.disabled = false
-    el_txt_txt.classList = ''
-    el_txt_txt.hidden = false
-    el_txt.hidden = true
+  if (quizmode === 'imla') {
+    el_imla_txt.style.height = '95vh'
+    el_imla_txt.value = ""
+    el_imla_txt.disabled = false
+    el_imla_txt.classList = ''
+    el_imla_txt.hidden = false
+    el_uthm_txt.hidden = true
     el_mvbtns.hidden = true
     Qid('end_of_header').style.color = 'transparent'  // to keep some space
     document.documentElement.style.setProperty('--sticky', '')
   }
-  else {
-    el_txt.hidden = false
-    el_txt.innerHTML = ''
+  else {  /* uthmani */
+    el_uthm_txt.hidden = false
+    el_uthm_txt.innerHTML = ''
     el_mvbtns.hidden = false
-    el_txt_txt.hidden = true
+    el_imla_txt.hidden = true
     Qid('end_of_header').style.color = ''
     document.documentElement.style.setProperty('--sticky', 'sticky')
   }
@@ -309,8 +309,8 @@ const show_selectors = function () {
 }
 
 const clear_screen = function () {
-  el_txt.innerHTML = ''
-  el_txt_txt.hidden = true
+  el_uthm_txt.innerHTML = ''
+  el_imla_txt.hidden = true
   el_endmsg.hidden = true
 }
 
@@ -333,7 +333,7 @@ onload = function () {
              // inputs, so they keep their values on refresh.
   decode_contact()
   ligilumi()
-  el_txt_txt.spellcheck = false
+  el_imla_txt.spellcheck = false
   // fix help opening
   document.querySelectorAll('details').forEach(el => {
     el.addEventListener('toggle', ev => {

@@ -41,7 +41,7 @@ function load_zip(basename, callback) {
 }
 
 var imla
-var othm = Array(6236)
+var uthm = Array(6236)
 
 function load_imla (callback) {
   if (imla == null) {
@@ -49,25 +49,27 @@ function load_imla (callback) {
   } else { callback() }
 }
 
-// othmani is split into two parts: until Surat Mariam (Sura 19), and then from Surat Ta-Ha.
+// uthmani is split into two parts: until Surat Mariam (Sura 19), and then from Surat Ta-Ha.
 // this is *not* arbitrary: it makes both parts almost the same size in bytes.
 const FIRST_AAYA_OF_TAHA = 2349
 function is_in_first_half  (st, en) { return (st-1 <  FIRST_AAYA_OF_TAHA || en <  FIRST_AAYA_OF_TAHA) }
 function is_in_second_half (st, en) { return (st-1 >= FIRST_AAYA_OF_TAHA || en >= FIRST_AAYA_OF_TAHA) }
 
-function load_othm1 (callback) {
-  if (othm[0] == null) {  /* checking an arbitrary aaya in the 1st half */
-    load_zip('othm1', (arr) => { othm = [...arr, ...othm.slice(FIRST_AAYA_OF_TAHA)]; callback() })
+/* WARNING: the files are named othm1 & othm2 NOT uthmN as you may expect; do NOT change this! */
+
+function load_uthm1 (callback) {
+  if (uthm[0] == null) {  /* checking an arbitrary aaya in the 1st half */
+    load_zip('othm1', (arr) => { uthm = [...arr, ...uthm.slice(FIRST_AAYA_OF_TAHA)]; callback() })
   } else { callback() }
 }
 
-function load_othm2 (callback) {
-  if (othm[6000] == null) {  /* checking an arbitrary aaya in the 2nd half */
-    load_zip('othm2', (arr) => { othm = [...othm.slice(0,FIRST_AAYA_OF_TAHA-1), ...arr]; callback() })
+function load_uthm2 (callback) {
+  if (uthm[6000] == null) {  /* checking an arbitrary aaya in the 2nd half */
+    load_zip('othm2', (arr) => { uthm = [...uthm.slice(0,FIRST_AAYA_OF_TAHA-1), ...arr]; callback() })
   } else { callback() }
 }
 
-function imalaai_ayat (st, en) {
+function imlaai_ayat (st, en) {
 
   return (
     imla
@@ -87,11 +89,11 @@ function make_words_list (st, en) {
   // let's make tab ('\t') separates the words,
   // and newline (actually '<br>\n') separates the ayat.
 
-  const basmala = 'بِسۡمِ ٱللَّهِ ٱX<ل>R<رَّ>حۡمَT<ـٰ>نِ ٱX<ل>R<رَّ>حِJ<ی>مِ A<۝>D<١>'  /* othm[0] */
+  const basmala = 'بِسۡمِ ٱللَّهِ ٱX<ل>R<رَّ>حۡمَT<ـٰ>نِ ٱX<ل>R<رَّ>حِJ<ی>مِ A<۝>D<١>'  /*uothm[0] */
       .replace(/\xa0.*/, '').replace(/ /g, '\xa0')  // '\ufdfd'
 
   return (
-    othm
+    uthm
       .slice(st-1, en)
       .reduce((arr, aya) => {  // https://stackoverflow.com/a/38528645
         if (aya.startsWith('#')) {

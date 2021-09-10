@@ -128,7 +128,7 @@ body {
 }
 
 :not(input, button, select) { color: var(--uitext); } /* are just inverted */
-#txt { color: var(--txt); }
+#uthm_txt { color: var(--txt); }
 
 .L { color: var(--L) } .W { color: var(--W) } .J { color: var(--J) } .T { color: var(--T) }
 .N { color: var(--N) } .X { color: var(--X) } .R { color: var(--R) } .Q { color: var(--Q) }
@@ -147,8 +147,8 @@ html { font-size: calc(16px + 0.5vw) }
   font-size: inherit; /* some widgets default to another value */
 }
 
-#txt, #txt * { font-family: var(--txt-font); font-size: 1.5rem; }
-#txt {
+#uthm_txt, #uthm_txt * { font-family: var(--txt-font); font-size: 1.5rem; }
+#uthm_txt {
   text-align: right;
   padding: 0 1em;
   padding-bottom: 4rem;
@@ -169,7 +169,7 @@ html { font-size: calc(16px + 0.5vw) }
 #header {
   padding: 0;
   padding-top: 0.5rem;
-  position: var(--sticky);  /* static (default) in txt/imlaai; sticky in uthmani */
+  position: var(--sticky);  /* static (default) in imlaai; sticky in uthmani */
   background-color: var(--background-translucent);
   top:        -4.8rem;
   margin-top: -5.1rem;
@@ -261,14 +261,14 @@ html { font-size: calc(16px + 0.5vw) }
 #textclr_input { width: calc(100% -  6.50em) }
 #feedbackrate  { width: calc(100% - 18.35em) }
 
-#txt_txt { background: var(--background); color: var(--txt) }
+#imla_txt { background: var(--background); color: var(--txt) }
 
-                      #txt_txt.done  { background: lightgreen }
-                      #txt_txt.wrong { background: pink }
-#dark:checked ~ #body #txt_txt.done  { background: #004400 }
-#dark:checked ~ #body #txt_txt.wrong { background: #441014 }
+                      #imla_txt.done  { background: lightgreen }
+                      #imla_txt.wrong { background: pink }
+#dark:checked ~ #body #imla_txt.done  { background: #004400 }
+#dark:checked ~ #body #imla_txt.wrong { background: #441014 }
 
-#txt_txt {
+#imla_txt {
   font-size: 1.5rem;
   text-align: right;
   padding: 0 1em;
@@ -315,24 +315,24 @@ button:disabled {
 #dark:checked ~ #body button,
 #dark:checked ~ #body select { filter: invert(1) hue-rotate(180deg) }
 
-body.letter-parts #txt {
+body.letter-parts #uthm_txt {
   --txt-font: AmiriQuranColoredWeb;
   --L: var(--txt); --W: var(--txt); --J: var(--txt); --T: var(--txt);
   --N: var(--txt); --X: var(--txt); --R: var(--txt); --Q: var(--txt);
 }
 
-body.letter-nocolor #txt {
+body.letter-nocolor #uthm_txt {
   --L: var(--txt); --W: var(--txt); --J: var(--txt); --T: var(--txt);
   --N: var(--txt); --X: var(--txt); --R: var(--txt); --Q: var(--txt);
 }
 
-body.ayat-nocolor #txt {
+body.ayat-nocolor #uthm_txt {
   --A: var(--txt); --A-shadow: none;
   --D: var(--txt); --D-shadow: none;
 }
 
-body.letter-parts:not(.ayat-nocolor) #txt .A,
-body.letter-parts:not(.ayat-nocolor) #txt .D {
+body.letter-parts:not(.ayat-nocolor) #uthm_txt .A,
+body.letter-parts:not(.ayat-nocolor) #uthm_txt .D {
   font-family: AmiriQuranWeb;
 }
 
@@ -690,8 +690,8 @@ details[open] > .details-content {
   <div class="option">
     <label for="quizmode">وضع التسميع (تغييره يتطلب إعادة التسميع):</label>
     <select id="quizmode" onchange="chquizmode()">
-      <option value="" selected>عثماني (بدون كتابة)</option>
-      <option value="txt">إملائي (كتابة)</option>
+      <option value="uthm" selected>عثماني (بدون كتابة)</option>
+      <option value="imla">إملائي (كتابة)</option>
     </select>
   </div>
 
@@ -871,9 +871,9 @@ details[open] > .details-content {
 <hr id="end_of_header">
 </div>
 
-<div id="txt"></div>
+<div id="uthm_txt"></div>
 
-<textarea hidden id="txt_txt" placeholder="اكتب هنا">
+<textarea hidden id="imla_txt" placeholder="اكتب هنا">
 </textarea>
 
 <div hidden id="endmsg">
@@ -921,8 +921,8 @@ const el_aaya_end = Qid("aaya_end")
 const el_qaris = Qid("qaris")
 const el_player = Qid("player")
 const el_title = Qid("title")
-const el_txt = Qid("txt")
-const el_txt_txt = Qid("txt_txt")
+const el_uthm_txt = Qid("uthm_txt")
+const el_imla_txt = Qid("imla_txt")
 const el_quizmode = Qid("quizmode")
 const el_feedbackrate = Qid("feedbackrate")
 const el_endmsg = Qid("endmsg")
@@ -1180,7 +1180,7 @@ function chquizmode () {
   const show = (id) => Qid(id).style.display = 'block'
   const hide = (id) => Qid(id).style.display = 'none'
   if (!el_zzignore.hidden) { parent.zz_set_quizmode(el_quizmode.value) }
-  if (el_quizmode.value) {  /* imlaai */
+  if (el_quizmode.value === 'imla') {
     hide('uthm_options')
     show('imla_options')
   }
@@ -1190,13 +1190,13 @@ function chquizmode () {
   }
 }
 
-function txtfilter_byword   (val) { return val.replace(/\S*$/, '') }  // only check after space or enter
-function txtfilter_byletter (val) { return val }
+function imlafilter_byword   (val) { return val.replace(/\S*$/, '') }  // only check after space or enter
+function imlafilter_byletter (val) { return val }
 
-window.txtfilter = txtfilter_byletter  // the default
+window.imlafilter = imlafilter_byletter  // the default
 
 function chfeedbackrate () {
-  window.txtfilter = el_feedbackrate.value === "word"? txtfilter_byword : txtfilter_byletter
+  window.imlafilter = el_feedbackrate.value === "word"? imlafilter_byword : imlafilter_byletter
   if (!el_zzignore.hidden) { parent.zz_set_feedbackrate(el_feedbackrate.value) }
 }
 
@@ -1462,6 +1462,15 @@ function parse_color (color) {
   return _color_values[ color.toLowerCase() ]
 }
 
+const _quizmode_values = {
+  i: 'imla', imla: 'imla', imlaai: 'imla',
+  u: 'uthm', uthm: 'uthm', uthmani: 'uthm',
+}
+
+function parse_quizmode (quizmode) {
+  return _quizmode_values[ quizmode.toLowerCase() ]
+}
+
 function parse_mv (mv) {
   mv = mv.toLowerCase()
   if (mv == ''
@@ -1476,7 +1485,7 @@ function _ligilumilo (params) {
   let dark
   let color  // tajweed, bas, none
   let mv  // accepts: b, r, l; contains: bottom, right, left
-  let txt  // true if TXT mode, otherwise: normal quizzing mode
+  let quizmode
   let byword  // true if error-checking in imlaai-mode is done every word instead of every letter.
   let zz
   // possible params:
@@ -1496,7 +1505,8 @@ function _ligilumilo (params) {
   // - dark & light: dark mode
   // - color or c: text colors: t/taj/tajweed (default); b/bas/basic; n/no/none.
   // - mvbtns or mv or m: its placement: b, r, l.
-  // - txt & enter: imlaai (typing) or othmani (no-typing; default)
+  // - quizmode or qz or q: imlaai (typing) or uthmani (no-typing; default)
+  // - byword and byletter: imlaai feedbackrate
   // - zz: enable ZZ-integration
   // TODO: audio
   params
@@ -1509,8 +1519,7 @@ function _ligilumilo (params) {
       else if (e[0] === 'light' || e[0] === 'l') { dark = false }
       else if (e[0] === 'color' || e[0] === 'c') { color = parse_color(e[1]) }
       else if (e[0] === 'mvbtns' || e[0] === 'mv' || e[0] === 'm') { mv = parse_mv(e[1]) }
-      else if (e[0] === 'txt') { txt = true }
-      else if (e[0] === 'enter') { txt = false }
+      else if (e[0] === 'quizmode' || e[0] === 'qz' || e[0] === 'q') { quizmode = parse_quizmode(e[1]) }
       else if (e[0] === 'byword') { byword = true }
       else if (e[0] === 'byletter') { byword = false }
       else if (e[0] === 'zz') { zz = true }
@@ -1524,17 +1533,17 @@ function _ligilumilo (params) {
       else if (e[0] === 'k') { [st, en] = rukus_to_ayat(...range_to_pair(e[1])) }
       else                   { [st, en] =  ayat_to_ayat(...range_to_pair(e[0])) }
     })
-  if (st == null || en == null) { return [null, null, dark, color, mv, txt, byword, zz] }
+  if (st == null || en == null) { return [null, null, dark, color, mv, quizmode, byword, zz] }
   st -= b; en += a
   if (st <= 0)    { st = 1    }
   if (en >  6236) { en = 6236 }
-  return [st, en, dark, color, mv, txt, byword, zz]
+  return [st, en, dark, color, mv, quizmode, byword, zz]
 }
 
 function ligilumi () {
-  const [st, en, dark, color, mv, _txt, byword, zz] = _ligilumilo(window.location.hash || window.location.search)
-  const txt = _txt != null? _txt : Qid('quizmode').value === 'txt'
-  Qid('quizmode').value = txt? 'txt' : ''
+  const [st, en, dark, color, mv, _qz, byword, zz] = _ligilumilo(window.location.hash || window.location.search)
+  const quizmode = _qz != null? _qz : Qid('quizmode').value
+  Qid('quizmode').value = quizmode
   Qid('darkmode_input').checked = dark
   Qid('textclr_input').value = color || 'taj'  // the default
   Qid('mvbtns_input').value = mv || 'bottom'  // the default
@@ -1544,7 +1553,7 @@ function ligilumi () {
   // chquizmode() for txt is currently not needed
   // if no aayat are selected, only change the provided preferences 
   if (st == null || en == null) { return }
-  recite(st, en, '', txt, zz)
+  recite(st, en, '', quizmode, zz)
 }
 
 // vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:
@@ -1556,23 +1565,23 @@ function ligilumi () {
 let most_recent_parameters = []
 
 function start_reciting () {
-  const txt = el_quizmode.value === 'txt'
-  hide_selectors(txt)
+  const quizmode = el_quizmode.value
+  hide_selectors(quizmode)
   el_nextword.focus()
   if (!valid_inputs(sura_bgn_val(), aaya_bgn_val(), sura_end_val(), aaya_end_val())) { return }
   const st = start_(sura_bgn_val()) + aaya_bgn_val()
   const en = start_(sura_end_val()) + aaya_end_val()
-  recite(st, en, el_qaris.value, txt)
+  recite(st, en, el_qaris.value, quizmode)
 }
 
 function restart_reciting () {
-  // qari and txt can change.
-  // Remember: most_recent_parameters = [st, en, qari, txt, zz]
-  let [st, en, qari, txt, zz] = most_recent_parameters 
+  // qari and quizmode can change.
+  // Remember: most_recent_parameters = [st, en, qari, quizmode, zz]
+  let [st, en, qari, quizmode, zz] = most_recent_parameters 
   qari = el_qaris.value
-  txt = el_quizmode.value === 'txt'
-  hide_selectors(txt)  // handles the change of quiz mode
-  recite(st, en, qari, txt, zz)
+  quizmode = el_quizmode.value
+  hide_selectors(quizmode)  // handles the change of quiz mode
+  recite(st, en, qari, quizmode, zz)
 }
 
 function input_trigger_x (ev) {
@@ -1615,9 +1624,9 @@ function show_done () {
       el_mvbtns.hidden = true
       setTimeout(() => el_zzback.focus(), 500)
     }
-    if (!el_txt_txt.hidden) {
-      el_txt_txt.style.height = el_zzback.hidden? 'calc(100vh - 12rem)' : 'calc(100vh - 15rem)'
-      el_txt_txt.scroll({ top: el_txt_txt.scrollHeight })  // scroll to bottom
+    if (!el_imla_txt.hidden) {
+      el_imla_txt.style.height = el_zzback.hidden? 'calc(100vh - 12rem)' : 'calc(100vh - 15rem)'
+      el_imla_txt.scroll({ top: el_imla_txt.scrollHeight })  // scroll to bottom
     }
     return true
   }
@@ -1653,8 +1662,8 @@ function init_audio (stpair, enpair, qari) {
   audio.fill(make_audio_list(stpair[0]-1, stpair[1], enpair[0]-1, enpair[1]))
 }
 
-function recite (st, en, qari, txt, zz) {
-  most_recent_parameters = [st, en, qari, txt, zz]
+function recite (st, en, qari, quizmode, zz) {
+  most_recent_parameters = [st, en, qari, quizmode, zz]
 
   const preserve_url = !!window.location.search || !!window.location.hash
 
@@ -1672,73 +1681,73 @@ function recite (st, en, qari, txt, zz) {
   init_audio(stpair, enpair, qari, preserve_url)
 
   if (zz) { parent.zz_show() }
-  hide_selectors(txt)
+  hide_selectors(quizmode)
 
-  const start = () => { _recite(st, en, qari, txt, zz) }
-  if (txt) { load_imla(start) }
-  else {  /* othmani, which is split into two parts */
+  const start = () => { _recite(st, en, qari, quizmode, zz) }
+  if (quizmode === 'imla') { load_imla(start) }
+  else {  /* uthmani, which is split into two parts */
     const n1 = is_in_first_half(st, en)
     const n2 = is_in_second_half(st, en)
-    if (n1 && n2) { load_othm1(() => { load_othm2(start) }) }  // TODO: parallize
-    else if (n1) { load_othm1(start) }
-    else if (n2) { load_othm2(start) }
+    if (n1 && n2) { load_uthm1(() => { load_uthm2(start) }) }  // TODO: parallize
+    else if (n1) { load_uthm1(start) }
+    else if (n2) { load_uthm2(start) }
   }
 }
 
-function _recite (st, en, qari, txt, zz) {
+function _recite (st, en, qari, quizmode, zz) {
 
-  if (txt) {
-    el_txt_txt.focus()
-    let correct_text = imalaai_ayat(st, en)
+  if (quizmode === 'imla') {
+    el_imla_txt.focus()
+    let correct_text = imlaai_ayat(st, en)
     let pasted = false
 
     const txt_changed = function () {
-      const current_aaya_index = el_txt_txt.value.split('\n').length - 2
+      const current_aaya_index = el_imla_txt.value.split('\n').length - 2
 
       if (!el_endmsg.hidden) { return }
 
       if (pasted) {
-        el_txt_txt.value = el_txt_txt.value.replace(/ \u06dd/g, '\xa0\u06dd')
-        // because NBSP is copied as normal, ASCII space
+        el_imla_txt.value = el_imla_txt.value.replace(/ \u06dd/g, '\xa0\u06dd')
+        // because NBSP is copied as a normal, ASCII space
         pasted = false
       }
 
-      if (correct_text.startsWith(txtfilter(el_txt_txt.value))) {
-        el_txt_txt.classList = ''
-        if (el_txt_txt.value.slice(-1) === '\n') {  // basmala, or BS+Enter to repeat the same aaya
+      if (correct_text.startsWith(imlafilter(el_imla_txt.value))) {
+        el_imla_txt.classList = ''
+        if (el_imla_txt.value.slice(-1) === '\n') {  // basmala, or BS+Enter to repeat the same aaya
           audio.play_index(current_aaya_index)
         }
       }
 
-      else if (el_txt_txt.value.slice(-1) === '\n'
-          && correct_text.startsWith(el_txt_txt.value.slice(0,-1) + '\xA0\u06dd'))
+      else if (el_imla_txt.value.slice(-1) === '\n'
+          && correct_text.startsWith(el_imla_txt.value.slice(0,-1) + '\xA0\u06dd'))
       {
-        let x = el_txt_txt.value.length + 2
+        let x = el_imla_txt.value.length + 2
         while (correct_text.slice(x, x+1) !== '\n') { ++x }
-        el_txt_txt.value = correct_text.slice(0, x+1)
+        el_imla_txt.value = correct_text.slice(0, x+1)
         audio.play_index(current_aaya_index)
-        if (el_txt_txt.value === correct_text) {
-          el_txt_txt.value = el_txt_txt.value.slice(0,-1)  // remove the last newline
+        if (el_imla_txt.value === correct_text) {
+          el_imla_txt.value = el_imla_txt.value.slice(0,-1)  // remove the last newline
           show_done()
           scroll_to_bottom()
-          el_txt_txt.disabled = true
-          el_txt_txt.classList = 'done'
+          el_imla_txt.disabled = true
+          el_imla_txt.classList = 'done'
           el_new.focus()
         }
       }
 
       else {
-        el_txt_txt.classList = 'wrong'
+        el_imla_txt.classList = 'wrong'
       }
     }
 
-    el_txt_txt.oninput = txt_changed // https://stackoverflow.com/a/14029861
-    el_txt_txt.onpaste = (e) => { pasted = true }
-    el_txt_txt.focus()
+    el_imla_txt.oninput = txt_changed // https://stackoverflow.com/a/14029861
+    el_imla_txt.onpaste = (e) => { pasted = true }
+    el_imla_txt.focus()
 
   }
   else {
-    el_txt.focus()
+    el_uthm_txt.focus()
 
     let words = make_words_list(st, en)
 
@@ -1755,7 +1764,7 @@ function _recite (st, en, qari, txt, zz) {
         new_word_kind = kind_of_portion( new_word.slice(-2) )
       } while (isnt_the_kind(new_word_kind))
       if (new_word_kind === 'a') { audio.play_next() }
-      el_txt.innerHTML += txt
+      el_uthm_txt.innerHTML += txt
       if (words.length === 0) { show_done() }
       scroll_to_bottom()
     }
@@ -1765,13 +1774,13 @@ function _recite (st, en, qari, txt, zz) {
     const jmla_fwd = () => fwd('j')
 
     const word_bck = function (ev) {
-      if (el_txt.innerHTML.length === 0) { return 'a' }
+      if (el_uthm_txt.innerHTML.length === 0) { return 'a' }
       if (!el_endmsg.hidden) { return 'a' }
-      const last_word = el_txt.innerHTML.match(/(?:^|\t|<br>\n)([^\n\t]+(?:\t|<br>\n))$/)[1]
+      const last_word = el_uthm_txt.innerHTML.match(/(?:^|\t|<br>\n)([^\n\t]+(?:\t|<br>\n))$/)[1]
       words.unshift(last_word)
-      el_txt.innerHTML = el_txt.innerHTML.substring(0, el_txt.innerHTML.length - last_word.length)
+      el_uthm_txt.innerHTML = el_uthm_txt.innerHTML.substring(0, el_uthm_txt.innerHTML.length - last_word.length)
       if (last_word.match(/<br>\n$/)) { audio.back() }
-      return kind_of_portion( el_txt.innerHTML.slice(-2) )
+      return kind_of_portion( el_uthm_txt.innerHTML.slice(-2) )
     }
 
     const aaya_bck = function (ev) {
@@ -1803,7 +1812,7 @@ function _recite (st, en, qari, txt, zz) {
     // the key, even for a few additional milliseconds by accident), which
     // prints a lot of words
     document.onkeyup = input_trigger
-    document.ondblclick = (ev) => { if (ev.target === el_txt || ev.target === Qid('body')) { word_fwd() } }
+    document.ondblclick = (ev) => { if (ev.target === el_uthm_txt || ev.target === Qid('body')) { word_fwd() } }
     el_nextaaya.onclick = aaya_fwd
     el_nextjmla.onclick = jmla_fwd
     el_nextword.onclick = word_fwd
@@ -1826,28 +1835,28 @@ function init_inputs () {
   el_sura_bgn.onkeyup = el_aaya_bgn.onkeyup = el_sura_end.onkeyup = el_aaya_end.onkeyup = input_trigger_x
 }
 
-const hide_selectors = function (txt) {
+const hide_selectors = function (quizmode) {
   el_selectors.hidden = true
   el_header.hidden = false
   el_endmsg.hidden = true
   el_ok.hidden = true
   el_title.style.display = 'inline-block'
-  if (txt) {
-    el_txt_txt.style.height = '95vh'
-    el_txt_txt.value = ""
-    el_txt_txt.disabled = false
-    el_txt_txt.classList = ''
-    el_txt_txt.hidden = false
-    el_txt.hidden = true
+  if (quizmode === 'imla') {
+    el_imla_txt.style.height = '95vh'
+    el_imla_txt.value = ""
+    el_imla_txt.disabled = false
+    el_imla_txt.classList = ''
+    el_imla_txt.hidden = false
+    el_uthm_txt.hidden = true
     el_mvbtns.hidden = true
     Qid('end_of_header').style.color = 'transparent'  // to keep some space
     document.documentElement.style.setProperty('--sticky', '')
   }
-  else {
-    el_txt.hidden = false
-    el_txt.innerHTML = ''
+  else {  /* uthmani */
+    el_uthm_txt.hidden = false
+    el_uthm_txt.innerHTML = ''
     el_mvbtns.hidden = false
-    el_txt_txt.hidden = true
+    el_imla_txt.hidden = true
     Qid('end_of_header').style.color = ''
     document.documentElement.style.setProperty('--sticky', 'sticky')
   }
@@ -1864,8 +1873,8 @@ const show_selectors = function () {
 }
 
 const clear_screen = function () {
-  el_txt.innerHTML = ''
-  el_txt_txt.hidden = true
+  el_uthm_txt.innerHTML = ''
+  el_imla_txt.hidden = true
   el_endmsg.hidden = true
 }
 
@@ -1888,7 +1897,7 @@ onload = function () {
              // inputs, so they keep their values on refresh.
   decode_contact()
   ligilumi()
-  el_txt_txt.spellcheck = false
+  el_imla_txt.spellcheck = false
   // fix help opening
   document.querySelectorAll('details').forEach(el => {
     el.addEventListener('toggle', ev => {
@@ -1944,7 +1953,7 @@ function load_zip(basename, callback) {
 }
 
 var imla
-var othm = Array(6236)
+var uthm = Array(6236)
 
 function load_imla (callback) {
   if (imla == null) {
@@ -1952,25 +1961,27 @@ function load_imla (callback) {
   } else { callback() }
 }
 
-// othmani is split into two parts: until Surat Mariam (Sura 19), and then from Surat Ta-Ha.
+// uthmani is split into two parts: until Surat Mariam (Sura 19), and then from Surat Ta-Ha.
 // this is *not* arbitrary: it makes both parts almost the same size in bytes.
 const FIRST_AAYA_OF_TAHA = 2349
 function is_in_first_half  (st, en) { return (st-1 <  FIRST_AAYA_OF_TAHA || en <  FIRST_AAYA_OF_TAHA) }
 function is_in_second_half (st, en) { return (st-1 >= FIRST_AAYA_OF_TAHA || en >= FIRST_AAYA_OF_TAHA) }
 
-function load_othm1 (callback) {
-  if (othm[0] == null) {  /* checking an arbitrary aaya in the 1st half */
-    load_zip('othm1', (arr) => { othm = [...arr, ...othm.slice(FIRST_AAYA_OF_TAHA)]; callback() })
+/* WARNING: the files are named othm1 & othm2 NOT uthmN as you may expect; do NOT change this! */
+
+function load_uthm1 (callback) {
+  if (uthm[0] == null) {  /* checking an arbitrary aaya in the 1st half */
+    load_zip('othm1', (arr) => { uthm = [...arr, ...uthm.slice(FIRST_AAYA_OF_TAHA)]; callback() })
   } else { callback() }
 }
 
-function load_othm2 (callback) {
-  if (othm[6000] == null) {  /* checking an arbitrary aaya in the 2nd half */
-    load_zip('othm2', (arr) => { othm = [...othm.slice(0,FIRST_AAYA_OF_TAHA-1), ...arr]; callback() })
+function load_uthm2 (callback) {
+  if (uthm[6000] == null) {  /* checking an arbitrary aaya in the 2nd half */
+    load_zip('othm2', (arr) => { uthm = [...uthm.slice(0,FIRST_AAYA_OF_TAHA-1), ...arr]; callback() })
   } else { callback() }
 }
 
-function imalaai_ayat (st, en) {
+function imlaai_ayat (st, en) {
 
   return (
     imla
@@ -1990,11 +2001,11 @@ function make_words_list (st, en) {
   // let's make tab ('\t') separates the words,
   // and newline (actually '<br>\n') separates the ayat.
 
-  const basmala = 'بِسۡمِ ٱللَّهِ ٱX<ل>R<رَّ>حۡمَT<ـٰ>نِ ٱX<ل>R<رَّ>حِJ<ی>مِ A<۝>D<١>'  /* othm[0] */
+  const basmala = 'بِسۡمِ ٱللَّهِ ٱX<ل>R<رَّ>حۡمَT<ـٰ>نِ ٱX<ل>R<رَّ>حِJ<ی>مِ A<۝>D<١>'  /*uothm[0] */
       .replace(/\xa0.*/, '').replace(/ /g, '\xa0')  // '\ufdfd'
 
   return (
-    othm
+    uthm
       .slice(st-1, en)
       .reduce((arr, aya) => {  // https://stackoverflow.com/a/38528645
         if (aya.startsWith('#')) {
