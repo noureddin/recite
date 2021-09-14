@@ -30,7 +30,7 @@ binmode STDOUT, ':encoding(UTF-8)';
 # out> <strong>strong</strong>
 #
 # in>> [Example site](http://example.com/)
-# out> <a href="http://example.com/">Example site</a>
+# out> <a href="http://example.com/" target="_blank">Example site</a>
 #
 # in>> ~
 # out> &nbsp;
@@ -74,7 +74,7 @@ my $expected_html = <<~END_OF_HTML;
     <p>Because <strong>I</strong> said so.</p>
     <p>And I wanted it like this way.
     So that I can rule the WORLD!!!</p>
-    <p>For more info, visit <span dir="ltr" class="roman"><a href="http://example.com">Example.com</a></span>.</p>
+    <p>For more info, visit <span dir="ltr" class="roman"><a href="http://example.com" target="_blank">Example.com</a></span>.</p>
     </div></details>
     <details><summary>What?</summary><div class="details-content">
     <ul>
@@ -117,7 +117,7 @@ sub process_all {
 sub process_strong  { return $_[0] =~ s|   \* (.*?) \*   |<strong>$1</strong>|gxr }
 sub process_roman   { return $_[0] =~ s|   \{ (.*?) \}   |<span dir="ltr" class="roman">$1</span>|gxr }
 sub process_kbd     { return $_[0] =~ s| \{\{ (.*?) \}\} |<kbd>$1</kbd>|gxr }
-sub process_links   { return $_[0] =~ s| \[ (.*?) \] \( (.*?) \) |<a href="$2">$1</a>|gxr }
+sub process_links   { return $_[0] =~ s| \[ (.*?) \] \( (.*?) \) |<a href="$2" target="_blank">$1</a>|gxr }
 
 sub process_part    { return $_[0] =~ s|^::[ ]+(.*?)$|<h2 class="help-part">$1</h2>|mgxr }
 sub process_summary { return $_[0] =~ s|^= [ ]+(.*?)$|<summary>$1</summary>|mgxr }
@@ -190,12 +190,12 @@ sub test_all {
 
     is process_links(
         "Go to [Example site](http://example.com/)."),
-        'Go to <a href="http://example.com/">Example site</a>.',
+        'Go to <a href="http://example.com/" target="_blank">Example site</a>.',
             'links only';
 
     is process_links(process_roman(
         "Go to {[Example site](http://example.com/)}.")),
-        'Go to <span dir="ltr" class="roman"><a href="http://example.com/">Example site</a></span>.',
+        'Go to <span dir="ltr" class="roman"><a href="http://example.com/" target="_blank">Example site</a></span>.',
             'both roman and links';
 
     is process_ul(
