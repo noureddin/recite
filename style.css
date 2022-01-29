@@ -198,6 +198,14 @@ html { font-size: calc(16px + 0.5vw) }
 .option > * { margin: 0 }
 /* to make no unclickable space between the label and input. */
 
+#darkmode_option { width: 7em }
+#teacher_option { width: 14em }
+
+.option.optionally-inline {
+  display: inline-block;
+  margin: 0 1em;
+}
+
 #mode_options {
   padding: 0; margin: 0;
 }

@@ -142,30 +142,34 @@ const audio = (function () {  // {{{
   let base_url
   let cur_idx
 
-  function invalid_state () {
-    return cur_idx == null || !base_url || !list || cur_idx >= list.length
+  function index (i) { return i != null ? i : cur_idx }
+
+  function invalid_state (idx) {
+    idx = index(idx)
+    return idx == null || idx < 0 || !base_url || !list || idx >= list.length
   }
 
-  function cur_url () {
-    if (invalid_state()) { return }
-    return base_url + list[cur_idx] + '.mp3'
+  function audio_url (idx) {
+    idx = index(idx)
+    if (invalid_state(idx)) { return }
+    return base_url + list[idx] + '.mp3'
   }
 
-  function fetch () {  // https://stackoverflow.com/a/31351186
-    if (invalid_state()) { return }
-    (new Audio()).src = cur_url()
+  function fetch (idx) {
+    idx = index(idx)
+    if (invalid_state(idx)) { return }
+    new Audio(audio_url(idx))
   }
 
   function play () {
     if (invalid_state()) { return }
-    el_player.src = cur_url()
+    // el_title.innerText = list[cur_idx]  // for debugging
+    el_player.src = audio_url()
+    el_player.addEventListener('loadeddata', () => fetch(cur_idx + 1))
     el_player.play()
   }
 
-  function advance  () { cur_idx += 1; fetch() }
-  function init_idx () { cur_idx = 0;  fetch() }
-  function set_idx  (i){ cur_idx = i;  fetch() }
-  function back     () { if (cur_idx >= 1) { cur_idx -= 1 } }
+  function set_idx (i) { cur_idx = i; fetch() }
 
   function show_or_hide_player () {
     invalid_state() ? hide_el(el_player) : show_el(el_player)
@@ -185,32 +189,24 @@ const audio = (function () {  // {{{
 
     init: function (qari) {
       update_qari(qari)
-      init_idx()
+      set_idx(0)
     },
 
     fill: function (ayat) {
       list = ayat
-      init_idx()
+      set_idx(0)
       show_or_hide_player()
     },
 
-    play_next: function () {
-      if (invalid_state()) { return }
-      play()
-      advance()
-    },
-
-    back: function () {
-      back()
-    },
-
-    play_index: function (i) {
-      if (invalid_state()) { return }
-      set_idx(i)
+    play: function (idx) {
+      if (idx != null) { set_idx(idx) }
       show_or_hide_player()
       play()
-      advance()
     },
+
+    set_index: function (i) { set_idx(i) },
+    next: function () { set_idx(cur_idx + 1) },
+    back: function () { set_idx(cur_idx - 1) },
 
   }
 })()

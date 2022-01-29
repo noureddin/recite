@@ -254,6 +254,14 @@ html { font-size: calc(16px + 0.5vw) }
 .option > * { margin: 0 }
 /* to make no unclickable space between the label and input. */
 
+#darkmode_option { width: 7em }
+#teacher_option { width: 14em }
+
+.option.optionally-inline {
+  display: inline-block;
+  margin: 0 1em;
+}
+
 #mode_options {
   padding: 0; margin: 0;
 }
@@ -624,8 +632,11 @@ details[open] > .details-content {
 
 <div id="options" class="contentcontainer">
 
-  <div class="option">
+  <div id="darkmode_option" class="option optionally-inline">
     <label for="darkmode_input">الوضع الليلي؟&ensp;</label><input id="darkmode_input" type="checkbox" onchange="chstyle()">
+  </div>
+  <div id="teacher_option" class="option optionally-inline">
+    <label for="teacher_input">معلم؟ (التلاوة الصوتية قبل الآية)&ensp;</label><input id="teacher_input" type="checkbox" onchange="">
   </div>
 
   <!-- from: http://www.everyayah.com/data/recitations.js -->
@@ -916,7 +927,10 @@ const el_help = Qid("help")
 const el_helptoggle = Qid("helptoggle")
 const el_optiontoggle = Qid("optiontoggle")
 const el_options = Qid("options")
+const el_darkmode_option = Qid("darkmode_option")
 const el_darkmode_input = Qid("darkmode_input")
+const el_teacher_option = Qid("teacher_option")
+const el_teacher_input = Qid("teacher_input")
 const el_qaris = Qid("qaris")
 const el_player = Qid("player")
 const el_guide = Qid("guide")
@@ -1087,30 +1101,34 @@ const audio = (function () {  // {{{
   let base_url
   let cur_idx
 
-  function invalid_state () {
-    return cur_idx == null || !base_url || !list || cur_idx >= list.length
+  function index (i) { return i != null ? i : cur_idx }
+
+  function invalid_state (idx) {
+    idx = index(idx)
+    return idx == null || idx < 0 || !base_url || !list || idx >= list.length
   }
 
-  function cur_url () {
-    if (invalid_state()) { return }
-    return base_url + list[cur_idx] + '.mp3'
+  function audio_url (idx) {
+    idx = index(idx)
+    if (invalid_state(idx)) { return }
+    return base_url + list[idx] + '.mp3'
   }
 
-  function fetch () {  // https://stackoverflow.com/a/31351186
-    if (invalid_state()) { return }
-    (new Audio()).src = cur_url()
+  function fetch (idx) {
+    idx = index(idx)
+    if (invalid_state(idx)) { return }
+    new Audio(audio_url(idx))
   }
 
   function play () {
     if (invalid_state()) { return }
-    el_player.src = cur_url()
+    // el_title.innerText = list[cur_idx]  // for debugging
+    el_player.src = audio_url()
+    el_player.addEventListener('loadeddata', () => fetch(cur_idx + 1))
     el_player.play()
   }
 
-  function advance  () { cur_idx += 1; fetch() }
-  function init_idx () { cur_idx = 0;  fetch() }
-  function set_idx  (i){ cur_idx = i;  fetch() }
-  function back     () { if (cur_idx >= 1) { cur_idx -= 1 } }
+  function set_idx (i) { cur_idx = i; fetch() }
 
   function show_or_hide_player () {
     invalid_state() ? hide_el(el_player) : show_el(el_player)
@@ -1130,32 +1148,24 @@ const audio = (function () {  // {{{
 
     init: function (qari) {
       update_qari(qari)
-      init_idx()
+      set_idx(0)
     },
 
     fill: function (ayat) {
       list = ayat
-      init_idx()
+      set_idx(0)
       show_or_hide_player()
     },
 
-    play_next: function () {
-      if (invalid_state()) { return }
-      play()
-      advance()
-    },
-
-    back: function () {
-      back()
-    },
-
-    play_index: function (i) {
-      if (invalid_state()) { return }
-      set_idx(i)
+    play: function (idx) {
+      if (idx != null) { set_idx(idx) }
       show_or_hide_player()
       play()
-      advance()
     },
+
+    set_index: function (i) { set_idx(i) },
+    next: function () { set_idx(cur_idx + 1) },
+    back: function () { set_idx(cur_idx - 1) },
 
   }
 })()
@@ -1498,6 +1508,8 @@ function _ligilumilo (params) {
   let mv  // accepts: b, r, l; contains: bottom, right, left
   let quizmode
   let byword  // true if error-checking in imlaai-mode is done every word instead of every letter.
+  let qari
+  let teacher
   let zz
   // possible params:
   // - p: page. 1-604.
@@ -1518,6 +1530,8 @@ function _ligilumilo (params) {
   // - mvbtns or mv or m: its placement: b, r, l.
   // - quizmode or qz or q: imlaai (typing) or uthmani (no-typing; default)
   // - byword and byletter: imlaai feedbackrate
+  // - teacher (audio recitation before ayah): t/teach/teacher; n/noteach/noteacher (default)
+  // - qari: the id of an audio recitation
   // - zz: enable ZZ-integration
   // TODO: audio
   params
@@ -1533,6 +1547,9 @@ function _ligilumilo (params) {
       else if (e[0] === 'quizmode' || e[0] === 'qz' || e[0] === 'q') { quizmode = parse_quizmode(e[1]) }
       else if (e[0] === 'byword') { byword = true }
       else if (e[0] === 'byletter') { byword = false }
+      else if (e[0] === 't' | e[0] === 'teach' | e[0] === 'teacher') { teacher = true }
+      else if (e[0] === 'n' | e[0] === 'noteach' | e[0] === 'noteacher') { teacher = false }
+      else if (e[0] === 'qari') { qari = e[1] }
       else if (e[0] === 'zz') { zz = true }
       else if (e[0] === 'a') { a = +e[1] }
       else if (e[0] === 'b') { b = +e[1] }
@@ -1544,18 +1561,21 @@ function _ligilumilo (params) {
       else if (e[0] === 'k') { [st, en] = rukus_to_ayat(...range_to_pair(e[1])) }
       else                   { [st, en] =  ayat_to_ayat(...range_to_pair(e[0])) }
     })
-  if (st == null || en == null) { return [null, null, dark, color, mv, quizmode, byword, zz] }
+  if (st == null || en == null) { return [null, null, dark, color, mv, quizmode, byword, qari, teacher, zz] }
   st -= b; en += a
   if (st <= 0)    { st = 1    }
   if (en >  6236) { en = 6236 }
-  return [st, en, dark, color, mv, quizmode, byword, zz]
+  return [st, en, dark, color, mv, quizmode, byword, qari, teacher, zz]
 }
 
 function ligilumi () {
-  const [st, en, dark, color, mv, _qz, byword, zz] = _ligilumilo(window.location.hash || window.location.search)
+  const [st, en, dark, color, mv, _qz, byword, qari, teacher, zz] = _ligilumilo(window.location.hash || window.location.search)
   const quizmode = _qz != null? _qz : Qid('quizmode').value
   Qid('quizmode').value = quizmode
   Qid('darkmode_input').checked = dark
+  Qid('teacher_input').checked = teacher
+  Qid('qaris').value = qari
+  if (!Qid('qaris').value) { Qid('qaris').value = '' }  // if unset or is a bad value
   Qid('textclr_input').value = color || 'taj'  // the default
   Qid('mvbtns_input').value = mv || 'bottom'  // the default
   Qid('feedbackrate').value = byword? 'word' : ''
@@ -1564,7 +1584,7 @@ function ligilumi () {
   // chquizmode() for txt is currently not needed
   // if no aayat are selected, only change the provided preferences 
   if (st == null || en == null) { return }
-  recite(st, en, '', quizmode, zz)
+  recite(st, en, Qid('qaris').value, quizmode, teacher, zz)
 }
 
 // vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:
@@ -1577,22 +1597,24 @@ let most_recent_parameters = []
 
 function start_reciting () {
   const quizmode = el_quizmode.value
+  const teacher = el_teacher_input.checked
   hide_selectors(quizmode)
   el_nextword.focus()
   if (!valid_inputs(sura_bgn_val(), aaya_bgn_val(), sura_end_val(), aaya_end_val())) { return }
   const st = start_(sura_bgn_val()) + aaya_bgn_val()
   const en = start_(sura_end_val()) + aaya_end_val()
-  recite(st, en, el_qaris.value, quizmode)
+  recite(st, en, el_qaris.value, teacher, quizmode)
 }
 
 function restart_reciting () {
-  // qari and quizmode can change.
-  // Remember: most_recent_parameters = [st, en, qari, quizmode, zz]
-  let [st, en, qari, quizmode, zz] = most_recent_parameters 
+  // qari and quizmode and teacher can change.
+  // Remember: most_recent_parameters = [st, en, qari, quizmode, teacher, zz]
+  let [st, en, qari, quizmode, teacher, zz] = most_recent_parameters 
   qari = el_qaris.value
   quizmode = el_quizmode.value
+  teacher = el_teacher_input.checked
   hide_selectors(quizmode)  // handles the change of quiz mode
-  recite(st, en, qari, quizmode, zz)
+  recite(st, en, qari, quizmode, teacher, zz)
 }
 
 function input_trigger_x (ev) {
@@ -1673,8 +1695,8 @@ function init_audio (stpair, enpair, qari) {
   audio.fill(make_audio_list(stpair[0]-1, stpair[1], enpair[0]-1, enpair[1]))
 }
 
-function recite (st, en, qari, quizmode, zz) {
-  most_recent_parameters = [st, en, qari, quizmode, zz]
+function recite (st, en, qari, quizmode, teacher, zz) {
+  most_recent_parameters = [st, en, qari, quizmode, teacher, zz]
 
   const preserve_url = !!window.location.search || !!window.location.hash
 
@@ -1694,7 +1716,7 @@ function recite (st, en, qari, quizmode, zz) {
   if (zz) { parent.zz_show() }
   hide_selectors(quizmode)
 
-  const start = () => { _recite(st, en, qari, quizmode, zz) }
+  const start = () => { _recite(st, en, qari, quizmode, teacher, zz) }
   if (quizmode === 'imla') { load_imla(start) }
   else {  /* uthmani, which is split into two parts */
     const n1 = is_in_first_half(st, en)
@@ -1705,15 +1727,18 @@ function recite (st, en, qari, quizmode, zz) {
   }
 }
 
-function _recite (st, en, qari, quizmode, zz) {
+function _recite (st, en, qari, quizmode, teacher, zz) {
 
   if (quizmode === 'imla') {
     el_imla_txt.focus()
     let correct_text = imlaai_ayat(st, en)
     let pasted = false
 
+    const get_current_aaya_index = () =>
+      el_imla_txt.value.split('\n').length - 2 + (teacher? 1 : 0)
+
     const txt_changed = function () {
-      const current_aaya_index = el_imla_txt.value.split('\n').length - 2
+      audio.set_index(get_current_aaya_index())
 
       if (!el_endmsg.hidden) { return }
 
@@ -1726,7 +1751,7 @@ function _recite (st, en, qari, quizmode, zz) {
       if (correct_text.startsWith(imlafilter(el_imla_txt.value))) {
         el_imla_txt.classList = ''
         if (el_imla_txt.value.slice(-1) === '\n') {  // basmala, or BS+Enter to repeat the same aaya
-          audio.play_index(current_aaya_index)
+          audio.play()
         }
       }
 
@@ -1736,7 +1761,7 @@ function _recite (st, en, qari, quizmode, zz) {
         let x = el_imla_txt.value.length + 2
         while (correct_text.slice(x, x+1) !== '\n') { ++x }
         el_imla_txt.value = correct_text.slice(0, x+1)
-        audio.play_index(current_aaya_index)
+        audio.play()
         if (el_imla_txt.value === correct_text) {
           el_imla_txt.value = el_imla_txt.value.slice(0,-1)  // remove the last newline
           show_done()
@@ -1759,6 +1784,7 @@ function _recite (st, en, qari, quizmode, zz) {
   }
   else {
     el_uthm_txt.focus()
+    audio.set_index(teacher? 0 : -1)
 
     let words = make_words_list(st, en)
 
@@ -1774,7 +1800,7 @@ function _recite (st, en, qari, quizmode, zz) {
         txt += new_word
         new_word_kind = kind_of_portion( new_word.slice(-2) )
       } while (isnt_the_kind(new_word_kind))
-      if (new_word_kind === 'a') { audio.play_next() }
+      if (new_word_kind === 'a') { audio.next(); audio.play() }
       el_uthm_txt.innerHTML += txt
       if (words.length === 0) { show_done() }
       scroll_to_bottom()
@@ -1790,7 +1816,10 @@ function _recite (st, en, qari, quizmode, zz) {
       const last_word = el_uthm_txt.innerHTML.match(/(?:^|\t|<br>\n)([^\n\t]+(?:\t|<br>\n))$/)[1]
       words.unshift(last_word)
       el_uthm_txt.innerHTML = el_uthm_txt.innerHTML.substring(0, el_uthm_txt.innerHTML.length - last_word.length)
-      if (last_word.match(/<br>\n$/)) { audio.back() }
+      if (last_word.match(/<br>\n$/)) {
+        audio.back()
+        if (teacher) { audio.play() }
+      }
       return kind_of_portion( el_uthm_txt.innerHTML.slice(-2) )
     }
 
@@ -1832,6 +1861,8 @@ function _recite (st, en, qari, quizmode, zz) {
     el_prevaaya.onclick = aaya_bck
 
   }
+
+  if (teacher) { audio.play(0) }
 }
 
 el_ok.onclick  = start_reciting

@@ -196,6 +196,8 @@ function _ligilumilo (params) {
   let mv  // accepts: b, r, l; contains: bottom, right, left
   let quizmode
   let byword  // true if error-checking in imlaai-mode is done every word instead of every letter.
+  let qari
+  let teacher
   let zz
   // possible params:
   // - p: page. 1-604.
@@ -216,8 +218,9 @@ function _ligilumilo (params) {
   // - mvbtns or mv or m: its placement: b, r, l.
   // - quizmode or qz or q: imlaai (typing) or uthmani (no-typing; default)
   // - byword and byletter: imlaai feedbackrate
+  // - teacher (audio recitation before ayah): t/teach/teacher; n/noteach/noteacher (default)
+  // - qari: the id of an audio recitation
   // - zz: enable ZZ-integration
-  // TODO: audio
   params
     .slice(1)  // remove the first character (`?` or `#`)
     .split('&')
@@ -231,6 +234,9 @@ function _ligilumilo (params) {
       else if (e[0] === 'quizmode' || e[0] === 'qz' || e[0] === 'q') { quizmode = parse_quizmode(e[1]) }
       else if (e[0] === 'byword') { byword = true }
       else if (e[0] === 'byletter') { byword = false }
+      else if (e[0] === 't' | e[0] === 'teach' | e[0] === 'teacher') { teacher = true }
+      else if (e[0] === 'n' | e[0] === 'noteach' | e[0] === 'noteacher') { teacher = false }
+      else if (e[0] === 'qari') { qari = e[1] }
       else if (e[0] === 'zz') { zz = true }
       else if (e[0] === 'a') { a = +e[1] }
       else if (e[0] === 'b') { b = +e[1] }
@@ -242,18 +248,21 @@ function _ligilumilo (params) {
       else if (e[0] === 'k') { [st, en] = rukus_to_ayat(...range_to_pair(e[1])) }
       else                   { [st, en] =  ayat_to_ayat(...range_to_pair(e[0])) }
     })
-  if (st == null || en == null) { return [null, null, dark, color, mv, quizmode, byword, zz] }
+  if (st == null || en == null) { return [null, null, dark, color, mv, quizmode, byword, qari, teacher, zz] }
   st -= b; en += a
   if (st <= 0)    { st = 1    }
   if (en >  6236) { en = 6236 }
-  return [st, en, dark, color, mv, quizmode, byword, zz]
+  return [st, en, dark, color, mv, quizmode, byword, qari, teacher, zz]
 }
 
 function ligilumi () {
-  const [st, en, dark, color, mv, _qz, byword, zz] = _ligilumilo(window.location.hash || window.location.search)
+  const [st, en, dark, color, mv, _qz, byword, qari, teacher, zz] = _ligilumilo(window.location.hash || window.location.search)
   const quizmode = _qz != null? _qz : Qid('quizmode').value
   Qid('quizmode').value = quizmode
   Qid('darkmode_input').checked = dark
+  Qid('teacher_input').checked = teacher
+  Qid('qaris').value = qari
+  if (!Qid('qaris').value) { Qid('qaris').value = '' }  // if unset or is a bad value
   Qid('textclr_input').value = color || 'taj'  // the default
   Qid('mvbtns_input').value = mv || 'bottom'  // the default
   Qid('feedbackrate').value = byword? 'word' : ''
@@ -262,7 +271,7 @@ function ligilumi () {
   // chquizmode() for txt is currently not needed
   // if no aayat are selected, only change the provided preferences 
   if (st == null || en == null) { return }
-  recite(st, en, '', quizmode, zz)
+  recite(st, en, Qid('qaris').value, quizmode, teacher, zz)
 }
 
 // vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:

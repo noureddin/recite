@@ -14,7 +14,7 @@ Use it at: [noureddin.github.io/recite](https://noureddin.github.io/recite).
     2. typing-only Imlaai script.
 
 
-2. Opt-in audio recitation after completing every ayah, in either mode.
+2. Opt-in audio recitation after completing every ayah, in either mode. (It can optionally be made _before_ every ayah, which is called the "teacher mode".)
 
 3. Night mode, in addition to the default light mode.
 
@@ -81,6 +81,10 @@ Other parameters you can add to pre-configure the preferences:
     1. `u`, `uthm`, or `uthmani`: select the no-typing Uthmani mode (the default; use only to annul a previous `quizmode=imlaai`)
     2. `i`, `imla`, or `imlaai`: select the typing Imlaai mode
 
+- `t`, `teach`, or `teacher`: enable the teacher mode (play the audio recitation for the ayah _before_ you start reciting it, not after).
+- `n`, `noteach`, or `noteacher`: disable the teacher mode (the default; play the audio recitation for the ayah _after_ you finish reciting it).
+
+- `qari=`: select the Qari for the audio recitation; any invalid value (including no value) is considered as "no audio recitation". The [Qaris file](blob/gh-pages/res/qaris) contains, for each audio recitation, its address followed by its name. The valid values for this option are the addresses (the lines that are all-English with no spaces).
 
 Please note that all these parameters only change the default; all of them are still changeable from the preferences window.
 
@@ -88,5 +92,8 @@ Please note that all these parameters only change the default; all of them are s
 
 Many thanks for [Khaled Hosny](https://github.com/khaledhosny/) for his work on [Quran Data](https://github.com/aliftype/quran-data) and [Amiri Font](https://www.amirifont.org/).
 
-Thanks for my friends [Ezz El Din](https://github.com/EzzEddin) and [Ahmad Hassan](https://github.com/Ahmad-AbdulAziz) for testing these applications with me and giving me invaluable feedback.
+Heartfelt thanks for the [Verse By Verse MP3 Quran](http://www.versebyversequran.com/) project,
+for providing the audio recitations for every project that needs them,
+including Recite Web and [Ayat](https://quran.ksu.edu.sa/).
 
+Thanks for my friends [Ezz El Din](https://github.com/EzzEddin) and [Ahmad Hassan](https://github.com/Ahmad-AbdulAziz) for testing these applications with me and giving me invaluable feedback.

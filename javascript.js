@@ -2,22 +2,24 @@ let most_recent_parameters = []
 
 function start_reciting () {
   const quizmode = el_quizmode.value
+  const teacher = el_teacher_input.checked
   hide_selectors(quizmode)
   el_nextword.focus()
   if (!valid_inputs(sura_bgn_val(), aaya_bgn_val(), sura_end_val(), aaya_end_val())) { return }
   const st = start_(sura_bgn_val()) + aaya_bgn_val()
   const en = start_(sura_end_val()) + aaya_end_val()
-  recite(st, en, el_qaris.value, quizmode)
+  recite(st, en, el_qaris.value, teacher, quizmode)
 }
 
 function restart_reciting () {
-  // qari and quizmode can change.
-  // Remember: most_recent_parameters = [st, en, qari, quizmode, zz]
-  let [st, en, qari, quizmode, zz] = most_recent_parameters 
+  // qari and quizmode and teacher can change.
+  // Remember: most_recent_parameters = [st, en, qari, quizmode, teacher, zz]
+  let [st, en, qari, quizmode, teacher, zz] = most_recent_parameters 
   qari = el_qaris.value
   quizmode = el_quizmode.value
+  teacher = el_teacher_input.checked
   hide_selectors(quizmode)  // handles the change of quiz mode
-  recite(st, en, qari, quizmode, zz)
+  recite(st, en, qari, quizmode, teacher, zz)
 }
 
 function input_trigger_x (ev) {
@@ -98,8 +100,8 @@ function init_audio (stpair, enpair, qari) {
   audio.fill(make_audio_list(stpair[0]-1, stpair[1], enpair[0]-1, enpair[1]))
 }
 
-function recite (st, en, qari, quizmode, zz) {
-  most_recent_parameters = [st, en, qari, quizmode, zz]
+function recite (st, en, qari, quizmode, teacher, zz) {
+  most_recent_parameters = [st, en, qari, quizmode, teacher, zz]
 
   const preserve_url = !!window.location.search || !!window.location.hash
 
@@ -119,7 +121,7 @@ function recite (st, en, qari, quizmode, zz) {
   if (zz) { parent.zz_show() }
   hide_selectors(quizmode)
 
-  const start = () => { _recite(st, en, qari, quizmode, zz) }
+  const start = () => { _recite(st, en, qari, quizmode, teacher, zz) }
   if (quizmode === 'imla') { load_imla(start) }
   else {  /* uthmani, which is split into two parts */
     const n1 = is_in_first_half(st, en)
@@ -130,15 +132,18 @@ function recite (st, en, qari, quizmode, zz) {
   }
 }
 
-function _recite (st, en, qari, quizmode, zz) {
+function _recite (st, en, qari, quizmode, teacher, zz) {
 
   if (quizmode === 'imla') {
     el_imla_txt.focus()
     let correct_text = imlaai_ayat(st, en)
     let pasted = false
 
+    const get_current_aaya_index = () =>
+      el_imla_txt.value.split('\n').length - 2 + (teacher? 1 : 0)
+
     const txt_changed = function () {
-      const current_aaya_index = el_imla_txt.value.split('\n').length - 2
+      audio.set_index(get_current_aaya_index())
 
       if (!el_endmsg.hidden) { return }
 
@@ -151,7 +156,7 @@ function _recite (st, en, qari, quizmode, zz) {
       if (correct_text.startsWith(imlafilter(el_imla_txt.value))) {
         el_imla_txt.classList = ''
         if (el_imla_txt.value.slice(-1) === '\n') {  // basmala, or BS+Enter to repeat the same aaya
-          audio.play_index(current_aaya_index)
+          audio.play()
         }
       }
 
@@ -161,7 +166,7 @@ function _recite (st, en, qari, quizmode, zz) {
         let x = el_imla_txt.value.length + 2
         while (correct_text.slice(x, x+1) !== '\n') { ++x }
         el_imla_txt.value = correct_text.slice(0, x+1)
-        audio.play_index(current_aaya_index)
+        audio.play()
         if (el_imla_txt.value === correct_text) {
           el_imla_txt.value = el_imla_txt.value.slice(0,-1)  // remove the last newline
           show_done()
@@ -184,6 +189,7 @@ function _recite (st, en, qari, quizmode, zz) {
   }
   else {
     el_uthm_txt.focus()
+    audio.set_index(teacher? 0 : -1)
 
     let words = make_words_list(st, en)
 
@@ -199,7 +205,7 @@ function _recite (st, en, qari, quizmode, zz) {
         txt += new_word
         new_word_kind = kind_of_portion( new_word.slice(-2) )
       } while (isnt_the_kind(new_word_kind))
-      if (new_word_kind === 'a') { audio.play_next() }
+      if (new_word_kind === 'a') { audio.next(); audio.play() }
       el_uthm_txt.innerHTML += txt
       if (words.length === 0) { show_done() }
       scroll_to_bottom()
@@ -215,7 +221,10 @@ function _recite (st, en, qari, quizmode, zz) {
       const last_word = el_uthm_txt.innerHTML.match(/(?:^|\t|<br>\n)([^\n\t]+(?:\t|<br>\n))$/)[1]
       words.unshift(last_word)
       el_uthm_txt.innerHTML = el_uthm_txt.innerHTML.substring(0, el_uthm_txt.innerHTML.length - last_word.length)
-      if (last_word.match(/<br>\n$/)) { audio.back() }
+      if (last_word.match(/<br>\n$/)) {
+        audio.back()
+        if (teacher) { audio.play() }
+      }
       return kind_of_portion( el_uthm_txt.innerHTML.slice(-2) )
     }
 
@@ -257,6 +266,8 @@ function _recite (st, en, qari, quizmode, zz) {
     el_prevaaya.onclick = aaya_bck
 
   }
+
+  if (teacher) { audio.play(0) }
 }
 
 el_ok.onclick  = start_reciting
