@@ -86,6 +86,10 @@ Other parameters you can add to pre-configure the preferences:
 
 - `qari=`: select the Qari for the audio recitation; any invalid value (including no value) is considered as "no audio recitation". The [Qaris file](blob/gh-pages/res/qaris) contains, for each audio recitation, its address followed by its name. The valid values for this option are the addresses (the lines that are all-English with no spaces).
 
+    Note: Browsers don't allow any page to play audio before a user starts interacting with it, unless the user gave that domain the permission, so, if you use these parameters to select ayat, and a qari, _and_ enable teacher mode, then you won't hear the first ayah. Click anywhere inside the page then press Escape to hear the first ayah. Or allow `noureddin.github.io` to autoplay audio.
+
+    Pressing Escape anytime repeats the audio recitation for the current ayah, which is useful in the teacher mode.
+
 Please note that all these parameters only change the default; all of them are still changeable from the preferences window.
 
 ---

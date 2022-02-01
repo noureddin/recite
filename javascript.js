@@ -134,6 +134,16 @@ function recite (st, en, qari, quizmode, teacher, zz) {
 
 function _recite (st, en, qari, quizmode, teacher, zz) {
 
+  document.addEventListener('keyup', (ev) => {
+    if (ev.key === 'Escape') {
+      audio.play()
+      if (quizmode === 'imla') {
+        // re-focus, b/c Escape unfocuses it
+        el_imla_txt.focus()
+      }
+    }
+  })
+
   if (quizmode === 'imla') {
     el_imla_txt.focus()
     let correct_text = imlaai_ayat(st, en)
