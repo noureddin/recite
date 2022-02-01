@@ -84,7 +84,7 @@ Other parameters you can add to pre-configure the preferences:
 - `t`, `teach`, or `teacher`: enable the teacher mode (play the audio recitation for the ayah _before_ you start reciting it, not after).
 - `n`, `noteach`, or `noteacher`: disable the teacher mode (the default; play the audio recitation for the ayah _after_ you finish reciting it).
 
-- `qari=`: select the Qari for the audio recitation; any invalid value (including no value) is considered as "no audio recitation". The [Qaris file](blob/gh-pages/res/qaris) contains, for each audio recitation, its address followed by its name. The valid values for this option are the addresses (the lines that are all-English with no spaces).
+- `qari=`: select the Qari for the audio recitation; any invalid value (including no value) is considered as "no audio recitation". The [Qaris file](res/qaris) contains, for each audio recitation, its address followed by its name. The valid values for this option are the addresses (the lines that are all-English with no spaces).
 
     Note: Browsers don't allow any page to play audio before a user starts interacting with it, unless the user gave that domain the permission, so, if you use these parameters to select ayat, and a qari, _and_ enable teacher mode, then you won't hear the first ayah. Click anywhere inside the page then press Escape to hear the first ayah. Or allow `noureddin.github.io` to autoplay audio.
 
