@@ -100,4 +100,4 @@ Heartfelt thanks for the [Verse By Verse MP3 Quran](http://www.versebyversequran
 for providing the audio recitations for every project that needs them,
 including Recite Web and [Ayat](https://quran.ksu.edu.sa/).
 
-Thanks for my friends [Ezz El Din](https://github.com/EzzEddin) and [Ahmad Hassan](https://github.com/Ahmad-AbdulAziz) for testing these applications with me and giving me invaluable feedback.
+Thanks for my friends [Ezz El Din](https://github.com/EzzEddin) and [Ahmad Hassan](https://github.com/ahmad-h-yassin) for testing these applications with me and giving me invaluable feedback.
