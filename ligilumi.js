@@ -248,30 +248,36 @@ function _ligilumilo (params) {
       else if (e[0] === 'k') { [st, en] = rukus_to_ayat(...range_to_pair(e[1])) }
       else                   { [st, en] =  ayat_to_ayat(...range_to_pair(e[0])) }
     })
-  if (st == null || en == null) { return [null, null, dark, color, mv, quizmode, byword, qari, teacher, zz] }
+  let opts = { st:null, en:null, dark, color, mv, quizmode, byword, qari, teacher, zz }
+  if (st == null || en == null) { return opts }
   st -= b; en += a
   if (st <= 0)    { st = 1    }
   if (en >  6236) { en = 6236 }
-  return [st, en, dark, color, mv, quizmode, byword, qari, teacher, zz]
+  opts = {...opts, st, en}
+  return opts
 }
 
 function ligilumi () {
-  const [st, en, dark, color, mv, _qz, byword, qari, teacher, zz] = _ligilumilo(window.location.hash || window.location.search)
-  const quizmode = _qz != null? _qz : Qid('quizmode').value
-  Qid('quizmode').value = quizmode
-  Qid('darkmode_input').checked = dark
-  Qid('teacher_input').checked = teacher
-  Qid('qaris').value = qari
+  const opts = _ligilumilo(window.location.hash || window.location.search)
+  opts.quizmode = opts.quizmode != null? opts.quizmode : Qid('quizmode').value
+  Qid('quizmode').value = opts.quizmode
+  Qid('darkmode_input').checked = opts.dark
+  delete opts.dark
+  Qid('teacher_input').checked = opts.teacher
+  Qid('qaris').value = opts.qari
   if (!Qid('qaris').value) { Qid('qaris').value = '' }  // if unset or is a bad value
-  Qid('textclr_input').value = color || 'taj'  // the default
-  Qid('mvbtns_input').value = mv || 'bottom'  // the default
-  Qid('feedbackrate').value = byword? 'word' : ''
+  Qid('textclr_input').value = opts.color || 'taj'  // the default
+  delete opts.color
+  Qid('mvbtns_input').value = opts.mv || 'bottom'  // the default
+  delete opts.mv
+  Qid('feedbackrate').value = opts.byword? 'word' : ''
+  delete opts.byword
   chstyle()  // dark, color, mv
   chfeedbackrate() // byword
   // chquizmode() for txt is currently not needed
-  // if no aayat are selected, only change the provided preferences 
-  if (st == null || en == null) { return }
-  recite(st, en, Qid('qaris').value, quizmode, teacher, zz)
+  // if no aayat are selected, only change the provided preferences
+  if (opts.st == null || opts.en == null) { return }
+  recite(opts)
 }
 
 // vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:

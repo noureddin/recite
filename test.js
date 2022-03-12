@@ -1,7 +1,7 @@
 // ligilumi: reading url parameters {{{
 function test_ligilumi () {
-  let fail=0, all=0, st, en, d
-  [
+  let fail=0, all=0
+  ;[
     ['#p=1',            1,             7],
     ['#p=1&a=1',        1,             8],
     ['#p=1&b=1',        1,             7],
@@ -68,7 +68,7 @@ function test_ligilumi () {
     ['d',               null,          null],
   ]
   .forEach((t) => {
-    [st, en, d] = _ligilumilo(t[0])
+    let {st, en, d} = _ligilumilo(t[0])
     if (st !== t[1] || en !== t[2]) {
       console.log('ligilumi', t[0], ' got', st, en, ' exp', t[1], t[2])
       fail += 1

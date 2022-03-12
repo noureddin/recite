@@ -1,25 +1,25 @@
-let most_recent_parameters = []
+let opts = {}
 
 function start_reciting () {
   const quizmode = el_quizmode.value
-  const teacher = el_teacher_input.checked
   hide_selectors(quizmode)
   el_nextword.focus()
   if (!valid_inputs(sura_bgn_val(), aaya_bgn_val(), sura_end_val(), aaya_end_val())) { return }
   const st = start_(sura_bgn_val()) + aaya_bgn_val()
   const en = start_(sura_end_val()) + aaya_end_val()
-  recite(st, en, el_qaris.value, teacher, quizmode)
+  const teacher = el_teacher_input.checked
+  const qari = el_qaris.value
+  opts = {...opts, st, en, qari, teacher, quizmode}
+  recite(opts)
 }
 
 function restart_reciting () {
-  // qari and quizmode and teacher can change.
-  // Remember: most_recent_parameters = [st, en, qari, quizmode, teacher, zz]
-  let [st, en, qari, quizmode, teacher, zz] = most_recent_parameters 
-  qari = el_qaris.value
-  quizmode = el_quizmode.value
-  teacher = el_teacher_input.checked
-  hide_selectors(quizmode)  // handles the change of quiz mode
-  recite(st, en, qari, quizmode, teacher, zz)
+  // qari and quizmode and teacher can change from the UI.
+  opts.qari = el_qaris.value
+  opts.quizmode = el_quizmode.value
+  opts.teacher = el_teacher_input.checked
+  hide_selectors(opts.quizmode)  // handles the change of quiz mode
+  recite(opts)
 }
 
 function input_trigger_x (ev) {
@@ -84,15 +84,13 @@ function scroll_to_bottom () { el_body.scrollTo({ top: el_body.scrollHeight }) }
 function hide_el (el) { el.style.visibility = 'hidden';  el.style.opacity =   '0%' }
 function show_el (el) { el.style.visibility = 'visible'; el.style.opacity = '100%' }
 
-function sync_ui (stpair, enpair, qari, title, preserve_url) {
+function sync_ui (stpair, enpair, title, preserve_url) {
   if (!preserve_url) { window.location.hash = stpair.join('/') + '-' + enpair.join('/') }
   document.querySelector('title').innerHTML = title + ' | رسايت'
   if (!el_zzignore.hidden) { parent.zz_set_title(title) }
   //
   el_sura_bgn.value = stpair[0]-1; el_aaya_bgn.value = filter_aaya_input(stpair[1])
   el_sura_end.value = enpair[0]-1; el_aaya_end.value = filter_aaya_input(enpair[1])
-  //
-  el_qaris.value = qari  // if set thru url parameters; TODO
 }
 
 function init_audio (stpair, enpair, qari) {
@@ -100,39 +98,39 @@ function init_audio (stpair, enpair, qari) {
   audio.fill(make_audio_list(stpair[0]-1, stpair[1], enpair[0]-1, enpair[1]))
 }
 
-function recite (st, en, qari, quizmode, teacher, zz) {
-  most_recent_parameters = [st, en, qari, quizmode, teacher, zz]
+function recite (o) {
+  opts = o
 
   const preserve_url = !!window.location.search || !!window.location.hash
 
-  el_zzback.style.display = zz? 'block' : 'none'
-  el_zzback.hidden = !zz
-  el_zzignore.hidden = !zz
-  el_new.hidden = !!zz  // only hide if ignore is shown
+  el_zzback.style.display = o.zz? 'block' : 'none'
+  el_zzback.hidden = !o.zz
+  el_zzignore.hidden = !o.zz
+  el_new.hidden = !!o.zz  // only hide if ignore is shown
 
-  const stpair = idx2aya(st-1)
-  const enpair = idx2aya(en-1)
+  const stpair = idx2aya(o.st-1)
+  const enpair = idx2aya(o.en-1)
   const [title, titleclass] = make_title(...stpair, ...enpair)
   el_title.innerHTML = title
   el_title.classList = titleclass
-  sync_ui(stpair, enpair, qari, title, preserve_url)
-  init_audio(stpair, enpair, qari, preserve_url)
+  sync_ui(stpair, enpair, title, preserve_url)
+  init_audio(stpair, enpair, o.qari, preserve_url)
 
-  if (zz) { parent.zz_show() }
-  hide_selectors(quizmode)
+  if (o.zz) { parent.zz_show() }
+  hide_selectors(o.quizmode)
 
-  const start = () => { _recite(st, en, qari, quizmode, teacher, zz) }
+  const start = () => { _recite(o) }
   if (quizmode === 'imla') { load_imla(start) }
   else {  /* uthmani, which is split into two parts */
-    const n1 = is_in_first_half(st, en)
-    const n2 = is_in_second_half(st, en)
+    const n1 = is_in_first_half(o.st, o.en)
+    const n2 = is_in_second_half(o.st, o.en)
     if (n1 && n2) { load_uthm1(() => { load_uthm2(start) }) }  // TODO: parallize
     else if (n1) { load_uthm1(start) }
     else if (n2) { load_uthm2(start) }
   }
 }
 
-function _recite (st, en, qari, quizmode, teacher, zz) {
+function _recite (o) {
 
   document.addEventListener('keyup', (ev) => {
     if (ev.key === 'Escape') {
@@ -146,11 +144,11 @@ function _recite (st, en, qari, quizmode, teacher, zz) {
 
   if (quizmode === 'imla') {
     el_imla_txt.focus()
-    let correct_text = imlaai_ayat(st, en)
+    let correct_text = imlaai_ayat(o.st, o.en)
     let pasted = false
 
     const get_current_aaya_index = () =>
-      el_imla_txt.value.split('\n').length - 2 + (teacher? 1 : 0)
+      el_imla_txt.value.split('\n').length - 2 + (o.teacher? 1 : 0)
 
     const txt_changed = function () {
       audio.set_index(get_current_aaya_index())
@@ -199,9 +197,9 @@ function _recite (st, en, qari, quizmode, teacher, zz) {
   }
   else {
     el_uthm_txt.focus()
-    audio.set_index(teacher? 0 : -1)
+    audio.set_index(o.teacher? 0 : -1)
 
-    let words = make_words_list(st, en)
+    let words = make_words_list(o.st, o.en)
 
     const fwd = function (kind) {
       if (words.length === 0) { return }
@@ -277,7 +275,7 @@ function _recite (st, en, qari, quizmode, teacher, zz) {
 
   }
 
-  if (teacher) { audio.play(0) }
+  if (o.teacher) { audio.play(0) }
 }
 
 el_ok.onclick  = start_reciting

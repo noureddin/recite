@@ -176,7 +176,7 @@ const audio = (function () {  // {{{
   }
 
   function update_qari (qari) {
-    base_url = qari === '' ? undefined : `https://www.everyayah.com/data/${qari}/`
+    base_url = qari? `https://www.everyayah.com/data/${qari}/` : undefined
     fetch()
   }
 
