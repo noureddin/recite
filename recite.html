@@ -39,8 +39,8 @@
       <option value="" selected>بغير تلاوة صوتية</option>
 <<!!cat res/qaris | while read value; do read title; echo "    <option value=\"$value\">$title</option>"; done>>
     </select>
+    <input type="hidden" id="qariurl" value="">
   </div>
-  <audio id="player" controls preload></audio>
 
   <hr id="guide">
 
@@ -97,6 +97,8 @@
 
 </dl>
 </section>
+
+<audio id="player" controls preload></audio>
 
 <!-- I used to use sura_start, sura_end, aya_start, and aya_end, but changed -->
 <!--  them to sura_bgn, sura_end, aaya_bgn, and aaya_end to make them equal in -->

@@ -9,7 +9,8 @@ function start_reciting () {
   const en = start_(sura_end_val()) + aaya_end_val()
   const teacher = el_teacher_input.checked
   const qari = el_qaris.value
-  opts = {...opts, st, en, qari, teacher, quizmode}
+  const qariurl = el_qariurl.value
+  opts = {...opts, st, en, qari, qariurl, teacher, quizmode}
   recite(opts)
 }
 
@@ -93,8 +94,8 @@ function sync_ui (stpair, enpair, title, preserve_url) {
   el_sura_end.value = enpair[0]-1; el_aaya_end.value = filter_aaya_input(enpair[1])
 }
 
-function init_audio (stpair, enpair, qari) {
-  audio.init(qari)
+function init_audio (stpair, enpair, qari, qariurl) {
+  audio.init(qari, qariurl)
   audio.fill(make_audio_list(stpair[0]-1, stpair[1], enpair[0]-1, enpair[1]))
 }
 
@@ -114,7 +115,7 @@ function recite (o) {
   el_title.innerHTML = title
   el_title.classList = titleclass
   sync_ui(stpair, enpair, title, preserve_url)
-  init_audio(stpair, enpair, o.qari, preserve_url)
+  init_audio(stpair, enpair, o.qari, o.qariurl, preserve_url)
 
   if (o.zz) { parent.zz_show() }
   hide_selectors(o.quizmode)

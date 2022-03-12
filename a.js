@@ -187,8 +187,11 @@ const audio = (function () {  // {{{
       show_or_hide_player()
     },
 
-    init: function (qari) {
+    init: function (qari, qariurl) {
       update_qari(qari)
+      if (!qari && qariurl) {
+        base_url = qariurl.endsWith('/') ? qariurl : qariurl + '/'
+      }
       set_idx(0)
     },
 
