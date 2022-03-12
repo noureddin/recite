@@ -8,20 +8,36 @@ const MAX_SURA = 114
 const MAX_PAGE = 604
 const MAX_RUKU = 556
 
+function is_number (x) {
+  return x == null ? x : !!x.match(/^[0-9]+$/)
+}
+
+function __paired (pair, sep) {  // auxiliary function for is_valid_pair
+  const elems = pair.split(sep)
+  return elems.length === 2 && elems.every(is_number)
+}
+
+function is_valid_pair (x) {  // a number, empty string, or two numbers separated by slash or double-slash
+  return x === '' || is_number(x) || __paired(x, '//') || __paired(x, '/')
+}
+
 function range_to_pair (x) {
   let xs = x.split('-')
+  if (!xs.every(is_valid_pair)) { return [null, null] }
   return xs.length === 2 ? xs : xs.length === 1 ? [x, x] : [null, null]
 }
 
 function suras_to_ayat (stsura, ensura) {  // each is 1-114
-  if (stsura == null) { return [null, null] }
+  if (!is_number(stsura) || !is_number(ensura)) { return [null, null] }
   stsura = +stsura || 1
   ensura = +ensura || MAX_SURA
+  if (stsura < 1        || ensura < 1       ) { return [null, null] }
   if (stsura > MAX_SURA || ensura > MAX_SURA) { return [null, null] }
   const st = start_(stsura - 1) + 1
   const en = start_(ensura - 1) + suar_length[ensura - 1]
   return [st, en]
 }
+
 function idx2aya (idx) {  // 0-6235
   if (idx < 0 || idx > 6236) { return [null, null] }
   const s = [...Array(114).keys()].find(s => idx >= start_(s) && idx < start_(s + 1))
