@@ -1512,16 +1512,7 @@ function parse_mv (mv) {
 }
 
 function _ligilumilo (params) {
-  let a = 0; let b = 0
-  let st; let en
-  let dark
-  let color  // tajweed, bas, none
-  let mv  // accepts: b, r, l; contains: bottom, right, left
-  let quizmode
-  let byword  // true if error-checking in imlaai-mode is done every word instead of every letter.
-  let qari
-  let teacher
-  let zz
+  let st; let en  // start aaya and end aaya
   // possible params:
   // - p: page. 1-604.
   // - s: sura, an entire sura. 1-114.
@@ -1534,16 +1525,17 @@ function _ligilumilo (params) {
   //
   // all previous parameters can be paired; e.g., r=1-2 means to the end of the 2nd rub.
   //
+  let a = 0; let b = 0
   // - b: before, a number of ayat to add before whatever you select. 0-inf.
   // - a: after,  a number of ayat to add before whatever you select. 0-inf.
-  // - dark & light: dark mode
-  // - color or c: text colors: t/taj/tajweed (default); b/bas/basic; n/no/none.
-  // - mvbtns or mv or m: its placement: b, r, l.
-  // - quizmode or qz or q: imlaai (typing) or uthmani (no-typing; default)
-  // - byword and byletter: imlaai feedbackrate
-  // - teacher (audio recitation before ayah): t/teach/teacher; n/noteach/noteacher (default)
-  // - qari: the id of an audio recitation
-  // - zz: enable ZZ-integration
+  let dark             // dark mode: d/dark; l/light (default).
+  let color            // color of text: c/color = t/taj/tajweed (default); b/bas/basic; n/no/none.
+  let mv               // position of buttons: m/mv/mvbtns = b (bottom; default); r (right); l (left).
+  let quizmode         // quiz mode: q/qz/quizmode = u/uthm/uthmani (no-typing; default); i/imla/imlaai (typing)
+  let byword           // imlaai-mode feedback rate; default); byword (true)
+  let qari             // audio recitation qari's id
+  let teacher          // teacher mode (audio recitation before ayah): t/teach/teacher (true); n/noteach/noteacher (false; default)
+  let zz               // enable embedded integration: zz (cannot be disabled if enabled)
   params
     .slice(1)  // remove the first character (`?` or `#`)
     .split('&')
