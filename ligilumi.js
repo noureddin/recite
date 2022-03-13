@@ -229,6 +229,7 @@ function _ligilumilo (params) {
   let qari             // audio recitation qari's id
   let qariurl          // user-provided audio recitation base_url
   let teacher          // teacher mode (audio recitation before ayah): t/teach/teacher (true); n/noteach/noteacher (false; default)
+  let disableteacher   // remove teacher mode selector from the UI, teacher mode can still be set from the URL: dt/disableteacher
   let zz               // enable embedded integration: zz (cannot be disabled if enabled)
   params
     .slice(1)  // remove the first character (`?` or `#`)
@@ -245,6 +246,7 @@ function _ligilumilo (params) {
       else if (e[0] === 'byletter') { byword = false }
       else if (e[0] === 't' | e[0] === 'teach' | e[0] === 'teacher') { teacher = true }
       else if (e[0] === 'n' | e[0] === 'noteach' | e[0] === 'noteacher') { teacher = false }
+      else if (e[0] === 'dt' | e[0] === 'disableteacher') { disableteacher = true }
       else if (e[0] === 'qari') { qari = e[1] }
       else if (e[0] === 'qariurl') { qariurl = e[1] }
       else if (e[0] === 'zz') { zz = true }
@@ -258,7 +260,7 @@ function _ligilumilo (params) {
       else if (e[0] === 'k') { [st, en] = rukus_to_ayat(...range_to_pair(e[1])) }
       else                   { [st, en] =  ayat_to_ayat(...range_to_pair(e[0])) }
     })
-  let opts = { st:null, en:null, dark, color, mv, quizmode, byword, qari, qariurl, teacher, zz }
+  let opts = { st:null, en:null, dark, color, mv, quizmode, byword, qari, qariurl, teacher, disableteacher, zz }
   if (st == null || en == null) { return opts }
   st -= b; en += a
   if (st <= 0)    { st = 1    }
@@ -284,6 +286,8 @@ function ligilumi () {
   delete opts.mv
   Qid('feedbackrate').value = opts.byword? 'word' : ''
   delete opts.byword
+  if (opts.disableteacher) { Qid('teacher_option').style.display = 'none' }
+  delete opts.disableteacher
   chstyle()  // dark, color, mv
   chfeedbackrate()  // byword
   chquizmode()  // quizmode

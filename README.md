@@ -104,6 +104,8 @@ These are not changeable from the UI, only from the URL parameters; they are too
 
 - `qariurl=`, provide the url of your preferred audio recitation server, even a locally hosted one (e.g., `http://0.0.0.0:6236`, but NOT `file:///`). Makes the Qari selector empty. But changing the Qari selector overrides this. The given URL must be a full URL where ayat audio files can be found; e.g., one can append `/001001.mp3` to the given URL and find the first ayah of the first sura.
 
+- `dt` or `disableteacher`, to remove teacher mode selector from the UI; teacher mode can still be set from the URL params. Useful to force a specific value for the option in e.g. an embedding web app.
+
 - `zz`, for integration into another app. Made primarily for [Zikr-uz-Zikr](https://github.com/noureddin/zz), but is generic enough to be used with other apps.
 
     When enabled it does the following:
