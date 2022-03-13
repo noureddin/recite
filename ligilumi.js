@@ -303,8 +303,10 @@ function ligilumi () {
   if (opts.disableteacher) { hide(Qid('teacher_option')) }
   delete opts.disableteacher
   //
-  if (opts.disablequizmode) { hide(Qid('quizmode_option')) }
-  Qall('.mode_options_title').forEach(hide)
+  if (opts.disablequizmode) {
+    hide(Qid('quizmode_option'))
+    Qall('.mode_options_title').forEach(hide)
+  }
   delete opts.disablequizmode
   //
   chstyle()  // dark, color, mv
