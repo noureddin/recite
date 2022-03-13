@@ -1553,8 +1553,8 @@ function _ligilumilo (params) {
   // - b: before, a number of ayat to add before whatever you select. 0-inf.
   // - a: after,  a number of ayat to add before whatever you select. 0-inf.
   let dark             // dark mode: d/dark; l/light (default).
-  let color            // color of text: c/color = t/taj/tajweed (default); b/bas/basic; n/no/none.
-  let mv               // position of buttons: m/mv/mvbtns = b (bottom; default); r (right); l (left).
+  let color = 'taj'    // color of text: c/color = t/taj/tajweed (default); b/bas/basic; n/no/none.
+  let mv = 'bottom'    // position of buttons: m/mv/mvbtns = b (bottom; default); r (right); l (left).
   let quizmode         // quiz mode: q/qz/quizmode = u/uthm/uthmani (no-typing; default); i/imla/imlaai (typing)
   let byword           // imlaai-mode feedback rate; default); byword (true)
   let qari             // audio recitation qari's id
@@ -1569,29 +1569,30 @@ function _ligilumilo (params) {
     .map(p => p.split('='))
     //.reduce((obj, cur, i) => { i == 0? {} : (obj[cur[0]] = cur[1], obj), {})
     .forEach((e, i) => {
-           if (e[0] === 'dark'  || e[0] === 'd') { dark = true  }
-      else if (e[0] === 'light' || e[0] === 'l') { dark = false }
-      else if (e[0] === 'color' || e[0] === 'c') { color = parse_color(e[1]) }
-      else if (e[0] === 'mvbtns' || e[0] === 'mv' || e[0] === 'm') { mv = parse_mv(e[1]) }
-      else if (e[0] === 'quizmode' || e[0] === 'qz' || e[0] === 'q') { quizmode = parse_quizmode(e[1]) }
-      else if (e[0] === 'byword') { byword = true }
-      else if (e[0] === 'byletter') { byword = false }
-      else if (e[0] === 't' | e[0] === 'teach' | e[0] === 'teacher') { teacher = true }
-      else if (e[0] === 'n' | e[0] === 'noteach' | e[0] === 'noteacher') { teacher = false }
-      else if (e[0] === 'dt' | e[0] === 'disableteacher') { disableteacher = true }
-      else if (e[0] === 'dq' | e[0] === 'disablequizmode') { disablequizmode = true }
-      else if (e[0] === 'qari') { qari = e[1] }
-      else if (e[0] === 'qariurl') { qariurl = e[1] }
-      else if (e[0] === 'zz') { zz = true }
-      else if (e[0] === 'a') { a = +e[1] }
-      else if (e[0] === 'b') { b = +e[1] }
-      else if (e[0] === 'p') { [st, en] = pages_to_ayat(...range_to_pair(e[1])) }
-      else if (e[0] === 's') { [st, en] = suras_to_ayat(...range_to_pair(e[1])) }
-      else if (e[0] === 'r') { [st, en] =  rubs_to_ayat(...range_to_pair(e[1])) }
-      else if (e[0] === 'h') { [st, en] = hizbs_to_ayat(...range_to_pair(e[1])) }
-      else if (e[0] === 'j') { [st, en] =  juzs_to_ayat(...range_to_pair(e[1])) }
-      else if (e[0] === 'k') { [st, en] = rukus_to_ayat(...range_to_pair(e[1])) }
-      else                   { [st, en] =  ayat_to_ayat(...range_to_pair(e[0])) }
+      const is_of = (...params) => params.includes(e[0])
+           if (is_of('dark', 'd')) { dark = true  }
+      else if (is_of('light', 'l')) { dark = false }
+      else if (is_of('color', 'c')) { color = parse_color(e[1]) }
+      else if (is_of('mvbtns', 'mv', 'm')) { mv = parse_mv(e[1]) }
+      else if (is_of('quizmode', 'qz', 'q')) { quizmode = parse_quizmode(e[1]) }
+      else if (is_of('byword')) { byword = true }
+      else if (is_of('byletter')) { byword = false }
+      else if (is_of('t', 'teach', 'teacher')) { teacher = true }
+      else if (is_of('n', 'noteach', 'noteacher')) { teacher = false }
+      else if (is_of('dt', 'disableteacher')) { disableteacher = true }
+      else if (is_of('dq', 'disablequizmode')) { disablequizmode = true }
+      else if (is_of('qari')) { qari = e[1] }
+      else if (is_of('qariurl')) { qariurl = e[1] }
+      else if (is_of('zz')) { zz = true }
+      else if (is_of('a')) { a = +e[1] }
+      else if (is_of('b')) { b = +e[1] }
+      else if (is_of('p')) { [st, en] = pages_to_ayat(...range_to_pair(e[1])) }
+      else if (is_of('s')) { [st, en] = suras_to_ayat(...range_to_pair(e[1])) }
+      else if (is_of('r')) { [st, en] =  rubs_to_ayat(...range_to_pair(e[1])) }
+      else if (is_of('h')) { [st, en] = hizbs_to_ayat(...range_to_pair(e[1])) }
+      else if (is_of('j')) { [st, en] =  juzs_to_ayat(...range_to_pair(e[1])) }
+      else if (is_of('k')) { [st, en] = rukus_to_ayat(...range_to_pair(e[1])) }
+      else                 { [st, en] =  ayat_to_ayat(...range_to_pair(e[0])) }
     })
   let opts = { st:null, en:null, dark, color, mv, quizmode, disablequizmode, byword, qari, qariurl, teacher, disableteacher, zz }
   if (st == null || en == null) { return opts }
@@ -1604,27 +1605,39 @@ function _ligilumilo (params) {
 
 function ligilumi () {
   const opts = _ligilumilo(window.location.hash || window.location.search)
+  //
   opts.quizmode = opts.quizmode != null? opts.quizmode : Qid('quizmode').value
   Qid('quizmode').value = opts.quizmode
+  //
   Qid('darkmode_input').checked = opts.dark
   delete opts.dark
+  //
   Qid('teacher_input').checked = opts.teacher
+  //
   Qid('qaris').value = opts.qari
   if (!Qid('qaris').value) { Qid('qaris').value = '' }  // if unset or is a bad value
+  //
   if (opts.qariurl) { Qid('qaris').value = '_' }  // an invalid value to hide "With audio"
   Qid('qariurl').value = opts.qariurl
-  Qid('textclr_input').value = opts.color || 'taj'  // the default
+  //
+  Qid('textclr_input').value = opts.color
   delete opts.color
-  Qid('mvbtns_input').value = opts.mv || 'bottom'  // the default
+  //
+  Qid('mvbtns_input').value = opts.mv
   delete opts.mv
+  //
   Qid('feedbackrate').value = opts.byword? 'word' : ''
   delete opts.byword
+  //
   const hide = (e) => e.style.display = 'none'
+  //
   if (opts.disableteacher) { hide(Qid('teacher_option')) }
   delete opts.disableteacher
+  //
   if (opts.disablequizmode) { hide(Qid('quizmode_option')) }
   Qall('.mode_options_title').forEach(hide)
   delete opts.disablequizmode
+  //
   chstyle()  // dark, color, mv
   chfeedbackrate()  // byword
   chquizmode()  // quizmode

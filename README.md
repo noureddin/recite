@@ -106,7 +106,11 @@ These are not changeable from the UI, only from the URL parameters; they are too
 
 - `dt` or `disableteacher`, to remove teacher mode selector from the UI. The Teacher mode can still be set from the URL params. Useful to force a specific value for the option in e.g. an embedding web app.
 
+    **Warning:** It's still changeble from the JavaScript console; I couldn't disable this yet.
+
 - `dq` or `disablequizmode`, to remove quiz mode selector from the UI. The quiz mode can still be specified from the URL params. Useful to force a specific mode in e.g. an embedding web app.
+
+    **Warning:** It's still changeble from the JavaScript console; I couldn't disable this yet.
 
 - `zz`, for integration into another app. Made primarily for [Zikr-uz-Zikr](https://github.com/noureddin/zz), but is generic enough to be used with other apps.
 
