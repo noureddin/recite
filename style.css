@@ -302,6 +302,8 @@ body.letter-parts:not(.ayat-nocolor) #uthm_txt .D {
 #dark:checked ~ #body kbd             { color: #000 }  /* inverted */
 #dark:checked ~ #body summary         { color: #fff }
 
+a * { color: inherit !important }
+
 .help-part {
     font-weight: normal;
     color: #c00;
@@ -318,6 +320,10 @@ details * {
 summary {
   color: #000;
   margin-right: -0.2em;
+}
+
+details strong {
+  border-bottom: 0.1em solid
 }
 
 summary::marker { color: #c00; }
@@ -532,7 +538,7 @@ kbd {
   margin: 0 0.1em;
   padding: 0.1em 0.6em;
   text-shadow: 0 1px 0 #fff;
-}            
+}
 
 .roman { font-size: 80%; }
 .roman, .roman * {

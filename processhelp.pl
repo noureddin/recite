@@ -26,6 +26,9 @@ binmode STDOUT, ':encoding(UTF-8)';
 # in>> {English}
 # out> <span dir="ltr" class="roman">English</span>
 #
+# in>> <<any thing>>
+# out> <span style="white-space:nowrap">any thing</span>
+#
 # in>> *strong*
 # out> <strong>strong</strong>
 #
@@ -63,7 +66,7 @@ my $full_example = <<~END_OF_EXAMPLE;
     ===
     = What?
     
-    - Just press {{Alt}}+{{F4}} and you'll be fine.
+    - Just press {{Alt}}+{{F4}} and <<you'll be fine.>>
     - Or, better, remove the plug and the battery (if~any).
     ===
     END_OF_EXAMPLE
@@ -78,7 +81,7 @@ my $expected_html = <<~END_OF_HTML;
     </div></details>
     <details><summary>What?</summary><div class="details-content">
     <ul>
-    <li><p>Just press <kbd>Alt</kbd>+<kbd>F4</kbd> and you'll be fine.</p></li>
+    <li><p>Just press <kbd>Alt</kbd>+<kbd>F4</kbd> and <span style="white-space:nowrap">you'll be fine.</span></p></li>
     <li><p>Or, better, remove the plug and the battery (if&nbsp;any).</p></li>
     </ul>
     </div></details>
@@ -110,10 +113,12 @@ sub process_all {
     process_kbd(
     process_details(
     process_summary(
+    process_nowrap(
         $_[0]
-    ))))))))))
+    )))))))))))
 }
 
+sub process_nowrap  { return $_[0] =~ s|   << (.*?) >>   |<span style="white-space:nowrap">$1</span>|gxr }
 sub process_strong  { return $_[0] =~ s|   \* (.*?) \*   |<strong>$1</strong>|gxr }
 sub process_roman   { return $_[0] =~ s|   \{ (.*?) \}   |<span dir="ltr" class="roman">$1</span>|gxr }
 sub process_kbd     { return $_[0] =~ s| \{\{ (.*?) \}\} |<kbd>$1</kbd>|gxr }
