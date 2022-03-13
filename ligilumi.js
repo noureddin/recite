@@ -285,8 +285,8 @@ function ligilumi () {
   Qid('feedbackrate').value = opts.byword? 'word' : ''
   delete opts.byword
   chstyle()  // dark, color, mv
-  chfeedbackrate() // byword
-  // chquizmode() for txt is currently not needed
+  chfeedbackrate()  // byword
+  chquizmode()  // quizmode
   // if no aayat are selected, only change the provided preferences
   if (opts.st == null || opts.en == null) { return }
   recite(opts)

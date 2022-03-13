@@ -121,7 +121,7 @@ function recite (o) {
   hide_selectors(o.quizmode)
 
   const start = () => { _recite(o) }
-  if (quizmode === 'imla') { load_imla(start) }
+  if (o.quizmode === 'imla') { load_imla(start) }
   else {  /* uthmani, which is split into two parts */
     const n1 = is_in_first_half(o.st, o.en)
     const n2 = is_in_second_half(o.st, o.en)
@@ -136,14 +136,14 @@ function _recite (o) {
   document.addEventListener('keyup', (ev) => {
     if (ev.key === 'Escape') {
       audio.play()
-      if (quizmode === 'imla') {
+      if (o.quizmode === 'imla') {
         // re-focus, b/c Escape unfocuses it
         el_imla_txt.focus()
       }
     }
   })
 
-  if (quizmode === 'imla') {
+  if (o.quizmode === 'imla') {
     el_imla_txt.focus()
     let correct_text = imlaai_ayat(o.st, o.en)
     let pasted = false
@@ -152,7 +152,6 @@ function _recite (o) {
       el_imla_txt.value.split('\n').length - 2 + (o.teacher? 1 : 0)
 
     const txt_changed = function () {
-      audio.set_index(get_current_aaya_index())
 
       if (!el_endmsg.hidden) { return }
 
@@ -165,7 +164,7 @@ function _recite (o) {
       if (correct_text.startsWith(imlafilter(el_imla_txt.value))) {
         el_imla_txt.classList = ''
         if (el_imla_txt.value.slice(-1) === '\n') {  // basmala, or BS+Enter to repeat the same aaya
-          audio.play()
+          audio.play(get_current_aaya_index())
         }
       }
 
@@ -175,7 +174,7 @@ function _recite (o) {
         let x = el_imla_txt.value.length + 2
         while (correct_text.slice(x, x+1) !== '\n') { ++x }
         el_imla_txt.value = correct_text.slice(0, x+1)
-        audio.play()
+        audio.play(get_current_aaya_index())
         if (el_imla_txt.value === correct_text) {
           el_imla_txt.value = el_imla_txt.value.slice(0,-1)  // remove the last newline
           show_done()
@@ -232,7 +231,7 @@ function _recite (o) {
       el_uthm_txt.innerHTML = el_uthm_txt.innerHTML.substring(0, el_uthm_txt.innerHTML.length - last_word.length)
       if (last_word.match(/<br>\n$/)) {
         audio.back()
-        if (teacher) { audio.play() }
+        if (o.teacher) { audio.play() }
       }
       return kind_of_portion( el_uthm_txt.innerHTML.slice(-2) )
     }
