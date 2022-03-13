@@ -1,15 +1,14 @@
 let opts = {}
 
 function start_reciting () {
-  const quizmode = el_quizmode.value
-  hide_selectors(quizmode)
-  el_nextword.focus()
   if (!valid_inputs(sura_bgn_val(), aaya_bgn_val(), sura_end_val(), aaya_end_val())) { return }
   const st = start_(sura_bgn_val()) + aaya_bgn_val()
   const en = start_(sura_end_val()) + aaya_end_val()
   const teacher = el_teacher_input.checked
   const qari = el_qaris.value
   const qariurl = el_qariurl.value
+  const quizmode = el_quizmode.value
+  hide_selectors(quizmode)
   opts = {...opts, st, en, qari, qariurl, teacher, quizmode}
   recite(opts)
 }
@@ -306,6 +305,7 @@ const hide_selectors = function (quizmode) {
     el_mvbtns.hidden = true
     Qid('end_of_header').style.color = 'transparent'  // to keep some space
     document.documentElement.style.setProperty('--sticky', '')
+    el_imla_txt.focus()
   }
   else {  /* uthmani */
     el_uthm_txt.hidden = false
@@ -314,6 +314,7 @@ const hide_selectors = function (quizmode) {
     el_imla_txt.hidden = true
     Qid('end_of_header').style.color = ''
     document.documentElement.style.setProperty('--sticky', 'sticky')
+    el_nextword.focus()
   }
   scroll_to_bottom()
 }
