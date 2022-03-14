@@ -193,6 +193,10 @@ function _recite (o) {
     el_imla_txt.onpaste = (e) => { pasted = true }
     el_imla_txt.focus()
 
+    // these are set in Uthmani; need to override if used Uthmani before Imlaai
+    document.onkeyup = () => {}
+    document.ondblclick = () => {}
+
   }
   else {
     el_uthm_txt.focus()
