@@ -1,5 +1,8 @@
 # Recite (the Web version)
 
+<div align="center">~~ <strong><a href="اقرأني.md">اقرأني بالعربية</a></strong> ~~</div>
+<p></p>
+
 This is the web version of [Recite for desktop](https://github.com/noureddin/recite/tree/master), but for the Quran only, and with much, much more features.
 
 Use it at: [noureddin.github.io/recite](https://noureddin.github.io/recite).
