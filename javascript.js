@@ -160,6 +160,21 @@ function _recite (o) {
         pasted = false
       }
 
+      // remove superfluous spaces:
+      //   the second char of: \A⎵ | \n⎵ | ⎵⎵ | \A\n | \n\n
+      //   and the first of: ⎵\n
+      // note: only checks against the last two chars/bytes, and only once
+      const last_two = el_imla_txt.value.slice(-2)
+      if (last_two === ' ' || last_two === '\n') {  // the entire input is this char
+        el_imla_txt.value = ''
+      }
+      if (last_two === '  ' || last_two === '\n ' || last_two === '\n\n') {
+        el_imla_txt.value = el_imla_txt.value.slice(0,-1)
+      }
+      if (last_two === ' \n') {
+        el_imla_txt.value = el_imla_txt.value.slice(0,-2)+'\n'
+      }
+
       if (correct_text.startsWith(imlafilter(el_imla_txt.value))) {
         el_imla_txt.classList = ''
         if (el_imla_txt.value.slice(-1) === '\n') {  // basmala, or BS+Enter to repeat the same aaya
