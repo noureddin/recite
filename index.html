@@ -426,6 +426,10 @@ summary::marker { color: #c00; }
   margin: 0.2rem;
 }
 
+#preloader {
+  display: none;
+}
+
 #player {
   display: block;
   /* centered with https://stackoverflow.com/a/2006008 */
@@ -878,6 +882,7 @@ details[open] > .details-content {
 </section>
 
 <audio id="player" controls preload></audio>
+<audio id="preloader" muted preload></audio>
 
 <!-- I used to use sura_start, sura_end, aya_start, and aya_end, but changed -->
 <!--  them to sura_bgn, sura_end, aaya_bgn, and aaya_end to make them equal in -->
@@ -1004,6 +1009,7 @@ const el_imla_options_title = Qid("imla_options_title")
 const el_feedbackrate = Qid("feedbackrate")
 const el_helpcontent = Qid("helpcontent")
 const el_player = Qid("player")
+const el_preloader = Qid("preloader")
 const el_title = Qid("title")
 const el_selectors = Qid("selectors")
 const el_sura_bgn = Qid("sura_bgn")
@@ -1177,7 +1183,7 @@ const audio = (function () {  // {{{
   function fetch (idx) {
     idx = index(idx)
     if (invalid_state(idx)) { return }
-    new Audio(audio_url(idx))
+    el_preloader.src = audio_url(idx)
   }
 
   function play () {

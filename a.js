@@ -159,7 +159,7 @@ const audio = (function () {  // {{{
   function fetch (idx) {
     idx = index(idx)
     if (invalid_state(idx)) { return }
-    new Audio(audio_url(idx))
+    el_preloader.src = audio_url(idx)
   }
 
   function play () {
