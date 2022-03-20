@@ -287,7 +287,7 @@ function ligilumi () {
   if (!Qid('qaris').value) { Qid('qaris').value = '' }  // if unset or is a bad value
   //
   if (opts.qariurl) { Qid('qaris').value = '_' }  // an invalid value to hide "With audio"
-  Qid('qariurl').value = opts.qariurl
+  Qid('qariurl').value = opts.qariurl ? opts.qariurl : ''
   //
   Qid('textclr_input').value = opts.color
   delete opts.color
