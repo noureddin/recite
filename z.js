@@ -89,7 +89,7 @@ function make_words_list (st, en) {
   // let's make tab ('\t') separates the words,
   // and newline (actually '<br>\n') separates the ayat.
 
-  const basmala = 'بِسۡمِ ٱللَّهِ ٱX<ل>R<رَّ>حۡمَT<ـٰ>نِ ٱX<ل>R<رَّ>حِJ<ی>مِ A<۝>D<١>'  /*uothm[0] */
+  const basmala = 'بِسۡمِ ٱللَّهِ ٱX<ل>R<رَّ>حۡمَT<ـٰ>نِ ٱX<ل>R<رَّ>حِJ<ی>مِ A<۝>D<١>'  /* uthm[0] */
       .replace(/\xa0.*/, '').replace(/ /g, '\xa0')  // '\ufdfd'
 
   return (

@@ -8,8 +8,8 @@ function start_reciting () {
   const qari = el_qaris.value
   const qariurl = el_qariurl.value
   const quizmode = el_quizmode.value
-  hide_selectors(quizmode)
   opts = {...opts, st, en, qari, qariurl, teacher, quizmode}
+  hide_selectors(quizmode)
   recite(opts)
 }
 
@@ -130,17 +130,18 @@ function recite (o) {
   }
 }
 
-function _recite (o) {
-
-  document.addEventListener('keyup', (ev) => {
-    if (ev.key === 'Escape') {
-      audio.play()
-      if (o.quizmode === 'imla') {
-        // re-focus, b/c Escape unfocuses it
-        el_imla_txt.focus()
-      }
+document.addEventListener('keyup', (ev) => {
+  if (ev.key === 'Escape') {
+    audio.play()
+    // if currently quizzing, in imlaai mode
+    if (!el_imla_txt.hidden && el_endmsg.hidden) {
+      // re-focus, b/c Escape unfocuses it
+      el_imla_txt.focus()
     }
-  })
+  }
+})
+
+function _recite (o) {
 
   if (o.quizmode === 'imla') {
     el_imla_txt.focus()
@@ -206,7 +207,6 @@ function _recite (o) {
 
     el_imla_txt.oninput = txt_changed // https://stackoverflow.com/a/14029861
     el_imla_txt.onpaste = (e) => { pasted = true }
-    el_imla_txt.focus()
 
     // these are set in Uthmani; need to override if used Uthmani before Imlaai
     document.onkeyup = () => {}

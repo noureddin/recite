@@ -6,7 +6,7 @@
 
 const say = console.log
 
-// Q, Qid, el_*, data {{{
+// Q*, el_*, data {{{
 function Q    (selector) { return document.querySelector(selector) }
 function Qall (selector) { return document.querySelectorAll(selector) }
 function Qid  (id)       { return document.getElementById(id) }
@@ -138,7 +138,6 @@ function validate_aaya_sura_input (ev) {
 <<!!cat res/jszip-utils.min.js>>
 
 const audio = (function () {  // {{{
-  const el_player = Qid('player')
   let list
   let base_url
   let cur_idx

@@ -978,7 +978,7 @@ details[open] > .details-content {
 
 const say = console.log
 
-// Q, Qid, el_*, data {{{
+// Q*, el_*, data {{{
 function Q    (selector) { return document.querySelector(selector) }
 function Qall (selector) { return document.querySelectorAll(selector) }
 function Qid  (id)       { return document.getElementById(id) }
@@ -1162,7 +1162,6 @@ var confetti={maxCount:150,speed:2,frameInterval:15,alpha:1,gradient:!1,start:nu
 
 
 const audio = (function () {  // {{{
-  const el_player = Qid('player')
   let list
   let base_url
   let cur_idx
@@ -1714,8 +1713,8 @@ function start_reciting () {
   const qari = el_qaris.value
   const qariurl = el_qariurl.value
   const quizmode = el_quizmode.value
-  hide_selectors(quizmode)
   opts = {...opts, st, en, qari, qariurl, teacher, quizmode}
+  hide_selectors(quizmode)
   recite(opts)
 }
 
@@ -1836,17 +1835,18 @@ function recite (o) {
   }
 }
 
-function _recite (o) {
-
-  document.addEventListener('keyup', (ev) => {
-    if (ev.key === 'Escape') {
-      audio.play()
-      if (o.quizmode === 'imla') {
-        // re-focus, b/c Escape unfocuses it
-        el_imla_txt.focus()
-      }
+document.addEventListener('keyup', (ev) => {
+  if (ev.key === 'Escape') {
+    audio.play()
+    // if currently quizzing, in imlaai mode
+    if (!el_imla_txt.hidden && el_endmsg.hidden) {
+      // re-focus, b/c Escape unfocuses it
+      el_imla_txt.focus()
     }
-  })
+  }
+})
+
+function _recite (o) {
 
   if (o.quizmode === 'imla') {
     el_imla_txt.focus()
@@ -1912,7 +1912,6 @@ function _recite (o) {
 
     el_imla_txt.oninput = txt_changed // https://stackoverflow.com/a/14029861
     el_imla_txt.onpaste = (e) => { pasted = true }
-    el_imla_txt.focus()
 
     // these are set in Uthmani; need to override if used Uthmani before Imlaai
     document.onkeyup = () => {}
@@ -2192,7 +2191,7 @@ function make_words_list (st, en) {
   // let's make tab ('\t') separates the words,
   // and newline (actually '<br>\n') separates the ayat.
 
-  const basmala = 'بِسۡمِ ٱللَّهِ ٱX<ل>R<رَّ>حۡمَT<ـٰ>نِ ٱX<ل>R<رَّ>حِJ<ی>مِ A<۝>D<١>'  /*uothm[0] */
+  const basmala = 'بِسۡمِ ٱللَّهِ ٱX<ل>R<رَّ>حۡمَT<ـٰ>نِ ٱX<ل>R<رَّ>حِJ<ی>مِ A<۝>D<١>'  /* uthm[0] */
       .replace(/\xa0.*/, '').replace(/ /g, '\xa0')  // '\ufdfd'
 
   return (
