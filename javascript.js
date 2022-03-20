@@ -383,4 +383,14 @@ onload = function () {
   })
 }
 
+if (visualViewport) {
+  visualViewport.addEventListener('resize', (ev) => {
+    // if currently quizzing, in imlaai mode
+    if (!el_imla_txt.hidden && el_endmsg.hidden) {
+      el_imla_txt.style.height = Math.trunc(ev.target.height * 0.95) + 'px' // to mirror the original '95vh'
+      el_imla_txt.scrollIntoView()
+    }
+  })
+}
+
 // vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:
