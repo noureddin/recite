@@ -87,7 +87,7 @@ function show_el (el) { el.style.visibility = 'visible'; el.style.opacity = '100
 function sync_ui (stpair, enpair, title, preserve_url) {
   if (!preserve_url) { window.location.hash = stpair.join('/') + '-' + enpair.join('/') }
   document.querySelector('title').innerHTML = title + ' | رسايت'
-  if (!el_zzignore.hidden) { parent.zz_set_title(title) }
+  zz_set('title', title)
   //
   el_sura_bgn.value = stpair[0]-1; el_aaya_bgn.value = filter_aaya_input(stpair[1])
   el_sura_end.value = enpair[0]-1; el_aaya_end.value = filter_aaya_input(enpair[1])

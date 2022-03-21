@@ -241,10 +241,15 @@ function valid_inputs (sura_bgn, aaya_bgn, sura_end, aaya_end) {  // {{{
   )
 }  // }}}
 
+function zz_set (prop, val) {
+  prop = 'zz_set_'+prop
+  if (prop in parent) { parent[prop](val) }
+}
+
 function chquizmode () {
   const show = (id) => Qid(id).style.display = 'block'
   const hide = (id) => Qid(id).style.display = 'none'
-  if (!el_zzignore.hidden) { parent.zz_set_quizmode(el_quizmode.value) }
+  zz_set('quizmode', el_quizmode.value)
   if (el_quizmode.value === 'imla') {
     hide('uthm_options')
     show('imla_options')
@@ -262,7 +267,7 @@ window.imlafilter = imlafilter_byletter  // the default
 
 function chfeedbackrate () {
   window.imlafilter = el_feedbackrate.value === "word"? imlafilter_byword : imlafilter_byletter
-  if (!el_zzignore.hidden) { parent.zz_set_feedbackrate(el_feedbackrate.value) }
+  zz_set('feedbackrate', el_feedbackrate.value)
 }
 
 function chstyle () {
@@ -272,13 +277,13 @@ function chstyle () {
   const tval = Qid('textclr_input').value
   sync_class_with('letter-parts',   tval === 'bas')
   sync_class_with('letter-nocolor', tval === 'no')
-  if (!el_zzignore.hidden) { parent.zz_set_tajweed(tval.slice(0,1)) }
+  zz_set('tajweed', tval.slice(0,1))
   //
   sync_class_with('ayat-nocolor', !Qid('ayatnum_input').checked)
   //
   // sync_class_with('dark', Qid('darkmode_input').checked)
   let dark = Qid('dark').checked = Qid('darkmode_input').checked
-  if (!el_zzignore.hidden) { parent.zz_set_dark(dark) }
+  zz_set('dark', dark)
   // mvbtns
   const mv = Qid('mvbtns_input').value
   const mv_cls =
@@ -286,7 +291,7 @@ function chstyle () {
     mv === 'left'  ? 'sidebtns leftside'  :
                      ''  /* no class for 'bottom' */
   el_mvbtns.setAttribute('class', mv_cls)
-  if (!el_zzignore.hidden) { parent.zz_set_mvbtns(mv.slice(0,1)) }
+  zz_set('mvbtns', mv.slice(0,1))
 }
 
 function decode_contact () {
