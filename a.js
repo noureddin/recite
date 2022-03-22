@@ -246,7 +246,13 @@ function zz_set (prop, val) {
   if (prop in parent) { parent[prop](val) }
 }
 
-function chquizmode () {
+function change_qari () {
+  const val = el_qaris.value
+  audio.update_qari(val)
+  zz_set('qari', val)
+}
+
+function change_quizmode () {
   const show = (id) => Qid(id).style.display = 'block'
   const hide = (id) => Qid(id).style.display = 'none'
   zz_set('quizmode', el_quizmode.value)
@@ -265,26 +271,35 @@ function imlafilter_byletter (val) { return val }
 
 window.imlafilter = imlafilter_byletter  // the default
 
-function chfeedbackrate () {
+function change_feedbackrate () {
   window.imlafilter = el_feedbackrate.value === "word"? imlafilter_byword : imlafilter_byletter
   zz_set('feedbackrate', el_feedbackrate.value)
 }
 
-function chstyle () {
-  const sync_class_with = (cls, pred) =>
-    pred ? Q('body').classList.add(cls) : Q('body').classList.remove(cls)
-  //
+const sync_class_with = (cls, pred) =>
+  pred ? Q('body').classList.add(cls) : Q('body').classList.remove(cls)
+
+function change_tajweed () {
   const tval = Qid('textclr_input').value
   sync_class_with('letter-parts',   tval === 'bas')
   sync_class_with('letter-nocolor', tval === 'no')
   zz_set('tajweed', tval.slice(0,1))
-  //
-  sync_class_with('ayat-nocolor', !Qid('ayatnum_input').checked)
-  //
+}
+
+function change_ayatnum () {
+  const ayatnum = Qid('ayatnum_input').checked
+  sync_class_with('ayat-nocolor', !ayatnum)
+  zz_set('ayatnum', ayatnum)
+}
+
+function change_dark () {
   // sync_class_with('dark', Qid('darkmode_input').checked)
-  let dark = Qid('dark').checked = Qid('darkmode_input').checked
+  const dark = Qid('darkmode_input').checked
+  Qid('dark').checked = dark
   zz_set('dark', dark)
-  // mvbtns
+}
+
+function change_mvbtns () {
   const mv = Qid('mvbtns_input').value
   const mv_cls =
     mv === 'right' ? 'sidebtns rightside' :

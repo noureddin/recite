@@ -642,7 +642,7 @@ details[open] > .details-content {
 <div id="options" class="contentcontainer">
 
   <div id="darkmode_option" class="option optionally-inline">
-    <label for="darkmode_input">الوضع الليلي؟&ensp;</label><input id="darkmode_input" type="checkbox" onchange="chstyle()">
+    <label for="darkmode_input">الوضع الليلي؟&ensp;</label><input id="darkmode_input" type="checkbox" onchange="change_dark()">
   </div>
   <div id="teacher_option" class="option optionally-inline">
     <label for="teacher_input">معلم؟ (التلاوة الصوتية قبل الآية)&ensp;</label><input id="teacher_input" type="checkbox" onchange="">
@@ -650,7 +650,7 @@ details[open] > .details-content {
 
   <!-- from: http://www.everyayah.com/data/recitations.js -->
   <div class="option">
-    <label for="qaris">تلاوة بصوت:&ensp;</label><select id="qaris" oninput="audio.update_qari(this.value)">
+    <label for="qaris">تلاوة بصوت:&ensp;</label><select id="qaris" oninput="change_qari()">
       <option value="" selected>بغير تلاوة صوتية</option>
     <option value="warsh/warsh_ibrahim_aldosary_128kbps">إبراهيم الدوسري (ورش) (جودة فائقة)</option>
     <option value="Abu_Bakr_Ash-Shaatree_64kbps">أبو بكر الشاطري (جودة عالية)</option>
@@ -709,7 +709,7 @@ details[open] > .details-content {
   <hr id="guide">
 
   <div id="quizmode_option" class="option">
-    <label for="quizmode">وضع التسميع:&ensp;</label><select id="quizmode" onchange="chquizmode()">
+    <label for="quizmode">وضع التسميع:&ensp;</label><select id="quizmode" onchange="change_quizmode()">
       <option value="uthm" selected>عثماني (بلا كتابة) &mdash; تغييره يتطلب إعادة التسميع</option>
       <option value="imla">إملائي (كتابة) &mdash; تغييره يتطلب إعادة التسميع</option>
     </select>
@@ -719,7 +719,7 @@ details[open] > .details-content {
     <span id="uthm_options_title" class="mode_options_title">خيارات وضع التسميع العثماني (بلا كتابة):</span>
 
     <div class="option">
-      <label for="mvbtns_input">موضع أزار التسميع:&ensp;</label><select id="mvbtns_input" onchange="chstyle()">
+      <label for="mvbtns_input">موضع أزار التسميع:&ensp;</label><select id="mvbtns_input" onchange="change_mvbtns()">
         <option value="bottom" selected>أسفل</option>
         <option value="right">يمين</option>
         <option value="left">يسار</option>
@@ -727,7 +727,7 @@ details[open] > .details-content {
     </div>
 
     <div class="option">
-      <label for="textclr_input">تلوين النص:&ensp;</label><select id="textclr_input" onchange="chstyle()">
+      <label for="textclr_input">تلوين النص:&ensp;</label><select id="textclr_input" onchange="change_tajweed()">
         <option value="taj" selected>تبعا لقواعد التجويد</option>
         <option value="bas">تلوين أجزاء الرسم</option>
         <option value="no">بغير أي تلوين</option>
@@ -735,7 +735,7 @@ details[open] > .details-content {
     </div>
 
     <div class="option">
-      <label for="ayatnum_input">تلوين أرقام الآيات؟&ensp;</label><input id="ayatnum_input" type="checkbox" checked onchange="chstyle()">
+      <label for="ayatnum_input">تلوين أرقام الآيات؟&ensp;</label><input id="ayatnum_input" type="checkbox" checked onchange="change_ayatnum()">
     </div>
 
   </div>
@@ -744,7 +744,7 @@ details[open] > .details-content {
     <span id="imla_options_title" class="mode_options_title">خيارات وضع التسميع الإملائي (كتابة):</span>
 
     <div class="option">
-      <label for="feedbackrate">مراجعة الأخطاء كل:&ensp;</label><select id="feedbackrate" onchange="chfeedbackrate()">
+      <label for="feedbackrate">مراجعة الأخطاء كل:&ensp;</label><select id="feedbackrate" onchange="change_feedbackrate()">
         <option value="" selected>حرف</option>
         <option value="word">كلمة</option>
       </select>
@@ -1270,7 +1270,13 @@ function zz_set (prop, val) {
   if (prop in parent) { parent[prop](val) }
 }
 
-function chquizmode () {
+function change_qari () {
+  const val = el_qaris.value
+  audio.update_qari(val)
+  zz_set('qari', val)
+}
+
+function change_quizmode () {
   const show = (id) => Qid(id).style.display = 'block'
   const hide = (id) => Qid(id).style.display = 'none'
   zz_set('quizmode', el_quizmode.value)
@@ -1289,26 +1295,35 @@ function imlafilter_byletter (val) { return val }
 
 window.imlafilter = imlafilter_byletter  // the default
 
-function chfeedbackrate () {
+function change_feedbackrate () {
   window.imlafilter = el_feedbackrate.value === "word"? imlafilter_byword : imlafilter_byletter
   zz_set('feedbackrate', el_feedbackrate.value)
 }
 
-function chstyle () {
-  const sync_class_with = (cls, pred) =>
-    pred ? Q('body').classList.add(cls) : Q('body').classList.remove(cls)
-  //
+const sync_class_with = (cls, pred) =>
+  pred ? Q('body').classList.add(cls) : Q('body').classList.remove(cls)
+
+function change_tajweed () {
   const tval = Qid('textclr_input').value
   sync_class_with('letter-parts',   tval === 'bas')
   sync_class_with('letter-nocolor', tval === 'no')
   zz_set('tajweed', tval.slice(0,1))
-  //
-  sync_class_with('ayat-nocolor', !Qid('ayatnum_input').checked)
-  //
+}
+
+function change_ayatnum () {
+  const ayatnum = Qid('ayatnum_input').checked
+  sync_class_with('ayat-nocolor', !ayatnum)
+  zz_set('ayatnum', ayatnum)
+}
+
+function change_dark () {
   // sync_class_with('dark', Qid('darkmode_input').checked)
-  let dark = Qid('dark').checked = Qid('darkmode_input').checked
+  const dark = Qid('darkmode_input').checked
+  Qid('dark').checked = dark
   zz_set('dark', dark)
-  // mvbtns
+}
+
+function change_mvbtns () {
   const mv = Qid('mvbtns_input').value
   const mv_cls =
     mv === 'right' ? 'sidebtns rightside' :
@@ -1694,9 +1709,6 @@ function ligilumi () {
   }
   delete opts.disablequizmode
   //
-  chstyle()  // dark, color, mv
-  chfeedbackrate()  // byword
-  chquizmode()  // quizmode
   // if no aayat are selected, only change the provided preferences
   if (opts.st == null || opts.en == null) { return }
   recite(opts)
@@ -2077,9 +2089,9 @@ el_zzignore.onclick = () => { clear_screen(); parent.zz_ignore() }
 onload = function () {
   el_ok.disabled = true
   init_inputs()
-  chquizmode()
-  chstyle()  // to update the style, as we don't reset these
-             // inputs, so they keep their values on refresh.
+  // To update the styles, as we don't reset these
+  // inputs, so they keep their values on refresh:
+  Qall('input, select').forEach(e => e.onchange && e.onchange())
   decode_contact()
   ligilumi()
   el_imla_txt.spellcheck = false

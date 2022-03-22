@@ -27,7 +27,7 @@
 <div id="options" class="contentcontainer">
 
   <div id="darkmode_option" class="option optionally-inline">
-    <label for="darkmode_input">الوضع الليلي؟&ensp;</label><input id="darkmode_input" type="checkbox" onchange="chstyle()">
+    <label for="darkmode_input">الوضع الليلي؟&ensp;</label><input id="darkmode_input" type="checkbox" onchange="change_dark()">
   </div>
   <div id="teacher_option" class="option optionally-inline">
     <label for="teacher_input">معلم؟ (التلاوة الصوتية قبل الآية)&ensp;</label><input id="teacher_input" type="checkbox" onchange="">
@@ -35,7 +35,7 @@
 
   <!-- from: http://www.everyayah.com/data/recitations.js -->
   <div class="option">
-    <label for="qaris">تلاوة بصوت:&ensp;</label><select id="qaris" oninput="audio.update_qari(this.value)">
+    <label for="qaris">تلاوة بصوت:&ensp;</label><select id="qaris" oninput="change_qari()">
       <option value="" selected>بغير تلاوة صوتية</option>
 <<!!cat res/qaris | while read value; do read title; echo "    <option value=\"$value\">$title</option>"; done>>
     </select>
@@ -45,7 +45,7 @@
   <hr id="guide">
 
   <div id="quizmode_option" class="option">
-    <label for="quizmode">وضع التسميع:&ensp;</label><select id="quizmode" onchange="chquizmode()">
+    <label for="quizmode">وضع التسميع:&ensp;</label><select id="quizmode" onchange="change_quizmode()">
       <option value="uthm" selected>عثماني (بلا كتابة) &mdash; تغييره يتطلب إعادة التسميع</option>
       <option value="imla">إملائي (كتابة) &mdash; تغييره يتطلب إعادة التسميع</option>
     </select>
@@ -55,7 +55,7 @@
     <span id="uthm_options_title" class="mode_options_title">خيارات وضع التسميع العثماني (بلا كتابة):</span>
 
     <div class="option">
-      <label for="mvbtns_input">موضع أزار التسميع:&ensp;</label><select id="mvbtns_input" onchange="chstyle()">
+      <label for="mvbtns_input">موضع أزار التسميع:&ensp;</label><select id="mvbtns_input" onchange="change_mvbtns()">
         <option value="bottom" selected>أسفل</option>
         <option value="right">يمين</option>
         <option value="left">يسار</option>
@@ -63,7 +63,7 @@
     </div>
 
     <div class="option">
-      <label for="textclr_input">تلوين النص:&ensp;</label><select id="textclr_input" onchange="chstyle()">
+      <label for="textclr_input">تلوين النص:&ensp;</label><select id="textclr_input" onchange="change_tajweed()">
         <option value="taj" selected>تبعا لقواعد التجويد</option>
         <option value="bas">تلوين أجزاء الرسم</option>
         <option value="no">بغير أي تلوين</option>
@@ -71,7 +71,7 @@
     </div>
 
     <div class="option">
-      <label for="ayatnum_input">تلوين أرقام الآيات؟&ensp;</label><input id="ayatnum_input" type="checkbox" checked onchange="chstyle()">
+      <label for="ayatnum_input">تلوين أرقام الآيات؟&ensp;</label><input id="ayatnum_input" type="checkbox" checked onchange="change_ayatnum()">
     </div>
 
   </div>
@@ -80,7 +80,7 @@
     <span id="imla_options_title" class="mode_options_title">خيارات وضع التسميع الإملائي (كتابة):</span>
 
     <div class="option">
-      <label for="feedbackrate">مراجعة الأخطاء كل:&ensp;</label><select id="feedbackrate" onchange="chfeedbackrate()">
+      <label for="feedbackrate">مراجعة الأخطاء كل:&ensp;</label><select id="feedbackrate" onchange="change_feedbackrate()">
         <option value="" selected>حرف</option>
         <option value="word">كلمة</option>
       </select>

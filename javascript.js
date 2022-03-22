@@ -367,9 +367,9 @@ el_zzignore.onclick = () => { clear_screen(); parent.zz_ignore() }
 onload = function () {
   el_ok.disabled = true
   init_inputs()
-  chquizmode()
-  chstyle()  // to update the style, as we don't reset these
-             // inputs, so they keep their values on refresh.
+  // To update the styles, as we don't reset these
+  // inputs, so they keep their values on refresh:
+  Qall('input, select').forEach(e => e.onchange && e.onchange())
   decode_contact()
   ligilumi()
   el_imla_txt.spellcheck = false
