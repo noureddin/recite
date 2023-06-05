@@ -1679,23 +1679,28 @@ function ligilumi () {
   Qid('quizmode').value = opts.quizmode
   //
   Qid('darkmode_input').checked = opts.dark
+  Qid('darkmode_input').onchange()
   delete opts.dark
   //
   Qid('teacher_input').checked = opts.teacher
   //
   Qid('qaris').value = opts.qari
   if (!Qid('qaris').value) { Qid('qaris').value = '' }  // if unset or is a bad value
+  Qid('qaris').oninput()
   //
   if (opts.qariurl) { Qid('qaris').value = '_' }  // an invalid value to hide "With audio"
   Qid('qariurl').value = opts.qariurl ? opts.qariurl : ''
   //
   Qid('textclr_input').value = opts.color
+  Qid('textclr_input').onchange()
   delete opts.color
   //
   Qid('mvbtns_input').value = opts.mv
+  Qid('mvbtns_input').onchange()
   delete opts.mv
   //
   Qid('feedbackrate').value = opts.byword? 'word' : ''
+  Qid('feedbackrate').onchange()
   delete opts.byword
   //
   const hide = (e) => e.style.display = 'none'
