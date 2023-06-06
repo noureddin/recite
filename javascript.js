@@ -244,10 +244,10 @@ function _recite (o) {
     const word_bck = function (ev) {
       if (el_uthm_txt.innerHTML.length === 0) { return 'a' }
       if (!el_endmsg.hidden) { return 'a' }
-      const last_word = el_uthm_txt.innerHTML.match(/(?:^|\t|<br>\n)([^\n\t]+(?:\t|<br>\n))$/)[1]
+      const last_word = el_uthm_txt.innerHTML.match(/(?:^|\t|\n)([^\n\t]+(?:\t|\n))$/)[1]
       words.unshift(last_word)
       el_uthm_txt.innerHTML = el_uthm_txt.innerHTML.substring(0, el_uthm_txt.innerHTML.length - last_word.length)
-      if (last_word.match(/<br>\n$/)) {
+      if (last_word.match(/\n$/)) {
         audio.back()
         if (o.teacher) { audio.play() }
       }

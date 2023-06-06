@@ -64,7 +64,6 @@ html, body {
 
 body {
   text-align: center; /* center everything */
-
 }
 #body {
   background-color: var(--background);
@@ -134,6 +133,13 @@ body {
 .N { color: var(--N) } .X { color: var(--X) } .R { color: var(--R) } .Q { color: var(--Q) }
 .A { color: var(--A); text-shadow: var(--A-shadow) }
 .D { color: var(--D); text-shadow: var(--D-shadow) }
+
+#uthm_txt    { white-space: pre-line }
+#uthm_txt.nb { white-space: normal }
+#uthm_txt    > br { display: none }
+#uthm_txt.nb > br { display: block }
+
+.D:after { content: '\200f'; margin-right: 0.35em }
 
 /* general */
 #body { scroll-behavior: smooth; }
@@ -734,8 +740,12 @@ details[open] > .details-content {
       </select>
     </div>
 
-    <div class="option">
+    <div class="option optionally-inline">
       <label for="ayatnum_input">تلوين أرقام الآيات؟&ensp;</label><input id="ayatnum_input" type="checkbox" checked onchange="change_ayatnum()">
+    </div>
+
+    <div class="option optionally-inline">
+      <label for="linebreaks_input">فصل الآيات في أسطر؟&ensp;</label><input id="linebreaks_input" type="checkbox" checked onchange="change_linebreaks()">
     </div>
 
   </div>
@@ -974,7 +984,7 @@ details[open] > .details-content {
 // and functions. But I decided to use snake_case exclusively to make my
 // functions visually distinct from those of JS, especially b/c I have functions
 // with similar names, eg scroll_to_top. I also use it for variables and consts.
-// The only exception is the following two shorthand functions.
+// The only exception is the Q* shorthand functions defined next.
 
 const say = console.log
 
@@ -1004,6 +1014,7 @@ const el_uthm_options_title = Qid("uthm_options_title")
 const el_mvbtns_input = Qid("mvbtns_input")
 const el_textclr_input = Qid("textclr_input")
 const el_ayatnum_input = Qid("ayatnum_input")
+const el_linebreaks_input = Qid("linebreaks_input")
 const el_imla_options = Qid("imla_options")
 const el_imla_options_title = Qid("imla_options_title")
 const el_feedbackrate = Qid("feedbackrate")
@@ -1296,12 +1307,15 @@ function imlafilter_byletter (val) { return val }
 window.imlafilter = imlafilter_byletter  // the default
 
 function change_feedbackrate () {
-  window.imlafilter = el_feedbackrate.value === "word"? imlafilter_byword : imlafilter_byletter
+  window.imlafilter = el_feedbackrate.value === "word" ? imlafilter_byword : imlafilter_byletter
   zz_set('feedbackrate', el_feedbackrate.value)
 }
 
 const sync_class_with = (cls, pred) =>
   pred ? Q('body').classList.add(cls) : Q('body').classList.remove(cls)
+
+const sync_elem_class_with = (el, cls, pred) =>
+  pred ? el.classList.add(cls) : el.classList.remove(cls)
 
 function change_tajweed () {
   const tval = Qid('textclr_input').value
@@ -1314,6 +1328,12 @@ function change_ayatnum () {
   const ayatnum = Qid('ayatnum_input').checked
   sync_class_with('ayat-nocolor', !ayatnum)
   zz_set('ayatnum', ayatnum)
+}
+
+function change_linebreaks() {
+  const nb = !Qid('linebreaks_input').checked
+  sync_elem_class_with(el_uthm_txt, 'nb', nb)
+  zz_set('linebreaks', !nb)
 }
 
 function change_dark () {
@@ -1626,6 +1646,7 @@ function _ligilumilo (params) {
   let mv = 'bottom'    // position of buttons: m/mv/mvbtns = b (bottom; default); r (right); l (left).
   let quizmode         // quiz mode: q/qz/quizmode = u/uthm/uthmani (no-typing; default); i/imla/imlaai (typing)
   let byword           // imlaai-mode feedback rate; default); byword (true)
+  let nolinebreaks     // uthmani-mode linebreaks between ayat (default: linebreaks)
   let qari             // audio recitation qari's id
   let qariurl          // user-provided audio recitation base_url
   let teacher          // teacher mode (audio recitation before ayah): t/teach/teacher (true); n/noteach/noteacher (false; default)
@@ -1646,6 +1667,8 @@ function _ligilumilo (params) {
       else if (is_of('quizmode', 'qz', 'q')) { quizmode = parse_quizmode(e[1]) }
       else if (is_of('byword')) { byword = true }
       else if (is_of('byletter')) { byword = false }
+      else if (is_of('linebreaks')) { nolinebreaks = false }
+      else if (is_of('nolinebreaks')) { nolinebreaks = true }
       else if (is_of('t', 'teach', 'teacher')) { teacher = true }
       else if (is_of('n', 'noteach', 'noteacher')) { teacher = false }
       else if (is_of('dt', 'disableteacher')) { disableteacher = true }
@@ -1663,7 +1686,7 @@ function _ligilumilo (params) {
       else if (is_of('k')) { [st, en] = rukus_to_ayat(...range_to_pair(e[1])) }
       else                 { [st, en] =  ayat_to_ayat(...range_to_pair(e[0])) }
     })
-  let opts = { st:null, en:null, dark, color, mv, quizmode, disablequizmode, byword, qari, qariurl, teacher, disableteacher, zz }
+  let opts = { st:null, en:null, dark, color, mv, quizmode, disablequizmode, byword, nolinebreaks, qari, qariurl, teacher, disableteacher, zz }
   if (st == null || en == null) { return opts }
   st -= b; en += a
   if (st <= 0)    { st = 1    }
@@ -1702,6 +1725,10 @@ function ligilumi () {
   Qid('feedbackrate').value = opts.byword? 'word' : ''
   Qid('feedbackrate').onchange()
   delete opts.byword
+  //
+  Qid('linebreaks_input').checked = !opts.nolinebreaks
+  Qid('linebreaks_input').onchange()
+  delete opts.nolinebreaks
   //
   const hide = (e) => e.style.display = 'none'
   //
@@ -1971,10 +1998,10 @@ function _recite (o) {
     const word_bck = function (ev) {
       if (el_uthm_txt.innerHTML.length === 0) { return 'a' }
       if (!el_endmsg.hidden) { return 'a' }
-      const last_word = el_uthm_txt.innerHTML.match(/(?:^|\t|<br>\n)([^\n\t]+(?:\t|<br>\n))$/)[1]
+      const last_word = el_uthm_txt.innerHTML.match(/(?:^|\t|\n)([^\n\t]+(?:\t|\n))$/)[1]
       words.unshift(last_word)
       el_uthm_txt.innerHTML = el_uthm_txt.innerHTML.substring(0, el_uthm_txt.innerHTML.length - last_word.length)
-      if (last_word.match(/<br>\n$/)) {
+      if (last_word.match(/\n$/)) {
         audio.back()
         if (o.teacher) { audio.play() }
       }
@@ -2211,7 +2238,7 @@ function make_words_list (st, en) {
 
   // all spaces are a single space in html;
   // let's make tab ('\t') separates the words,
-  // and newline (actually '<br>\n') separates the ayat.
+  // and newline ('\n' with 'whitespace: pre-line') separates the ayat.
 
   const basmala = 'بِسۡمِ ٱللَّهِ ٱX<ل>R<رَّ>حۡمَT<ـٰ>نِ ٱX<ل>R<رَّ>حِJ<ی>مِ A<۝>D<١>'  /* uthm[0] */
       .replace(/\xa0.*/, '').replace(/ /g, '\xa0')  // '\ufdfd'
@@ -2221,7 +2248,7 @@ function make_words_list (st, en) {
       .slice(st-1, en)
       .reduce((arr, aya) => {  // https://stackoverflow.com/a/38528645
         if (aya.startsWith('#')) {
-          arr.push(basmala)
+          arr.push(basmala+'<br>')
           aya = aya.replace('#', '')
         }
         arr.push(aya)
@@ -2231,7 +2258,7 @@ function make_words_list (st, en) {
       .map(a => a.replace(/أ\u064eو\u064e /g, 'أ\u064eو\u064e'))
       // continuing
       .map(a => tajweed_colorize_aaya(a))
-      .map(a => a.replace(/ /g, '\t<SPC>') + '<br>\n')
+      .map(a => a.replace(/ /g, '\t<SPC>') + '\n')
       .map(a => a.replace(/_/g, ' '))  // for tajweed
       .reduce((arr, aya) => {
         arr.push(...aya.split('<SPC>', -1))  // split and flatten

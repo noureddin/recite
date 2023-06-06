@@ -226,6 +226,7 @@ function _ligilumilo (params) {
   let mv = 'bottom'    // position of buttons: m/mv/mvbtns = b (bottom; default); r (right); l (left).
   let quizmode         // quiz mode: q/qz/quizmode = u/uthm/uthmani (no-typing; default); i/imla/imlaai (typing)
   let byword           // imlaai-mode feedback rate; default); byword (true)
+  let nolinebreaks     // uthmani-mode linebreaks between ayat (default: linebreaks)
   let qari             // audio recitation qari's id
   let qariurl          // user-provided audio recitation base_url
   let teacher          // teacher mode (audio recitation before ayah): t/teach/teacher (true); n/noteach/noteacher (false; default)
@@ -246,6 +247,8 @@ function _ligilumilo (params) {
       else if (is_of('quizmode', 'qz', 'q')) { quizmode = parse_quizmode(e[1]) }
       else if (is_of('byword')) { byword = true }
       else if (is_of('byletter')) { byword = false }
+      else if (is_of('linebreaks')) { nolinebreaks = false }
+      else if (is_of('nolinebreaks')) { nolinebreaks = true }
       else if (is_of('t', 'teach', 'teacher')) { teacher = true }
       else if (is_of('n', 'noteach', 'noteacher')) { teacher = false }
       else if (is_of('dt', 'disableteacher')) { disableteacher = true }
@@ -263,7 +266,7 @@ function _ligilumilo (params) {
       else if (is_of('k')) { [st, en] = rukus_to_ayat(...range_to_pair(e[1])) }
       else                 { [st, en] =  ayat_to_ayat(...range_to_pair(e[0])) }
     })
-  let opts = { st:null, en:null, dark, color, mv, quizmode, disablequizmode, byword, qari, qariurl, teacher, disableteacher, zz }
+  let opts = { st:null, en:null, dark, color, mv, quizmode, disablequizmode, byword, nolinebreaks, qari, qariurl, teacher, disableteacher, zz }
   if (st == null || en == null) { return opts }
   st -= b; en += a
   if (st <= 0)    { st = 1    }
@@ -302,6 +305,10 @@ function ligilumi () {
   Qid('feedbackrate').value = opts.byword? 'word' : ''
   Qid('feedbackrate').onchange()
   delete opts.byword
+  //
+  Qid('linebreaks_input').checked = !opts.nolinebreaks
+  Qid('linebreaks_input').onchange()
+  delete opts.nolinebreaks
   //
   const hide = (e) => e.style.display = 'none'
   //

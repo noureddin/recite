@@ -87,7 +87,7 @@ function make_words_list (st, en) {
 
   // all spaces are a single space in html;
   // let's make tab ('\t') separates the words,
-  // and newline (actually '<br>\n') separates the ayat.
+  // and newline ('\n' with 'whitespace: pre-line') separates the ayat.
 
   const basmala = 'بِسۡمِ ٱللَّهِ ٱX<ل>R<رَّ>حۡمَT<ـٰ>نِ ٱX<ل>R<رَّ>حِJ<ی>مِ A<۝>D<١>'  /* uthm[0] */
       .replace(/\xa0.*/, '').replace(/ /g, '\xa0')  // '\ufdfd'
@@ -97,7 +97,7 @@ function make_words_list (st, en) {
       .slice(st-1, en)
       .reduce((arr, aya) => {  // https://stackoverflow.com/a/38528645
         if (aya.startsWith('#')) {
-          arr.push(basmala)
+          arr.push(basmala+'<br>')
           aya = aya.replace('#', '')
         }
         arr.push(aya)
@@ -107,7 +107,7 @@ function make_words_list (st, en) {
       .map(a => a.replace(/أ\u064eو\u064e /g, 'أ\u064eو\u064e'))
       // continuing
       .map(a => tajweed_colorize_aaya(a))
-      .map(a => a.replace(/ /g, '\t<SPC>') + '<br>\n')
+      .map(a => a.replace(/ /g, '\t<SPC>') + '\n')
       .map(a => a.replace(/_/g, ' '))  // for tajweed
       .reduce((arr, aya) => {
         arr.push(...aya.split('<SPC>', -1))  // split and flatten

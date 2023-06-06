@@ -8,7 +8,6 @@ html, body {
 
 body {
   text-align: center; /* center everything */
-
 }
 #body {
   background-color: var(--background);
@@ -78,6 +77,13 @@ body {
 .N { color: var(--N) } .X { color: var(--X) } .R { color: var(--R) } .Q { color: var(--Q) }
 .A { color: var(--A); text-shadow: var(--A-shadow) }
 .D { color: var(--D); text-shadow: var(--D-shadow) }
+
+#uthm_txt    { white-space: pre-line }
+#uthm_txt.nb { white-space: normal }
+#uthm_txt    > br { display: none }
+#uthm_txt.nb > br { display: block }
+
+.D:after { content: '\200f'; margin-right: 0.35em }
 
 /* general */
 #body { scroll-behavior: smooth; }

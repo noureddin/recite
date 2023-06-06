@@ -2,7 +2,7 @@
 // and functions. But I decided to use snake_case exclusively to make my
 // functions visually distinct from those of JS, especially b/c I have functions
 // with similar names, eg scroll_to_top. I also use it for variables and consts.
-// The only exception is the following two shorthand functions.
+// The only exception is the Q* shorthand functions defined next.
 
 const say = console.log
 
@@ -272,12 +272,15 @@ function imlafilter_byletter (val) { return val }
 window.imlafilter = imlafilter_byletter  // the default
 
 function change_feedbackrate () {
-  window.imlafilter = el_feedbackrate.value === "word"? imlafilter_byword : imlafilter_byletter
+  window.imlafilter = el_feedbackrate.value === "word" ? imlafilter_byword : imlafilter_byletter
   zz_set('feedbackrate', el_feedbackrate.value)
 }
 
 const sync_class_with = (cls, pred) =>
   pred ? Q('body').classList.add(cls) : Q('body').classList.remove(cls)
+
+const sync_elem_class_with = (el, cls, pred) =>
+  pred ? el.classList.add(cls) : el.classList.remove(cls)
 
 function change_tajweed () {
   const tval = Qid('textclr_input').value
@@ -290,6 +293,12 @@ function change_ayatnum () {
   const ayatnum = Qid('ayatnum_input').checked
   sync_class_with('ayat-nocolor', !ayatnum)
   zz_set('ayatnum', ayatnum)
+}
+
+function change_linebreaks() {
+  const nb = !Qid('linebreaks_input').checked
+  sync_elem_class_with(el_uthm_txt, 'nb', nb)
+  zz_set('linebreaks', !nb)
 }
 
 function change_dark () {
