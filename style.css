@@ -70,6 +70,15 @@ body {
   --tab-active: darkgoldenrod;
 }
 
+#dark:checked ~ #body.highcontrast {
+  /* general */
+  --faint-btn: #333;
+  --uitext: #eee;  --txt: #fff;  --background-rgb: 0,0,0; --content-rgb: 23, 23, 23;
+  /* tajweed */
+  --L: #ee8888;  --W: #ff4444;  --J: #ffaa44;  --T: #ffee66;  --N: #66ffaa;
+  --X: #aaaaaa;  --R: #66bbff;  --Q: #22eeff;
+}
+
 :not(input, button, select) { color: var(--uitext); } /* are just inverted */
 #uthm_txt { color: var(--txt); }
 

@@ -126,6 +126,15 @@ body {
   --tab-active: darkgoldenrod;
 }
 
+#dark:checked ~ #body.highcontrast {
+  /* general */
+  --faint-btn: #333;
+  --uitext: #eee;  --txt: #fff;  --background-rgb: 0,0,0; --content-rgb: 23, 23, 23;
+  /* tajweed */
+  --L: #ee8888;  --W: #ff4444;  --J: #ffaa44;  --T: #ffee66;  --N: #66ffaa;
+  --X: #aaaaaa;  --R: #66bbff;  --Q: #22eeff;
+}
+
 :not(input, button, select) { color: var(--uitext); } /* are just inverted */
 #uthm_txt { color: var(--txt); }
 
@@ -1652,6 +1661,7 @@ function _ligilumilo (params) {
   let teacher          // teacher mode (audio recitation before ayah): t/teach/teacher (true); n/noteach/noteacher (false; default)
   let disableteacher   // remove teacher mode selector from the UI, teacher mode can still be set from the URL: dt/disableteacher
   let disablequizmode  // remove quiz mode selector from the UI, quiz mode can still be set from the URL: dq/disablequizmode
+  let highcontrast     // high-contrast, dark colorscheme
   let zz               // enable embedded integration: zz (cannot be disabled if enabled)
   params
     .slice(1)  // remove the first character (`?` or `#`)
@@ -1673,6 +1683,7 @@ function _ligilumilo (params) {
       else if (is_of('n', 'noteach', 'noteacher')) { teacher = false }
       else if (is_of('dt', 'disableteacher')) { disableteacher = true }
       else if (is_of('dq', 'disablequizmode')) { disablequizmode = true }
+      else if (is_of('hc', 'highcontrast')) { highcontrast = true }
       else if (is_of('qari')) { qari = e[1] }
       else if (is_of('qariurl')) { qariurl = e[1] }
       else if (is_of('zz')) { zz = true }
@@ -1686,7 +1697,7 @@ function _ligilumilo (params) {
       else if (is_of('k')) { [st, en] = rukus_to_ayat(...range_to_pair(e[1])) }
       else                 { [st, en] =  ayat_to_ayat(...range_to_pair(e[0])) }
     })
-  let opts = { st:null, en:null, dark, color, mv, quizmode, disablequizmode, byword, nolinebreaks, qari, qariurl, teacher, disableteacher, zz }
+  let opts = { st:null, en:null, dark, color, mv, quizmode, disablequizmode, byword, nolinebreaks, qari, qariurl, teacher, disableteacher, highcontrast, zz }
   if (st == null || en == null) { return opts }
   st -= b; en += a
   if (st <= 0)    { st = 1    }
@@ -1702,8 +1713,13 @@ function ligilumi () {
   Qid('quizmode').value = opts.quizmode
   //
   Qid('darkmode_input').checked = opts.dark
-  Qid('darkmode_input').onchange()
   delete opts.dark
+  if (opts.highcontrast) {
+    Qid('darkmode_input').checked = true
+    Qid('body').classList.add('highcontrast')
+  }
+  delete opts.highcontrast
+  Qid('darkmode_input').onchange()
   //
   Qid('teacher_input').checked = opts.teacher
   //

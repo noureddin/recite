@@ -232,6 +232,7 @@ function _ligilumilo (params) {
   let teacher          // teacher mode (audio recitation before ayah): t/teach/teacher (true); n/noteach/noteacher (false; default)
   let disableteacher   // remove teacher mode selector from the UI, teacher mode can still be set from the URL: dt/disableteacher
   let disablequizmode  // remove quiz mode selector from the UI, quiz mode can still be set from the URL: dq/disablequizmode
+  let highcontrast     // high-contrast, dark colorscheme
   let zz               // enable embedded integration: zz (cannot be disabled if enabled)
   params
     .slice(1)  // remove the first character (`?` or `#`)
@@ -253,6 +254,7 @@ function _ligilumilo (params) {
       else if (is_of('n', 'noteach', 'noteacher')) { teacher = false }
       else if (is_of('dt', 'disableteacher')) { disableteacher = true }
       else if (is_of('dq', 'disablequizmode')) { disablequizmode = true }
+      else if (is_of('hc', 'highcontrast')) { highcontrast = true }
       else if (is_of('qari')) { qari = e[1] }
       else if (is_of('qariurl')) { qariurl = e[1] }
       else if (is_of('zz')) { zz = true }
@@ -266,7 +268,7 @@ function _ligilumilo (params) {
       else if (is_of('k')) { [st, en] = rukus_to_ayat(...range_to_pair(e[1])) }
       else                 { [st, en] =  ayat_to_ayat(...range_to_pair(e[0])) }
     })
-  let opts = { st:null, en:null, dark, color, mv, quizmode, disablequizmode, byword, nolinebreaks, qari, qariurl, teacher, disableteacher, zz }
+  let opts = { st:null, en:null, dark, color, mv, quizmode, disablequizmode, byword, nolinebreaks, qari, qariurl, teacher, disableteacher, highcontrast, zz }
   if (st == null || en == null) { return opts }
   st -= b; en += a
   if (st <= 0)    { st = 1    }
@@ -280,6 +282,11 @@ function ligilumi () {
   //
   opts.quizmode = opts.quizmode != null? opts.quizmode : Qid('quizmode').value
   Qid('quizmode').value = opts.quizmode
+  //
+  if (opts.highcontrast) {
+    Qid('body').classList.add('highcontrast')
+  }
+  delete opts.highcontrast
   //
   Qid('darkmode_input').checked = opts.dark
   Qid('darkmode_input').onchange()
