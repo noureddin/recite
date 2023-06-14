@@ -329,13 +329,13 @@ function decode_contact () {
 function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {
 
   //// the longest strings (some are impossible):
-  // return ["تسميع الآية الأخيرة من سورة العنكبوت", 'oneaaya']
+  // return ["تسميع الآية ٣٠٠ الأخيرة من سورة العنكبوت", 'oneaaya']
   // return ["تسميع سورة العنكبوت كاملة", 'onesura']
-  // return ["تسميع سورة العنكبوت من الآية الأخيرة حتى الآية الأخيرة", 'manyaaya']
+  // return ["تسميع سورة العنكبوت من الآية ٣٠٠ حتى الآية ٣٠٠ الأخيرة", 'manyaaya']
   // return ["تسميع سورتي العنكبوت والعنكبوت كاملتين", 'twosura']
   // return ["تسميع السور من العنكبوت حتى العنكبوت", 'manysura']
-  // return ["تسميع من سورة العنكبوت الآية الأخيرة حتى سورة العنكبوت الآية الأخيرة", 'manymany']
-  // return ["تسميع الآيتين الأخيرة والأخيرة من سورة العنكبوت", 'twoaaya']
+  // return ["تسميع من سورة العنكبوت الآية ٣٠٠ الأخيرة حتى سورة العنكبوت الآية ٣٠٠ الأخيرة", 'manymany']
+  // return ["تسميع الآيتين ٣٠٠ الأخيرة و٣٠٠ الأخيرة من سورة العنكبوت", 'twoaaya']
 
   const nbsp = '\xa0'
   // all numbers are 1-based
@@ -348,8 +348,8 @@ function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {
   const s_bgn_txt = suar_name[sura_bgn - 1]
   const s_end_txt = suar_name[sura_end - 1]
   // converts to Eastern Arabic numerals, and state the first and last in words
-  const a_bgn_txt = aaya_bgn === 1? 'الأولى' : aaya_bgn === s_bgn_len? 'الأخيرة' : filter_aaya_input(aaya_bgn)
-  const a_end_txt = aaya_end === 1? 'الأولى' : aaya_end === s_end_len? 'الأخيرة' : filter_aaya_input(aaya_end)
+  const a_bgn_txt = aaya_bgn === 1? 'الأولى' : aaya_bgn === s_bgn_len?  filter_aaya_input(aaya_bgn) + ' الأخيرة' : filter_aaya_input(aaya_bgn)
+  const a_end_txt = aaya_end === 1? 'الأولى' : aaya_end === s_end_len?  filter_aaya_input(aaya_end) + ' الأخيرة' : filter_aaya_input(aaya_end)
   //
   if (sura_bgn === sura_end) {
     // if exactly one aaya

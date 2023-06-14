@@ -203,11 +203,9 @@ html { font-size: calc(16px + 0.5vw) }
 }
 
 /* To keep #header in place, covering the area under the curve (of the tab labels) */
-/* I want to make sure its height is 1em, so it's either one line, or two lines with size 0.5em */
-/* I used KacstOne. The longest sura name in that font is sura 29. The longest "aaya" is the last one: "الأخيرة" */
-/* I also don't want to make it too small if the title is short; hence the adaptive font-size to content. */
-
-#title.manymany { font-size: clamp(0.5rem, 2.8vw, 1.25rem) } /* "تسميع من سورة العنكبوت الآية الأخيرة حتى سورة العنكبوت الآية الأخيرة" */
+/* make the longest possible title "تسميع من سورة العنكبوت الآية ٣٠٠ الأخيرة حتى سورة العنكبوت الآية ٣٠٠ الأخيرة" on one-line */
+/* other title kinds are already one line with the previous definition of font-size */
+#title.manymany { font-size: calc(var(--all-width) / 30) }
 
 
 #aaya_bgn, #aaya_end { font-family: KacstOne; }
@@ -1373,13 +1371,13 @@ function decode_contact () {
 function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {
 
   //// the longest strings (some are impossible):
-  // return ["تسميع الآية الأخيرة من سورة العنكبوت", 'oneaaya']
+  // return ["تسميع الآية ٣٠٠ الأخيرة من سورة العنكبوت", 'oneaaya']
   // return ["تسميع سورة العنكبوت كاملة", 'onesura']
-  // return ["تسميع سورة العنكبوت من الآية الأخيرة حتى الآية الأخيرة", 'manyaaya']
+  // return ["تسميع سورة العنكبوت من الآية ٣٠٠ حتى الآية ٣٠٠ الأخيرة", 'manyaaya']
   // return ["تسميع سورتي العنكبوت والعنكبوت كاملتين", 'twosura']
   // return ["تسميع السور من العنكبوت حتى العنكبوت", 'manysura']
-  // return ["تسميع من سورة العنكبوت الآية الأخيرة حتى سورة العنكبوت الآية الأخيرة", 'manymany']
-  // return ["تسميع الآيتين الأخيرة والأخيرة من سورة العنكبوت", 'twoaaya']
+  // return ["تسميع من سورة العنكبوت الآية ٣٠٠ الأخيرة حتى سورة العنكبوت الآية ٣٠٠ الأخيرة", 'manymany']
+  // return ["تسميع الآيتين ٣٠٠ الأخيرة و٣٠٠ الأخيرة من سورة العنكبوت", 'twoaaya']
 
   const nbsp = '\xa0'
   // all numbers are 1-based
@@ -1392,8 +1390,8 @@ function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {
   const s_bgn_txt = suar_name[sura_bgn - 1]
   const s_end_txt = suar_name[sura_end - 1]
   // converts to Eastern Arabic numerals, and state the first and last in words
-  const a_bgn_txt = aaya_bgn === 1? 'الأولى' : aaya_bgn === s_bgn_len? 'الأخيرة' : filter_aaya_input(aaya_bgn)
-  const a_end_txt = aaya_end === 1? 'الأولى' : aaya_end === s_end_len? 'الأخيرة' : filter_aaya_input(aaya_end)
+  const a_bgn_txt = aaya_bgn === 1? 'الأولى' : aaya_bgn === s_bgn_len?  filter_aaya_input(aaya_bgn) + ' الأخيرة' : filter_aaya_input(aaya_bgn)
+  const a_end_txt = aaya_end === 1? 'الأولى' : aaya_end === s_end_len?  filter_aaya_input(aaya_end) + ' الأخيرة' : filter_aaya_input(aaya_end)
   //
   if (sura_bgn === sura_end) {
     // if exactly one aaya
@@ -1712,14 +1710,14 @@ function ligilumi () {
   opts.quizmode = opts.quizmode != null? opts.quizmode : Qid('quizmode').value
   Qid('quizmode').value = opts.quizmode
   //
-  Qid('darkmode_input').checked = opts.dark
-  delete opts.dark
   if (opts.highcontrast) {
-    Qid('darkmode_input').checked = true
     Qid('body').classList.add('highcontrast')
   }
   delete opts.highcontrast
+  //
+  Qid('darkmode_input').checked = opts.dark
   Qid('darkmode_input').onchange()
+  delete opts.dark
   //
   Qid('teacher_input').checked = opts.teacher
   //
