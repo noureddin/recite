@@ -5,9 +5,9 @@ function tajweed_colorize_aaya (a) {
 function make_audio_list (sura_bgn, aaya_bgn, sura_end, aaya_end) {
   // returns ayat ref in the form sprintf("%03d%03d", sura_num, aaya_num)
   return (
-    [...Array(115).keys()].slice(+sura_bgn + 1, +sura_end + 2)
+    range(115).slice(+sura_bgn + 1, +sura_end + 2)
       // s is the sura number, 1-based
-      .map(s => [...Array(+suar_length[s - 1] + 1).keys()]
+      .map(s => range(+suar_length[s - 1] + 1)
         .slice(s === +sura_bgn + 1? +aaya_bgn     :   1,
                s === +sura_end + 1? +aaya_end + 1 : 300  // larger than any sura
         )
@@ -80,7 +80,15 @@ function imlaai_ayat (st, en) {
   )
 }
 
-function make_words_list (st, en) {
+function make_words_list (st, en, cn) {  // uthmani
+
+  // continuation; ie, append a "phrase" from the next aaya if in the same sura
+  if (cn && sura_of(en) === sura_of(en+1)) {
+    en += 1
+  }
+  else {
+    cn = false
+  }
 
   // const st = +suar_length.slice(0, sura_bgn).reduce((a,b)=>a+b, 0) + +aaya_bgn
   // const en = +suar_length.slice(0, sura_end).reduce((a,b)=>a+b, 0) + +aaya_end
@@ -95,10 +103,15 @@ function make_words_list (st, en) {
   return (
     uthm
       .slice(st-1, en)
-      .reduce((arr, aya) => {  // https://stackoverflow.com/a/38528645
+      .reduce((arr, aya, i) => {
+        // https://stackoverflow.com/a/38528645
         if (aya.startsWith('#')) {
           arr.push(basmala+'<br>')
           aya = aya.replace('#', '')
+        }
+        if (cn && i === en-st) {
+          // based on kind_of_portion() in a.js
+          aya = aya.replace(/([\u06DC\u06D6\u06D7\u06D8\u06DA\u06DB]) .*/, '$1')
         }
         arr.push(aya)
         return arr

@@ -217,7 +217,7 @@ function _recite (o) {
     el_uthm_txt.focus()
     audio.set_index(o.teacher? 0 : -1)
 
-    let words = make_words_list(o.st, o.en)
+    let words = make_words_list(o.st, o.en, o.cn)
 
     const fwd = function (kind) {
       if (words.length === 0) { return }
