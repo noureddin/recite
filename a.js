@@ -25,7 +25,7 @@ const rukus = [[1],[1,8,21,30,40,47,60,62,72,83,87,97,104,113,122,130,142,148,15
 
 function start_ (s) { return +suar_length.slice(0, s).reduce((a, b) => a + b, 0) }
 const sura_offset = range(115).map(start_)  // array mapping 0-based suar to how many ayat before it (eg 0 => 0, 1 => 7, 2 => 286+7)
-function sura_of (a) { return range(115).find((i) => sura_offset[i] > a) }  // takes 0-based aaya ∈ [0-6236), returns its 1-based sura
+function sura_of (a) { return range(115).find((i) => sura_offset[i] >= a) }  // takes 0-based aaya ∈ [0-6236), returns its 1-based sura
 
 // TODO see: https://stackoverflow.com/q/10726638
 

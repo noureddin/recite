@@ -83,7 +83,8 @@ function imlaai_ayat (st, en) {
 function make_words_list (st, en, cn) {  // uthmani
 
   // continuation; ie, append a "phrase" from the next aaya if in the same sura
-  if (cn && sura_of(en) === sura_of(en+1)) {
+  const last_aya_of_sura = sura_offset[sura_of(en)]
+  if (cn && en < last_aya_of_sura) {  // don't continue if at the end of sura
     en += 1
   }
   else {
