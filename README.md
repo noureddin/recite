@@ -67,7 +67,9 @@ Any of these parameters can have `a=` to add ayat from *after* the specified reg
 Other parameters you can add to pre-configure the preferences:
 
 - `d`, or `dark`: select the dark mode by default.
-- `l`, or `light`: de-select the dark mode (the default; use only to annul a previous `d`).
+- `l`, or `light`: de-select the dark mode.
+- If neither `dark` or `light` is given, it follows system preference, until you change it from the UI if you wish.
+
 - `c=`, or `color=`: select the text colorization in the Uthmani mode; it takes the following values:
 
     1. `t`, `taj`, or `tajweed`: Tajweed&ndash;color-coding (the default).

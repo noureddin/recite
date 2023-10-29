@@ -290,6 +290,9 @@ function ligilumi () {
   }
   delete opts.highcontrast
   //
+  if (opts.dark == null) {  // no overriding; follow preference initially
+    opts.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  }
   Qid('darkmode_input').checked = opts.dark
   Qid('darkmode_input').onchange()
   delete opts.dark
