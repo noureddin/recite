@@ -180,19 +180,31 @@ function _recite (o) {
       // remove invalid characters
       el_imla_txt.value = imla_input_filter(el_imla_txt.value)
 
-      if (correct_text.startsWith(imlafilter(el_imla_txt.value))) {
+      const fix_tashkeel = (last_char) => {
+        if (last_char !== ' ' && last_char !== '\n') { throw 'bad last_char in fix_tashkeel' }
+        let correct_end = 0
+        const input_end = el_imla_txt.value.count_char(last_char)
+        for (let i = 0; i < input_end; ++i) {
+          correct_end = correct_text.indexOf(last_char, correct_end) + 1
+        }
+        el_imla_txt.value = correct_text.slice(0, correct_end)
+      }
+
+      if (imla_match(correct_text, el_imla_txt.value)) {
         el_imla_txt.classList = ''
         if (el_imla_txt.value.slice(-1) === '\n') {  // basmala, or BS+Enter to repeat the same aaya
           audio.play(get_current_aaya_index())
         }
+        const last_char = el_imla_txt.value.slice(-1)
+        if (last_char === ' ' || last_char === '\n') {
+          fix_tashkeel(last_char)
+        }
       }
 
       else if (el_imla_txt.value.slice(-1) === '\n'
-          && correct_text.startsWith(el_imla_txt.value.slice(0,-1) + '\xA0\u06dd'))
+          && correct_text.remove_tashkeel().startsWith(el_imla_txt.value.remove_tashkeel().slice(0,-1) + '\xA0\u06dd'))
       {
-        let x = el_imla_txt.value.length + 2
-        while (correct_text.slice(x, x+1) !== '\n') { ++x }
-        el_imla_txt.value = correct_text.slice(0, x+1)
+        fix_tashkeel('\n')  // also adds ayah number
         audio.play(get_current_aaya_index())
         if (el_imla_txt.value === correct_text) {
           el_imla_txt.value = el_imla_txt.value.slice(0,-1)  // remove the last newline

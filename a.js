@@ -273,6 +273,16 @@ function imla_input_filter (val) {  // removes invalid characters
   return val.replace(/[^ \xA0\nء-غف-\u0652٠-٩\u06DD]+/g, '')
 }
 
+String.prototype.remove_tashkeel = function () {
+  return this.replace(/[\u064B-\u0652]+/g, '')
+}
+
+String.prototype.count_char = function (ch) {
+  return ch === ' '  ? this.replace(/[^ ]+/g,  '').length
+       : ch === '\n' ? this.replace(/[^\n]+/g, '').length
+       : this.replace(new RegExp('[^'+ch+']+', 'g'), '').length
+}
+
 function imlafilter_byword   (val) { return val.replace(/\S*$/, '') }  // only check after space or enter
 function imlafilter_byletter (val) { return val }
 
@@ -281,6 +291,12 @@ window.imlafilter = imlafilter_byletter  // the default
 function change_feedbackrate () {
   window.imlafilter = el_feedbackrate.value === "word" ? imlafilter_byword : imlafilter_byletter
   zz_set('feedbackrate', el_feedbackrate.value)
+}
+
+function imla_match (correct, input) {
+  // for now, assume no tashkeel (and remove it if found)
+  return correct.remove_tashkeel().startsWith(imlafilter(input).remove_tashkeel())
+  // later: check the tashkeel the user entered against the correct text, while ignoring the order of shadda
 }
 
 const sync_class_with = (cls, pred) =>

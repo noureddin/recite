@@ -74,7 +74,7 @@ function imlaai_ayat (st, en) {
   return (
     imla
       .slice(st-1,en)
-      .map(a => a.startsWith('#')? a.replace('#', 'بسم الله الرحمن الرحيم\n') : a)
+      .map(a => a.startsWith('#')? a.replace('#', 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\n') : a)
       .join('\n')
       + '\n'
   )

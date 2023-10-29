@@ -241,7 +241,6 @@ html { font-size: calc(16px + 0.5vw) }
   text-align: right;
   padding: 0 1em;
   font-family: AmiriQuranWeb;
-  line-height: 1.7;  /* Amiri Quran is too high to make space for Quranic signs */
   width: min(90%, 70vw);
   /* height: 95vh; */ /* set thru JS */
   margin: auto;

@@ -297,7 +297,6 @@ html { font-size: calc(16px + 0.5vw) }
   text-align: right;
   padding: 0 1em;
   font-family: AmiriQuranWeb;
-  line-height: 1.7;  /* Amiri Quran is too high to make space for Quranic signs */
   width: min(90%, 70vw);
   /* height: 95vh; */ /* set thru JS */
   margin: auto;
@@ -826,6 +825,7 @@ details[open] > .details-content {
 <li><p>بمجرد انتهاء الآية (بضغط زر <kbd>Enter</kbd>)، يُضاف رقم الآية آليا، وإذا كنت قد اخترت قارئا من&nbsp;شاشة «الخيارات» فسيتلوها كذلك.</p></li>
 <li><p>عند الخطأ في أي حرف، يتغير لون خانة الكتابة إلى&nbsp;الأحمر.</p></li>
 <li><p>يمكن جعل مراجعة الأخطاء تتم بعد كل كلمة وليس كل حرف، من&nbsp;شاشة «الخيارات».</p></li>
+<li><p>لا&nbsp;تكتب علامات التشكيل، أبدا؛ جميع علامات التشكيل التي تكتبها ستُحذف قبل إضافة علامات التشكيل الصحيحة. قد يتغير هذا في المستقبل.</p></li>
 <li><p>الألف المقصورة والياء حرفان مختلفان. الألف المقصورة هي ألف في آخر الكلمة وتُرسم ياءً بغير نقطتين، وتوجد في الصف الأسفل من&nbsp;لوحة المفاتيح، تحت زر الألف غالبا. أما الياء فتحتها نقطتين <strong>دائما</strong>، حتى في آخر الكلمة. وتوجد غالبا على الزر الثالث من&nbsp;اليسار في الصف الأوسط، بين الباء والسين.</p></li>
 <li><p>الهمزات صعبة. أعرف هذا. <span dir="ltr" class="roman">¯\_(ツ)_/¯</span></p></li>
 </ul>
@@ -1315,6 +1315,16 @@ function imla_input_filter (val) {  // removes invalid characters
   return val.replace(/[^ \xA0\nء-غف-\u0652٠-٩\u06DD]+/g, '')
 }
 
+String.prototype.remove_tashkeel = function () {
+  return this.replace(/[\u064B-\u0652]+/g, '')
+}
+
+String.prototype.count_char = function (ch) {
+  return ch === ' '  ? this.replace(/[^ ]+/g,  '').length
+       : ch === '\n' ? this.replace(/[^\n]+/g, '').length
+       : this.replace(new RegExp('[^'+ch+']+', 'g'), '').length
+}
+
 function imlafilter_byword   (val) { return val.replace(/\S*$/, '') }  // only check after space or enter
 function imlafilter_byletter (val) { return val }
 
@@ -1323,6 +1333,12 @@ window.imlafilter = imlafilter_byletter  // the default
 function change_feedbackrate () {
   window.imlafilter = el_feedbackrate.value === "word" ? imlafilter_byword : imlafilter_byletter
   zz_set('feedbackrate', el_feedbackrate.value)
+}
+
+function imla_match (correct, input) {
+  // for now, assume no tashkeel (and remove it if found)
+  return correct.remove_tashkeel().startsWith(imlafilter(input).remove_tashkeel())
+  // later: check the tashkeel the user entered against the correct text, while ignoring the order of shadda
 }
 
 const sync_class_with = (cls, pred) =>
@@ -1960,19 +1976,31 @@ function _recite (o) {
       // remove invalid characters
       el_imla_txt.value = imla_input_filter(el_imla_txt.value)
 
-      if (correct_text.startsWith(imlafilter(el_imla_txt.value))) {
+      const fix_tashkeel = (last_char) => {
+        if (last_char !== ' ' && last_char !== '\n') { throw 'bad last_char in fix_tashkeel' }
+        let correct_end = 0
+        const input_end = el_imla_txt.value.count_char(last_char)
+        for (let i = 0; i < input_end; ++i) {
+          correct_end = correct_text.indexOf(last_char, correct_end) + 1
+        }
+        el_imla_txt.value = correct_text.slice(0, correct_end)
+      }
+
+      if (imla_match(correct_text, el_imla_txt.value)) {
         el_imla_txt.classList = ''
         if (el_imla_txt.value.slice(-1) === '\n') {  // basmala, or BS+Enter to repeat the same aaya
           audio.play(get_current_aaya_index())
         }
+        const last_char = el_imla_txt.value.slice(-1)
+        if (last_char === ' ' || last_char === '\n') {
+          fix_tashkeel(last_char)
+        }
       }
 
       else if (el_imla_txt.value.slice(-1) === '\n'
-          && correct_text.startsWith(el_imla_txt.value.slice(0,-1) + '\xA0\u06dd'))
+          && correct_text.remove_tashkeel().startsWith(el_imla_txt.value.remove_tashkeel().slice(0,-1) + '\xA0\u06dd'))
       {
-        let x = el_imla_txt.value.length + 2
-        while (correct_text.slice(x, x+1) !== '\n') { ++x }
-        el_imla_txt.value = correct_text.slice(0, x+1)
+        fix_tashkeel('\n')  // also adds ayah number
         audio.play(get_current_aaya_index())
         if (el_imla_txt.value === correct_text) {
           el_imla_txt.value = el_imla_txt.value.slice(0,-1)  // remove the last newline
@@ -2255,7 +2283,7 @@ function imlaai_ayat (st, en) {
   return (
     imla
       .slice(st-1,en)
-      .map(a => a.startsWith('#')? a.replace('#', 'بسم الله الرحمن الرحيم\n') : a)
+      .map(a => a.startsWith('#')? a.replace('#', 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\n') : a)
       .join('\n')
       + '\n'
   )
