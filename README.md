@@ -97,6 +97,9 @@ Other parameters you can add to pre-configure the preferences:
 
     **Tip:** Pressing <kbd>Escape</kbd> anytime repeats the current audio recitation, which is particularly useful in the teacher mode.
 
+- `linebreaks` to separate each ayah in its line in the Uthmani mode (the default; use only to annul a previous `nolinebreaks`).
+- `nolinebreaks` to make all ayat flow in the Uthmani mode.
+
 Please note that all these parameters only change the default; all of them are still changeable from the preferences window.
 (But take a look at "Even more advanced URL parameters" below.)
 
@@ -105,15 +108,19 @@ Please note that all these parameters only change the default; all of them are s
 
 <p></p>
 
-These are not changeable from the UI, only from the URL parameters; they are too advanced and/or too specific for almost all users.
+These are not changeable from the UI, only from the URL parameters; they are experimental features, too advanced, and/or too specific for almost all users.
 
 - `qariurl=`: provide the url of your preferred audio recitation server, even a locally hosted one (e.g., `http://0.0.0.0:6236`, but NOT&nbsp;`file:///`). Makes the Qari selector empty. But changing the Qari selector overrides this. The given URL must be a full URL where ayat audio files can be found; e.g., one can append `/001001.mp3` to the given URL and find the first ayah of the first sura.
 
-- `dt` or `disableteacher`: to remove teacher mode selector from the UI. The Teacher mode can still be set from the URL params. Useful to force a specific value for the option (e.g. no-teacher) in an embedding web app for example.
+- `hc`, or `highcontrast`: when enabled with the dark mode, it improves the contrast of most colors, including the tajweed colors.
+
+- `cn`: at the end of a recitation, it appends a "phrase" from the next ayah if it's in the same sura.
+
+- `dt`, or `disableteacher`: to remove teacher mode selector from the UI. The Teacher mode can still be set from the URL params. Useful to force a specific value for the option (e.g. no-teacher) in an embedding web app for example.
 
     **Warning:** It's still changeable from the JavaScript console; I couldn't disable this yet.
 
-- `dq` or `disablequizmode`: to remove quiz mode selector from the UI. The quiz mode can still be specified from the URL params. Useful to force a specific mode (e.g. Imlaai) in an embedding web app for example.
+- `dq`, or `disablequizmode`: to remove quiz mode selector from the UI. The quiz mode can still be specified from the URL params. Useful to force a specific mode (e.g. Imlaai) in an embedding web app for example.
 
     **Warning:** It's still changeable from the JavaScript console; I couldn't disable this yet.
 
