@@ -158,6 +158,7 @@ function _recite (o) {
       if (pasted) {
         el_imla_txt.value = el_imla_txt.value.replace(/ \u06dd/g, '\xa0\u06dd')
         // because NBSP is copied as a normal, ASCII space
+        el_imla_txt.value = imla_input_filter(el_imla_txt.value)
         pasted = false
       }
 
@@ -175,6 +176,9 @@ function _recite (o) {
       if (last_two === ' \n') {
         el_imla_txt.value = el_imla_txt.value.slice(0,-2)+'\n'
       }
+
+      // remove invalid characters
+      el_imla_txt.value = imla_input_filter(el_imla_txt.value)
 
       if (correct_text.startsWith(imlafilter(el_imla_txt.value))) {
         el_imla_txt.classList = ''

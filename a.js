@@ -269,6 +269,10 @@ function change_quizmode () {
   }
 }
 
+function imla_input_filter (val) {  // removes invalid characters
+  return val.replace(/[^ \xA0\nء-غف-\u0652٠-٩\u06DD]+/g, '')
+}
+
 function imlafilter_byword   (val) { return val.replace(/\S*$/, '') }  // only check after space or enter
 function imlafilter_byletter (val) { return val }
 
