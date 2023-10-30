@@ -156,9 +156,14 @@ function _recite (o) {
       if (!el_endmsg.hidden) { return }
 
       if (pasted) {
-        el_imla_txt.value = el_imla_txt.value.replace(/ \u06dd/g, '\xa0\u06dd')
-        // because NBSP is copied as a normal, ASCII space
-        el_imla_txt.value = imla_input_filter(el_imla_txt.value)
+        el_imla_txt.value = el_imla_txt.value
+          // restore NBSP because it's copied as a normal, ASCII space
+          .replace(/ \u06dd/g, '\xa0\u06dd')
+          // remove all invalid characters
+          .replace(/[^ \xA0\nء-غف-\u0652٠-٩\u06DD]+/g, '')
+          // remove superfluous spaces (see below)
+          .replace(/ +(\n)/g, '$1')
+          .replace(/(\A|\n| )[ \n]+/g, '$1')  // ⎵\n is matched before
         pasted = false
       }
 
@@ -176,9 +181,6 @@ function _recite (o) {
       if (last_two === ' \n') {
         el_imla_txt.value = el_imla_txt.value.slice(0,-2)+'\n'
       }
-
-      // remove invalid characters
-      el_imla_txt.value = imla_input_filter(el_imla_txt.value)
 
       const fix_tashkeel = (last_char) => {
         if (last_char !== ' ' && last_char !== '\n') { throw 'bad last_char in fix_tashkeel' }
@@ -218,6 +220,14 @@ function _recite (o) {
 
       else {
         el_imla_txt.classList = 'wrong'
+      }
+    }
+
+    el_imla_txt.onkeydown = (ev) => {
+      if (!ev.altKey && !ev.ctrlKey && ev.key.length === 1
+          && ev.key.match(/[ \nء-غف-\u0652]/) == null
+      ) {
+        ev.preventDefault()  // refuse invalid characters
       }
     }
 
