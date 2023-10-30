@@ -1472,12 +1472,16 @@ function is_valid_pair (x) {  // a number, empty string, or two numbers separate
 }
 
 function range_to_pair (x) {
+  if (x === '') { return [null, null] }
   let xs = x.split('-')
-  if (!xs.every(is_valid_pair)) { return [null, null] }
-  return xs.length === 2 ? xs : xs.length === 1 ? [x, x] : [null, null]
+  if (xs.length === 1 && xs.every(is_valid_pair)) { return [x, x] }
+  if (xs.length === 2 && xs.every(is_valid_pair)) { return  xs    }
+  return [null, null]
 }
 
 function suras_to_ayat (stsura, ensura) {  // each is 1-114
+  if (stsura === '') { stsura =   '1' }
+  if (ensura === '') { ensura = '114' }
   if (!is_number(stsura) || !is_number(ensura)) { return [null, null] }
   stsura = +stsura || 1
   ensura = +ensura || MAX_SURA
@@ -1734,6 +1738,7 @@ function ligilumi () {
   //
   opts.quizmode = opts.quizmode != null? opts.quizmode : Qid('quizmode').value
   Qid('quizmode').value = opts.quizmode
+  Qid('quizmode').onchange()
   //
   if (opts.highcontrast) {
     Qid('body').classList.add('highcontrast')
