@@ -182,8 +182,11 @@ function _recite (o) {
         el_imla_txt.value = el_imla_txt.value.slice(0,-2)+'\n'
       }
 
-      const fix_tashkeel = (last_char) => {
-        if (last_char !== ' ' && last_char !== '\n') { throw 'bad last_char in fix_tashkeel' }
+      const cursor_at_end = el_imla_txt.selectionStart === el_imla_txt.value.length
+      // selectionStart is guaranteed to be ≤ selectionEnd
+
+      const fix_imla_additions = (last_char) => {
+        if (last_char !== ' ' && last_char !== '\n') { throw 'bad last_char in fix_imla_additions' }
         let correct_end = 0
         const input_end = el_imla_txt.value.count_char(last_char)
         for (let i = 0; i < input_end; ++i) {
@@ -192,22 +195,19 @@ function _recite (o) {
         el_imla_txt.value = correct_text.slice(0, correct_end)
       }
 
-      if (imla_match(correct_text, el_imla_txt.value)) {
+      if (!imla_match(correct_text, el_imla_txt.value)) {
+        el_imla_txt.classList = 'wrong'
+      }
+      else {
         el_imla_txt.classList = ''
-        if (el_imla_txt.value.slice(-1) === '\n') {  // basmala, or BS+Enter to repeat the same aaya
-          audio.play(get_current_aaya_index())
-        }
+        if (!cursor_at_end) { return }
         const last_char = el_imla_txt.value.slice(-1)
         if (last_char === ' ' || last_char === '\n') {
-          fix_tashkeel(last_char)
+          fix_imla_additions(last_char)
         }
-      }
-
-      else if (el_imla_txt.value.slice(-1) === '\n'
-          && correct_text.remove_tashkeel().startsWith(el_imla_txt.value.remove_tashkeel().slice(0,-1) + '\xA0\u06dd'))
-      {
-        fix_tashkeel('\n')  // also adds ayah number
-        audio.play(get_current_aaya_index())
+        if (last_char === '\n') {
+          audio.play(get_current_aaya_index())
+        }
         if (el_imla_txt.value === correct_text) {
           el_imla_txt.value = el_imla_txt.value.slice(0,-1)  // remove the last newline
           show_done()
@@ -218,9 +218,6 @@ function _recite (o) {
         }
       }
 
-      else {
-        el_imla_txt.classList = 'wrong'
-      }
     }
 
     el_imla_txt.onkeydown = (ev) => {

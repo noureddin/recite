@@ -269,12 +269,9 @@ function change_quizmode () {
   }
 }
 
-function imla_input_filter (val) {  // removes invalid characters
-  return val.replace(/[^ \xA0\nء-غف-\u0652٠-٩\u06DD]+/g, '')
-}
-
-String.prototype.remove_tashkeel = function () {
-  return this.replace(/[\u064B-\u0652]+/g, '')
+String.prototype.remove_imla_additions = function () {
+  // removes tashkeel and ayat numbers
+  return this.replace(/[\u064B-\u0652\xA0\u06DD٠-٩]+/g, '')
 }
 
 String.prototype.count_char = function (ch) {
@@ -295,7 +292,7 @@ function change_feedbackrate () {
 
 function imla_match (correct, input) {
   // for now, assume no tashkeel (and remove it if found)
-  return correct.remove_tashkeel().startsWith(imlafilter(input).remove_tashkeel())
+  return correct.remove_imla_additions().startsWith(imlafilter(input).remove_imla_additions())
   // later: check the tashkeel the user entered against the correct text, while ignoring the order of shadda
 }
 
