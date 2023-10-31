@@ -251,6 +251,7 @@ function _ligilumilo (params) {
       else if (is_of('color', 'c')) { color = parse_color(e[1]) }
       else if (is_of('mvbtns', 'mv', 'm')) { mv = parse_mv(e[1]) }
       else if (is_of('quizmode', 'qz', 'q')) { quizmode = parse_quizmode(e[1]) }
+      else if (is_of('txt')) { quizmode = parse_quizmode('imlaai') }
       else if (is_of('byword')) { byword = true }
       else if (is_of('byletter')) { byword = false }
       else if (is_of('linebreaks')) { nolinebreaks = false }

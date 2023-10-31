@@ -87,6 +87,8 @@ Other parameters you can add to pre-configure the preferences:
     1. `u`, `uthm`, or `uthmani`: select the no-typing Uthmani mode (the default; use only to annul a previous `quizmode=imlaai`).
     2. `i`, `imla`, or `imlaai`: select the typing-only Imlaai mode.
 
+- `txt`: a shorthand for `quizmode=imlaai`/`qz=i`.
+
 - `byword`: change the feedback rate in the Imlaai mode to by-word, instead of by-letter.
 - `byletter`: change the feedback rate in the Imlaai mode to by-letter, instead of by-word (the default; use only to annul a previous `byword`).
 
