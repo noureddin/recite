@@ -246,25 +246,25 @@ function _ligilumilo (params) {
     //.reduce((obj, cur, i) => { i == 0? {} : (obj[cur[0]] = cur[1], obj), {})
     .forEach((e, i) => {
       const is_of = (...params) => params.includes(e[0])
-           if (is_of('dark', 'd')) { dark = true  }
-      else if (is_of('light', 'l')) { dark = false }
-      else if (is_of('color', 'c')) { color = parse_color(e[1]) }
-      else if (is_of('mvbtns', 'mv', 'm')) { mv = parse_mv(e[1]) }
-      else if (is_of('quizmode', 'qz', 'q')) { quizmode = parse_quizmode(e[1]) }
-      else if (is_of('txt')) { quizmode = parse_quizmode('imlaai') }
-      else if (is_of('byword')) { byword = true }
-      else if (is_of('byletter')) { byword = false }
-      else if (is_of('linebreaks')) { nolinebreaks = false }
-      else if (is_of('nolinebreaks')) { nolinebreaks = true }
-      else if (is_of('t', 'teach', 'teacher')) { teacher = true }
-      else if (is_of('n', 'noteach', 'noteacher')) { teacher = false }
-      else if (is_of('dt', 'disableteacher')) { disableteacher = true }
-      else if (is_of('dq', 'disablequizmode')) { disablequizmode = true }
-      else if (is_of('hc', 'highcontrast')) { highcontrast = true }
-      else if (is_of('cn')) { cn = true }
-      else if (is_of('qari')) { qari = e[1] }
-      else if (is_of('qariurl')) { qariurl = e[1] }
-      else if (is_of('zz')) { zz = true }
+           if (is_of('dark', 'd'))                 {            dark = true                     }
+      else if (is_of('light', 'l'))                {            dark = false                    }
+      else if (is_of('color', 'c'))                {           color = parse_color(e[1])        }
+      else if (is_of('mvbtns', 'mv', 'm'))         {              mv = parse_mv(e[1])           }
+      else if (is_of('quizmode', 'qz', 'q'))       {        quizmode = parse_quizmode(e[1])     }
+      else if (is_of('txt'))                       {        quizmode = parse_quizmode('imlaai') }
+      else if (is_of('byword'))                    {          byword = true                     }
+      else if (is_of('byletter'))                  {          byword = false                    }
+      else if (is_of(  'linebreaks'))              {    nolinebreaks = false                    }
+      else if (is_of('nolinebreaks'))              {    nolinebreaks = true                     }
+      else if (is_of('t',   'teach',   'teacher')) {         teacher = true                     }
+      else if (is_of('n', 'noteach', 'noteacher')) {         teacher = false                    }
+      else if (is_of('dt', 'disableteacher'))      {  disableteacher = true                     }
+      else if (is_of('dq', 'disablequizmode'))     { disablequizmode = true                     }
+      else if (is_of('hc', 'highcontrast'))        {    highcontrast = true                     }
+      else if (is_of('qari'))                      {            qari = e[1]                     }
+      else if (is_of('qariurl'))                   {         qariurl = e[1]                     }
+      else if (is_of('cn'))                        {              cn = true                     }
+      else if (is_of('zz'))                        {              zz = true                     }
       else if (is_of('a')) { a = +e[1] }
       else if (is_of('b')) { b = +e[1] }
       else if (is_of('p')) { [st, en] = pages_to_ayat(...range_to_pair(e[1])) }
@@ -275,7 +275,23 @@ function _ligilumilo (params) {
       else if (is_of('k')) { [st, en] = rukus_to_ayat(...range_to_pair(e[1])) }
       else                 { [st, en] =  ayat_to_ayat(...range_to_pair(e[0])) }
     })
-  let opts = { st:null, en:null, cn, dark, color, mv, quizmode, disablequizmode, byword, nolinebreaks, qari, qariurl, teacher, disableteacher, highcontrast, zz }
+  let opts = {
+    st:null, en:null,
+    dark,
+    color,
+    mv,
+    quizmode,
+    byword,
+    nolinebreaks,
+    teacher,
+    disableteacher,
+    disablequizmode,
+    highcontrast,
+    qari,
+    qariurl,
+    cn,
+    zz,
+  }
   if (st == null || en == null) { return opts }
   st -= b; en += a
   if (st <= 0)    { st = 1    }
@@ -296,7 +312,7 @@ function ligilumi () {
   }
   delete opts.highcontrast
   //
-  if (opts.dark == null) {  // no overriding; follow preference initially
+  if (opts.dark == null) {  // no overriding; follow system preference initially
     opts.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
   }
   Qid('darkmode_input').checked = opts.dark
@@ -330,7 +346,9 @@ function ligilumi () {
   //
   const hide = (e) => e.style.display = 'none'
   //
-  if (opts.disableteacher) { hide(Qid('teacher_option')) }
+  if (opts.disableteacher) {
+    hide(Qid('teacher_option'))
+  }
   delete opts.disableteacher
   //
   if (opts.disablequizmode) {
@@ -339,7 +357,7 @@ function ligilumi () {
   }
   delete opts.disablequizmode
   //
-  // if no aayat are selected, only change the provided preferences
+  // if no ayat are selected, only change the provided preferences
   if (opts.st == null || opts.en == null) { return }
   recite(opts)
 }
