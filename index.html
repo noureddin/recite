@@ -1444,6 +1444,22 @@ function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {
 
 // vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:
 
+
+function insert_in_field (el, ch) {
+  if (!ch) { return }
+  // https://stackoverflow.com/a/11077016 and comments, with modifications
+  const st = el.selectionStart
+  const en = el.selectionEnd
+  //
+  const before = el.value.substring(0, st)
+  const after  = el.value.substring(en, el.value.length)
+  //
+  el.value = before + ch + after
+  // restore cursor position
+  el.selectionStart = el.selectionEnd = st + ch.length
+}
+
+
 // ligilumi: reading url parameters
 
 const MAX_JUZ  = 30
@@ -2037,19 +2053,24 @@ function _recite (o) {
     }
 
     el_imla_txt.onkeydown = (ev) => {
-      if (!ev.altKey && !ev.ctrlKey && ev.key.length === 1
-          && ev.key.match(/[ \nء-غف-\u0652]/) == null
-      ) {
-        ev.preventDefault()  // refuse invalid characters
+      if (!ev.altKey && !ev.ctrlKey && ev.key.length === 1) {
+        ev.preventDefault()
+        if (ev.key.match(/^[ \nء-غف-\u0652]$/)) {
+          insert_in_field(el_imla_txt, ev.key)
+          txt_changed()
+        }
+      }
+      if (ev.composed) {  // can't handle it directly from ev, so let the
+        pasted = true     // default action, and handle it after the fact
       }
     }
 
-    el_imla_txt.oninput = txt_changed // https://stackoverflow.com/a/14029861
+    el_imla_txt.oninput = txt_changed  // https://stackoverflow.com/a/14029861
     el_imla_txt.onpaste = (e) => { pasted = true }
 
     // these are set in Uthmani; need to override if used Uthmani before Imlaai
-    document.onkeyup = () => {}
-    document.ondblclick = () => {}
+    document.onkeyup = null
+    document.ondblclick = null
 
   }
   else {

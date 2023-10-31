@@ -221,19 +221,24 @@ function _recite (o) {
     }
 
     el_imla_txt.onkeydown = (ev) => {
-      if (!ev.altKey && !ev.ctrlKey && ev.key.length === 1
-          && ev.key.match(/[ \nء-غف-\u0652]/) == null
-      ) {
-        ev.preventDefault()  // refuse invalid characters
+      if (!ev.altKey && !ev.ctrlKey && ev.key.length === 1) {
+        ev.preventDefault()
+        if (ev.key.match(/^[ \nء-غف-\u0652]$/)) {
+          insert_in_field(el_imla_txt, ev.key)
+          txt_changed()
+        }
+      }
+      if (ev.composed) {  // can't handle it directly from ev, so let the
+        pasted = true     // default action, and handle it after the fact
       }
     }
 
-    el_imla_txt.oninput = txt_changed // https://stackoverflow.com/a/14029861
+    el_imla_txt.oninput = txt_changed  // https://stackoverflow.com/a/14029861
     el_imla_txt.onpaste = (e) => { pasted = true }
 
     // these are set in Uthmani; need to override if used Uthmani before Imlaai
-    document.onkeyup = () => {}
-    document.ondblclick = () => {}
+    document.onkeyup = null
+    document.ondblclick = null
 
   }
   else {
