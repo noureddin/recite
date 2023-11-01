@@ -223,8 +223,13 @@ function _recite (o) {
     el_imla_txt.onkeydown = (ev) => {
       if (!ev.altKey && !ev.ctrlKey && ev.key.length === 1) {
         ev.preventDefault()
-        if (ev.key.match(/^[ \nء-غف-\u0652]$/)) {
-          insert_in_field(el_imla_txt, ev.key)
+        const k = window.emulate
+          && mappings[window.emulate]
+          && mappings[window.emulate][ev.code]
+           ? mappings[window.emulate][ev.code][+ev.shiftKey]
+           : ev.key
+        if (k.match(/^[ \nء-غف-\u0652]$|^ل[اأإآ]$/)) {  // the lam-alefs for emulated IBM kb
+          insert_in_field(el_imla_txt, k)
           txt_changed()
         }
       }

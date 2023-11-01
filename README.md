@@ -120,6 +120,13 @@ These are not changeable from the UI, only from the URL parameters; they are exp
 
 - `cn`: at the end of a recitation, it appends a "phrase" from the next ayah if it's in the same sura.
 
+- `emu=`, `emulate=`, or `emulation=`: to use a specific keyboard layout regardless of your currently activated layout, even if yours is an English layout. Currently supported layouts:
+
+    - `ibm`: the common Arabic layout on IBM PCs.
+    - `mac`: the common Arabic layout on Apple devices.
+    - `arak`: the [Arak](https://github.com/noureddin/arak) improved layout.
+    - `dv`: an experimental phonetic layout based on Dvorak.
+
 - `dt`, or `disableteacher`: to remove teacher mode selector from the UI. The Teacher mode can still be set from the URL params. Useful to force a specific value for the option (e.g. no-teacher) in an embedding web app for example.
 
     **Warning:** It's still changeable from the JavaScript console; I couldn't disable this yet.

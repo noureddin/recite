@@ -1459,6 +1459,160 @@ function insert_in_field (el, ch) {
   el.selectionStart = el.selectionEnd = st + ch.length
 }
 
+const mappings = {
+  arak: {
+    Backquote: ['`', '~'],
+    Minus: ['[', '{'],
+    Equal: [']', '}'],
+    KeyQ: ['ض', '"'],
+    KeyW: ['ع', 'غ'],
+    KeyE: ['ب', 'پ'],
+    KeyR: ['ح', 'َ'],
+    KeyT: ['س', 'ً'],
+    KeyY: ['خ', 'ٌ'],
+    KeyU: ['د', 'ُ'],
+    KeyI: ['أ', 'آ'],
+    KeyO: ['ك', 'گ'],
+    KeyP: ['ج', 'چ'],
+    BracketLeft: ['/', '؟'],
+    BracketRight: ['=', '+'],
+    KeyA: ['ه', '؛'],
+    KeyS: ['ي', '»'],
+    KeyD: ['م', '«'],
+    KeyF: ['ن', 'ْ'],
+    KeyG: ['ف', 'ڤ'],
+    KeyH: ['ت', 'ث'],
+    KeyJ: ['ل', 'ّ'],
+    KeyK: ['ا', 'ء'],
+    KeyL: ['و', 'ؤ'],
+    Semicolon: ['ر', '>'],
+    Quote: ['إ', '<'],
+    KeyZ: ['.', ':'],
+    KeyX: ['،', 'ـ'],
+    KeyC: ['ش', '_'],
+    KeyV: ['ق', '-'],
+    KeyB: ['ص', "'"],
+    KeyN: ['ذ', 'ٍ'],
+    KeyM: ['ة', 'ِ'],
+    Comma: ['ى', 'ئ'],
+    Period: ['ز', 'ژ'],
+    Slash: ['ط', 'ظ'],
+  },
+  dv: {
+    Backquote: ['`', '~'],
+    Minus: ['[', '{'],
+    Equal: [']', '}'],
+    KeyQ: ["'", '"'],
+    KeyW: ['،', '<'],
+    KeyE: ['.', '>'],
+    KeyR: ['ط', 'ظ'],
+    KeyT: ['ى', 'آ'],
+    KeyY: ['ف', 'ڤ'],
+    KeyU: ['غ', 'ـ'],
+    KeyI: ['ص', 'ض'],
+    KeyO: ['ر', '»'],
+    KeyP: ['ل', '«'],
+    BracketLeft: ['/', '؟'],
+    BracketRight: ['=', '+'],
+    KeyA: ['ا', 'أ'],
+    KeyS: ['ع', 'إ'],
+    KeyD: ['ه', 'ة'],
+    KeyF: ['و', 'ؤ'],
+    KeyG: ['ي', 'ئ'],
+    KeyH: ['د', 'َ'],
+    KeyJ: ['ح', 'ً'],
+    KeyK: ['ت', 'ٌ'],
+    KeyL: ['ن', 'ُ'],
+    Semicolon: ['س', 'ش'],
+    Quote: ['-', '_'],
+    KeyZ: ['؛', ':'],
+    KeyX: ['ق', 'ء'],
+    KeyC: ['ج', 'چ'],
+    KeyV: ['ك', 'گ'],
+    KeyB: ['خ', 'ْ'],
+    KeyN: ['ب', 'پ'],
+    KeyM: ['م', 'ّ'],
+    Comma: ['ث', 'ٍ'],
+    Period: ['ذ', 'ِ'],
+    Slash: ['ز', 'ژ'],
+  },
+  ibm: {
+    Backquote: ['ذ', 'ّ'],
+    Minus: ['-', '_'],
+    Equal: ['=', '+'],
+    KeyQ: ['ض', 'َ'],
+    KeyW: ['ص', 'ً'],
+    KeyE: ['ث', 'ُ'],
+    KeyR: ['ق', 'ٌ'],
+    KeyT: ['ف', 'لإ'],
+    KeyY: ['غ', 'إ'],
+    KeyU: ['ع', '`'],
+    KeyI: ['ه', '÷'],
+    KeyO: ['خ', '×'],
+    KeyP: ['ح', '؛'],
+    BracketLeft: ['ج', '<'],
+    BracketRight: ['د', '>'],
+    KeyA: ['ش', 'ِ'],
+    KeyS: ['س', 'ٍ'],
+    KeyD: ['ي', ']'],
+    KeyF: ['ب', '['],
+    KeyG: ['ل', 'لأ'],
+    KeyH: ['ا', 'أ'],
+    KeyJ: ['ت', 'ـ'],
+    KeyK: ['ن', '،'],
+    KeyL: ['م', '/'],
+    Semicolon: ['ك', ':'],
+    Quote: ['ط', '"'],
+    KeyZ: ['ئ', '~'],
+    KeyX: ['ء', 'ْ'],
+    KeyC: ['ؤ', '}'],
+    KeyV: ['ر', '{'],
+    KeyB: ['لا', 'لآ'],
+    KeyN: ['ى', 'آ'],
+    KeyM: ['ة', "'"],
+    Comma: ['و', ','],
+    Period: ['ز', '.'],
+    Slash: ['ظ', '؟'],
+  },
+  mac: {
+    Backquote: ['§', '±'],
+    Minus: ['-', '_'],
+    Equal: ['=', '+'],
+    KeyQ: ['ض', 'َ'],
+    KeyW: ['ص', 'ً'],
+    KeyE: ['ث', 'ِ'],
+    KeyR: ['ق', 'ٍ'],
+    KeyT: ['ف', 'ُ'],
+    KeyY: ['غ', 'ٌ'],
+    KeyU: ['ع', 'ْ'],
+    KeyI: ['ه', 'ّ'],
+    KeyO: ['خ', ']'],
+    KeyP: ['ح', '['],
+    BracketLeft: ['ج', '}'],
+    BracketRight: ['ة', '{'],
+    KeyA: ['ش', '»'],
+    KeyS: ['س', '«'],
+    KeyD: ['ي', 'ى'],
+    KeyF: ['ب', ''],
+    KeyG: ['ل', ''],
+    KeyH: ['ا', 'آ'],
+    KeyJ: ['ت', ''],
+    KeyK: ['ن', ''],
+    KeyL: ['م', ''],
+    Semicolon: ['ك', ':'],
+    Quote: ['؛', '"'],
+    KeyZ: ['ظ', ''],
+    KeyX: ['ط', ''],
+    KeyC: ['ذ', 'ئ'],
+    KeyV: ['د', 'ء'],
+    KeyB: ['ز', 'أ'],
+    KeyN: ['ر', 'إ'],
+    KeyM: ['و', 'ؤ'],
+    Comma: ['،', '>'],
+    Period: ['.', '<'],
+    Slash: ['/', '؟'],
+  },
+}
 
 // ligilumi: reading url parameters
 
@@ -1699,6 +1853,7 @@ function _ligilumilo (params) {
   let disableteacher   // remove teacher mode selector from the UI, teacher mode can still be set from the URL: dt/disableteacher
   let disablequizmode  // remove quiz mode selector from the UI, quiz mode can still be set from the URL: dq/disablequizmode
   let highcontrast     // high-contrast, dark colorscheme
+  let emulate          // keyboard layout emulation; see https://noureddin.github.io/kbt (same ids, w/o '-ar')
   let cn               // continuation; ie, append a "phrase" from the next aaya if in the same sura
   let zz               // enable embedded integration: zz (cannot be disabled if enabled)
   params
@@ -1708,25 +1863,26 @@ function _ligilumilo (params) {
     //.reduce((obj, cur, i) => { i == 0? {} : (obj[cur[0]] = cur[1], obj), {})
     .forEach((e, i) => {
       const is_of = (...params) => params.includes(e[0])
-           if (is_of('dark', 'd'))                 {            dark = true                     }
-      else if (is_of('light', 'l'))                {            dark = false                    }
-      else if (is_of('color', 'c'))                {           color = parse_color(e[1])        }
-      else if (is_of('mvbtns', 'mv', 'm'))         {              mv = parse_mv(e[1])           }
-      else if (is_of('quizmode', 'qz', 'q'))       {        quizmode = parse_quizmode(e[1])     }
-      else if (is_of('txt'))                       {        quizmode = parse_quizmode('imlaai') }
-      else if (is_of('byword'))                    {          byword = true                     }
-      else if (is_of('byletter'))                  {          byword = false                    }
-      else if (is_of(  'linebreaks'))              {    nolinebreaks = false                    }
-      else if (is_of('nolinebreaks'))              {    nolinebreaks = true                     }
-      else if (is_of('t',   'teach',   'teacher')) {         teacher = true                     }
-      else if (is_of('n', 'noteach', 'noteacher')) {         teacher = false                    }
-      else if (is_of('dt', 'disableteacher'))      {  disableteacher = true                     }
-      else if (is_of('dq', 'disablequizmode'))     { disablequizmode = true                     }
-      else if (is_of('hc', 'highcontrast'))        {    highcontrast = true                     }
-      else if (is_of('qari'))                      {            qari = e[1]                     }
-      else if (is_of('qariurl'))                   {         qariurl = e[1]                     }
-      else if (is_of('cn'))                        {              cn = true                     }
-      else if (is_of('zz'))                        {              zz = true                     }
+           if (is_of('dark', 'd'))                   {            dark = true                     }
+      else if (is_of('light', 'l'))                  {            dark = false                    }
+      else if (is_of('color', 'c'))                  {           color = parse_color(e[1])        }
+      else if (is_of('mvbtns', 'mv', 'm'))           {              mv = parse_mv(e[1])           }
+      else if (is_of('quizmode', 'qz', 'q'))         {        quizmode = parse_quizmode(e[1])     }
+      else if (is_of('txt'))                         {        quizmode = parse_quizmode('imlaai') }
+      else if (is_of('byword'))                      {          byword = true                     }
+      else if (is_of('byletter'))                    {          byword = false                    }
+      else if (is_of(  'linebreaks'))                {    nolinebreaks = false                    }
+      else if (is_of('nolinebreaks'))                {    nolinebreaks = true                     }
+      else if (is_of('t',   'teach',   'teacher'))   {         teacher = true                     }
+      else if (is_of('n', 'noteach', 'noteacher'))   {         teacher = false                    }
+      else if (is_of('dt', 'disableteacher'))        {  disableteacher = true                     }
+      else if (is_of('dq', 'disablequizmode'))       { disablequizmode = true                     }
+      else if (is_of('hc', 'highcontrast'))          {    highcontrast = true                     }
+      else if (is_of('emu', 'emulate', 'emulation')) {         emulate = e[1]                     }
+      else if (is_of('qari'))                        {            qari = e[1]                     }
+      else if (is_of('qariurl'))                     {         qariurl = e[1]                     }
+      else if (is_of('cn'))                          {              cn = true                     }
+      else if (is_of('zz'))                          {              zz = true                     }
       else if (is_of('a')) { a = +e[1] }
       else if (is_of('b')) { b = +e[1] }
       else if (is_of('p')) { [st, en] = pages_to_ayat(...range_to_pair(e[1])) }
@@ -1749,6 +1905,7 @@ function _ligilumilo (params) {
     disableteacher,
     disablequizmode,
     highcontrast,
+    emulate,
     qari,
     qariurl,
     cn,
@@ -1818,6 +1975,10 @@ function ligilumi () {
     Qall('.mode_options_title').forEach(hide)
   }
   delete opts.disablequizmode
+  //
+  if (opts.emulate && mappings[opts.emulate]) {
+    window.emulate = opts.emulate  // it's an option, but a hidden one.
+  }
   //
   // if no ayat are selected, only change the provided preferences
   if (opts.st == null || opts.en == null) { return }
@@ -2055,8 +2216,13 @@ function _recite (o) {
     el_imla_txt.onkeydown = (ev) => {
       if (!ev.altKey && !ev.ctrlKey && ev.key.length === 1) {
         ev.preventDefault()
-        if (ev.key.match(/^[ \nء-غف-\u0652]$/)) {
-          insert_in_field(el_imla_txt, ev.key)
+        const k = window.emulate
+          && mappings[window.emulate]
+          && mappings[window.emulate][ev.code]
+           ? mappings[window.emulate][ev.code][+ev.shiftKey]
+           : ev.key
+        if (k.match(/^[ \nء-غف-\u0652]$|^ل[اأإآ]$/)) {  // the lam-alefs for emulated IBM kb
+          insert_in_field(el_imla_txt, k)
           txt_changed()
         }
       }

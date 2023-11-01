@@ -237,6 +237,7 @@ function _ligilumilo (params) {
   let disableteacher   // remove teacher mode selector from the UI, teacher mode can still be set from the URL: dt/disableteacher
   let disablequizmode  // remove quiz mode selector from the UI, quiz mode can still be set from the URL: dq/disablequizmode
   let highcontrast     // high-contrast, dark colorscheme
+  let emulate          // keyboard layout emulation; see https://noureddin.github.io/kbt (same ids, w/o '-ar')
   let cn               // continuation; ie, append a "phrase" from the next aaya if in the same sura
   let zz               // enable embedded integration: zz (cannot be disabled if enabled)
   params
@@ -246,25 +247,26 @@ function _ligilumilo (params) {
     //.reduce((obj, cur, i) => { i == 0? {} : (obj[cur[0]] = cur[1], obj), {})
     .forEach((e, i) => {
       const is_of = (...params) => params.includes(e[0])
-           if (is_of('dark', 'd'))                 {            dark = true                     }
-      else if (is_of('light', 'l'))                {            dark = false                    }
-      else if (is_of('color', 'c'))                {           color = parse_color(e[1])        }
-      else if (is_of('mvbtns', 'mv', 'm'))         {              mv = parse_mv(e[1])           }
-      else if (is_of('quizmode', 'qz', 'q'))       {        quizmode = parse_quizmode(e[1])     }
-      else if (is_of('txt'))                       {        quizmode = parse_quizmode('imlaai') }
-      else if (is_of('byword'))                    {          byword = true                     }
-      else if (is_of('byletter'))                  {          byword = false                    }
-      else if (is_of(  'linebreaks'))              {    nolinebreaks = false                    }
-      else if (is_of('nolinebreaks'))              {    nolinebreaks = true                     }
-      else if (is_of('t',   'teach',   'teacher')) {         teacher = true                     }
-      else if (is_of('n', 'noteach', 'noteacher')) {         teacher = false                    }
-      else if (is_of('dt', 'disableteacher'))      {  disableteacher = true                     }
-      else if (is_of('dq', 'disablequizmode'))     { disablequizmode = true                     }
-      else if (is_of('hc', 'highcontrast'))        {    highcontrast = true                     }
-      else if (is_of('qari'))                      {            qari = e[1]                     }
-      else if (is_of('qariurl'))                   {         qariurl = e[1]                     }
-      else if (is_of('cn'))                        {              cn = true                     }
-      else if (is_of('zz'))                        {              zz = true                     }
+           if (is_of('dark', 'd'))                   {            dark = true                     }
+      else if (is_of('light', 'l'))                  {            dark = false                    }
+      else if (is_of('color', 'c'))                  {           color = parse_color(e[1])        }
+      else if (is_of('mvbtns', 'mv', 'm'))           {              mv = parse_mv(e[1])           }
+      else if (is_of('quizmode', 'qz', 'q'))         {        quizmode = parse_quizmode(e[1])     }
+      else if (is_of('txt'))                         {        quizmode = parse_quizmode('imlaai') }
+      else if (is_of('byword'))                      {          byword = true                     }
+      else if (is_of('byletter'))                    {          byword = false                    }
+      else if (is_of(  'linebreaks'))                {    nolinebreaks = false                    }
+      else if (is_of('nolinebreaks'))                {    nolinebreaks = true                     }
+      else if (is_of('t',   'teach',   'teacher'))   {         teacher = true                     }
+      else if (is_of('n', 'noteach', 'noteacher'))   {         teacher = false                    }
+      else if (is_of('dt', 'disableteacher'))        {  disableteacher = true                     }
+      else if (is_of('dq', 'disablequizmode'))       { disablequizmode = true                     }
+      else if (is_of('hc', 'highcontrast'))          {    highcontrast = true                     }
+      else if (is_of('emu', 'emulate', 'emulation')) {         emulate = e[1]                     }
+      else if (is_of('qari'))                        {            qari = e[1]                     }
+      else if (is_of('qariurl'))                     {         qariurl = e[1]                     }
+      else if (is_of('cn'))                          {              cn = true                     }
+      else if (is_of('zz'))                          {              zz = true                     }
       else if (is_of('a')) { a = +e[1] }
       else if (is_of('b')) { b = +e[1] }
       else if (is_of('p')) { [st, en] = pages_to_ayat(...range_to_pair(e[1])) }
@@ -287,6 +289,7 @@ function _ligilumilo (params) {
     disableteacher,
     disablequizmode,
     highcontrast,
+    emulate,
     qari,
     qariurl,
     cn,
@@ -356,6 +359,10 @@ function ligilumi () {
     Qall('.mode_options_title').forEach(hide)
   }
   delete opts.disablequizmode
+  //
+  if (opts.emulate && mappings[opts.emulate]) {
+    window.emulate = opts.emulate  // it's an option, but a hidden one.
+  }
   //
   // if no ayat are selected, only change the provided preferences
   if (opts.st == null || opts.en == null) { return }
