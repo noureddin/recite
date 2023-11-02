@@ -19,9 +19,9 @@ Use it at: [noureddin.github.io/recite](https://noureddin.github.io/recite).
 
 2. Opt-in audio recitation after completing every ayah, in either mode. (It can optionally be made _before_ every ayah, which is called the "teacher mode".)
 
-3. Night mode, in addition to the default light mode.
+3. Night mode, in addition to the light mode, with your system preference as the default, but easy to change.
 
-4. The ability to quiz yourself on any number of consecutive ayat, including for example a number of complete suar, an entire juz that starts in a sura and ends in another, etc.
+4. The ability to quiz yourself on any number of consecutive ayat, including for example a number of complete suar, an entire juz that starts in the middle of a sura and ends in the middle of another, etc.
 
 5. Tajweed&ndash;color-coding in the No-typing Uthmani mode, or with no colorization.
 
@@ -49,11 +49,20 @@ Examples of `PARAMS`:
 - `p=1-3`: the first three pages (in Mushaf Medina).
 - `j=1`: the entire first juz.
 - `j=30`: the entire last juz.
+- `h=1`: the entire first hizb (half juz).
+- `r=1`: the entire first rub (quarter hizb, ie eighth of a juz).
 - `r=1-4`: the first four rubs (in the entire Quran).
-- `r=10//1`: the first rub in the 10th juz.
-- `r=10//1-10//2`: the first two rubs in the 10th juz.
-- `r=10//7-10//8`: the last two rubs in the 10th juz.
-- `h=1`: the entire first hizb (half-juz).
+- `r=10//0`: the first rub in the 10th juz (when the Mushaf writes «جزء» in the margin).
+- `r=10//1`: the second rub in the 10th juz (when the Mushaf writes «ربع» (¼) in the margin).
+- `r=10//2`: the third rub in the 10th juz (when the Mushaf writes «نصف» (½) in the margin).
+- `r=10//3`: the fourth rub in the 10th juz (when the Mushaf writes «ثلاثة أرباع» (¾) in the margin).
+- `r=10//4`: the fifth rub in the 10th juz (when the Mushaf writes «حزب» in the margin).
+- `r=10//5`: the sixth rub in the 10th juz (when the Mushaf writes «ربع» (¼) in the margin).
+- `r=10//6`: the seveth rub in the 10th juz (when the Mushaf writes «نصف» (½) in the margin).
+- `r=10//7`: the eighth (last) rub in the 10th juz (when the Mushaf writes «ثلاثة أرباع» (¾) in the margin).
+- `r=10//0-10//1`: the first two rubs in the 10th juz.
+- `r=10//6-10//7`: the last two rubs in the 10th juz.
+- `1/2`: only the second ayah of the first sura.
 - `1/1-1/3`: from the first ayah of first sura, till the third ayah of the first sura.
 - `2/1-4/3`: from the first ayah of second sura, till the third ayah of the fourth sura.
 
