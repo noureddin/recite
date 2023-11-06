@@ -4,6 +4,10 @@ function start_reciting () {
   if (!valid_inputs(sura_bgn_val(), aaya_bgn_val(), sura_end_val(), aaya_end_val())) { return }
   const st = start_(sura_bgn_val()) + aaya_bgn_val()
   const en = start_(sura_end_val()) + aaya_end_val()
+  _start_reciting(st, en)
+}
+
+function _start_reciting (st, en) {
   const teacher = el_teacher_input.checked
   const qari = el_qaris.value
   const qariurl = el_qariurl.value
@@ -77,12 +81,6 @@ function help_toggled () {
 function option_toggled () {
   // TODO: scroll to top of options
 }
-
-function scroll_to_top ()    { el_body.scrollTo({ top: 0 }) }
-function scroll_to_bottom () { el_body.scrollTo({ top: el_body.scrollHeight }) }
-
-function hide_el (el) { el.style.visibility = 'hidden';  el.style.opacity =   '0%' }
-function show_el (el) { el.style.visibility = 'visible'; el.style.opacity = '100%' }
 
 function sync_ui (stpair, enpair, title, preserve_url) {
   if (!preserve_url) { window.location.hash = stpair.join('/') + '-' + enpair.join('/') }
@@ -404,7 +402,7 @@ onload = function () {
   // inputs, so they keep their values on refresh:
   Qall('input, select').forEach(e => e.onchange && e.onchange())
   decode_contact()
-  ligilumi()
+  versligilumi()
   el_imla_txt.spellcheck = false
   // fix help opening
   document.querySelectorAll('details').forEach(el => {
@@ -425,5 +423,3 @@ if (visualViewport) {
     }
   })
 }
-
-// vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:

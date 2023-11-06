@@ -129,5 +129,3 @@ function make_words_list (st, en, cn) {  // uthmani
       }, [])
   )
 }
-
-// vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:

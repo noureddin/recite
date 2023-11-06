@@ -1,4 +1,6 @@
-// ligilumi: reading url parameters
+// ligilumi: to parse url parameters
+// verso: a verse
+// versligilumi: parsing verses (not preferences) url params
 
 const MAX_JUZ  = 30
 const MAX_HIZB = 60
@@ -181,34 +183,7 @@ function hizbs_to_ayat (sthizb, enhizb) {  // each is 1-240 or 1/1-60/4 or 1//1-
   return [st, en]
 }
 
-const _color_values = {
-  t: 'taj', taj: 'taj', tajweed: 'taj',
-  b: 'bas', bas: 'bas', basic: 'bas',
-  n: 'no',  no: 'no',   none: 'no',
-}
-
-function parse_color (color) {
-  return _color_values[ color.toLowerCase() ]
-}
-
-const _quizmode_values = {
-  i: 'imla', imla: 'imla', imlaai: 'imla',
-  u: 'uthm', uthm: 'uthm', uthmani: 'uthm',
-}
-
-function parse_quizmode (quizmode) {
-  return _quizmode_values[ quizmode.toLowerCase() ]
-}
-
-function parse_mv (mv) {
-  mv = mv.toLowerCase()
-  if (mv == ''
-   || mv == 'b') { return 'bottom' }
-  if (mv == 'r') { return 'right' }
-  if (mv == 'l') { return 'left' }
-}
-
-function _ligilumilo (params) {
+function _versligilumilo (params) {
   let st; let en  // start aaya and end aaya
   // possible params:
   // - p: page. 1-604.
@@ -225,21 +200,6 @@ function _ligilumilo (params) {
   let a = 0; let b = 0
   // - b: before, a number of ayat to add before whatever you select. 0-inf.
   // - a: after,  a number of ayat to add before whatever you select. 0-inf.
-  let dark             // dark mode: d/dark; l/light (default).
-  let color = 'taj'    // color of text: c/color = t/taj/tajweed (default); b/bas/basic; n/no/none.
-  let mv = 'bottom'    // position of buttons: m/mv/mvbtns = b (bottom; default); r (right); l (left).
-  let quizmode         // quiz mode: q/qz/quizmode = u/uthm/uthmani (no-typing; default); i/imla/imlaai (typing)
-  let byword           // imlaai-mode feedback rate; default); byword (true)
-  let nolinebreaks     // uthmani-mode linebreaks between ayat (default: linebreaks)
-  let qari             // audio recitation qari's id
-  let qariurl          // user-provided audio recitation base_url
-  let teacher          // teacher mode (audio recitation before ayah): t/teach/teacher (true); n/noteach/noteacher (false; default)
-  let disableteacher   // remove teacher mode selector from the UI, teacher mode can still be set from the URL: dt/disableteacher
-  let disablequizmode  // remove quiz mode selector from the UI, quiz mode can still be set from the URL: dq/disablequizmode
-  let highcontrast     // high-contrast, dark colorscheme
-  let emulate          // keyboard layout emulation; see https://noureddin.github.io/kbt (same ids, w/o '-ar')
-  let cn               // continuation; ie, append a "phrase" from the next aaya if in the same sura
-  let zz               // enable embedded integration: zz (cannot be disabled if enabled)
   params
     .slice(1)  // remove the first character (`?` or `#`)
     .split('&')
@@ -247,27 +207,7 @@ function _ligilumilo (params) {
     //.reduce((obj, cur, i) => { i == 0? {} : (obj[cur[0]] = cur[1], obj), {})
     .forEach((e, i) => {
       const is_of = (...params) => params.includes(e[0])
-           if (is_of('dark', 'd'))                   {            dark = true                     }
-      else if (is_of('light', 'l'))                  {            dark = false                    }
-      else if (is_of('color', 'c'))                  {           color = parse_color(e[1])        }
-      else if (is_of('mvbtns', 'mv', 'm'))           {              mv = parse_mv(e[1])           }
-      else if (is_of('quizmode', 'qz', 'q'))         {        quizmode = parse_quizmode(e[1])     }
-      else if (is_of('txt'))                         {        quizmode = parse_quizmode('imlaai') }
-      else if (is_of('byword'))                      {          byword = true                     }
-      else if (is_of('byletter'))                    {          byword = false                    }
-      else if (is_of(  'linebreaks'))                {    nolinebreaks = false                    }
-      else if (is_of('nolinebreaks'))                {    nolinebreaks = true                     }
-      else if (is_of('t',   'teach',   'teacher'))   {         teacher = true                     }
-      else if (is_of('n', 'noteach', 'noteacher'))   {         teacher = false                    }
-      else if (is_of('dt', 'disableteacher'))        {  disableteacher = true                     }
-      else if (is_of('dq', 'disablequizmode'))       { disablequizmode = true                     }
-      else if (is_of('hc', 'highcontrast'))          {    highcontrast = true                     }
-      else if (is_of('emu', 'emulate', 'emulation')) {         emulate = e[1]                     }
-      else if (is_of('qari'))                        {            qari = e[1]                     }
-      else if (is_of('qariurl'))                     {         qariurl = e[1]                     }
-      else if (is_of('cn'))                          {              cn = true                     }
-      else if (is_of('zz'))                          {              zz = true                     }
-      else if (is_of('a')) { a = +e[1] }
+           if (is_of('a')) { a = +e[1] }
       else if (is_of('b')) { b = +e[1] }
       else if (is_of('p')) { [st, en] = pages_to_ayat(...range_to_pair(e[1])) }
       else if (is_of('s')) { [st, en] = suras_to_ayat(...range_to_pair(e[1])) }
@@ -277,96 +217,17 @@ function _ligilumilo (params) {
       else if (is_of('k')) { [st, en] = rukus_to_ayat(...range_to_pair(e[1])) }
       else                 { [st, en] =  ayat_to_ayat(...range_to_pair(e[0])) }
     })
-  let opts = {
-    st:null, en:null,
-    dark,
-    color,
-    mv,
-    quizmode,
-    byword,
-    nolinebreaks,
-    teacher,
-    disableteacher,
-    disablequizmode,
-    highcontrast,
-    emulate,
-    qari,
-    qariurl,
-    cn,
-    zz,
-  }
-  if (st == null || en == null) { return opts }
+  if (st == null || en == null) { return [null, null] }
   st -= b; en += a
   if (st <= 0)    { st = 1    }
   if (en >  6236) { en = 6236 }
-  opts = {...opts, st, en}
-  return opts
+  return [st, en]
 }
 
-function ligilumi () {
-  const opts = _ligilumilo(window.location.hash || window.location.search)
+function versligilumi () {
+  const [st, en] = _versligilumilo(window.location.hash || window.location.search)
   //
-  opts.quizmode = opts.quizmode != null? opts.quizmode : Qid('quizmode').value
-  Qid('quizmode').value = opts.quizmode
-  Qid('quizmode').onchange()
-  //
-  if (opts.highcontrast) {
-    Qid('body').classList.add('highcontrast')
-  }
-  delete opts.highcontrast
-  //
-  if (opts.dark == null) {  // no overriding; follow system preference initially
-    opts.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
-  }
-  Qid('darkmode_input').checked = opts.dark
-  Qid('darkmode_input').onchange()
-  delete opts.dark
-  //
-  Qid('teacher_input').checked = opts.teacher
-  //
-  Qid('qaris').value = opts.qari
-  if (!Qid('qaris').value) { Qid('qaris').value = '' }  // if unset or is a bad value
-  Qid('qaris').oninput()
-  //
-  if (opts.qariurl) { Qid('qaris').value = '_' }  // an invalid value to hide "With audio"
-  Qid('qariurl').value = opts.qariurl ? opts.qariurl : ''
-  //
-  Qid('textclr_input').value = opts.color
-  Qid('textclr_input').onchange()
-  delete opts.color
-  //
-  Qid('mvbtns_input').value = opts.mv
-  Qid('mvbtns_input').onchange()
-  delete opts.mv
-  //
-  Qid('feedbackrate').value = opts.byword? 'word' : ''
-  Qid('feedbackrate').onchange()
-  delete opts.byword
-  //
-  Qid('linebreaks_input').checked = !opts.nolinebreaks
-  Qid('linebreaks_input').onchange()
-  delete opts.nolinebreaks
-  //
-  const hide = (e) => e.style.display = 'none'
-  //
-  if (opts.disableteacher) {
-    hide(Qid('teacher_option'))
-  }
-  delete opts.disableteacher
-  //
-  if (opts.disablequizmode) {
-    hide(Qid('quizmode_option'))
-    Qall('.mode_options_title').forEach(hide)
-  }
-  delete opts.disablequizmode
-  //
-  if (opts.emulate && mappings[opts.emulate]) {
-    window.emulate = opts.emulate  // it's an option, but a hidden one.
-  }
-  //
-  // if no ayat are selected, only change the provided preferences
-  if (opts.st == null || opts.en == null) { return }
-  recite(opts)
+  // if no ayat are selected
+  if (st == null || en == null) { return }
+  _start_reciting(st, en)
 }
-
-// vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:

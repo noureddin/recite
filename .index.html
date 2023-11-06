@@ -6,7 +6,6 @@
 <<!!# this file uses a small preprocessor to embed fonts and data; see index.html for the generated HTML file>>
 <<!!sh meta.sh>>
 <style>
-<<!!cat fonts.css>>
 <<!!cat style.css>>
 </style>
 </head>
@@ -161,7 +160,7 @@
 <button id="zzback" hidden>عودة</button>
 </div>
 
-<!-- these svg arrows were designed in Inkscape by me and optimized with https://vecta.io/nano -->
+<!-- these svg arrows were designed in Inkscape by me and optimized with https://vecta.io/nano; CC0 -->
 <div id="mvbtns" hidden>
   <button title="أخف آية (زري Ctrl+BackSpace)" id="prevaaya"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M195.826 237.711h-39.765l60.864-105.419-60.864-105.419h39.765l60.864 105.419zm-68.792 0H87.269l60.864-105.419-60.864-105.42h39.765l60.864 105.419zm-68.792 0H18.477l60.864-105.419-60.864-105.42h39.765l60.864 105.419z"/></svg></button>
   <button title="أخف عبارة - حتى علامة وقف أو نهاية آية (زر رقم الواحد)" id="prevjmla"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M161.43 237.711h-39.765l60.864-105.419-60.864-105.419h39.765l60.864 105.419zm-68.792 0H52.873l60.864-105.419-60.864-105.42h39.765l60.864 105.419z"/></svg></button>
@@ -171,11 +170,8 @@
   <button title="أظهر آية (زري Ctrl+Space أو Ctrl+Enter)" id="nextaaya"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M68.758 237.711h39.765L47.659 132.292l60.864-105.419H68.758L7.894 132.292zm68.791 0h39.765L116.45 132.292l60.864-105.419h-39.765L76.685 132.292zm68.792 0h39.765l-60.864-105.419 60.864-105.419h-39.765l-60.864 105.419z"/></svg></button>
 </div>
 
-
 </div>
 </div>
-
-<script src="res/jszip.min.js"></script>
 
 <script>
     window.goatcounter = {
@@ -188,20 +184,23 @@
         async src="//gc.zgo.at/count.js"></script>
 
 <script>
-'use strict';
-
+'use strict'
 <<!!cat a.js>>
-<<!!cat b.js>>
-<<!!cat ligilumi.js>>
-
+<<!!cat mappings.js>>
+<<!!cat tajlorligilumi.js>>
+</script>
+<script src="res/jszip.min.js"></script>
+<script>
+'use strict'
+<<!!cat data.js>>
+<<!!cat versligilumi.js>>
+// from: https://github.com/mathusummut/confetti.js. Copyright (c) 2018 MathuSum Mut. MIT License
+<<!!cat res/confetti.min.js>>
 <<!!#cat test.js>>
 // remove the '#' in the previous line to perform the tests
-
 <<!!cat javascript.js>>
+<<!!cat res/jszip-utils.min.js>>
 <<!!cat z.js>>
-
 </script>
-
 </body>
 </html>
-<!-- vim: set sw=2 ts=2 et colorcolumn=80: -->

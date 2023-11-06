@@ -1,5 +1,5 @@
-// ligilumi: reading url parameters {{{
-function test_ligilumi () {
+// versligilumi: parsing verses url parameters {{{
+function test_versligilumi () {
   let fail=0, all=0
   ;[
     ['#p=1',            1,             7],
@@ -68,14 +68,14 @@ function test_ligilumi () {
     ['d',               null,          null],
   ]
   .forEach((t) => {
-    let {st, en, d} = _ligilumilo(t[0])
+    let [st, en] = _versligilumilo(t[0])
     if (st !== t[1] || en !== t[2]) {
-      console.log('ligilumi', t[0], ' got', st, en, ' exp', t[1], t[2])
+      console.log('versligilumi', t[0], ' got', st, en, ' exp', t[1], t[2])
       fail += 1
     }
     all += 1
   })
-  console.log('ligilumi test finished;', fail, 'failed out of', all)
+  console.log('versligilumi test finished;', fail, 'failed out of', all)
 }/**/ // }}}
 
 // make_title: human readable version of the range to recite {{{
@@ -109,7 +109,7 @@ function test_make_title () {
   console.log('make_title test finished;', fail, 'failed out of', all)
 }/**/ // }}}
 
-test_ligilumi()
+test_versligilumi()
 test_make_title()
 
-// vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:
+// vim: fdm=marker :
