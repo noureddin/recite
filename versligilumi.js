@@ -34,11 +34,11 @@ function range_to_pair (x) {
 function suras_to_ayat (stsura, ensura) {  // each is 1-114
   if (stsura === '') { stsura =   '1' }
   if (ensura === '') { ensura = '114' }
-  if (!is_number(stsura) || !is_number(ensura)) { return [null, null] }
+  if (!is_number(stsura) || !is_number(ensura)) { return }
   stsura = +stsura || 1
   ensura = +ensura || MAX_SURA
-  if (stsura < 1        || ensura < 1       ) { return [null, null] }
-  if (stsura > MAX_SURA || ensura > MAX_SURA) { return [null, null] }
+  if (stsura < 1        || ensura < 1       ) { return }
+  if (stsura > MAX_SURA || ensura > MAX_SURA) { return }
   const st = start_(stsura - 1) + 1
   const en = start_(ensura - 1) + suar_length[ensura - 1]
   return [st, en]
@@ -66,10 +66,10 @@ function _aya2idx (aya) {  // 1-6236 or 1/7
 }
 
 function ayat_to_ayat (staya, enaya) {  // each is 1-6236 or 1/7 (sura/aya)
-  if (!staya) { return [null, null] }
+  if (!staya) { return }
   let st = _aya2idx(staya)
   let en = _aya2idx(enaya)
-  if (st == null || en == null) { return [null, null] }
+  if (st == null || en == null) { return }
   st = +st || 1; en = +en || MAX_AYA
   return [st, en]
 }
@@ -102,27 +102,27 @@ function _ruku2idx (ruku) {  // each is 1/1 (sura/ruku) -- TODO: remove redundan
 }
 
 function rukus_to_ayat (struku, enruku) {  // each is 1/1 (sura/ruku)
-  if (struku == null) { return [null, null] }
+  if (struku == null) { return }
   let stpair = _ruku2idx(struku)
   let enpair = _ruku2idx(enruku)
-  if (stpair == null || enpair == null) { return [null, null] }
+  if (stpair == null || enpair == null) { return }
   return [stpair[0], enpair[1]]
 }
 
 function pages_to_ayat (stpage, enpage) {  // each is 1-604
-  if (stpage == null) { return [null, null] }
+  if (stpage == null) { return }
   stpage = +stpage || 1; enpage = +enpage || MAX_PAGE
-  if (stpage > MAX_PAGE || enpage > MAX_PAGE) { return [null, null] }
+  if (stpage > MAX_PAGE || enpage > MAX_PAGE) { return }
   let st = pages[+stpage - 1] + 1
   let en = pages[+enpage]
   return [st, en]
 }
 
 function juzs_to_ayat (stjuz, enjuz) {  // each is 1-30
-  if (stjuz == null) { return [null, null] }
+  if (stjuz == null) { return }
   stjuz = +stjuz || 1
   enjuz = +enjuz || MAX_JUZ
-  if (stjuz > MAX_JUZ || enjuz > MAX_JUZ) { return [null, null] }
+  if (stjuz > MAX_JUZ || enjuz > MAX_JUZ) { return }
   // we multiply by 8, as we have only data for rubs.
   const ratio = MAX_RUB / MAX_JUZ  // 8
   let st = rubs[((stjuz || 1)      - 1) * ratio] + 1
@@ -151,10 +151,10 @@ function _rub2idx (rub) {  // 1-240 or 1/1-60/4 or 1//1-30//8.
 }
 
 function rubs_to_ayat (strub, enrub) {  // each is 1-240 or 1/1-60/4 or 1//1-30//8.
-  if (strub == null) { return [null, null] }
+  if (strub == null) { return }
   const stidx = _rub2idx(strub)
   const enidx = _rub2idx(enrub)
-  if (stidx == null || enidx == null) { return [null, null] }
+  if (stidx == null || enidx == null) { return }
   let st = rubs[(stidx || 1) - 1] + 1
   let en = rubs[ enidx || 240   ]
   return [st, en]
@@ -172,10 +172,10 @@ function _hizb2idx (hizb) {  // 1-60 or 1/1-30/2.
 }
 
 function hizbs_to_ayat (sthizb, enhizb) {  // each is 1-240 or 1/1-60/4 or 1//1-30//8.
-  if (sthizb == null) { return [null, null] }
+  if (sthizb == null) { return }
   const stidx = _hizb2idx(sthizb)
   const enidx = _hizb2idx(enhizb)
-  if (stidx == null || enidx == null) { return [null, null] }
+  if (stidx == null || enidx == null) { return }
   // we multiply by 4, as we have only data for rubs.
   const ratio = MAX_RUB / MAX_HIZB  // 4
   let st = rubs[((stidx || 1) - 1) * ratio] + 1
@@ -207,15 +207,15 @@ function _versligilumilo (params) {
     //.reduce((obj, cur, i) => { i == 0? {} : (obj[cur[0]] = cur[1], obj), {})
     .forEach((e, i) => {
       const is_of = (...params) => params.includes(e[0])
-           if (is_of('a')) { a = +e[1] }
-      else if (is_of('b')) { b = +e[1] }
-      else if (is_of('p')) { [st, en] = pages_to_ayat(...range_to_pair(e[1])) }
-      else if (is_of('s')) { [st, en] = suras_to_ayat(...range_to_pair(e[1])) }
-      else if (is_of('r')) { [st, en] =  rubs_to_ayat(...range_to_pair(e[1])) }
-      else if (is_of('h')) { [st, en] = hizbs_to_ayat(...range_to_pair(e[1])) }
-      else if (is_of('j')) { [st, en] =  juzs_to_ayat(...range_to_pair(e[1])) }
-      else if (is_of('k')) { [st, en] = rukus_to_ayat(...range_to_pair(e[1])) }
-      else                 { [st, en] =  ayat_to_ayat(...range_to_pair(e[0])) }
+           if (is_of('a')) { a = isNaN(+e[1]) ? a : +e[1] }
+      else if (is_of('b')) { b = isNaN(+e[1]) ? b : +e[1] }
+      else if (is_of('p')) { [st, en] = pages_to_ayat(...range_to_pair(e[1])) || [st, en] }
+      else if (is_of('s')) { [st, en] = suras_to_ayat(...range_to_pair(e[1])) || [st, en] }
+      else if (is_of('r')) { [st, en] =  rubs_to_ayat(...range_to_pair(e[1])) || [st, en] }
+      else if (is_of('h')) { [st, en] = hizbs_to_ayat(...range_to_pair(e[1])) || [st, en] }
+      else if (is_of('j')) { [st, en] =  juzs_to_ayat(...range_to_pair(e[1])) || [st, en] }
+      else if (is_of('k')) { [st, en] = rukus_to_ayat(...range_to_pair(e[1])) || [st, en] }
+      else                 { [st, en] =  ayat_to_ayat(...range_to_pair(e[0])) || [st, en] }
     })
   if (st == null || en == null) { return [null, null] }
   st -= b; en += a

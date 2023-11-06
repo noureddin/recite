@@ -52,26 +52,26 @@ function _tajlorligilumilo (params) {
     //.reduce((obj, cur, i) => { i == 0? {} : (obj[cur[0]] = cur[1], obj), {})
     .forEach((e, i) => {
       const is_of = (...params) => params.includes(e[0])
-           if (is_of('dark', 'd'))                   {            dark = true                     }
-      else if (is_of('light', 'l'))                  {            dark = false                    }
-      else if (is_of('color', 'c'))                  {           color = parse_color(e[1])        }
-      else if (is_of('mvbtns', 'mv', 'm'))           {              mv = parse_mv(e[1])           }
-      else if (is_of('quizmode', 'qz', 'q'))         {        quizmode = parse_quizmode(e[1])     }
-      else if (is_of('txt'))                         {        quizmode = parse_quizmode('imlaai') }
-      else if (is_of('byword'))                      {          byword = true                     }
-      else if (is_of('byletter'))                    {          byword = false                    }
-      else if (is_of(  'linebreaks'))                {    nolinebreaks = false                    }
-      else if (is_of('nolinebreaks'))                {    nolinebreaks = true                     }
-      else if (is_of('t',   'teach',   'teacher'))   {         teacher = true                     }
-      else if (is_of('n', 'noteach', 'noteacher'))   {         teacher = false                    }
-      else if (is_of('dt', 'disableteacher'))        {  disableteacher = true                     }
-      else if (is_of('dq', 'disablequizmode'))       { disablequizmode = true                     }
-      else if (is_of('hc', 'highcontrast'))          {    highcontrast = true                     }
-      else if (is_of('emu', 'emulate', 'emulation')) {         emulate = e[1]                     }
-      else if (is_of('qari'))                        {            qari = e[1]                     }
-      else if (is_of('qariurl'))                     {         qariurl = e[1]                     }
-      else if (is_of('cn'))                          {              cn = true                     }
-      else if (is_of('zz'))                          {              zz = true                     }
+           if (is_of('dark', 'd'))                   {            dark = true                             }
+      else if (is_of('light', 'l'))                  {            dark = false                            }
+      else if (is_of('color', 'c'))                  {           color = parse_color(e[1]) || color       }
+      else if (is_of('mvbtns', 'mv', 'm'))           {              mv = parse_mv(e[1]) || mv             }
+      else if (is_of('quizmode', 'qz', 'q'))         {        quizmode = parse_quizmode(e[1]) || quizmode }
+      else if (is_of('txt'))                         {        quizmode = parse_quizmode('imlaai')         }
+      else if (is_of('byword'))                      {          byword = true                             }
+      else if (is_of('byletter'))                    {          byword = false                            }
+      else if (is_of(  'linebreaks'))                {    nolinebreaks = false                            }
+      else if (is_of('nolinebreaks'))                {    nolinebreaks = true                             }
+      else if (is_of('t',   'teach',   'teacher'))   {         teacher = true                             }
+      else if (is_of('n', 'noteach', 'noteacher'))   {         teacher = false                            }
+      else if (is_of('dt', 'disableteacher'))        {  disableteacher = true                             }
+      else if (is_of('dq', 'disablequizmode'))       { disablequizmode = true                             }
+      else if (is_of('hc', 'highcontrast'))          {    highcontrast = true                             }
+      else if (is_of('emu', 'emulate', 'emulation')) {         emulate = e[1]                             }
+      else if (is_of('qari'))                        {            qari = e[1]                             }
+      else if (is_of('qariurl'))                     {         qariurl = e[1]                             }
+      else if (is_of('cn'))                          {              cn = true                             }
+      else if (is_of('zz'))                          {              zz = true                             }
     })
   let opts = {
     dark,
