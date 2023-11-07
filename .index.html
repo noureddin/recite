@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <<!!# this file uses a small preprocessor to embed fonts and data; see index.html for the generated HTML file>>
 <<!!sh meta.sh>>
-<link rel="stylesheet" type="text/css" href="style.min.css">
+<style>
+<<!!cat style.min.css>>
+</style>
 </head>
 <body>
 <input type="checkbox" id="dark" hidden disabled>
@@ -177,6 +179,6 @@
         async src="//gc.zgo.at/count.js"></script>
 
 <script src="res/jszip.min.js"></script>
-<script src="scripts.min.js"></script>
+<script><<!!cat scripts.min.js>></script>
 </body>
 </html>

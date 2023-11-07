@@ -3,13 +3,10 @@ J=deno run --quiet --allow-read npm:uglify-js -c passes=5 -m toplevel,reserved=$
 C=deno run --quiet --allow-read npm:clean-css-cli
 M=perl -CSAD minify.pl
 P=perl -CSAD -nE 'while(s/<<!!(.*?)>>/`$$1`/ge){} print'
-H=perl -CSAD -MDigest::file=digest_file_base64 -p \
-  -e 'sub hash(_) { digest_file_base64($$_[0], "SHA-1") =~ tr[+/][-_]r }' \
-  -e 's{(<script src="|<link [^<>]+ href=")([^"<>]+\.[^/]+)(?=")}{ "$$1$$2?h=" . hash($$2) }ge'
 
 
 index.html: .index.html a.js data.js scripts.min.js style.min.css
-	$P "$<" | $M | $H > "$@"
+	$P "$<" | $M > "$@"
 
 %.min.css: %.css
 	$C "$<" > "$@"
