@@ -6,7 +6,7 @@
 <<!!# this file uses a small preprocessor to embed fonts and data; see index.html for the generated HTML file>>
 <<!!sh meta.sh>>
 <style>
-<<!!cat style.css>>
+<<!!cat style.min.css>>
 </style>
 </head>
 <body>
@@ -173,34 +173,12 @@
 </div>
 </div>
 
-<script>
-    window.goatcounter = {
-        path: location.href,
-        allow_frame: true,
-    }
-</script>
+<script>window.goatcounter={path:location.href,allow_frame:true}</script>
 <!-- privacy-friendly statistics, no tracking of personal data, no need for GDPR consent; see goatcounter.com -->
 <script data-goatcounter="https://noureddin.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 
-<script>
-'use strict'
-<<!!cat a.js>>
-<<!!cat mappings.js>>
-<<!!cat tajlorligilumi.js>>
-</script>
 <script src="res/jszip.min.js"></script>
-<script>
-'use strict'
-<<!!cat data.js>>
-<<!!cat versligilumi.js>>
-// from: https://github.com/mathusummut/confetti.js. Copyright (c) 2018 MathuSum Mut. MIT License
-<<!!cat res/confetti.min.js>>
-<<!!#cat test.js>>
-// remove the '#' in the previous line to perform the tests
-<<!!cat javascript.js>>
-<<!!cat res/jszip-utils.min.js>>
-<<!!cat z.js>>
-</script>
+<script><<!!cat scripts.min.js>></script>
 </body>
 </html>
