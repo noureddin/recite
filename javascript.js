@@ -314,7 +314,7 @@ function _recite (o) {
     // the key, even for a few additional milliseconds by accident), which
     // prints a lot of words
     document.onkeyup = input_trigger
-    document.ondblclick = (ev) => { if (ev.target === el_uthm_txt || ev.target === Qid('body')) { word_fwd() } }
+    document.ondblclick = (ev) => { if (ev.target === el_uthm_txt || ev.target === el_body) { word_fwd() } }
     el_nextaaya.onclick = aaya_fwd
     el_nextjmla.onclick = jmla_fwd
     el_nextword.onclick = word_fwd
@@ -353,7 +353,7 @@ const hide_selectors = function (quizmode) {
     el_imla_txt.hidden = false
     el_uthm_txt.hidden = true
     el_mvbtns.hidden = true
-    Qid('end_of_header').style.color = 'transparent'  // to keep some space
+    el_end_of_header.style.color = 'transparent'  // to keep some space
     document.documentElement.style.setProperty('--sticky', '')
     el_imla_txt.focus()
   }
@@ -362,7 +362,7 @@ const hide_selectors = function (quizmode) {
     el_uthm_txt.innerHTML = ''
     el_mvbtns.hidden = false
     el_imla_txt.hidden = true
-    Qid('end_of_header').style.color = ''
+    el_end_of_header.style.color = ''
     document.documentElement.style.setProperty('--sticky', 'sticky')
     // el_nextword.focus()
   }

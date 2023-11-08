@@ -99,64 +99,55 @@ function _tajlorligilumilo (params) {
 function tajlorligilumi () {
   const opts = _tajlorligilumilo(window.location.hash || window.location.search)
   //
-  opts.quizmode = opts.quizmode != null? opts.quizmode : Qid('quizmode').value
-  Qid('quizmode').value = opts.quizmode
-  Qid('quizmode').onchange()
+  opts.quizmode = opts.quizmode != null? opts.quizmode : el_quizmode.value
+  el_quizmode.value = opts.quizmode
+  el_quizmode.onchange()
   //
   if (opts.highcontrast) {
-    Qid('body').classList.add('highcontrast')
+    el_body.classList.add('highcontrast')
   }
-  delete opts.highcontrast
   //
   if (opts.lowcontrast) {
-    Qid('body').classList.add('lowcontrast')
+    el_body.classList.add('lowcontrast')
   }
-  delete opts.lowcontrast
   //
   if (opts.dark == null) {  // no overriding; follow system preference initially
     opts.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
   }
-  Qid('darkmode_input').checked = opts.dark
-  Qid('darkmode_input').onchange()
-  delete opts.dark
+  el_darkmode_input.checked = opts.dark
+  el_darkmode_input.onchange()
   //
-  Qid('teacher_input').checked = opts.teacher
+  el_teacher_input.checked = opts.teacher
   //
-  Qid('qaris').value = opts.qari
-  if (!Qid('qaris').value) { Qid('qaris').value = '' }  // if unset or is a bad value
-  Qid('qaris').oninput()
+  el_qaris.value = opts.qari
+  if (!el_qaris.value) { el_qaris.value = '' }  // if unset or is a bad value
+  el_qaris.oninput()
   //
-  if (opts.qariurl) { Qid('qaris').value = '_' }  // an invalid value to hide "With audio"
-  Qid('qariurl').value = opts.qariurl ? opts.qariurl : ''
+  if (opts.qariurl) { el_qaris.value = '_' }  // an invalid value to hide "With audio"
+  el_qariurl.value = opts.qariurl ? opts.qariurl : ''
   //
-  Qid('textclr_input').value = opts.color
-  Qid('textclr_input').onchange()
-  delete opts.color
+  el_textclr_input.value = opts.color
+  el_textclr_input.onchange()
   //
-  Qid('mvbtns_input').value = opts.mv
-  Qid('mvbtns_input').onchange()
-  delete opts.mv
+  el_mvbtns_input.value = opts.mv
+  el_mvbtns_input.onchange()
   //
-  Qid('feedbackrate').value = opts.byword? 'word' : ''
-  Qid('feedbackrate').onchange()
-  delete opts.byword
+  el_feedbackrate.value = opts.byword? 'word' : ''
+  el_feedbackrate.onchange()
   //
-  Qid('linebreaks_input').checked = !opts.nolinebreaks
-  Qid('linebreaks_input').onchange()
-  delete opts.nolinebreaks
+  el_linebreaks_input.checked = !opts.nolinebreaks
+  el_linebreaks_input.onchange()
   //
   const hide = (e) => e.style.display = 'none'
   //
   if (opts.disableteacher) {
-    hide(Qid('teacher_option'))
+    hide(el_teacher_option)
   }
-  delete opts.disableteacher
   //
   if (opts.disablequizmode) {
-    hide(Qid('quizmode_option'))
+    hide(el_quizmode_option)
     Qall('.mode_options_title').forEach(hide)
   }
-  delete opts.disablequizmode
   //
   if (opts.emulate && mappings[opts.emulate]) {
     window.emulate = opts.emulate  // it's an option, but a hidden one.
