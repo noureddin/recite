@@ -55,9 +55,15 @@ function _aya2idx (aya) {  // 1-6236 or 1/7
   if (aya.includes('/')) {
     let a = aya.split('/');
     if (a.length !== 2) { return }
-    if (+a[0] < 1 || +a[0] > MAX_SURA) { return }
-    if (+a[1] < 1 || +a[1] > suar_length[+a[0] - 1]) { return }
-    return start_(+a[0] - 1) + +a[1]
+    // neither can be negative because of the earlier range_to_pair's split('-')
+    const [sura, aaya] = [ +a[0], +a[1] ]
+    if (isNaN(sura) || isNaN(aaya)) { return }
+    if (sura < 1 || sura > MAX_SURA) { return }
+    const max_aaya = suar_length[sura - 1]
+    const clamped_aaya = Math.max(1, Math.min(max_aaya, aaya))
+    // that clamps the aaya number to the valid range,
+    // so zero is the first aaya, and 300 is the last aaya in the sura.
+    return start_(sura - 1) + clamped_aaya
   }
   else {
     if (+aya > MAX_AYA) { return }
