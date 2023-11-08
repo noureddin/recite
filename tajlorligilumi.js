@@ -42,6 +42,7 @@ function _tajlorligilumilo (params) {
   let disableteacher   // remove teacher mode selector from the UI, teacher mode can still be set from the URL: dt/disableteacher
   let disablequizmode  // remove quiz mode selector from the UI, quiz mode can still be set from the URL: dq/disablequizmode
   let highcontrast     // high-contrast, dark colorscheme
+  let lowcontrast      // use a lower contrast imlaai bg color when wrong (not incompatible with highcontrast)
   let emulate          // keyboard layout emulation; see https://noureddin.github.io/kbt (same ids, w/o '-ar')
   let cn               // continuation; ie, append a "phrase" from the next aaya if in the same sura
   let zz               // enable embedded integration: zz (cannot be disabled if enabled)
@@ -67,6 +68,7 @@ function _tajlorligilumilo (params) {
       else if (is_of('dt', 'disableteacher'))        {  disableteacher = true                             }
       else if (is_of('dq', 'disablequizmode'))       { disablequizmode = true                             }
       else if (is_of('hc', 'highcontrast'))          {    highcontrast = true                             }
+      else if (is_of('lc', 'lowcontrast'))           {     lowcontrast = true                             }
       else if (is_of('emu', 'emulate', 'emulation')) {         emulate = e[1]                             }
       else if (is_of('qari'))                        {            qari = e[1]                             }
       else if (is_of('qariurl'))                     {         qariurl = e[1]                             }
@@ -84,6 +86,7 @@ function _tajlorligilumilo (params) {
     disableteacher,
     disablequizmode,
     highcontrast,
+    lowcontrast,
     emulate,
     qari,
     qariurl,
@@ -104,6 +107,11 @@ function tajlorligilumi () {
     Qid('body').classList.add('highcontrast')
   }
   delete opts.highcontrast
+  //
+  if (opts.lowcontrast) {
+    Qid('body').classList.add('lowcontrast')
+  }
+  delete opts.lowcontrast
   //
   if (opts.dark == null) {  // no overriding; follow system preference initially
     opts.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
