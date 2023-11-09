@@ -4,7 +4,7 @@
 // with similar names, eg scroll_to_top. I also use it for variables and consts.
 // The only exception is the Q* shorthand functions defined next.
 
-const say = console.log
+// const say = console.log
 const range = (i) => [...Array(i).keys()]
 
 // Q*, el_*
