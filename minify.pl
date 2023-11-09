@@ -15,14 +15,22 @@ sub minify_html { my $t = shift;
     $t =~ s|\s+| |g;
     ## remove horizontal spaces around punctuation
     $t =~ s|> <|><|g;
+    $t =~ s/(<(?:script|style)>) /$1/g;
+    $t =~ s/ (<\/(?:script|style)>)/$1/g;
+    ## old:
     # $t =~ s|(?<=\W) (?=\W)||g;
     # $t =~ s|(?<=[^\w"]) (?=\w)||g; # don't remove the space between html attributes
     # $t =~ s| (?=\W)||g;
     ## remove leading and trailing spaces
     $t =~ s|\A\s+||g;
     $t =~ s|\s+\Z||g;
-    ## restore the newline after doctype (if any)
-    $t =~ s|<!doctype .*?>|$&\n|i;
+    ## for debugging
+    # $t =~ s| <|█<|g;
+    # $t =~ s|> |>█|g;
+    ## unquote attribute values if allowable (I use only double-quotes in html)
+    ## https://html.spec.whatwg.org/multipage/syntax.html#unquoted
+    $t =~ s|(\b\w+)="([^\s"'`<>]+)"|$1=$2|g;
+    $t =~ s|(\b\w+)=""|$1|g;
     return $t;
 }
 

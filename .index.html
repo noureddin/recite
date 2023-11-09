@@ -36,7 +36,7 @@
   <div class="option">
     <label for="qaris">تلاوة بصوت:&ensp;</label><select id="qaris" oninput="change_qari()">
       <option value="" selected>بغير تلاوة صوتية</option>
-<<!!cat res/qaris | while read value; do read title; echo "    <option value=\"$value\">$title</option>"; done>>
+<<!!cat res/qaris | while read value; do read title; printf "<option value=%s>%s</option>" "$value" "$title"; done>>
     </select>
     <input type="hidden" id="qariurl" value="">
   </div>
@@ -119,7 +119,7 @@
     <label for="sura_bgn">من&nbsp;سورة:&thinsp;</label>
     <select id="sura_bgn">
       <option value="" selected>السورة</option>
-      <<!!sh -c 'i=0; cat res/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$((i + 1)); done | tr -d "\n"'>>
+      <<!!sh -c 'i=0; cat res/suar-names | while read sura; do printf "<option value=%s>%s</option>" $i "$sura"; i=$((i + 1)); done | tr -d "\n"'>>
     </select>&thinsp;<label for="aaya_bgn">الآية:&thinsp;</label>
     <input id="aaya_bgn">
   </div>
@@ -128,7 +128,7 @@
     <label for="sura_end">إلى&nbsp;سورة:&thinsp;</label>
     <select id="sura_end">
       <option value="" selected>السورة</option>
-      <<!!sh -c 'i=0; cat res/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$((i + 1)); done | tr -d "\n"'>>
+      <<!!sh -c 'i=0; cat res/suar-names | while read sura; do printf "<option value=%s>%s</option>" $i "$sura"; i=$((i + 1)); done | tr -d "\n"'>>
     </select>&thinsp;<label for="aaya_end">الآية:&thinsp;</label>
     <input id="aaya_end">
   </div>
@@ -152,20 +152,19 @@
 <textarea hidden id="imla_txt" placeholder="اكتب هنا">
 </textarea>
 
-<div hidden id="endmsg">
-بارك الله فيك وفتح&nbsp;عليك!&nbsp;<<!!cat res/party-popper.svg | tr -d "\n">>
+<div hidden id="endmsg">بارك الله فيك وفتح&nbsp;عليك!&nbsp;<<!!cat res/party-popper.svg>>
 <!-- U+1F389 Party Popper, from NotoColorEmoji; https://github.com/googlefonts/noto-emoji/raw/main/svg/emoji_u1f389.svg -->
 <button id="zzback" hidden>عودة</button>
 </div>
 
 <!-- these svg arrows were designed in Inkscape by me and optimized with https://vecta.io/nano; CC0 -->
 <div id="mvbtns" hidden>
-  <button title="أخف آية (زري Ctrl+BackSpace)" id="prevaaya"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M195.826 237.711h-39.765l60.864-105.419-60.864-105.419h39.765l60.864 105.419zm-68.792 0H87.269l60.864-105.419-60.864-105.42h39.765l60.864 105.419zm-68.792 0H18.477l60.864-105.419-60.864-105.42h39.765l60.864 105.419z"/></svg></button>
-  <button title="أخف عبارة - حتى علامة وقف أو نهاية آية (زر رقم الواحد)" id="prevjmla"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M161.43 237.711h-39.765l60.864-105.419-60.864-105.419h39.765l60.864 105.419zm-68.792 0H52.873l60.864-105.419-60.864-105.42h39.765l60.864 105.419z"/></svg></button>
-  <button title="أخف كلمة (زر BackSpace أو سهم يمين)" id="prevword"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M127.034 237.711H87.269l60.864-105.419L87.269 26.872h39.765l60.864 105.419z"/></svg></button>
-  <button title="أظهر كلمة (زر Space أو Enter أو سهم يسار)" id="nextword"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M137.549 237.711h39.765l-60.864-105.419 60.864-105.419h-39.765L76.686 132.292z"/></svg></button>
-  <button title="أظهر عبارة - حتى علامة وقف أو نهاية آية (زر رقم الصفر)" id="nextjmla"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M103.154 237.711h39.765L82.055 132.292l60.864-105.419h-39.765L42.29 132.292zm68.791 0h39.765l-60.864-105.419 60.864-105.42h-39.765l-60.864 105.419z"/></svg></button>
-  <button title="أظهر آية (زري Ctrl+Space أو Ctrl+Enter)" id="nextaaya"><svg viewBox="0 0 250 200" height="1000" width="1000"><path d="M68.758 237.711h39.765L47.659 132.292l60.864-105.419H68.758L7.894 132.292zm68.791 0h39.765L116.45 132.292l60.864-105.419h-39.765L76.685 132.292zm68.792 0h39.765l-60.864-105.419 60.864-105.419h-39.765l-60.864 105.419z"/></svg></button>
+  <button title="أخف آية (زري Ctrl+BackSpace)" id="prevaaya"><<!!cat res/ppp.svg>></button>
+  <button title="أخف عبارة - حتى علامة وقف أو نهاية آية (زر رقم الواحد)" id="prevjmla"><<!!cat res/pp.svg>></button>
+  <button title="أخف كلمة (زر BackSpace أو سهم يمين)" id="prevword"><<!!cat res/p.svg>></button>
+  <button title="أظهر كلمة (زر Space أو Enter أو سهم يسار)" id="nextword"><<!!cat res/n.svg>></button>
+  <button title="أظهر عبارة - حتى علامة وقف أو نهاية آية (زر رقم الصفر)" id="nextjmla"><<!!cat res/nn.svg>></button>
+  <button title="أظهر آية (زري Ctrl+Space أو Ctrl+Enter)" id="nextaaya"><<!!cat res/nnn.svg>></button>
 </div>
 
 </div>
