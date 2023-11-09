@@ -2,6 +2,7 @@ R=$(shell perl -nle 'push @a, /\bon\w+="([^"]+)\(\)/; END { printf "[%s]\n", joi
 J=deno run --quiet --allow-read npm:uglify-js -c passes=5 -m toplevel,reserved=$R
 C=deno run --quiet --allow-read npm:clean-css-cli
 M=perl -CSAD minify.pl
+# M=cat
 P=perl -CSAD -nE 'while(s/<<!!(.*?)>>/`$$1`/ge){} print'
 
 

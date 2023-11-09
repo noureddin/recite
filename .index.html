@@ -116,22 +116,20 @@
 <div id="selectors">
 
   <div>
-    <label for="sura_bgn">من سورة:</label>
+    <label for="sura_bgn">من&nbsp;سورة:&thinsp;</label>
     <select id="sura_bgn">
       <option value="" selected>السورة</option>
       <<!!sh -c 'i=0; cat res/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$((i + 1)); done | tr -d "\n"'>>
-    </select>
-    <label for="aaya_bgn">الآية:</label>
+    </select>&thinsp;<label for="aaya_bgn">الآية:&thinsp;</label>
     <input id="aaya_bgn">
   </div>
 
   <div>
-    <label for="sura_end">إلى سورة:</label>
+    <label for="sura_end">إلى&nbsp;سورة:&thinsp;</label>
     <select id="sura_end">
       <option value="" selected>السورة</option>
       <<!!sh -c 'i=0; cat res/suar-names | while read sura; do echo "<option value=\"$i\">$sura</option>"; i=$((i + 1)); done | tr -d "\n"'>>
-    </select>
-    <label for="aaya_end">الآية:</label>
+    </select>&thinsp;<label for="aaya_end">الآية:&thinsp;</label>
     <input id="aaya_end">
   </div>
 
@@ -155,7 +153,7 @@
 </textarea>
 
 <div hidden id="endmsg">
-بارك الله فيك وفتح عليك!&nbsp;<<!!cat res/party-popper.svg | tr -d "\n">>
+بارك الله فيك وفتح&nbsp;عليك!&nbsp;<<!!cat res/party-popper.svg | tr -d "\n">>
 <!-- U+1F389 Party Popper, from NotoColorEmoji; https://github.com/googlefonts/noto-emoji/raw/main/svg/emoji_u1f389.svg -->
 <button id="zzback" hidden>عودة</button>
 </div>

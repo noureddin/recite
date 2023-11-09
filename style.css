@@ -296,7 +296,7 @@ button {
 
 #mvbtns button {
   --width: calc(var(--all-width) / 7.5);
-  margin: 0;
+  margin: 0 0.25em;
   fill: var(--faint-btn);
 }
 
@@ -397,7 +397,6 @@ summary::marker { color: #c00; }
   --all-width: clamp(10rem, 80vh, 35rem);
   position: fixed;
   width: 100vh;
-  margin: 0;
   top: 0;
   transform-origin: top right;
   transform: rotate(-90deg);
@@ -418,7 +417,7 @@ summary::marker { color: #c00; }
 }
 
 #header button {
-  margin: 0.2rem;
+  margin: 0.25rem;
 }
 
 #preloader {
