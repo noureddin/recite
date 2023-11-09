@@ -262,30 +262,30 @@ function _recite_uthm () {
     scroll_to_bottom()
   }
 
-  const word_fwd = () => fwd('w')
+  const word_fwd = () => fwd('')
   const aaya_fwd = () => fwd('a')
   const jmla_fwd = () => fwd('j')
 
-  const word_bck = function (ev) {
-    if (el_uthm_txt.innerHTML.length === 0) { return 'a' }
-    if (!el_endmsg.hidden) { return 'a' }
-    const last_word = el_uthm_txt.innerHTML.match(/(?:^|\t|\n)([^\n\t]+(?:\t|\n))$/)[1]
-    words.unshift(last_word)
-    el_uthm_txt.innerHTML = el_uthm_txt.innerHTML.substring(0, el_uthm_txt.innerHTML.length - last_word.length)
-    if (last_word.match(/\n$/)) {
-      audio.back()
-      if (teacher) { audio.play() }
+  const bck = function (kind) {
+    let uthm = el_uthm_txt.innerHTML
+    if (uthm.length === 0 || !el_endmsg.hidden) { return }
+    while (uthm.length > 0) {
+      const last_word = uthm.match(/(?:^|\t|\n)([^\n\t]+(?:\t|\n))$/)[1]
+      words.unshift(last_word)
+      uthm = uthm.substring(0, uthm.length - last_word.length)
+      if (last_word.match(/\n$/)) {
+        audio.back()
+        if (teacher) { audio.play() }
+      }
+      const new_kind = kind_of_portion(uthm.slice(-2))
+      if (kind === new_kind || (kind === 'j' && new_kind === 'a')) { break }
     }
-    return kind_of_portion( el_uthm_txt.innerHTML.slice(-2) )
+    el_uthm_txt.innerHTML = uthm
   }
 
-  const aaya_bck = function (ev) {
-    do { var c = word_bck() } while (c !== 'a')
-  }
-
-  const jmla_bck = function (ev) {
-    do { var c = word_bck() } while (c !== 'a' && c !== 'j')
-  }
+  const word_bck = () => bck('')
+  const aaya_bck = () => bck('a')
+  const jmla_bck = () => bck('j')
 
   const input_trigger = function (ev) {
 
