@@ -288,33 +288,33 @@ const sync_elem_class_with = (el, cls, pred) =>
   pred ? el.classList.add(cls) : el.classList.remove(cls)
 
 function change_tajweed () {
-  const tval = Qid('textclr_input').value
+  const tval = el_textclr_input.value
   sync_class_with('letter-parts',   tval === 'bas')
   sync_class_with('letter-nocolor', tval === 'no')
   zz_set('tajweed', tval.slice(0,1))
 }
 
 function change_ayatnum () {
-  const ayatnum = Qid('ayatnum_input').checked
+  const ayatnum = el_ayatnum_input.checked
   sync_class_with('ayat-nocolor', !ayatnum)
   zz_set('ayatnum', ayatnum)
 }
 
 function change_linebreaks() {
-  const nb = !Qid('linebreaks_input').checked
+  const nb = !el_linebreaks_input.checked
   sync_elem_class_with(el_uthm_txt, 'nb', nb)
   zz_set('linebreaks', !nb)
 }
 
 function change_dark () {
-  // sync_class_with('dark', Qid('darkmode_input').checked)
-  const dark = Qid('darkmode_input').checked
-  Qid('dark').checked = dark
+  // sync_class_with('dark', el_darkmode_input.checked)
+  const dark = el_darkmode_input.checked
+  el_dark.checked = dark
   zz_set('dark', dark)
 }
 
 function change_mvbtns () {
-  const mv = Qid('mvbtns_input').value
+  const mv = el_mvbtns_input.value
   const mv_cls =
     mv === 'right' ? 'sidebtns rightside' :
     mv === 'left'  ? 'sidebtns leftside'  :
@@ -324,7 +324,7 @@ function change_mvbtns () {
 }
 
 function decode_contact () {
-  let xyz = Qid('xyz')
+  let xyz = Qid('xyz')  // do NOT change to el_xyz; it's not defined in .index.html thus this const is not created
   let mia_nomo = Q('body').innerHTML.match(/github[.]com\/([a-z0-9]+)\//)[1]
   xyz.innerHTML = mia_nomo + String.fromCharCode(1<<6) + 'pro' + (''+(!![]))[+![]] + 'moc.liamno'.split('').reverse().join('')
   xyz.href = xyz.innerHTML.slice(16,20) + 'to' + String.fromCharCode('xyz'.charCodeAt(1<<1)^0O100) + xyz.innerHTML
