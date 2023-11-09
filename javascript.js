@@ -2,8 +2,8 @@ let opts = {}
 
 function start_reciting () {
   if (!valid_inputs(sura_bgn_val(), aaya_bgn_val(), sura_end_val(), aaya_end_val())) { return }
-  const st = start_(sura_bgn_val()) + aaya_bgn_val()
-  const en = start_(sura_end_val()) + aaya_end_val()
+  const st = sura_offset[sura_bgn_val()] + aaya_bgn_val()
+  const en = sura_offset[sura_end_val()] + aaya_end_val()
   _start_reciting(st, en)
 }
 
@@ -115,16 +115,7 @@ function recite (o) {
 
   if (o.zz) { parent.zz_show() }
   hide_selectors(o.quizmode)
-
-  const start = () => { _recite(o) }
-  if (o.quizmode === 'imla') { load_imla(start) }
-  else {  /* uthmani, which is split into two parts */
-    const n1 = is_in_first_half(o.st, o.en)
-    const n2 = is_in_second_half(o.st, o.en)
-    if (n1 && n2) { load_uthm1(() => { load_uthm2(start) }) }  // TODO: parallize
-    else if (n1) { load_uthm1(start) }
-    else if (n2) { load_uthm2(start) }
-  }
+  load(o.quizmode, o.st, o.en, () => _recite(o))
 }
 
 document.addEventListener('keyup', (ev) => {

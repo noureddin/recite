@@ -40,39 +40,97 @@ function load_zip(basename, callback) {
   })
 }
 
-var imla
-var uthm = Array(6236)
-
-function load_imla (callback) {
-  if (imla == null) {
-    load_zip('imla', (arr) => { imla = arr; callback() })
-  } else { callback() }
+var ayat = {
+  imla: Array(6236),
+  uthm: Array(6236),
 }
 
-// uthmani is split into two parts: until Surat Mariam (Sura 19), and then from Surat Ta-Ha.
-// this is *not* arbitrary: it makes both parts almost the same size in bytes.
-const FIRST_AAYA_OF_TAHA = 2349
-function is_in_first_half  (st, en) { return (st-1 <  FIRST_AAYA_OF_TAHA || en <  FIRST_AAYA_OF_TAHA) }
-function is_in_second_half (st, en) { return (st-1 >= FIRST_AAYA_OF_TAHA || en >= FIRST_AAYA_OF_TAHA) }
+// both imlaai and uthmani are split into nearly equal-size (in bytes) parts, without crossing suar.
+// each of these constants is the aaya that starts that part.
+const P2 =  494
+const P3 =  955
+const P4 = 1474
+const P5 = 2141
+const P6 = 2933
+const P7 = 3789
+const P8 = 4736
 
-/* WARNING: the files are named othm1 & othm2 NOT uthmN as you may expect; do NOT change this! */
+function load (name, st, en, callback) {
 
-function load_uthm1 (callback) {
-  if (uthm[0] == null) {  /* checking an arbitrary aaya in the 1st half */
-    load_zip('othm1', (arr) => { uthm = [...arr, ...uthm.slice(FIRST_AAYA_OF_TAHA)]; callback() })
-  } else { callback() }
-}
+  const either_between = (a, b) => st >= a && st < b || en >= a && en < b
 
-function load_uthm2 (callback) {
-  if (uthm[6000] == null) {  /* checking an arbitrary aaya in the 2nd half */
-    load_zip('othm2', (arr) => { uthm = [...uthm.slice(0,FIRST_AAYA_OF_TAHA-1), ...arr]; callback() })
-  } else { callback() }
+  // check what parts are needed
+  const p1 = st < P2 || en < P2
+  const p2 = either_between(P2, P3)
+  const p3 = either_between(P3, P4)
+  const p4 = either_between(P4, P5)
+  const p5 = either_between(P5, P6)
+  const p6 = either_between(P6, P7)
+  const p7 = either_between(P7, P8)
+  const p8 = st >= P8 || en >= P8
+
+  // check an arbitrary aaya in the given quarter, then callback or load then callback
+  const L1 = (cb) => ayat[name][ 0] ? cb() : load_zip(name+'1', (a) => { ayat[name] = [                             ...a, ...ayat[name].slice(P2)]; cb() })
+  const L2 = (cb) => ayat[name][P2] ? cb() : load_zip(name+'2', (a) => { ayat[name] = [...ayat[name].slice(0,P2-1), ...a, ...ayat[name].slice(P3)]; cb() })
+  const L3 = (cb) => ayat[name][P3] ? cb() : load_zip(name+'3', (a) => { ayat[name] = [...ayat[name].slice(0,P3-1), ...a, ...ayat[name].slice(P4)]; cb() })
+  const L4 = (cb) => ayat[name][P4] ? cb() : load_zip(name+'4', (a) => { ayat[name] = [...ayat[name].slice(0,P4-1), ...a, ...ayat[name].slice(P5)]; cb() })
+  const L5 = (cb) => ayat[name][P5] ? cb() : load_zip(name+'5', (a) => { ayat[name] = [...ayat[name].slice(0,P5-1), ...a, ...ayat[name].slice(P6)]; cb() })
+  const L6 = (cb) => ayat[name][P6] ? cb() : load_zip(name+'6', (a) => { ayat[name] = [...ayat[name].slice(0,P6-1), ...a, ...ayat[name].slice(P7)]; cb() })
+  const L7 = (cb) => ayat[name][P7] ? cb() : load_zip(name+'7', (a) => { ayat[name] = [...ayat[name].slice(0,P7-1), ...a, ...ayat[name].slice(P8)]; cb() })
+  const L8 = (cb) => ayat[name][P8] ? cb() : load_zip(name+'8', (a) => { ayat[name] = [...ayat[name].slice(0,P8-1), ...a                         ]; cb() })
+
+  // TODO: parallize
+  if      (p1 && p8) { L1(()=> L2(()=> L3(()=> L4(()=> L5(()=> L6(()=> L7(()=> L8( callback )))))))) }
+
+  else if (p1 && p7) { L1(()=> L2(()=> L3(()=> L4(()=> L5(()=> L6(()=> L7(         callback )))))))  }
+  else if (p2 && p8) {         L2(()=> L3(()=> L4(()=> L5(()=> L6(()=> L7(()=> L8( callback )))))))  }
+
+  else if (p1 && p6) { L1(()=> L2(()=> L3(()=> L4(()=> L5(()=> L6(                 callback ))))))   }
+  else if (p2 && p7) {         L2(()=> L3(()=> L4(()=> L5(()=> L6(()=> L7(         callback ))))))   }
+  else if (p3 && p8) {                 L3(()=> L4(()=> L5(()=> L6(()=> L7(()=> L8( callback ))))))   }
+
+  else if (p1 && p5) { L1(()=> L2(()=> L3(()=> L4(()=> L5(                         callback )))))    }
+  else if (p2 && p6) {         L2(()=> L3(()=> L4(()=> L5(()=> L6(                 callback )))))    }
+  else if (p3 && p7) {                 L3(()=> L4(()=> L5(()=> L6(()=> L7(         callback )))))    }
+  else if (p4 && p8) {                         L4(()=> L5(()=> L6(()=> L7(()=> L8( callback )))))    }
+
+  else if (p1 && p4) { L1(()=> L2(()=> L3(()=> L4(                                 callback ))))     }
+  else if (p2 && p5) {         L2(()=> L3(()=> L4(()=> L5(                         callback ))))     }
+  else if (p3 && p6) {                 L3(()=> L4(()=> L5(()=> L6(                 callback ))))     }
+  else if (p4 && p7) {                         L4(()=> L5(()=> L6(()=> L7(         callback ))))     }
+  else if (p5 && p8) {                                 L5(()=> L6(()=> L7(()=> L8( callback ))))     }
+
+  else if (p1 && p3) { L1(()=> L2(()=> L3(                                         callback )))      }
+  else if (p2 && p4) {         L2(()=> L3(()=> L4(                                 callback )))      }
+  else if (p3 && p5) {                 L3(()=> L4(()=> L5(                         callback )))      }
+  else if (p4 && p6) {                         L4(()=> L5(()=> L6(                 callback )))      }
+  else if (p5 && p7) {                                 L5(()=> L6(()=> L7(         callback )))      }
+  else if (p6 && p8) {                                         L6(()=> L7(()=> L8( callback )))      }
+
+  else if (p1 && p2) { L1(()=> L2(                                                 callback ))       }
+  else if (p2 && p3) {         L2(()=> L3(                                         callback ))       }
+  else if (p3 && p4) {                 L3(()=> L4(                                 callback ))       }
+  else if (p4 && p5) {                         L4(()=> L5(                         callback ))       }
+  else if (p5 && p6) {                                 L5(()=> L6(                 callback ))       }
+  else if (p6 && p7) {                                         L6(()=> L7(         callback ))       }
+  else if (p7 && p8) {                                                 L7(()=> L8( callback ))       }
+
+  else if (p1) { L1(callback) }
+  else if (p2) { L2(callback) }
+  else if (p3) { L3(callback) }
+  else if (p4) { L4(callback) }
+  else if (p5) { L5(callback) }
+  else if (p6) { L6(callback) }
+  else if (p7) { L7(callback) }
+  else if (p8) { L8(callback) }
+
+  else { throw `cannot load that: ${st} - ${en}` }
 }
 
 function imlaai_ayat (st, en) {
 
   return (
-    imla
+    ayat.imla
       .slice(st-1,en)
       .map(a => a.startsWith('#')? a.replace('#', 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\n') : a)
       .join('\n')
@@ -102,7 +160,7 @@ function make_words_list (st, en, cn) {  // uthmani
       .replace(/\xa0.*/, '').replace(/ /g, '\xa0')  // '\ufdfd'
 
   return (
-    uthm
+    ayat.uthm
       .slice(st-1, en)
       .reduce((arr, aya, i) => {
         // https://stackoverflow.com/a/38528645
