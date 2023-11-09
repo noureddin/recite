@@ -8,8 +8,8 @@ function make_audio_list (sura_bgn, aaya_bgn, sura_end, aaya_end) {
     range(115).slice(+sura_bgn + 1, +sura_end + 2)
       // s is the sura number, 1-based
       .map(s => range(+suar_length[s - 1] + 1)
-        .slice(s === +sura_bgn + 1? +aaya_bgn     :   1,
-               s === +sura_end + 1? +aaya_end + 1 : 300  // larger than any sura
+        .slice(s === +sura_bgn + 1 ? +aaya_bgn     :   1,
+               s === +sura_end + 1 ? +aaya_end + 1 : 300  // larger than any sura
         )
         .map(a => s.toString().padStart(3,'0')
                 + a.toString().padStart(3,'0')
@@ -132,7 +132,7 @@ function imlaai_ayat (st, en) {
   return (
     ayat.imla
       .slice(st-1,en)
-      .map(a => a.startsWith('#')? a.replace('#', 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\n') : a)
+      .map(a => a.startsWith('#') ? a.replace('#', 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\n') : a)
       .join('\n')
       + '\n'
   )

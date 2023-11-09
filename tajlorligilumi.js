@@ -50,7 +50,7 @@ function _tajlorligilumilo (params) {
     .slice(1)  // remove the first character (`?` or `#`)
     .split('&')
     .map(p => p.split('='))
-    //.reduce((obj, cur, i) => { i == 0? {} : (obj[cur[0]] = cur[1], obj), {})
+    //.reduce((obj, cur, i) => { i == 0 ? {} : (obj[cur[0]] = cur[1], obj), {})
     .forEach((e, i) => {
       const is_of = (...params) => params.includes(e[0])
            if (is_of('dark', 'd'))                   {            dark = true                             }
@@ -99,7 +99,7 @@ function _tajlorligilumilo (params) {
 function tajlorligilumi () {
   const opts = _tajlorligilumilo(window.location.hash || window.location.search)
   //
-  opts.quizmode = opts.quizmode != null? opts.quizmode : el_quizmode.value
+  opts.quizmode = opts.quizmode != null ? opts.quizmode : el_quizmode.value
   el_quizmode.value = opts.quizmode
   el_quizmode.onchange()
   //
@@ -132,7 +132,7 @@ function tajlorligilumi () {
   el_mvbtns_input.value = opts.mv
   el_mvbtns_input.onchange()
   //
-  el_feedbackrate.value = opts.byword? 'word' : ''
+  el_feedbackrate.value = opts.byword ? 'word' : ''
   el_feedbackrate.onchange()
   //
   el_linebreaks_input.checked = !opts.nolinebreaks
@@ -149,8 +149,9 @@ function tajlorligilumi () {
     Qall('.mode_options_title').forEach(hide)
   }
   //
-  if (opts.emulate && mappings[opts.emulate]) {
-    window.emulate = opts.emulate  // it's an option, but a hidden one.
-  }
+  // options that don't have a visible ui input (in addition to qariurl)
+  if (opts.emulate && mappings[opts.emulate]) { window.emulate = opts.emulate }
+  if (opts.cn) { el_cn.value = opts.cn ? '1' : '' }
+  if (opts.zz) { el_zz.value = opts.zz ? '1' : '' }
 }
 tajlorligilumi()

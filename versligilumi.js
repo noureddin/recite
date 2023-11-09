@@ -210,7 +210,7 @@ function _versligilumilo (params) {
     .slice(1)  // remove the first character (`?` or `#`)
     .split('&')
     .map(p => p.split('='))
-    //.reduce((obj, cur, i) => { i == 0? {} : (obj[cur[0]] = cur[1], obj), {})
+    //.reduce((obj, cur, i) => { i == 0 ? {} : (obj[cur[0]] = cur[1], obj), {})
     .forEach((e, i) => {
       const is_of = (...params) => params.includes(e[0])
            if (is_of('a')) { a = isNaN(+e[1]) ? a : +e[1] }
@@ -235,5 +235,5 @@ function versligilumi () {
   //
   // if no ayat are selected
   if (st == null || en == null) { return }
-  _start_reciting(st, en)
+  recite(st, en)
 }

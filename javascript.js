@@ -4,26 +4,11 @@ function start_reciting () {
   if (!valid_inputs(sura_bgn_val(), aaya_bgn_val(), sura_end_val(), aaya_end_val())) { return }
   const st = sura_offset[sura_bgn_val()] + aaya_bgn_val()
   const en = sura_offset[sura_end_val()] + aaya_end_val()
-  _start_reciting(st, en)
-}
-
-function _start_reciting (st, en) {
-  const teacher = el_teacher_input.checked
-  const qari = el_qaris.value
-  const qariurl = el_qariurl.value
-  const quizmode = el_quizmode.value
-  opts = {...opts, st, en, qari, qariurl, teacher, quizmode}
-  hide_selectors(quizmode)
-  recite(opts)
+  recite(st, en)
 }
 
 function restart_reciting () {
-  // qari and quizmode and teacher can change from the UI.
-  opts.qari = el_qaris.value
-  opts.quizmode = el_quizmode.value
-  opts.teacher = el_teacher_input.checked
-  hide_selectors(opts.quizmode)  // handles the change of quiz mode
-  recite(opts)
+  recite(opts.st, opts.en)
 }
 
 function input_trigger_x (ev) {
@@ -36,10 +21,10 @@ function input_trigger_x (ev) {
   //   sura_bgn > aaya_bgn > sura_end > aaya_end > ok
   // also, on the last element, get the next (ie first) word
   if (ev.key === 'Enter' && (on_ayat || on_suar)) {
-    (ev.target.id === 'sura_bgn'? el_aaya_bgn :
-     ev.target.id === 'aaya_bgn'? el_sura_end :
-     ev.target.id === 'sura_end'? el_aaya_end :
-     ev.target.id === 'aaya_end'? el_ok       :
+    (ev.target.id === 'sura_bgn' ? el_aaya_bgn :
+     ev.target.id === 'aaya_bgn' ? el_sura_end :
+     ev.target.id === 'sura_end' ? el_aaya_end :
+     ev.target.id === 'aaya_end' ? el_ok       :
      1).focus()
     return
   }
@@ -67,7 +52,7 @@ function show_done () {
       setTimeout(() => el_zzback.focus(), 500)
     }
     if (!el_imla_txt.hidden) {
-      el_imla_txt.style.height = el_zzback.hidden? 'calc(100vh - 12rem)' : 'calc(100vh - 15rem)'
+      el_imla_txt.style.height = el_zzback.hidden ? 'calc(100vh - 12rem)' : 'calc(100vh - 15rem)'
       el_imla_txt.scroll({ top: el_imla_txt.scrollHeight })  // scroll to bottom
     }
     return true
@@ -95,27 +80,37 @@ function init_audio (stpair, enpair, qari, qariurl) {
   audio.fill(make_audio_list(stpair[0]-1, stpair[1], enpair[0]-1, enpair[1]))
 }
 
-function recite (o) {
-  opts = o
+function recite (st, en) {
+  opts.st = st ? st : opts.st
+  opts.en = en ? en : opts.en
+
+  const cn = !!el_cn.value
+  const zz = !!el_zz.value
+  const qari = el_qaris.value
+  const qariurl = el_qariurl.value
+  const quizmode = el_quizmode.value
+  const teacher = el_teacher_input.checked
 
   const preserve_url = !!window.location.search || !!window.location.hash
 
-  el_zzback.style.display = o.zz? 'block' : 'none'
-  el_zzback.hidden = !o.zz
-  el_zzignore.hidden = !o.zz
-  el_new.hidden = !!o.zz  // only hide if ignore is shown
+  hide_selectors(quizmode)
 
-  const stpair = idx2aya(o.st-1)
-  const enpair = idx2aya(o.en-1)
+  el_zzback.style.display = zz ? 'block' : 'none'
+  el_zzback.hidden = !zz
+  el_zzignore.hidden = !zz
+  el_new.hidden = !!zz  // only hide if ignore is shown
+
+  const stpair = idx2aya(st-1)
+  const enpair = idx2aya(en-1)
   const [title, titleclass] = make_title(...stpair, ...enpair)
   el_title.innerHTML = title
   el_title.classList = titleclass
   sync_ui(stpair, enpair, title, preserve_url)
-  init_audio(stpair, enpair, o.qari, o.qariurl, preserve_url)
+  init_audio(stpair, enpair, qari, qariurl, preserve_url)
 
-  if (o.zz) { parent.zz_show() }
-  hide_selectors(o.quizmode)
-  load(o.quizmode, o.st, o.en, () => _recite(o))
+  if (zz) { parent.zz_show() }
+  const _recite = quizmode === 'imla' ? _recite_imla : _recite_uthm
+  load(quizmode, st, en, _recite)
 }
 
 document.addEventListener('keyup', (ev) => {
@@ -129,192 +124,199 @@ document.addEventListener('keyup', (ev) => {
   }
 })
 
-function _recite (o) {
+function _recite_imla () {
+  const st = opts.st
+  const en = opts.en
+  const teacher = el_teacher_input.checked
 
-  if (o.quizmode === 'imla') {
-    el_imla_txt.focus()
-    let correct_text = imlaai_ayat(o.st, o.en)
-    let pasted = false
+  el_imla_txt.focus()
+  let correct_text = imlaai_ayat(st, en)
+  let pasted = false
 
-    const get_current_aaya_index = () =>
-      el_imla_txt.value.split('\n').length - 2 + (o.teacher? 1 : 0)
+  const get_current_aaya_index = () =>
+    el_imla_txt.value.split('\n').length - 2 + (teacher ? 1 : 0)
 
-    const txt_changed = function () {
+  const txt_changed = function () {
 
-      if (!el_endmsg.hidden) { return }
+    if (!el_endmsg.hidden) { return }
 
-      if (pasted) {
-        el_imla_txt.value = el_imla_txt.value
-          // restore NBSP because it's copied as a normal, ASCII space
-          .replace(/ \u06dd/g, '\xa0\u06dd')
-          // remove all invalid characters
-          .replace(/[^ \xA0\nء-غف-\u0652٠-٩\u06DD]+/g, '')
-          // remove superfluous spaces (see below)
-          .replace(/ +(\n)/g, '$1')
-          .replace(/(\A|\n| )[ \n]+/g, '$1')  // ⎵\n is matched before
-        pasted = false
-      }
-
-      // remove superfluous spaces:
-      //   the second char of: \A⎵ | \n⎵ | ⎵⎵ | \A\n | \n\n
-      //   and the first of: ⎵\n
-      // note: only checks against the last two chars/bytes, and only once
-      const last_two = el_imla_txt.value.slice(-2)
-      if (last_two === ' ' || last_two === '\n') {  // the entire input is this char
-        el_imla_txt.value = ''
-      }
-      if (last_two === '  ' || last_two === '\n ' || last_two === '\n\n') {
-        el_imla_txt.value = el_imla_txt.value.slice(0,-1)
-      }
-      if (last_two === ' \n') {
-        el_imla_txt.value = el_imla_txt.value.slice(0,-2)+'\n'
-      }
-
-      const cursor_at_end = el_imla_txt.selectionStart === el_imla_txt.value.length
-      // selectionStart is guaranteed to be ≤ selectionEnd
-
-      const fix_imla_additions = (last_char) => {
-        if (last_char !== ' ' && last_char !== '\n') { throw 'bad last_char in fix_imla_additions' }
-        let correct_end = 0
-        const input_end = el_imla_txt.value.count_char(last_char)
-        for (let i = 0; i < input_end; ++i) {
-          correct_end = correct_text.indexOf(last_char, correct_end) + 1
-        }
-        el_imla_txt.value = correct_text.slice(0, correct_end)
-      }
-
-      if (!imla_match(correct_text, el_imla_txt.value)) {
-        el_imla_txt.classList = 'wrong'
-      }
-      else {
-        el_imla_txt.classList = ''
-        if (!cursor_at_end) { return }
-        const last_char = el_imla_txt.value.slice(-1)
-        if (last_char === ' ' || last_char === '\n') {
-          fix_imla_additions(last_char)
-        }
-        if (last_char === '\n') {
-          audio.play(get_current_aaya_index())
-        }
-        if (el_imla_txt.value === correct_text) {
-          el_imla_txt.value = el_imla_txt.value.slice(0,-1)  // remove the last newline
-          show_done()
-          scroll_to_bottom()
-          el_imla_txt.disabled = true
-          el_imla_txt.classList = 'done'
-          el_new.focus()
-        }
-      }
-
+    if (pasted) {
+      el_imla_txt.value = el_imla_txt.value
+        // restore NBSP because it's copied as a normal, ASCII space
+        .replace(/ \u06dd/g, '\xa0\u06dd')
+        // remove all invalid characters
+        .replace(/[^ \xA0\nء-غف-\u0652٠-٩\u06DD]+/g, '')
+        // remove superfluous spaces (see below)
+        .replace(/ +(\n)/g, '$1')
+        .replace(/(\A|\n| )[ \n]+/g, '$1')  // ⎵\n is matched before
+      pasted = false
     }
 
-    el_imla_txt.onkeydown = (ev) => {
-      if (!ev.altKey && !ev.ctrlKey && ev.key.length === 1) {
-        ev.preventDefault()
-        const k = window.emulate
-          && mappings[window.emulate]
-          && mappings[window.emulate][ev.code]
-           ? mappings[window.emulate][ev.code][+ev.shiftKey]
-           : ev.key
-        if (k.match(/^[ \nء-غف-\u0652]$|^ل[اأإآ]$/)) {  // the lam-alefs for emulated IBM kb
-          insert_in_field(el_imla_txt, k)
-          txt_changed()
-        }
+    // remove superfluous spaces:
+    //   the second char of: \A⎵ | \n⎵ | ⎵⎵ | \A\n | \n\n
+    //   and the first of: ⎵\n
+    // note: only checks against the last two chars/bytes, and only once
+    const last_two = el_imla_txt.value.slice(-2)
+    if (last_two === ' ' || last_two === '\n') {  // the entire input is this char
+      el_imla_txt.value = ''
+    }
+    if (last_two === '  ' || last_two === '\n ' || last_two === '\n\n') {
+      el_imla_txt.value = el_imla_txt.value.slice(0,-1)
+    }
+    if (last_two === ' \n') {
+      el_imla_txt.value = el_imla_txt.value.slice(0,-2)+'\n'
+    }
+
+    const cursor_at_end = el_imla_txt.selectionStart === el_imla_txt.value.length
+    // selectionStart is guaranteed to be ≤ selectionEnd
+
+    const fix_imla_additions = (last_char) => {
+      if (last_char !== ' ' && last_char !== '\n') { throw 'bad last_char in fix_imla_additions' }
+      let correct_end = 0
+      const input_end = el_imla_txt.value.count_char(last_char)
+      for (let i = 0; i < input_end; ++i) {
+        correct_end = correct_text.indexOf(last_char, correct_end) + 1
       }
-      if (ev.composed) {  // can't handle it directly from ev, so let the
-        pasted = true     // default action, and handle it after the fact
+      el_imla_txt.value = correct_text.slice(0, correct_end)
+    }
+
+    if (!imla_match(correct_text, el_imla_txt.value)) {
+      el_imla_txt.classList = 'wrong'
+    }
+    else {
+      el_imla_txt.classList = ''
+      if (!cursor_at_end) { return }
+      const last_char = el_imla_txt.value.slice(-1)
+      if (last_char === ' ' || last_char === '\n') {
+        fix_imla_additions(last_char)
+      }
+      if (last_char === '\n') {
+        audio.play(get_current_aaya_index())
+      }
+      if (el_imla_txt.value === correct_text) {
+        el_imla_txt.value = el_imla_txt.value.slice(0,-1)  // remove the last newline
+        show_done()
+        scroll_to_bottom()
+        el_imla_txt.disabled = true
+        el_imla_txt.classList = 'done'
+        el_new.focus()
       }
     }
-
-    el_imla_txt.oninput = txt_changed  // https://stackoverflow.com/a/14029861
-    el_imla_txt.onpaste = (e) => { pasted = true }
-
-    // these are set in Uthmani; need to override if used Uthmani before Imlaai
-    document.onkeyup = null
-    document.ondblclick = null
-
-  }
-  else {
-    el_uthm_txt.focus()
-    audio.set_index(o.teacher? 0 : -1)
-
-    let words = make_words_list(o.st, o.en, o.cn)
-
-    const fwd = function (kind) {
-      if (words.length === 0) { return }
-      const isnt_the_kind =
-        kind === 'a'? (k) => k !== 'a' :
-        kind === 'j'? (k) => k !== 'a' && k !== 'j' :
-                      (k) => false
-      let new_word_kind, txt = ''
-      do {
-        let new_word = words.shift()
-        txt += new_word
-        new_word_kind = kind_of_portion( new_word.slice(-2) )
-      } while (isnt_the_kind(new_word_kind))
-      if (new_word_kind === 'a') { audio.next(); audio.play() }
-      el_uthm_txt.innerHTML += txt
-      if (words.length === 0) { show_done() }
-      scroll_to_bottom()
-    }
-
-    const word_fwd = () => fwd('w')
-    const aaya_fwd = () => fwd('a')
-    const jmla_fwd = () => fwd('j')
-
-    const word_bck = function (ev) {
-      if (el_uthm_txt.innerHTML.length === 0) { return 'a' }
-      if (!el_endmsg.hidden) { return 'a' }
-      const last_word = el_uthm_txt.innerHTML.match(/(?:^|\t|\n)([^\n\t]+(?:\t|\n))$/)[1]
-      words.unshift(last_word)
-      el_uthm_txt.innerHTML = el_uthm_txt.innerHTML.substring(0, el_uthm_txt.innerHTML.length - last_word.length)
-      if (last_word.match(/\n$/)) {
-        audio.back()
-        if (o.teacher) { audio.play() }
-      }
-      return kind_of_portion( el_uthm_txt.innerHTML.slice(-2) )
-    }
-
-    const aaya_bck = function (ev) {
-      do { var c = word_bck() } while (c !== 'a')
-    }
-
-    const jmla_bck = function (ev) {
-      do { var c = word_bck() } while (c !== 'a' && c !== 'j')
-    }
-
-    const input_trigger = function (ev) {
-
-      const kb_mod = ev.shiftKey || ev.ctrlKey || ev.altKey
-      const kb_fwd = ev.key === ' ' || ev.key === 'Enter' || ev.key === 'ArrowLeft'
-      const kb_bck = ev.key === 'Backspace' || ev.key === 'ArrowRight'
-      const on_input_field =  // not just ayat and suar; also buttons like #mvbtns
-        ev.target.nodeName === 'INPUT' || ev.target.nodeName === 'SELECT' || ev.target.nodeName === 'BUTTON'
-
-      if (on_input_field) { return }
-
-      if      (kb_fwd) { if (kb_mod) { aaya_fwd() } else { word_fwd() } }
-      else if (kb_bck) { if (kb_mod) { aaya_bck() } else { word_bck() } }
-      else if (ev.key === '0' && !kb_mod) { jmla_fwd() }
-      else if (ev.key === '1' && !kb_mod) { jmla_bck() }
-
-    }
-
-    // both events are the "up" variants to disable repeating (holding down
-    // the key, even for a few additional milliseconds by accident), which
-    // prints a lot of words
-    document.onkeyup = input_trigger
-    document.ondblclick = (ev) => { if (ev.target === el_uthm_txt || ev.target === el_body) { word_fwd() } }
-    el_nextaaya.onclick = aaya_fwd
-    el_nextjmla.onclick = jmla_fwd
-    el_nextword.onclick = word_fwd
-    el_prevword.onclick = word_bck
-    el_prevjmla.onclick = jmla_bck
-    el_prevaaya.onclick = aaya_bck
 
   }
 
-  if (o.teacher) { audio.play(0) }
+  el_imla_txt.onkeydown = (ev) => {
+    if (!ev.altKey && !ev.ctrlKey && ev.key.length === 1) {
+      ev.preventDefault()
+      const k = window.emulate
+        && mappings[window.emulate]
+        && mappings[window.emulate][ev.code]
+         ? mappings[window.emulate][ev.code][+ev.shiftKey]
+         : ev.key
+      if (k.match(/^[ \nء-غف-\u0652]$|^ل[اأإآ]$/)) {  // the lam-alefs for emulated IBM kb
+        insert_in_field(el_imla_txt, k)
+        txt_changed()
+      }
+    }
+    if (ev.composed) {  // can't handle it directly from ev, so let the
+      pasted = true     // default action, and handle it after the fact
+    }
+  }
+
+  el_imla_txt.oninput = txt_changed  // https://stackoverflow.com/a/14029861
+  el_imla_txt.onpaste = (e) => { pasted = true }
+
+  // these are set in Uthmani; need to override if used Uthmani before Imlaai
+  document.onkeyup = null
+  document.ondblclick = null
+
+  if (teacher) { audio.play(0) }
+}
+
+function _recite_uthm () {
+  const st = opts.st
+  const en = opts.en
+  const cn = !!el_cn.value
+  const teacher = el_teacher_input.checked
+
+  el_uthm_txt.focus()
+  audio.set_index(teacher ? 0 : -1)
+
+  let words = make_words_list(st, en, cn)
+
+  const fwd = function (kind) {
+    if (words.length === 0) { return }
+    const isnt_the_kind =
+      kind === 'a' ? (k) => k !== 'a' :
+      kind === 'j' ? (k) => k !== 'a' && k !== 'j' :
+                     (k) => false
+    let new_word_kind, txt = ''
+    do {
+      let new_word = words.shift()
+      txt += new_word
+      new_word_kind = kind_of_portion( new_word.slice(-2) )
+    } while (isnt_the_kind(new_word_kind))
+    if (new_word_kind === 'a') { audio.next(); audio.play() }
+    el_uthm_txt.innerHTML += txt
+    if (words.length === 0) { show_done() }
+    scroll_to_bottom()
+  }
+
+  const word_fwd = () => fwd('w')
+  const aaya_fwd = () => fwd('a')
+  const jmla_fwd = () => fwd('j')
+
+  const word_bck = function (ev) {
+    if (el_uthm_txt.innerHTML.length === 0) { return 'a' }
+    if (!el_endmsg.hidden) { return 'a' }
+    const last_word = el_uthm_txt.innerHTML.match(/(?:^|\t|\n)([^\n\t]+(?:\t|\n))$/)[1]
+    words.unshift(last_word)
+    el_uthm_txt.innerHTML = el_uthm_txt.innerHTML.substring(0, el_uthm_txt.innerHTML.length - last_word.length)
+    if (last_word.match(/\n$/)) {
+      audio.back()
+      if (teacher) { audio.play() }
+    }
+    return kind_of_portion( el_uthm_txt.innerHTML.slice(-2) )
+  }
+
+  const aaya_bck = function (ev) {
+    do { var c = word_bck() } while (c !== 'a')
+  }
+
+  const jmla_bck = function (ev) {
+    do { var c = word_bck() } while (c !== 'a' && c !== 'j')
+  }
+
+  const input_trigger = function (ev) {
+
+    const kb_mod = ev.shiftKey || ev.ctrlKey || ev.altKey
+    const kb_fwd = ev.key === ' ' || ev.key === 'Enter' || ev.key === 'ArrowLeft'
+    const kb_bck = ev.key === 'Backspace' || ev.key === 'ArrowRight'
+    const on_input_field =  // not just ayat and suar; also buttons like #mvbtns
+      ev.target.nodeName === 'INPUT' || ev.target.nodeName === 'SELECT' || ev.target.nodeName === 'BUTTON'
+
+    if (on_input_field) { return }
+
+    if      (kb_fwd) { if (kb_mod) { aaya_fwd() } else { word_fwd() } }
+    else if (kb_bck) { if (kb_mod) { aaya_bck() } else { word_bck() } }
+    else if (ev.key === '0' && !kb_mod) { jmla_fwd() }
+    else if (ev.key === '1' && !kb_mod) { jmla_bck() }
+
+  }
+
+  // both events are the "up" variants to disable repeating (holding down
+  // the key, even for a few additional milliseconds by accident), which
+  // prints a lot of words
+  document.onkeyup = input_trigger
+  document.ondblclick = (ev) => { if (ev.target === el_uthm_txt || ev.target === el_body) { word_fwd() } }
+  el_nextaaya.onclick = aaya_fwd
+  el_nextjmla.onclick = jmla_fwd
+  el_nextword.onclick = word_fwd
+  el_prevword.onclick = word_bck
+  el_prevjmla.onclick = jmla_bck
+  el_prevaaya.onclick = aaya_bck
+
+  if (teacher) { audio.play(0) }
 }
 
 el_ok.onclick  = start_reciting
