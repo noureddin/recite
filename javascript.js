@@ -75,11 +75,10 @@ function show_done () {
   return false
 }
 
-function help_toggled () {
-  setTimeout(scroll_to_top, 100)
-}
-function option_toggled () {
-  // TODO: scroll to top of options
+function tab_toggled (el) {
+  if (el.open) {
+    setTimeout(scroll_to_top, 100)
+  }
 }
 
 function sync_ui (stpair, enpair, title, preserve_url) {
