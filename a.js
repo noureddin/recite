@@ -325,6 +325,7 @@ window.imlafilter = imlafilter_byletter  // the default
 
 function change_feedbackrate () {
   window.imlafilter = el_feedbackrate.value === "word" ? imlafilter_byword : imlafilter_byletter
+  if (el_imla_txt.value && el_imla_txt.oninput) { el_imla_txt.oninput() }
   zz_set('feedbackrate', el_feedbackrate.value)
 }
 
