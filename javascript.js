@@ -136,6 +136,19 @@ function _recite_imla () {
   const get_current_aaya_index = () =>
     el_imla_txt.value.split('\n').length - 2 + (teacher ? 1 : 0)
 
+  const cursor_at_end = el_imla_txt.selectionStart === el_imla_txt.value.length
+  // selectionStart is guaranteed to be ≤ selectionEnd
+
+  const fix_imla_additions = (last_char) => {
+    if (last_char !== ' ' && last_char !== '\n') { throw 'bad last_char in fix_imla_additions' }
+    let correct_end = 0
+    const input_end = count_char(el_imla_txt.value, last_char)
+    for (let i = 0; i < input_end; ++i) {
+      correct_end = correct_text.indexOf(last_char, correct_end) + 1
+    }
+    el_imla_txt.value = correct_text.slice(0, correct_end)
+  }
+
   const txt_changed = function () {
 
     if (!el_endmsg.hidden) { return }
@@ -165,19 +178,6 @@ function _recite_imla () {
     }
     if (last_two === ' \n') {
       el_imla_txt.value = el_imla_txt.value.slice(0,-2)+'\n'
-    }
-
-    const cursor_at_end = el_imla_txt.selectionStart === el_imla_txt.value.length
-    // selectionStart is guaranteed to be ≤ selectionEnd
-
-    const fix_imla_additions = (last_char) => {
-      if (last_char !== ' ' && last_char !== '\n') { throw 'bad last_char in fix_imla_additions' }
-      let correct_end = 0
-      const input_end = count_char(el_imla_txt.value, last_char)
-      for (let i = 0; i < input_end; ++i) {
-        correct_end = correct_text.indexOf(last_char, correct_end) + 1
-      }
-      el_imla_txt.value = correct_text.slice(0, correct_end)
     }
 
     if (!imla_match(correct_text, el_imla_txt.value)) {
