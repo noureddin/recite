@@ -173,7 +173,7 @@ function _recite_imla () {
     const fix_imla_additions = (last_char) => {
       if (last_char !== ' ' && last_char !== '\n') { throw 'bad last_char in fix_imla_additions' }
       let correct_end = 0
-      const input_end = el_imla_txt.value.count_char(last_char)
+      const input_end = count_char(el_imla_txt.value, last_char)
       for (let i = 0; i < input_end; ++i) {
         correct_end = correct_text.indexOf(last_char, correct_end) + 1
       }

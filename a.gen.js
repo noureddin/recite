@@ -307,15 +307,15 @@ function change_quizmode () {
   }
 }
 
-String.prototype.remove_imla_additions = function () {
+function remove_imla_additions (str) {
   // removes tashkeel and ayat numbers
-  return this.replace(/[\u064B-\u0652\xA0\u06DD٠-٩]+/g, '')
+  return str.replace(/[\u064B-\u0652\xA0\u06DD٠-٩]+/g, '')
 }
 
-String.prototype.count_char = function (ch) {
-  return ch === ' '  ? this.replace(/[^ ]+/g,  '').length
-       : ch === '\n' ? this.replace(/[^\n]+/g, '').length
-       : this.replace(new RegExp('[^'+ch+']+', 'g'), '').length
+function count_char (str, ch) {
+  return ch === ' '  ? str.replace(/[^ ]+/g,  '').length
+       : ch === '\n' ? str.replace(/[^\n]+/g, '').length
+       : str.replace(new RegExp('[^'+ch+']+', 'g'), '').length
 }
 
 function imlafilter_byword   (val) { return val.replace(/\S*$/, '') }  // only check after space or enter
@@ -331,7 +331,7 @@ function change_feedbackrate () {
 
 function imla_match (correct, input) {
   // for now, assume no tashkeel (and remove it if found)
-  return correct.remove_imla_additions().startsWith(imlafilter(input).remove_imla_additions())
+  return remove_imla_additions(correct).startsWith(remove_imla_additions(imlafilter(input)))
   // later: check the tashkeel the user entered against the correct text, while ignoring the order of shadda
 }
 
