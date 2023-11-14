@@ -18,7 +18,7 @@ P=perl -CSAD -nE 'while(s/<<!!(.*?)>>/`$$1`/ge){} print'
 # All of that concerns only index.html, because it needs minify.pl too;
 #   other files using the preprocesser are unaffected.
 
-index.html: .index.html a.gen.js data.gen.js scripts.gen.min.js style.min.css minify.pl
+index.html: .index.html .scripts.gen.min.js style.min.css minify.pl
 	$A "$<" | $M | $P > "$@"
 
 %.min.css: %.css
@@ -27,10 +27,10 @@ index.html: .index.html a.gen.js data.gen.js scripts.gen.min.js style.min.css mi
 %.min.js: %.js
 	$J "$<" > "$@"
 
-%.gen.js: .%.js
+%.gen.js: %.js
 	$P "$<" > "$@"
 
-scripts.gen.min.js: .scripts.js a.gen.js mappings.js tajlorligilumi.js data.gen.js versligilumi.js res/confetti.min.js javascript.js res/jszip-utils.min.js z.js
+.scripts.gen.min.js: .scripts.js a.gen.js mappings.js tajlorligilumi.js data.gen.js versligilumi.js res/confetti.min.js javascript.js res/jszip-utils.min.js z.js
 	$P "$<" | perl -CDAS -pe 's/const +say += +console\.log//' | $J > "$@"
 
 .PHONEY: clean
