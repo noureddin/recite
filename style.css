@@ -273,12 +273,12 @@ html { font-size: calc(16px + 0.5vw) }
                                   #imla_txt.wrong { background: pink }
                 #body.lowcontrast #imla_txt.wrong { background: #ffe0e0 }
 #dark:checked ~ #body             #imla_txt.wrong { background: #661016 }
-#dark:checked ~ #body.lowcontrast #imla_txt.wrong { background: #441014 }
+#dark:checked ~ #body.lowcontrast #imla_txt.wrong { background: #401014 }
 
                                   #imla_txt.spacewrong { background: wheat }
                 #body.lowcontrast #imla_txt.spacewrong { background: wheat }
-#dark:checked ~ #body             #imla_txt.spacewrong { background: #241600 }
-#dark:checked ~ #body.lowcontrast #imla_txt.spacewrong { background: #241600 }
+#dark:checked ~ #body             #imla_txt.spacewrong { background: #5B3300 }
+#dark:checked ~ #body.lowcontrast #imla_txt.spacewrong { background: #351D00 }
 
 #imla_txt {
   font-size: 1.5rem;
