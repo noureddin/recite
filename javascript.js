@@ -241,6 +241,8 @@ function _recite_imla () {
             el_imla_txt.value = correct_text.slice(0, el_imla_txt.value.length+1)
           } while (remove_imla_additions(el_imla_txt.value.slice(-1)) === '')
           txt_changed()
+          // scroll to bottom, if the added letter caused moving to the next line
+          el_imla_txt.scrollTo({ top: el_imla_txt.scrollHeight })
           return
         }
       }
