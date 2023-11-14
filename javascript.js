@@ -140,7 +140,8 @@ function _recite_imla () {
   // selectionStart is guaranteed to be ≤ selectionEnd
 
   const fix_imla_additions = (last_char) => {
-    if (last_char !== ' ' && last_char !== '\n') { throw 'bad last_char in fix_imla_additions' }
+    // pre-conditions: el_imla_txt.value must be correct so far
+    //   and last_char must be el_imla_txt.value.slice(-1)
     let correct_end = 0
     const input_end = count_char(el_imla_txt.value, last_char)
     for (let i = 0; i < input_end; ++i) {
@@ -215,8 +216,42 @@ function _recite_imla () {
 
   }
 
+  let bang = 0
+  let since_last_bang = 0
+
   el_imla_txt.onkeydown = (ev) => {
-    if (!ev.altKey && !ev.ctrlKey && ev.key.length === 1) {
+    const unmodified = !ev.altKey && !ev.ctrlKey
+    // cheating
+    if (unmodified && ev.key === '!') {
+      ev.preventDefault()
+      // enforce at least 0.25 sec between each keydown of bang
+      // because for some reason ev.repeat always returns false in my testing.
+      const now = (new Date()).getTime()
+      if (now - since_last_bang < 250) { return }
+      since_last_bang = now
+      bang += 1
+      if (bang === 10) {
+        bang = 0
+        // cheat one character, if all up to this point is correct
+        if (imla_match(correct_text, el_imla_txt.value)) {
+          // taking the last char blindly could take a tashkeel, which could be exploited to cheat more than one char.
+          fix_imla_additions(remove_imla_additions(el_imla_txt.value).slice(-1))
+          // add one char; then while the last copied-to-input char is an addition (tashkeel etc): add one more
+          do {
+            el_imla_txt.value = correct_text.slice(0, el_imla_txt.value.length+1)
+          } while (remove_imla_additions(el_imla_txt.value.slice(-1)) === '')
+          txt_changed()
+          return
+        }
+      }
+    }
+    else {
+      // any key resets the counters; even a lone Shift.
+      bang = 0
+      since_last_bang = 0
+    }
+    // filtering & emulation
+    if (unmodified && ev.key.length === 1) {
       ev.preventDefault()
       const k = window.emulate
         && mappings[window.emulate]
