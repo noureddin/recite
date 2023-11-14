@@ -294,16 +294,14 @@ function change_qari () {
 }
 
 function change_quizmode () {
-  const show = (id) => Qid(id).style.display = 'block'
-  const hide = (id) => Qid(id).style.display = 'none'
   zz_set('quizmode', el_quizmode.value)
   if (el_quizmode.value === 'imla') {
-    hide('uthm_options')
-    show('imla_options')
+    /* hide */ el_uthm_options.style.display = 'none'
+    /* show */ el_imla_options.style.display = 'block'
   }
   else {  /* uthmani */
-    hide('imla_options')
-    show('uthm_options')
+    /* hide */ el_imla_options.style.display = 'none'
+    /* show */ el_uthm_options.style.display = 'block'
   }
 }
 
@@ -313,9 +311,7 @@ function remove_imla_additions (str) {
 }
 
 function count_char (str, ch) {
-  return ch === ' '  ? str.replace(/[^ ]+/g,  '').length
-       : ch === '\n' ? str.replace(/[^\n]+/g, '').length
-       : str.replace(new RegExp('[^'+ch+']+', 'g'), '').length
+  return str.replace(new RegExp('[^'+ch+']+', 'g'), '').length
 }
 
 function imlafilter_byword   (val) { return val.replace(/\S*$/, '') }  // only check after space or enter
@@ -324,7 +320,7 @@ function imlafilter_byletter (val) { return val }
 window.imlafilter = imlafilter_byletter  // the default
 
 function change_feedbackrate () {
-  window.imlafilter = el_feedbackrate.value === "word" ? imlafilter_byword : imlafilter_byletter
+  window.imlafilter = el_feedbackrate.value === 'word' ? imlafilter_byword : imlafilter_byletter
   if (el_imla_txt.value && el_imla_txt.oninput) { el_imla_txt.oninput() }
   zz_set('feedbackrate', el_feedbackrate.value)
 }
@@ -335,33 +331,28 @@ function imla_match (correct, input) {
   // later: check the tashkeel the user entered against the correct text, while ignoring the order of shadda
 }
 
-const sync_class_with = (cls, pred) =>
-  pred ? Q('body').classList.add(cls) : Q('body').classList.remove(cls)
-
-const sync_elem_class_with = (el, cls, pred) =>
-  pred ? el.classList.add(cls) : el.classList.remove(cls)
+const sync_uthm_class_with = (cls, pred) => el_uthm_txt.classList.toggle(cls, pred)
 
 function change_tajweed () {
   const tval = el_textclr_input.value
-  sync_class_with('letter-parts',   tval === 'bas')
-  sync_class_with('letter-nocolor', tval === 'no')
+  sync_uthm_class_with('letter-parts',   tval === 'bas')
+  sync_uthm_class_with('letter-nocolor', tval === 'no')
   zz_set('tajweed', tval.slice(0,1))
 }
 
 function change_ayatnum () {
   const ayatnum = el_ayatnum_input.checked
-  sync_class_with('ayat-nocolor', !ayatnum)
+  sync_uthm_class_with('ayat-nocolor', !ayatnum)
   zz_set('ayatnum', ayatnum)
 }
 
 function change_linebreaks() {
   const nb = !el_linebreaks_input.checked
-  sync_elem_class_with(el_uthm_txt, 'nb', nb)
+  sync_uthm_class_with('nb', nb)
   zz_set('linebreaks', !nb)
 }
 
 function change_dark () {
-  // sync_class_with('dark', el_darkmode_input.checked)
   const dark = el_darkmode_input.checked
   el_dark.checked = dark
   zz_set('dark', dark)
@@ -373,7 +364,7 @@ function change_mvbtns () {
     mv === 'right' ? 'sidebtns rightside' :
     mv === 'left'  ? 'sidebtns leftside'  :
                      ''  /* no class for 'bottom' */
-  el_mvbtns.setAttribute('class', mv_cls)
+  el_mvbtns.classList = mv_cls
   zz_set('mvbtns', mv.slice(0,1))
 }
 

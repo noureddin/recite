@@ -326,24 +326,24 @@ button:disabled {
 #dark:checked ~ #body button,
 #dark:checked ~ #body select { filter: invert(1) hue-rotate(180deg) }
 
-body.letter-parts #uthm_txt {
+#uthm_txt.letter-parts {
   --txt-font: AmiriQuranColoredWeb;
   --L: var(--txt); --W: var(--txt); --J: var(--txt); --T: var(--txt);
   --N: var(--txt); --X: var(--txt); --R: var(--txt); --Q: var(--txt);
 }
 
-body.letter-nocolor #uthm_txt {
+#uthm_txt.letter-nocolor {
   --L: var(--txt); --W: var(--txt); --J: var(--txt); --T: var(--txt);
   --N: var(--txt); --X: var(--txt); --R: var(--txt); --Q: var(--txt);
 }
 
-body.ayat-nocolor #uthm_txt {
+#uthm_txt.ayat-nocolor {
   --A: var(--txt); --A-shadow: none;
   --D: var(--txt); --D-shadow: none;
 }
 
-body.letter-parts:not(.ayat-nocolor) #uthm_txt .A,
-body.letter-parts:not(.ayat-nocolor) #uthm_txt .D {
+#uthm_txt.letter-parts:not(.ayat-nocolor) .A,
+#uthm_txt.letter-parts:not(.ayat-nocolor) .D {
   font-family: AmiriQuranWeb;
 }
 

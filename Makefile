@@ -30,7 +30,7 @@ index.html: .index.html a.gen.js data.gen.js scripts.gen.min.js style.min.css mi
 %.gen.js: .%.js
 	$P "$<" > "$@"
 
-scripts.min.js: .scripts.js a.js data.js *.js
+scripts.gen.min.js: .scripts.js a.gen.js mappings.js tajlorligilumi.js data.gen.js versligilumi.js res/confetti.min.js javascript.js res/jszip-utils.min.js z.js
 	$P "$<" | perl -CDAS -pe 's/const +say += +console\.log//' | $J > "$@"
 
 .PHONEY: clean
