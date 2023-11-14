@@ -41,6 +41,7 @@ function _tajlorligilumilo (params) {
   let teacher          // teacher mode (audio recitation before ayah): t/teach/teacher (true); n/noteach/noteacher (false; default)
   let disableteacher   // remove teacher mode selector from the UI, teacher mode can still be set from the URL: dt/disableteacher
   let disablequizmode  // remove quiz mode selector from the UI, quiz mode can still be set from the URL: dq/disablequizmode
+  let disablecheat     // disable the ability to press '!' ten times to show one letter in imlaai mode
   let highcontrast     // high-contrast, dark colorscheme
   let lowcontrast      // use a lower contrast imlaai bg color when wrong (not incompatible with highcontrast)
   let emulate          // keyboard layout emulation; see https://noureddin.github.io/kbt (same ids, w/o '-ar')
@@ -67,6 +68,7 @@ function _tajlorligilumilo (params) {
       else if (is_of('n', 'noteach', 'noteacher'))   {         teacher = false                            }
       else if (is_of('dt', 'disableteacher'))        {  disableteacher = true                             }
       else if (is_of('dq', 'disablequizmode'))       { disablequizmode = true                             }
+      else if (is_of('dc', 'disablecheat'))          {    disablecheat = true                             }
       else if (is_of('hc', 'highcontrast'))          {    highcontrast = true                             }
       else if (is_of('lc', 'lowcontrast'))           {     lowcontrast = true                             }
       else if (is_of('emu', 'emulate', 'emulation')) {         emulate = e[1]                             }
@@ -85,6 +87,7 @@ function _tajlorligilumilo (params) {
     teacher,
     disableteacher,
     disablequizmode,
+    disablecheat,
     highcontrast,
     lowcontrast,
     emulate,
@@ -150,6 +153,7 @@ function tajlorligilumi () {
   }
   //
   // options that don't have a visible ui input (in addition to qariurl)
+  window.allow_cheating = !opts.disablecheat  // cheating is allowed by default
   if (opts.emulate && mappings[opts.emulate]) { window.emulate = opts.emulate }
   if (opts.cn) { el_cn.value = opts.cn ? '1' : '' }
   if (opts.zz) { el_zz.value = opts.zz ? '1' : '' }

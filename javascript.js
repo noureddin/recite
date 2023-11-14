@@ -221,8 +221,8 @@ function _recite_imla () {
 
   el_imla_txt.onkeydown = (ev) => {
     const unmodified = !ev.altKey && !ev.ctrlKey
-    // cheating
-    if (unmodified && ev.key === '!') {
+    // cheating -- enabled by default unless disablecheat is passed as a url param
+    if (unmodified && ev.key === '!' && window.allow_cheating) {
       ev.preventDefault()
       // enforce at least 0.25 sec between each keydown of bang
       // because for some reason ev.repeat always returns false in my testing.

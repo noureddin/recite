@@ -144,6 +144,10 @@ These are not changeable from the UI, only from the URL parameters; they are exp
 
     **Warning:** It's still changeable from the JavaScript console; I couldn't disable this yet.
 
+- `dc`, or `disablecheat`: to disable the cheating feature in Imlaai mode. Cheating is pressing the `!` key ten times consecutively (when the input so far is correct) to automatically type the next correct letter for you.
+
+    **Warning:** It's still changeable from the JavaScript console; I couldn't disable this yet.
+
 - `zz`: for integration into another app. Made primarily for [Zikr-uz-Zikr](https://github.com/noureddin/zz), but is generic enough to be used with other apps.
 
     When enabled it does the following:
