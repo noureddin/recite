@@ -18,7 +18,7 @@ P=perl -CSAD -nE 'while(s/<<!!(.*?)>>/`$$1`/ge){} print'
 # All of that concerns only index.html, because it needs minify.pl too;
 #   other files using the preprocesser are unaffected.
 
-index.html: .index.html a.js data.js scripts.min.js style.min.css minify.pl
+index.html: .index.html a.gen.js data.gen.js scripts.gen.min.js style.min.css minify.pl
 	$A "$<" | $M | $P > "$@"
 
 %.min.css: %.css
@@ -27,7 +27,7 @@ index.html: .index.html a.js data.js scripts.min.js style.min.css minify.pl
 %.min.js: %.js
 	$J "$<" > "$@"
 
-%.js: .%.js
+%.gen.js: .%.js
 	$P "$<" > "$@"
 
 scripts.min.js: .scripts.js a.js data.js *.js

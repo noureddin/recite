@@ -1,8 +1,8 @@
 'use strict'
-<<!!cat a.js>>
+<<!!cat a.gen.js>>
 <<!!cat mappings.js>>
 <<!!cat tajlorligilumi.js>>
-<<!!cat data.js>>
+<<!!cat data.gen.js>>
 <<!!cat versligilumi.js>>
 // from: https://github.com/mathusummut/confetti.js. Copyright (c) 2018 MathuSum Mut. MIT License
 <<!!cat res/confetti.min.js>>
