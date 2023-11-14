@@ -228,9 +228,6 @@ function _recite_imla () {
         txt_changed()
       }
     }
-    if (ev.composed) {  // can't handle it directly from ev, so let the
-      pasted = true     // default action, and handle it after the fact
-    }
   }
 
   el_imla_txt.oninput = txt_changed  // https://stackoverflow.com/a/14029861
