@@ -140,15 +140,33 @@ function _recite_imla () {
   const cursor_at_end = el_imla_txt.selectionStart === el_imla_txt.value.length
   // selectionStart is guaranteed to be ≤ selectionEnd
 
-  const fix_imla_additions = (last_char) => {
-    // pre-conditions: el_imla_txt.value must be correct so far
-    //   and last_char must be el_imla_txt.value.slice(-1)
+  const __correct_position_of = (str, last_char) => {
+    // pre-conditions:
+    // - imla_match(correct_text, str) must be true;  ie str must be correct so far
+    // - str.slice(-1) === last_char;  ie last_char must be the actual last character
+    // - remove_imla_additions(last_char) === last_char;  ie last_char must NOT be an addition
     let correct_end = 0
-    const input_end = count_char(el_imla_txt.value, last_char)
+    const input_end = count_char(str, last_char)
     for (let i = 0; i < input_end; ++i) {
       correct_end = correct_text.indexOf(last_char, correct_end) + 1
     }
-    el_imla_txt.value = correct_text.slice(0, correct_end)
+    return correct_end
+  }
+
+  const fix_imla_additions = (last_char) => {
+    // pre-conditions: see __correct_position_of (with str=el_imla_txt.value)
+    const correct_end = __correct_position_of(el_imla_txt.value, last_char)
+    if (el_imla_txt.selectionStart === el_imla_txt.value.length) {
+      // cursor is at the end
+      el_imla_txt.value = correct_text.slice(0, correct_end)
+    }
+    else {
+      // cursor is NOT at the end; try to maintain its position
+      const before = remove_imla_additions(el_imla_txt.value.slice(0, el_imla_txt.selectionStart))
+      const pos = __correct_position_of(before, before.slice(-1))
+      el_imla_txt.value = correct_text.slice(0, correct_end)
+      el_imla_txt.selectionStart = el_imla_txt.selectionEnd = pos+1
+    }
   }
 
   const txt_changed = function () {
