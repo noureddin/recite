@@ -316,6 +316,7 @@ function change_mvbtns () {
     mv === 'left'  ? 'sidebtns leftside'  :
                      ''  /* no class for 'bottom' */
   el_mvbtns.classList = mv_cls
+  el_uthm_txt.classList.toggle('sidebtns', mv_cls)
   zz_set('mvbtns', mv.slice(0,1))
 }
 

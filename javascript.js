@@ -51,10 +51,12 @@ function show_done () {
       el_mvbtns.hidden = true
       setTimeout(() => el_zzback.focus(), 500)
     }
-    if (!el_imla_txt.hidden) {
-      // resize height; note: zz mode has an additional button ("Return") at the end
-      el_imla_txt.style.height = el_zzback.hidden ? 'calc(100vh - 12.50rem)' : 'calc(100vh - 15.25rem)'
+    if (!el_imla_txt.hidden) {  /* imlaai mode */
+      resize_imlaai_done()
       imla_scroll_to_bottom()
+    }
+    else {  /* uthmani mode */
+      el_uthm_txt.classList.add('done')
     }
     return true
   }
@@ -311,6 +313,7 @@ function _recite_uthm () {
   const cn = !!el_cn.value
   const teacher = el_teacher_input.checked
 
+  el_uthm_txt.classList.remove('done')
   el_uthm_txt.focus()
   audio.set_index(teacher ? 0 : -1)
 
@@ -472,18 +475,36 @@ onload = function () {
   document.querySelectorAll('details').forEach(el => {
     el.addEventListener('toggle', ev => {
       if (el.open) {
-        el.scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"})
+        el.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" })
       }
     })
   })
 }
 
+function resize_imlaai_done () {
+  // getComputedStyle not getBoundingClientRect to get the content (selectors) without padding (tabs)
+  const sel = parseFloat(getComputedStyle(el_selectors).height)
+            + parseFloat(getComputedStyle(el_selectors.querySelector('hr')).marginBottom)
+  const before = isNaN(sel) /* zz-mode */
+               ? parseFloat(getComputedStyle(el_header).height)
+               : sel
+  const _m = getComputedStyle(el_endmsg)
+  const after = parseFloat(_m.height) + parseFloat(_m.marginTop) + parseFloat(_m.marginBottom)
+  const one_em = parseFloat(_m.marginTop)
+  const all = visualViewport ? visualViewport.height : document.body.clientHeight
+  el_imla_txt.style.height = (all - before - after - 0.1*one_em) + 'px'
+}
+
 if (visualViewport) {
   visualViewport.addEventListener('resize', (ev) => {
-    // if currently quizzing, in imlaai mode
-    if (!el_imla_txt.hidden && el_endmsg.hidden) {
-      el_imla_txt.style.height = Math.trunc(ev.target.height * 0.95) + 'px' // to mirror the original '95vh'
-      el_imla_txt.scrollIntoView()
+    if (!el_imla_txt.hidden) {  // if imlaai mode
+      if (el_endmsg.hidden) {  // if currently quizzing
+        el_imla_txt.style.height = Math.trunc(ev.target.height * 0.95) + 'px'  // emulate '95vh'
+        el_imla_txt.scrollIntoView()
+      }
+      else {
+        resize_imlaai_done()
+      }
     }
   })
 }

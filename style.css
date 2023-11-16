@@ -145,19 +145,17 @@ html { font-size: calc(16px + 0.5vw) }
 #uthm_txt, #uthm_txt * { font-family: var(--txt-font); font-size: 1.5rem; }
 #uthm_txt {
   text-align: right;
-  padding: 0 1em;
-  padding-bottom: 4rem;
+  margin: 0 1em;
+  margin-bottom: 4rem;
+}
+#uthm_txt.done, #uthm_txt.sidebtns {
+  margin-bottom: 1rem;  /* same as padding above */
 }
 #endmsg {
   font-size: min(5vw, 2rem);
   text-align: center;
   color: var(--uitext);
-  margin: auto;
-  /* margin-top: -3rem;  /1* counter padding-bottom for #txt *1/ */
-  /* the negative margin-top is commented out because I find it better to have
-   * more space between #txt and #endmsg, especially after making #endmsg show
-   * with the last word, not after it. */
-  padding-bottom: 1rem;
+  margin: 1rem auto 2rem;
 }
 
 #selectors,
@@ -296,6 +294,7 @@ html { font-size: calc(16px + 0.5vw) }
 
 #imla_txt.done {
   padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 button {
