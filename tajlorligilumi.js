@@ -55,6 +55,7 @@ function _tajlorligilumilo (params) {
   let highcontrast     // high-contrast, dark colorscheme
   let lowcontrast      // use a lower contrast imlaai bg color when wrong (not incompatible with highcontrast)
   let emulate          // keyboard layout emulation; see https://noureddin.github.io/kbt (same ids, w/o '-ar')
+  let fullpage         // make imla_txt fill the entire page while quizzing, like Recite Desktop (PyQt5, in the `master` branch)
   let cn               // continuation; ie, append a "phrase" from the next aaya if in the same sura
   let zz               // enable embedded integration: zz (cannot be disabled if enabled)
   params
@@ -86,6 +87,7 @@ function _tajlorligilumilo (params) {
       else if (is_of('emu', 'emulate', 'emulation')) {         emulate = e[1]                             }
       else if (is_of('qari'))                        {            qari = e[1]                             }
       else if (is_of('qariurl'))                     {         qariurl = e[1]                             }
+      else if (is_of('fp', 'fullpage'))              {        fullpage = true                             }
       else if (is_of('cn'))                          {              cn = true                             }
       else if (is_of('zz'))                          {              zz = true                             }
     })
@@ -105,6 +107,7 @@ function _tajlorligilumilo (params) {
     emulate,
     qari,
     qariurl,
+    fullpage,
     cn,
     zz,
   }
@@ -167,6 +170,7 @@ function tajlorligilumi () {
   // options that don't have a visible ui input (in addition to qariurl)
   window.allow_cheating = !opts.disablecheat  // cheating is allowed by default
   if (opts.emulate && mappings[opts.emulate]) { window.emulate = opts.emulate }
+  if (opts.fullpage) { el_body.classList.add('fullpage') }
   if (opts.cn) { el_cn.value = opts.cn ? '1' : '' }
   if (opts.zz) { el_zz.value = opts.zz ? '1' : '' }
 }

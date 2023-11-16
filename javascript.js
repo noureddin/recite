@@ -1,5 +1,8 @@
 let opts = {}
 
+const fullpage = el_body.classList.contains('fullpage')
+// ^ never changes because it can be set only from url params
+
 function start_reciting () {
   if (!valid_inputs(sura_bgn_val(), aaya_bgn_val(), sura_end_val(), aaya_end_val())) { return }
   const st = sura_offset[sura_bgn_val()] + aaya_bgn_val()
@@ -418,7 +421,7 @@ const hide_selectors = function (quizmode) {
   el_ok.hidden = true
   el_title.style.display = 'inline-block'
   if (quizmode === 'imla') {
-    el_imla_txt.style.height = '95vh'
+    el_imla_txt.style.height = fullpage ? '100vh' : '95vh'
     el_imla_txt.value = ""
     el_imla_txt.disabled = false
     el_imla_txt.classList = ''
@@ -486,6 +489,8 @@ onload = function () {
   })
 }
 
+el_imla_txt.onfocus = () => el_imla_txt.scrollIntoView()
+
 function resize_imlaai_done () {
   // getComputedStyle not getBoundingClientRect to get the content (selectors) without padding (tabs)
   const sel = parseFloat(getComputedStyle(el_selectors).height)
@@ -504,7 +509,10 @@ if (visualViewport) {
   visualViewport.addEventListener('resize', (ev) => {
     if (!el_imla_txt.hidden) {  // if imlaai mode
       if (el_endmsg.hidden) {  // if currently quizzing
-        el_imla_txt.style.height = Math.trunc(ev.target.height * 0.95) + 'px'  // emulate '95vh'
+        el_imla_txt.style.height =
+          fullpage
+            ? ev.target.height + 'px'
+            : Math.trunc(ev.target.height * 0.95) + 'px'  // emulate '95vh'
         el_imla_txt.scrollIntoView()
       }
       else {

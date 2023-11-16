@@ -297,6 +297,17 @@ html { font-size: calc(16px + 0.5vw) }
   margin-bottom: 0;
 }
 
+/* #body.fullpage and not #imla_txt.fullpage because */
+/* #imla_txt's classes are used for states (wrong, spacewrong, done) */
+#body.fullpage #imla_txt:not(.done) {  /* :not(.done) to restore them when done */
+  width: 100vw;
+  position: absolute;
+  right: 0;
+  /* height: 100vh; */ /* set thru JS */
+  border: none;
+  border-radius: 0;
+}
+
 button {
   --width: var(--btn-base-width);
   width: var(--width);
