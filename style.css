@@ -283,13 +283,19 @@ html { font-size: calc(16px + 0.5vw) }
 #imla_txt {
   font-size: 1.5rem;
   text-align: right;
-  padding: 0 1em 0.5em 0.5em;  /* bottom padding needed for tashkeel */
+  padding: 0.5em;
+  padding-bottom: 2em;
+  box-sizing: border-box;
   font-family: AmiriQuranWeb;
   width: min(90%, 70vw);
   /* height: 95vh; */ /* set thru JS */
   margin: auto;
   margin-bottom: 1rem;
   border-radius: 0.25rem;
+}
+
+#imla_txt.done {
+  padding-bottom: 0;
 }
 
 button {

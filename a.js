@@ -14,8 +14,12 @@ function Qid  (id)       { return document.getElementById(id) }
 
 <<!!bash -c 'for id in $(grep -Po "(?<=id=\")([^\"]+)(?=\")" .index.html); do echo "const el_$id = Qid(\"$id\")"; done'>>
 
-function scroll_to_top ()    { el_body.scrollTo({ top: 0 }) }
-function scroll_to_bottom () { el_body.scrollTo({ top: el_body.scrollHeight }) }
+function __scroll_top (el) { el.scrollTo({ top: 0 }) }
+function __scroll_bot (el) { el.scrollTo({ top: el.scrollHeight }) }
+
+function body_scroll_to_top ()    { __scroll_top(el_body) }
+function body_scroll_to_bottom () { __scroll_bot(el_body) }
+function imla_scroll_to_bottom () { __scroll_bot(el_body); __scroll_bot(el_imla_txt) }
 
 function hide_el (el) { el.style.visibility = 'hidden';  el.style.opacity =   '0%' }
 function show_el (el) { el.style.visibility = 'visible'; el.style.opacity = '100%' }

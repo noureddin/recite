@@ -52,8 +52,9 @@ function show_done () {
       setTimeout(() => el_zzback.focus(), 500)
     }
     if (!el_imla_txt.hidden) {
-      el_imla_txt.style.height = el_zzback.hidden ? 'calc(100vh - 12rem)' : 'calc(100vh - 15rem)'
-      el_imla_txt.scroll({ top: el_imla_txt.scrollHeight })  // scroll to bottom
+      // resize height; note: zz mode has an additional button ("Return") at the end
+      el_imla_txt.style.height = el_zzback.hidden ? 'calc(100vh - 12.50rem)' : 'calc(100vh - 15.25rem)'
+      imla_scroll_to_bottom()
     }
     return true
   }
@@ -61,8 +62,8 @@ function show_done () {
 }
 
 function tab_toggled (el) {
-  if (el.open) {
-    setTimeout(scroll_to_top, 100)
+  if (el.checked) {
+    setTimeout(body_scroll_to_top, 100)
   }
 }
 
@@ -207,11 +208,17 @@ function _recite_imla () {
       if (el_imla_txt.value === correct_text) {
         el_imla_txt.value = el_imla_txt.value.slice(0,-1)  // remove the last newline
         show_done()
-        scroll_to_bottom()
+        body_scroll_to_bottom()
         el_imla_txt.disabled = true
         el_imla_txt.classList = 'done'
         el_new.focus()
       }
+    }
+
+    // if at the end: pad bottom (by scrolling to bottom), to handle if moved to a new line
+    if (el_imla_txt.selectionStart === el_imla_txt.value.length) {
+      requestAnimationFrame(imla_scroll_to_bottom)
+      // I don't exactly know why a delay is needed, but it wouldn't work otherwise
     }
 
   }
@@ -221,6 +228,7 @@ function _recite_imla () {
 
   el_imla_txt.onkeydown = (ev) => {
     const unmodified = !ev.altKey && !ev.ctrlKey
+
     // cheating -- enabled by default unless disablecheat is passed as a url param
     if (unmodified && ev.key === '!' && window.allow_cheating) {
       ev.preventDefault()
@@ -241,8 +249,8 @@ function _recite_imla () {
             el_imla_txt.value = correct_text.slice(0, el_imla_txt.value.length+1)
           } while (remove_imla_additions(el_imla_txt.value.slice(-1)) === '')
           txt_changed()
-          // scroll to bottom, if the added letter caused moving to the next line
-          el_imla_txt.scrollTo({ top: el_imla_txt.scrollHeight })
+          // scroll to bottom, to handle if the added letter caused moving to the next line
+          imla_scroll_to_bottom()
           return
         }
       }
@@ -252,6 +260,7 @@ function _recite_imla () {
       bang = 0
       since_last_bang = 0
     }
+
     // filtering & emulation
     if (unmodified && ev.key.length === 1) {
       ev.preventDefault()
@@ -265,12 +274,13 @@ function _recite_imla () {
         txt_changed()
       }
     }
+
   }
 
   el_imla_txt.oninput = txt_changed  // https://stackoverflow.com/a/14029861
   el_imla_txt.onpaste = (e) => { pasted = true }
 
-  // these are set in Uthmani; need to override if used Uthmani before Imlaai
+  // these are set in Uthmani; need to override if used Uthmani before Imlaai without reloading the page
   document.onkeyup = null
   document.ondblclick = null
 
@@ -303,7 +313,7 @@ function _recite_uthm () {
     if (new_word_kind === 'a') { audio.next(); audio.play() }
     el_uthm_txt.innerHTML += txt
     if (words.length === 0) { show_done() }
-    scroll_to_bottom()
+    body_scroll_to_bottom()
   }
 
   const word_fwd = () => fwd('')
@@ -402,7 +412,7 @@ const hide_selectors = function (quizmode) {
     document.documentElement.style.setProperty('--sticky', 'sticky')
     // el_nextword.focus()
   }
-  scroll_to_bottom()
+  body_scroll_to_bottom()
 }
 
 const show_selectors = function () {
