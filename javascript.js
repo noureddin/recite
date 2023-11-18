@@ -54,7 +54,7 @@ function show_done () {
       el_mvbtns.hidden = true
       setTimeout(() => el_zzback.focus(), 500)
     }
-    if (!el_imla_txt.hidden) {  /* imlaai mode */
+    if (!el_imla_txt_container.hidden) {  /* imlaai mode */
       resize_imlaai_done()
       imla_scroll_to_bottom()
     }
@@ -123,7 +123,7 @@ document.addEventListener('keyup', (ev) => {
   if (ev.key === 'Escape') {
     audio.play()
     // if currently quizzing, in imlaai mode
-    if (!el_imla_txt.hidden && el_endmsg.hidden) {
+    if (!el_imla_txt_container.hidden && el_endmsg.hidden) {
       // re-focus, b/c Escape unfocuses it
       el_imla_txt.focus()
     }
@@ -212,14 +212,14 @@ function _recite_imla () {
           input_last_char === ' '  && imla_match(correct_text, el_imla_txt.value.slice(0,-1) + '\n')
        || input_last_char === '\n' && imla_match(correct_text, el_imla_txt.value.slice(0,-1) + ' ')
       )) {
-        el_imla_txt.classList = 'spacewrong'
+        el_imla_txt_container.classList = 'spacewrong'
       }
       else {
-        el_imla_txt.classList = 'wrong'
+        el_imla_txt_container.classList = 'wrong'
       }
     }
     else {
-      el_imla_txt.classList = ''
+      el_imla_txt_container.classList = ''
       if (!cursor_at_end) { return }
       const last_char = el_imla_txt.value.slice(-1)
       if (last_char === '\n' || (el_feedbackrate.value !== 'aaya' && last_char === ' ')) {
@@ -233,7 +233,7 @@ function _recite_imla () {
         show_done()
         body_scroll_to_bottom()
         el_imla_txt.disabled = true
-        el_imla_txt.classList = 'done'
+        el_imla_txt_container.classList = 'done'
         el_new.focus()
       }
     }
@@ -421,11 +421,11 @@ const hide_selectors = function (quizmode) {
   el_ok.hidden = true
   el_title.style.display = 'inline-block'
   if (quizmode === 'imla') {
-    el_imla_txt.style.height = fullpage ? '100vh' : '95vh'
+    el_imla_txt_container.style.height = fullpage ? '100vh' : '95vh'
     el_imla_txt.value = ""
     el_imla_txt.disabled = false
-    el_imla_txt.classList = ''
-    el_imla_txt.hidden = false
+    el_imla_txt_container.classList = ''
+    el_imla_txt_container.hidden = false
     el_uthm_txt.hidden = true
     el_mvbtns.hidden = true
     el_end_of_header.style.color = 'transparent'  // to keep some space
@@ -436,7 +436,7 @@ const hide_selectors = function (quizmode) {
     el_uthm_txt.hidden = false
     el_uthm_txt.innerHTML = ''
     el_mvbtns.hidden = false
-    el_imla_txt.hidden = true
+    el_imla_txt_container.hidden = true
     el_end_of_header.style.color = ''
     document.documentElement.style.setProperty('--sticky', 'sticky')
     // el_nextword.focus()
@@ -455,7 +455,7 @@ const show_selectors = function () {
 
 const clear_screen = function () {
   el_uthm_txt.innerHTML = ''
-  el_imla_txt.hidden = true
+  el_imla_txt_container.hidden = true
   el_endmsg.hidden = true
 }
 
@@ -502,14 +502,14 @@ function resize_imlaai_done () {
   const after = parseFloat(_m.height) + parseFloat(_m.marginTop) + parseFloat(_m.marginBottom)
   const one_em = parseFloat(_m.marginTop)
   const all = visualViewport ? visualViewport.height : document.body.clientHeight
-  el_imla_txt.style.height = (all - before - after - 0.1*one_em) + 'px'
+  el_imla_txt_container.style.height = (all - before - after - 0.1*one_em) + 'px'
 }
 
 if (visualViewport) {
   visualViewport.addEventListener('resize', (ev) => {
-    if (!el_imla_txt.hidden) {  // if imlaai mode
+    if (!el_imla_txt_container.hidden) {  // if imlaai mode
       if (el_endmsg.hidden) {  // if currently quizzing
-        el_imla_txt.style.height =
+        el_imla_txt_container.style.height =
           fullpage
             ? ev.target.height + 'px'
             : Math.trunc(ev.target.height * 0.95) + 'px'  // emulate '95vh'

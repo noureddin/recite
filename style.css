@@ -265,18 +265,18 @@ html { font-size: calc(16px + 0.5vw) }
 
 #imla_txt { background: var(--background); color: var(--txt); transition: background 1s }
 
-                      #imla_txt.done  { background: lightgreen }
-#dark:checked ~ #body #imla_txt.done  { background: #004400 }
+                      .done #imla_txt  { background: lightgreen }
+#dark:checked ~ #body .done #imla_txt  { background: #004400 }
 
-                                  #imla_txt.wrong { background: pink }
-                #body.lowcontrast #imla_txt.wrong { background: #ffe0e0 }
-#dark:checked ~ #body             #imla_txt.wrong { background: #661016 }
-#dark:checked ~ #body.lowcontrast #imla_txt.wrong { background: #401014 }
+                                  .wrong #imla_txt { background: pink }
+                #body.lowcontrast .wrong #imla_txt { background: #ffe0e0 }
+#dark:checked ~ #body             .wrong #imla_txt { background: #661016 }
+#dark:checked ~ #body.lowcontrast .wrong #imla_txt { background: #401014 }
 
-                                  #imla_txt.spacewrong { background: wheat }
-                #body.lowcontrast #imla_txt.spacewrong { background: wheat }
-#dark:checked ~ #body             #imla_txt.spacewrong { background: #5B3300 }
-#dark:checked ~ #body.lowcontrast #imla_txt.spacewrong { background: #351D00 }
+                                  .spacewrong #imla_txt { background: wheat }
+                #body.lowcontrast .spacewrong #imla_txt { background: wheat }
+#dark:checked ~ #body             .spacewrong #imla_txt { background: #5B3300 }
+#dark:checked ~ #body.lowcontrast .spacewrong #imla_txt { background: #351D00 }
 
 #imla_txt {
   font-size: 1.5rem;
@@ -285,25 +285,32 @@ html { font-size: calc(16px + 0.5vw) }
   padding-bottom: 2em;
   box-sizing: border-box;
   font-family: AmiriQuranWeb;
+  width: 100%;
+  height: 100%;
+  border-radius: 0.25rem;
+}
+
+#imla_txt_container {
   width: min(90%, 70vw);
   /* height: 95vh; */ /* set thru JS */
   margin: auto;
   margin-bottom: 1rem;
-  border-radius: 0.25rem;
 }
 
-#imla_txt.done {
+#imla_txt_container #imla_txt.done {
   padding-bottom: 0;
   margin-bottom: 0;
 }
 
-/* #body.fullpage and not #imla_txt.fullpage because */
-/* #imla_txt's classes are used for states (wrong, spacewrong, done) */
-#body.fullpage #imla_txt:not(.done) {  /* :not(.done) to restore them when done */
+/* #body.fullpage and not #imla_txt_container.fullpage because */
+/* #imla_txt_container's classes are used for states (wrong, spacewrong, done) */
+#body.fullpage #imla_txt_container:not(.done) {  /* :not(.done) to restore them when done */
   width: 100vw;
   position: absolute;
   right: 0;
   /* height: 100vh; */ /* set thru JS */
+}
+#body.fullpage #imla_txt_container:not(.done) #imla_txt {
   border: none;
   border-radius: 0;
 }
