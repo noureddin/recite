@@ -265,13 +265,16 @@ function count_char (str, ch) {
   return str.replace(new RegExp('[^'+ch+']+', 'g'), '').length
 }
 
-function imlafilter_byword   (val) { return val.replace(/\S*$/, '') }  // only check after space or enter
 function imlafilter_byletter (val) { return val }
+function imlafilter_byword   (val) { return val.replace(/\S*$/, '') }  // only check after space or newline
+function imlafilter_byaaya   (val) { return val.replace(/[^\n]*$/, '') }  // only check after newline
 
 window.imlafilter = imlafilter_byletter  // the default
 
 function change_feedbackrate () {
-  window.imlafilter = el_feedbackrate.value === 'word' ? imlafilter_byword : imlafilter_byletter
+  window.imlafilter = el_feedbackrate.value === 'aaya' ? imlafilter_byaaya
+                    : el_feedbackrate.value === 'word' ? imlafilter_byword
+                    : imlafilter_byletter
   if (el_imla_txt.value && el_imla_txt.oninput) { el_imla_txt.oninput() }
   zz_set('feedbackrate', el_feedbackrate.value)
 }

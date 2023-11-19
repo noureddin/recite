@@ -96,10 +96,13 @@ Other parameters you can add to pre-configure the preferences:
     1. `u`, `uthm`, or `uthmani`: select the no-typing Uthmani mode (the default; use only to annul a previous `quizmode=imlaai`).
     2. `i`, `imla`, or `imlaai`: select the typing-only Imlaai mode.
 
-- `txt`: a shorthand for `quizmode=imlaai`/`qz=i`.
+- `txt`: a shorthand for `quizmode=imlaai` or `qz=i`.
 
-- `byword`: change the feedback rate in the Imlaai mode to by-word, instead of by-letter.
-- `byletter`: change the feedback rate in the Imlaai mode to by-letter, instead of by-word (the default; use only to annul a previous `byword`).
+- `by=`: change the feedback rate in the Imlaai mode; it takes the following values:
+
+    1. `l` or `letter`: by-letter (the default; use only to annul a previous `by=word` or `by=aaya`).
+    2. `w` or `word`: by-word (hard). So it checks your input only after you finish a word by pressing space or enter.
+    3. `a` or `aaya`: by-aaya (very hard). So it checks your input only after you finish an entire aaya (verse) by pressing enter. (Notice the spelling of `aaya`: it starts with two `a` letters and ends with just an `a`.)
 
 - `t`, `teach`, or `teacher`: enable the teacher mode (play the audio recitation for the ayah _before_ you start reciting it, not after).
 - `n`, `noteach`, or `noteacher`: disable the teacher mode (the default; play the audio recitation for the ayah _after_ you finish reciting it).

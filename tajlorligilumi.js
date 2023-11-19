@@ -2,6 +2,16 @@
 // tajlori: to personalize
 // tajlorligilumi: parsing preferences (not verses) url params
 
+const _fbrate_values = {
+  l: 'l', letter: 'l',
+  w: 'w', word: 'w',
+  a: 'a', aaya: 'a',
+}
+
+function parse_fbrate (fb) {
+  return _fbrate_values[ fb.toLowerCase() ]
+}
+
 const _color_values = {
   t: 'taj', taj: 'taj', tajweed: 'taj',
   b: 'bas', bas: 'bas', basic: 'bas',
@@ -34,7 +44,7 @@ function _tajlorligilumilo (params) {
   let color = 'taj'    // color of text: c/color = t/taj/tajweed (default); b/bas/basic; n/no/none.
   let mv = 'bottom'    // position of buttons: m/mv/mvbtns = b (bottom; default); r (right); l (left).
   let quizmode         // quiz mode: q/qz/quizmode = u/uthm/uthmani (no-typing; default); i/imla/imlaai (typing)
-  let byword           // imlaai-mode feedback rate; default); byword (true)
+  let fbrate           // imlaai-mode feedback rate: 'l' (by letter; default), 'w' (by word), 'a' (by aaya)
   let nolinebreaks     // uthmani-mode linebreaks between ayat (default: linebreaks)
   let qari             // audio recitation qari's id
   let qariurl          // user-provided audio recitation base_url
@@ -60,8 +70,10 @@ function _tajlorligilumilo (params) {
       else if (is_of('mvbtns', 'mv', 'm'))           {              mv = parse_mv(e[1]) || mv             }
       else if (is_of('quizmode', 'qz', 'q'))         {        quizmode = parse_quizmode(e[1]) || quizmode }
       else if (is_of('txt'))                         {        quizmode = parse_quizmode('imlaai')         }
-      else if (is_of('byword'))                      {          byword = true                             }
-      else if (is_of('byletter'))                    {          byword = false                            }
+      else if (is_of('byaaya'))                      {          fbrate = 'a'                              }
+      else if (is_of('byword'))                      {          fbrate = 'w'                              }
+      else if (is_of('byletter'))                    {          fbrate = 'l'                              }
+      else if (is_of('by'))                          {          fbrate = parse_fbrate(e[1]) || fbrate     }
       else if (is_of(  'linebreaks'))                {    nolinebreaks = false                            }
       else if (is_of('nolinebreaks'))                {    nolinebreaks = true                             }
       else if (is_of('t',   'teach',   'teacher'))   {         teacher = true                             }
@@ -82,7 +94,7 @@ function _tajlorligilumilo (params) {
     color,
     mv,
     quizmode,
-    byword,
+    fbrate,
     nolinebreaks,
     teacher,
     disableteacher,
@@ -135,7 +147,7 @@ function tajlorligilumi () {
   el_mvbtns_input.value = opts.mv
   el_mvbtns_input.onchange()
   //
-  el_feedbackrate.value = opts.byword ? 'word' : ''
+  el_feedbackrate.value = opts.fbrate === 'a' ? 'aaya' : opts.fbrate === 'w' ? 'word' : ''
   el_feedbackrate.onchange()
   //
   el_linebreaks_input.checked = !opts.nolinebreaks

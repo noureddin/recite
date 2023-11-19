@@ -205,10 +205,10 @@ function _recite_imla () {
     if (!imla_match(correct_text, el_imla_txt.value)) {
       // is the only problem is typing the last character as space instead of newline or vice versa?
       const input_last_char = el_imla_txt.value.slice(-1)
-      if (
+      if (el_feedbackrate.value !== 'aaya' && (
           input_last_char === ' '  && imla_match(correct_text, el_imla_txt.value.slice(0,-1) + '\n')
        || input_last_char === '\n' && imla_match(correct_text, el_imla_txt.value.slice(0,-1) + ' ')
-      ) {
+      )) {
         el_imla_txt.classList = 'spacewrong'
       }
       else {
@@ -219,7 +219,7 @@ function _recite_imla () {
       el_imla_txt.classList = ''
       if (!cursor_at_end) { return }
       const last_char = el_imla_txt.value.slice(-1)
-      if (last_char === ' ' || last_char === '\n') {
+      if (last_char === '\n' || (el_feedbackrate.value !== 'aaya' && last_char === ' ')) {
         fix_imla_additions(last_char)
       }
       if (last_char === '\n') {
