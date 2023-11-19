@@ -489,7 +489,7 @@ onload = function () {
   })
 }
 
-el_imla_txt.onfocus = () => el_imla_txt.scrollIntoView()
+el_imla_txt.onfocus = () => el_imla_txt.scrollIntoView({ behavior: "smooth" })
 
 function resize_imlaai_done () {
   // getComputedStyle not getBoundingClientRect to get the content (selectors) without padding (tabs)
