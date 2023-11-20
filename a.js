@@ -279,9 +279,9 @@ function change_feedbackrate () {
   zz_set('feedbackrate', el_feedbackrate.value)
 }
 
-function imla_match (correct, input) {
+function imla_match (correct, input, ifilter=window.imlafilter) {
   // for now, assume no tashkeel (and remove it if found)
-  return remove_imla_additions(correct).startsWith(remove_imla_additions(imlafilter(input)))
+  return remove_imla_additions(correct).startsWith(remove_imla_additions(ifilter(input)))
   // later: check the tashkeel the user entered against the correct text, while ignoring the order of shadda
 }
 

@@ -260,10 +260,15 @@ function _recite_imla () {
       bang += 1
       if (bang === 10) {
         bang = 0
-        // cheat one character, if all up to this point is correct
-        if (imla_match(correct_text, el_imla_txt.value)) {
-          // taking the last char blindly could take a tashkeel, which could be exploited to cheat more than one char.
-          fix_imla_additions(remove_imla_additions(el_imla_txt.value).slice(-1))
+        // cheat one character, if all up to this point is correct.
+        // if the feedback rate is not letter, imla_match can succeed while the input is wrong,
+        // so fix_imla_additions would complete too many chars to match the last char and then add one;
+        // e.g., recite/?txt&by=word&1/1 (the first aaya in al-Fatiha): type only ي then hold '!'.
+        // also taking the last char blindly could take a tashkeel, which would cause the same issue.
+        // hence we first force imla_match to act as if it's by=letter for the first issue,
+        // then for the second issue we remove_imla_additions before taking the last char.
+        if (imla_match(correct_text, el_imla_txt.value, imlafilter_byletter)) {
+          fix_imla_additions( remove_imla_additions(el_imla_txt.value).slice(-1) )
           // add one char; then while the last copied-to-input char is an addition (tashkeel etc): add one more
           do {
             el_imla_txt.value = correct_text.slice(0, el_imla_txt.value.length+1)
