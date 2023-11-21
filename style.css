@@ -504,7 +504,22 @@ a:visited { color: purple; }
 a:hover { text-shadow: 1pt 1pt 2pt lightblue; }
 a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
 
-.tab { display: none; }  /* hide the checkbox */
+.tab {  /* hide the checkbox, while making it accessible */
+  /* https://kittygiraudel.com/snippets/sr-only-class/ */
+  /* https://kittygiraudel.com/2021/02/17/hiding-content-responsibly/ */
+  border: 0 !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+  -webkit-clip-path: inset(50%) !important;
+  clip-path: inset(50%) !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  position: absolute !important;
+  width: 1px !important;
+  white-space: nowrap !important;
+}
+
 .tab ~ label { user-select: none; }  /* it's easy to select it while clicking */
 
 #help { display: flex; flex-direction: column-reverse; }
@@ -524,13 +539,16 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
 
 .tab + label {
   font-weight: normal; /* bold */
+  box-sizing: border-box;
   --label-gap: 0.5rem;
-  --small-width: 1rem;
-  --padding: 10px;
-  --height: 1.3rem;
-  --big-width: calc(var(--all-width) - 4*var(--padding) - var(--label-gap) - var(--small-width));  /* 2 paddings for each button */
+  --small-width: 2rem;
+  --margin-bottom: 1rem;
+  --padding: 0.5rem;
+  --height: 2.2rem;
+  --big-width: calc(var(--all-width) - var(--label-gap) - var(--small-width));
   line-height: 1.2;
   padding: var(--padding);
+  margin-bottom: var(--margin-bottom);
   height: var(--height);
   background: var(--tab);
   color: var(--tab-txt);
@@ -549,9 +567,9 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
 
 #helptoggle + label {
   width: var(--small-width);
-  right: calc(var(--big-width) + var(--label-gap) + 2*var(--padding));
+  right: calc(var(--big-width) + var(--label-gap));
   top: calc(-1*var(--height) - 2*var(--padding));
-  margin-bottom: calc(-1*var(--height) - 1*var(--padding)); /* remove the space created by removing it; subtracted one padding not two to make room below */
+  margin-bottom: calc(-1*var(--height)); /* remove the space created by removing it */
 }
 
 .contentcontainer {
@@ -598,10 +616,14 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   visibility: visible;
 }
 
-.tab + label:hover,
-.tab + label:focus {
+.tab + label:hover {
   background: var(--tab-active);
   color: var(--tab-active-txt);
+}
+
+.tab:focus-visible + label {
+  background: var(--tab-active);
+  outline: medium solid deepskyblue;
 }
 
 kbd {
