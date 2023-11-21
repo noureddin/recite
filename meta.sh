@@ -15,6 +15,11 @@ echo '<meta name="description" content="'"$DESC"'">'
 echo '<link rel="canonical" href="'"$URL"'">'
 
 
+# Favicon
+echo '<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">'
+echo '<link rel="icon" sizes="any" type="image/svg+xml" href="favicon.svg">'
+
+
 # Open Graph (Facebook et al)
 # OG doesn't follow ISO for Arabic: https://developers.facebook.com/docs/internationalization
 echo '<meta property="og:locale" content="ar_AR">'

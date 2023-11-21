@@ -3,6 +3,8 @@
 <div align="center">~~ <strong><a href="اقرأني.md">اقرأني بالعربية</a></strong> ~~</div>
 <p></p>
 
+<img align="right" width="80" height="80" alt="Recite App Logo" src="favicon.svg">
+
 This is the web version of [Recite for desktop](https://github.com/noureddin/recite/tree/master), but for the Quran only, and with much, much more features.
 
 Use it at: [noureddin.github.io/recite](https://noureddin.github.io/recite).
@@ -191,3 +193,5 @@ for providing the audio recitations for every project that needs them,
 including Recite Web and [Ayat](https://quran.ksu.edu.sa/).
 
 Thanks for my friends [Ezz El Din](https://github.com/EzzEddin) and [Ahmad Hassan](https://github.com/ahmad-h-yassin) for helping me in developing these applications and giving me invaluable feedback.
+
+The logo is based on the beautiful [Anchor by dwtoch on OpenClipArt](https://openclipart.org/detail/292353/anchor-sign).
