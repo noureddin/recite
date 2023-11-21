@@ -135,6 +135,13 @@ function tajlorligilumi () {
   el_darkmode_input.checked = opts.dark
   el_darkmode_input.onchange()
   //
+  // TODO: add a url param for this '^_^
+  window.prefers_reduced_motion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  window.scroll_behavior =
+    window.prefers_reduced_motion
+      ? {}
+      : { behavior: 'smooth' }
+  //
   el_teacher_input.checked = opts.teacher
   //
   el_qaris.value = opts.qari

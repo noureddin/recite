@@ -483,13 +483,13 @@ onload = function () {
   document.querySelectorAll('details').forEach(el => {
     el.addEventListener('toggle', ev => {
       if (el.open) {
-        el.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" })
+        el.scrollIntoView({ ...window.scroll_behavior, block: "nearest", inline: "nearest" })
       }
     })
   })
 }
 
-el_imla_txt.onfocus = () => el_imla_txt.scrollIntoView({ behavior: "smooth" })
+el_imla_txt.onfocus = () => el_imla_txt.scrollIntoView(window.scroll_behavior)
 
 function resize_imlaai_done () {
   // getComputedStyle not getBoundingClientRect to get the content (selectors) without padding (tabs)

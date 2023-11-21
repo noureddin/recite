@@ -666,3 +666,14 @@ details[open] > .details-content {
   margin: 0;
   margin-top: 0.2em
 }
+
+
+/* reduced motion */
+
+@media screen and (prefers-reduced-motion: reduce) {
+* {
+  scroll-behavior: auto !important;
+  animation: none !important;
+  transition: none !important;
+}
+}
