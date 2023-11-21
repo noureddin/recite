@@ -588,6 +588,10 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   padding-right: 1rem;
 }
 
+#help details {
+  scroll-margin: 0.5rem;
+}
+
 #helptoggle:not(checked) ~ #helpcontent {
   overflow: hidden;
   max-height: 0;
