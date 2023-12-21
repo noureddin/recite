@@ -1,7 +1,7 @@
 #!/bin/sh
 
 URL='https://noureddin.github.io/recite/'
-TITLE='راجع ما تحفظ من القرآن الكريم | رسايت'
+TITLE='راجع ما تحفظ من القرآن الكريم | رسيت'
 DESC='تطبيق ويب مجاني لمراجعة حفظ القرآن الكريم بلا كتابة، للحاسوب والمحمول.'
 
 # https://iamturns.com/open-graph-image-size/

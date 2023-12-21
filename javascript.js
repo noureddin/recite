@@ -74,7 +74,7 @@ function tab_toggled (el) {
 
 function sync_ui (stpair, enpair, title, preserve_url) {
   if (!preserve_url) { window.location.hash = stpair.join('/') + '-' + enpair.join('/') }
-  document.querySelector('title').innerHTML = title + ' | رسايت'
+  document.querySelector('title').innerHTML = title + ' | رسيت'
   zz_set('title', title)
   //
   el_sura_bgn.value = stpair[0]-1; el_aaya_bgn.value = filter_aaya_input(stpair[1])

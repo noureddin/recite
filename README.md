@@ -171,7 +171,7 @@ These are not changeable from the UI, only from the URL parameters; they are exp
         Unlike `zz_done()` (the "Return" button), `zz_ignore()` means that the user doesn't want to register this recitation.
         So, if you're asking the user how their recitation/memorization was, don't do that if `zz_ignore()` is called instead of `zz_done()`.
 
-    - `zz_set_title(title)`: called on start to set the parent window's title to the current recitation content, the same as the Recite's window's title without `| رسايت` and the title appearing above the header buttons.
+    - `zz_set_title(title)`: called on start to set the parent window's title to the current recitation content, the same as the Recite's window's title without `| رسيت` and the title appearing above the header buttons.
     - `zz_set_quizmode(uthm_or_imla)`: called when the user changes the quiz mode selector. Either `"uthm"` for Uthmani (the default) or `"imla"` for Imlaai.
     - `zz_set_feedbackrate(emptystring_or_word)`: called when the user changes the feedback rate selector for the Imlaai mode. Empty string (`""`) is for by-letter (the default) and `"word"` is for by-word.
     - `zz_set_tajweed(t_or_b_or_n)`: called when the user changes the text colorization selector for the Uthmani mode. `"t"` for Tajweed (the default), `"b"` for Basic (parts of characters), and `"n"` for None.
