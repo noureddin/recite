@@ -28,9 +28,10 @@ function make_audio_list (sura_bgn, aaya_bgn, sura_end, aaya_end) {
   )
 }
 
+const MX = 6236
 var ayat = {
-  imla: Array(6236),
-  uthm: Array(6236),
+  imla: Array(MX),
+  uthm: Array(MX),
 }
 
 // both imlaai and uthmani are split into nearly equal-size (in bytes) parts, without crossing suar.
@@ -57,15 +58,31 @@ function load (name, st, en, callback) {
   const p7 = either_between(P7, P8)
   const p8 = st >= P8 || en >= P8
 
-  // check an arbitrary aaya in the given quarter, then callback or load then callback
-  const L1 = (cb) => ayat[name][ 0] ? cb() : G('res/'+name+'1.gz').then((a) => { ayat[name] = [                             ...a.split('\n'), ...ayat[name].slice(P2)]; cb() })
-  const L2 = (cb) => ayat[name][P2] ? cb() : G('res/'+name+'2.gz').then((a) => { ayat[name] = [...ayat[name].slice(0,P2-1), ...a.split('\n'), ...ayat[name].slice(P3)]; cb() })
-  const L3 = (cb) => ayat[name][P3] ? cb() : G('res/'+name+'3.gz').then((a) => { ayat[name] = [...ayat[name].slice(0,P3-1), ...a.split('\n'), ...ayat[name].slice(P4)]; cb() })
-  const L4 = (cb) => ayat[name][P4] ? cb() : G('res/'+name+'4.gz').then((a) => { ayat[name] = [...ayat[name].slice(0,P4-1), ...a.split('\n'), ...ayat[name].slice(P5)]; cb() })
-  const L5 = (cb) => ayat[name][P5] ? cb() : G('res/'+name+'5.gz').then((a) => { ayat[name] = [...ayat[name].slice(0,P5-1), ...a.split('\n'), ...ayat[name].slice(P6)]; cb() })
-  const L6 = (cb) => ayat[name][P6] ? cb() : G('res/'+name+'6.gz').then((a) => { ayat[name] = [...ayat[name].slice(0,P6-1), ...a.split('\n'), ...ayat[name].slice(P7)]; cb() })
-  const L7 = (cb) => ayat[name][P7] ? cb() : G('res/'+name+'7.gz').then((a) => { ayat[name] = [...ayat[name].slice(0,P7-1), ...a.split('\n'), ...ayat[name].slice(P8)]; cb() })
-  const L8 = (cb) => ayat[name][P8] ? cb() : G('res/'+name+'8.gz').then((a) => { ayat[name] = [...ayat[name].slice(0,P8-1), ...a.split('\n')                         ]; cb() })
+  const load_part = (part, start, end, cb) => {
+    // check an arbitrary aaya in the given part, then callback or load it then callback
+    if (ayat[name][start]) {
+      cb()
+    }
+    else {
+      G('res/'+name+part+'.gz').then((txt) => {
+        ayat[name] = [
+          ...ayat[name].slice(0, start && start-1),  // zero if zero (which gives an empty array), subtract one otherwise
+          ...txt.split('\n'),
+          ...ayat[name].slice(end),
+        ]
+        cb()
+      })
+    }
+  }
+
+  const L1 = (cb) => load_part(1,  0, P2, cb)
+  const L2 = (cb) => load_part(2, P2, P3, cb)
+  const L3 = (cb) => load_part(3, P3, P4, cb)
+  const L4 = (cb) => load_part(4, P4, P5, cb)
+  const L5 = (cb) => load_part(5, P5, P6, cb)
+  const L6 = (cb) => load_part(6, P6, P7, cb)
+  const L7 = (cb) => load_part(7, P7, P8, cb)
+  const L8 = (cb) => load_part(8, P8, MX, cb)
 
   // TODO: parallize
   if      (p1 && p8) { L1(()=> L2(()=> L3(()=> L4(()=> L5(()=> L6(()=> L7(()=> L8( callback )))))))) }
