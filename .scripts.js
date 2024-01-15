@@ -9,5 +9,7 @@
 <<!!#cat test.js>>
 // remove the '#' in the previous line to perform the tests
 <<!!cat javascript.js>>
-<<!!cat res/jszip-utils.min.js>>
+// gunzipSync from fflate with a few modifications (check .g.ts)
+// MIT License; original source: https://github.com/101arrowz/fflate
+<<!!cat .g.js>>
 <<!!cat z.js>>

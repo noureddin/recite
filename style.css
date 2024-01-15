@@ -18,7 +18,7 @@
 
 /* The following two fonts are from: https://sourceforge.net/projects/arabeyes/files/Fonts/ */
 /* They are under GNU GPL v2. Both are converted from TrueType to WOFF using */
-/* then both are subset and converted to WOFF & WOFF2 using glyphhanger */
+/* then both are subsetted and converted to WOFF & WOFF2 using glyphhanger */
 @font-face {
   font-family: KacstOne; /* version 5.0 */
   font-style: normal;
