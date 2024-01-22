@@ -267,13 +267,8 @@ function kind_of_portion (last_two_chars) {
   const last_one_char = last_two_chars.slice(-1)
   return last_one_char  === ''  ? 'a' :  // start of text
          last_one_char  === '\n'? 'a' :  // end of aaya
-         last_two_chars === '\u06DC\t'? 'j' :  // ARABIC SMALL HIGH SEEN
-         last_two_chars === '\u06D6\t'? 'j' :  // ARABIC SMALL HIGH LIGATURE SAD WITH LAM WITH ALEF MAKSURA
-         last_two_chars === '\u06D7\t'? 'j' :  // ARABIC SMALL HIGH LIGATURE QAF WITH LAM WITH ALEF MAKSURA
-         last_two_chars === '\u06D8\t'? 'j' :  // ARABIC SMALL HIGH MEEM INITIAL FORM
-         last_two_chars === '\u06DA\t'? 'j' :  // ARABIC SMALL HIGH JEEM
-         last_two_chars === '\u06DB\t'? 'j' :  // ARABIC SMALL HIGH THREE DOTS
-         ''
+         last_two_chars.match(/[\u06D7-\u06DC]\t/) ? 'j' :  // waqf signs
+         ''  // normal word
 }  // }}}
 
 function valid_inputs (sura_bgn, aaya_bgn, sura_end, aaya_end) {  // {{{
