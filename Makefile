@@ -5,20 +5,20 @@ endef
 R=$(shell perl -MList::Util=uniq -nle '$(get_reserved)' .index.html)
 J=deno run --quiet --allow-read npm:uglify-js --compress top_retain=$R,passes=5 --mangle toplevel,reserved=$R
 C=deno run --quiet --allow-read npm:clean-css-cli
-M=perl -CSAD minify.pl
+M=perl -CSAD .minify.pl
 A=perl -CSAD -nE 'while(s/<<!!(?!cat )(.*?)>>/`$$1`/ge){} print'
 P=perl -CSAD -nE 'while(s/<<!!(.*?)>>/`$$1`/ge){} print'
 
-# minify.pl minifies HTML, but the transformations it applies are bad for SVG and JS.
+# .minify.pl minifies HTML, but the transformations it applies are bad for SVG and JS.
 # It can be made to be more context-sensitive, but it's much better to separate them
 #   both into their files and not minify them at all.
 # Therefore the preprocesser was split into the non-including preprocesser ($A),
 #   and after minification the usual (now including only, for html) preprocesser ($P)
 #   is called.
-# All of that concerns only index.html, because it needs minify.pl too;
+# All of that concerns only index.html, because it needs .minify.pl too;
 #   other files using the preprocesser are unaffected.
 
-index.html: .index.html .scripts.gen.min.js style.min.css minify.pl
+index.html: .index.html .scripts.gen.min.js style.min.css .minify.pl
 	$A "$<" | $M | $P > "$@"
 
 %.min.css: %.css
