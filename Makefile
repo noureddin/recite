@@ -30,7 +30,7 @@ index.html: .index.html .scripts.gen.min.js style.min.css minify.pl
 %.gen.js: %.js
 	$P "$<" > "$@"
 
-.scripts.gen.min.js: .scripts.js .g.js a.gen.js mappings.js tajlorligilumi.js data.gen.js versligilumi.js res/confetti.min.js javascript.js res/jszip-utils.min.js z.js
+.scripts.gen.min.js: .scripts.js .g.js a.gen.js mappings.js tajlorligilumi.js data.gen.js versligilumi.js res/confetti.min.js javascript.js z.js
 	$P "$<" | perl -CDAS -pe 's/const +say += +console\.log//' | $J > "$@"
 
 .g.js: .g.ts .g.sh
