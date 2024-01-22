@@ -3,7 +3,7 @@ push @a, /\bon\w+="([^"]+)\(/; END { printf "[%s]\n", join ",", uniq sort @a }
 endef
 
 R=$(shell perl -MList::Util=uniq -nle '$(get_reserved)' .index.html)
-J=deno run --quiet --allow-read npm:uglify-js --compress top_retain=$R,passes=5 --mangle toplevel,reserved=$R
+J=deno run --quiet --allow-read npm:uglify-js --compress top_retain=$R,passes=10 --mangle toplevel,reserved=$R
 C=deno run --quiet --allow-read npm:clean-css-cli
 M=perl -CSAD .minify.pl
 A=perl -CSAD -nE 'while(s/<<!!(?!cat )(.*?)>>/`$$1`/ge){} print'
@@ -31,7 +31,7 @@ index.html: .index.html .scripts.gen.min.js style.min.css .minify.pl
 	$P "$<" > "$@"
 
 .scripts.gen.min.js: .scripts.js .g.js a.gen.js mappings.js tajlorligilumi.js data.gen.js versligilumi.js res/confetti.min.js javascript.js z.js
-	$P "$<" | perl -CDAS -pe 's/const +say += +console\.log//' | $J > "$@"
+	$P "$<" | perl -CDAS -pe 's/const +say += +console\.log//' | $J | perl -pe 's/;?\s*\Z//' > "$@"
 
 .g.js: .g.ts .g.sh
 	bash .g.sh
