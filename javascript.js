@@ -17,26 +17,29 @@ function restart_reciting () {
 function input_trigger_x (ev) {
   // this fn is connected to onkeyup and onmouseup. it handles three "events"
 
-  const on_ayat = ev.target.id === 'aaya_bgn' || ev.target.id === 'aaya_end'
-  const on_suar = ev.target.id === 'sura_bgn' || ev.target.id === 'sura_end'
+  const id = ev.target.id
+  const key = ev.key
+
+  const on_ayat = id === 'aaya_bgn' || id === 'aaya_end'
+  const on_suar = id === 'sura_bgn' || id === 'sura_end'
 
   // Enter on suar/ayat selection: set focus on the next element:
   //   sura_bgn > aaya_bgn > sura_end > aaya_end > ok
   // also, on the last element, get the next (ie first) word
-  if (ev.key === 'Enter' && (on_ayat || on_suar)) {
-    (ev.target.id === 'sura_bgn' ? el_aaya_bgn :
-     ev.target.id === 'aaya_bgn' ? el_sura_end :
-     ev.target.id === 'sura_end' ? el_aaya_end :
-     ev.target.id === 'aaya_end' ? el_ok       :
+  if (key === 'Enter' && (on_ayat || on_suar)) {
+    (id === 'sura_bgn' ? el_aaya_bgn :
+     id === 'aaya_bgn' ? el_sura_end :
+     id === 'sura_end' ? el_aaya_end :
+     id === 'aaya_end' ? el_ok       :
      1).focus()
     return
   }
 
   // Up or Down on an ayat-input, increase or decrease it
   if (on_ayat) {
-    let el = Qid(ev.target.id)
-    if (ev.key === 'ArrowUp')   { el.value = 1 + +defilter_aaya_input(el.value) }
-    if (ev.key === 'ArrowDown') { el.value = 1 - +defilter_aaya_input(el.value) }
+    let el = Qid(id)
+    if (key === 'ArrowUp')   { el.value = 1 + +defilter_aaya_input(el.value) }
+    if (key === 'ArrowDown') { el.value = 1 - +defilter_aaya_input(el.value) }
     validate_aaya_sura_input(ev)  // handles the filtering and the limits
     return
   }
@@ -372,18 +375,21 @@ function _recite_uthm () {
 
   const input_trigger = function (ev) {
 
+    const name = ev.target.nodeName
+    const key = ev.key
+
     const kb_mod = ev.shiftKey || ev.ctrlKey || ev.altKey
-    const kb_fwd = ev.key === ' ' || ev.key === 'Enter' || ev.key === 'ArrowLeft'
-    const kb_bck = ev.key === 'Backspace' || ev.key === 'ArrowRight'
+    const kb_fwd = key === ' ' || key === 'Enter' || key === 'ArrowLeft'
+    const kb_bck = key === 'Backspace' || key === 'ArrowRight'
     const on_input_field =  // not just ayat and suar; also buttons like #mvbtns
-      ev.target.nodeName === 'INPUT' || ev.target.nodeName === 'SELECT' || ev.target.nodeName === 'BUTTON'
+      name === 'INPUT' || name === 'SELECT' || name === 'BUTTON'
 
     if (on_input_field) { return }
 
     if      (kb_fwd) { if (kb_mod) { aaya_fwd() } else { word_fwd() } }
     else if (kb_bck) { if (kb_mod) { aaya_bck() } else { word_bck() } }
-    else if (ev.key === '0' && !kb_mod) { jmla_fwd() }
-    else if (ev.key === '1' && !kb_mod) { jmla_bck() }
+    else if (key === '0' && !kb_mod) { jmla_fwd() }
+    else if (key === '1' && !kb_mod) { jmla_bck() }
 
   }
 
@@ -420,6 +426,7 @@ const hide_selectors = function (quizmode) {
   el_endmsg.hidden = true
   el_ok.hidden = true
   el_title.style.display = 'inline-block'
+  const d = document.documentElement
   if (quizmode === 'imla') {
     el_imla_txt_container.style.height = fullpage ? '100vh' : '95vh'
     el_imla_txt.value = ""
@@ -429,7 +436,7 @@ const hide_selectors = function (quizmode) {
     el_uthm_txt.hidden = true
     el_mvbtns.hidden = true
     el_end_of_header.style.color = 'transparent'  // to keep some space
-    document.documentElement.style.setProperty('--sticky', '')
+    d.style.setProperty('--sticky', '')
     el_imla_txt.focus()
   }
   else {  /* uthmani */
@@ -438,7 +445,7 @@ const hide_selectors = function (quizmode) {
     el_mvbtns.hidden = false
     el_imla_txt_container.hidden = true
     el_end_of_header.style.color = ''
-    document.documentElement.style.setProperty('--sticky', 'sticky')
+    d.style.setProperty('--sticky', 'sticky')
     // el_nextword.focus()
   }
   body_scroll_to_bottom()
@@ -480,7 +487,7 @@ onload = function () {
   versligilumi()
   el_imla_txt.spellcheck = false
   // fix help opening
-  document.querySelectorAll('details').forEach(el => {
+  Qall('details').forEach(el => {
     el.addEventListener('toggle', ev => {
       if (el.open) {
         el.scrollIntoView({ ...window.scroll_behavior, block: "nearest", inline: "nearest" })
@@ -493,15 +500,18 @@ el_imla_txt.onfocus = () => el_imla_txt.scrollIntoView(window.scroll_behavior)
 
 function resize_imlaai_done () {
   // getComputedStyle not getBoundingClientRect to get the content (selectors) without padding (tabs)
-  const sel = parseFloat(getComputedStyle(el_selectors).height)
-            + parseFloat(getComputedStyle(el_selectors.querySelector('hr')).marginBottom)
+  const g = getComputedStyle
+  const f = parseFloat
+  const sel = f(g(el_selectors).height)
+            + f(g(el_selectors.querySelector('hr')).marginBottom)
   const before = isNaN(sel) /* zz-mode */
-               ? parseFloat(getComputedStyle(el_header).height)
+               ? f(g(el_header).height)
                : sel
-  const _m = getComputedStyle(el_endmsg)
-  const after = parseFloat(_m.height) + parseFloat(_m.marginTop) + parseFloat(_m.marginBottom)
-  const one_em = parseFloat(_m.marginTop)
-  const all = visualViewport ? visualViewport.height : document.body.clientHeight
+  const _m = g(el_endmsg)
+  const after = f(_m.height) + f(_m.marginTop) + f(_m.marginBottom)
+  const one_em = f(_m.marginTop)
+  const v = visualViewport
+  const all = v ? v.height : document.body.clientHeight
   el_imla_txt_container.style.height = (all - before - after - 0.1*one_em) + 'px'
 }
 
