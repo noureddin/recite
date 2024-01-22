@@ -115,7 +115,7 @@ function _tajlorligilumilo (params) {
 }
 
 function tajlorligilumi () {
-  const opts = _tajlorligilumilo(window.location.hash || window.location.search)
+  const opts = _tajlorligilumilo(L.hash || L.search)
   //
   opts.quizmode = opts.quizmode != null ? opts.quizmode : el_quizmode.value
   el_quizmode.value = opts.quizmode

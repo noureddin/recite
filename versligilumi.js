@@ -231,7 +231,7 @@ function _versligilumilo (params) {
 }
 
 function versligilumi () {
-  const [st, en] = _versligilumilo(window.location.hash || window.location.search)
+  const [st, en] = _versligilumilo(L.hash || L.search)
   //
   // if no ayat are selected
   if (st == null || en == null) { return }

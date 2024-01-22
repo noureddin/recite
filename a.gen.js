@@ -12,6 +12,8 @@ function Q    (selector) { return document.querySelector(selector) }
 function Qall (selector) { return document.querySelectorAll(selector) }
 function Qid  (id)       { return document.getElementById(id) }
 
+const L = location
+
 const el_dark = Qid("dark")
 const el_body = Qid("body")
 const el_all = Qid("all")

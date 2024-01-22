@@ -12,6 +12,8 @@ function Q    (selector) { return document.querySelector(selector) }
 function Qall (selector) { return document.querySelectorAll(selector) }
 function Qid  (id)       { return document.getElementById(id) }
 
+const L = location
+
 <<!!bash -c 'for id in $(grep -Po "(?<=id=\")([^\"]+)(?=\")" .index.html); do echo "const el_$id = Qid(\"$id\")"; done'>>
 
 const __scroll_top = (el) => el.scrollTo({ top: 0 })

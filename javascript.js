@@ -76,7 +76,7 @@ function tab_toggled (el) {
 }
 
 function sync_ui (stpair, enpair, title, preserve_url) {
-  if (!preserve_url) { window.location.hash = stpair.join('/') + '-' + enpair.join('/') }
+  if (!preserve_url) { L.hash = stpair.join('/') + '-' + enpair.join('/') }
   document.querySelector('title').innerHTML = title + ' | رسيت'
   zz_set('title', title)
   //
@@ -100,7 +100,7 @@ function recite (st, en) {
   const quizmode = el_quizmode.value
   const teacher = el_teacher_input.checked
 
-  const preserve_url = !!window.location.search || !!window.location.hash
+  const preserve_url = !!L.search || !!L.hash
 
   hide_selectors(quizmode)
 
