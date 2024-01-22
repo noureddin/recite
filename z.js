@@ -2,31 +2,28 @@ function tajweed_colorize_aaya (a) {
   return a.replace(/([A-Z])<([^>]+)>/g, '<span_class="$1">$2</span>')
 }
 
-function make_audio_list (sura_bgn, aaya_bgn, sura_end, aaya_end) {
-  // returns ayat ref in the form sprintf("%03d%03d", sura_num, aaya_num)
-  return (
-    range(115).slice(+sura_bgn + 1, +sura_end + 2)
-      // s is the sura number, 1-based
-      .map(s => range(+suar_length[s - 1] + 1)
-        .slice(s === +sura_bgn + 1 ? +aaya_bgn     :   1,
-               s === +sura_end + 1 ? +aaya_end + 1 : 300  // larger than any sura
-        )
-        .map(a => s.toString().padStart(3,'0')
-                + a.toString().padStart(3,'0')
-        )
+// returns ayat ref in the form sprintf("%03d%03d", sura_num, aaya_num)
+const make_audio_list = (sura_bgn, aaya_bgn, sura_end, aaya_end) =>
+  range(115).slice(+sura_bgn + 1, +sura_end + 2)
+    // s is the sura number, 1-based
+    .map(s => range(+suar_length[s - 1] + 1)
+      .slice(s === +sura_bgn + 1 ? +aaya_bgn     :   1,
+             s === +sura_end + 1 ? +aaya_end + 1 : 300  // larger than any sura
       )
-      .reduce((list, s) => {  // https://stackoverflow.com/a/38528645
-        if (s[0].match(/001$/) &&  // if it's the first aaya of the sura
-            !s[0].match(/^001/) && // and it's is not al-faatiha
-            !s[0].match(/^009/)    // and it's is not at-tawba
-        ) {
-          s.unshift('001001')      // add basmala
-        }
-        list.push(...s)  // flatten
-        return list
-      }, [])
-  )
-}
+      .map(a => s.toString().padStart(3,'0')
+              + a.toString().padStart(3,'0')
+      )
+    )
+    .reduce((list, s) => {  // https://stackoverflow.com/a/38528645
+      if (s[0].match(/001$/) &&  // if it's the first aaya of the sura
+          !s[0].match(/^001/) && // and it's is not al-faatiha
+          !s[0].match(/^009/)    // and it's is not at-tawba
+      ) {
+        s.unshift('001001')      // add basmala
+      }
+      list.push(...s)  // flatten
+      return list
+    }, [])
 
 const MX = 6236
 var ayat = {

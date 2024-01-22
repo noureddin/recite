@@ -14,21 +14,21 @@ function Qid  (id)       { return document.getElementById(id) }
 
 <<!!bash -c 'for id in $(grep -Po "(?<=id=\")([^\"]+)(?=\")" .index.html); do echo "const el_$id = Qid(\"$id\")"; done'>>
 
-function __scroll_top (el) { el.scrollTo({ top: 0 }) }
-function __scroll_bot (el) { el.scrollTo({ top: el.scrollHeight }) }
+const __scroll_top = (el) => el.scrollTo({ top: 0 })
+const __scroll_bot = (el) => el.scrollTo({ top: el.scrollHeight })
 
-function body_scroll_to_top ()    { __scroll_top(el_body) }
-function body_scroll_to_bottom () { __scroll_bot(el_body) }
-function imla_scroll_to_bottom () { __scroll_bot(el_body); __scroll_bot(el_imla_txt) }
+const body_scroll_to_top    = () =>   __scroll_top(el_body)
+const body_scroll_to_bottom = () =>   __scroll_bot(el_body)
+const imla_scroll_to_bottom = () => { __scroll_bot(el_body); __scroll_bot(el_imla_txt) }
 
-function hide_el (el) { el.style.visibility = 'hidden';  el.style.opacity =   '0%' }
-function show_el (el) { el.style.visibility = 'visible'; el.style.opacity = '100%' }
+const hide_el = (el) => { el.style.visibility = 'hidden';  el.style.opacity =   '0%' }
+const show_el = (el) => { el.style.visibility = 'visible'; el.style.opacity = '100%' }
 
 // tr num & fields() {{{
 // TODO see: https://stackoverflow.com/q/10726638
 
-function filter_aaya_input (n) {  // remove non-numerals and convert numerals to Eastern Arabic
-  return n.toString()
+const filter_aaya_input = (n) =>  // remove non-numerals and convert numerals to Eastern Arabic
+  n.toString()
       .replace(/[0٠]/g, '٠')
       .replace(/[1١]/g, '١')
       .replace(/[2٢]/g, '٢')
@@ -40,9 +40,9 @@ function filter_aaya_input (n) {  // remove non-numerals and convert numerals to
       .replace(/[8٨]/g, '٨')
       .replace(/[9٩]/g, '٩')
       .replace(/[^٠١٢٣٤٥٦٧٨٩]/g, '')
-}
-function defilter_aaya_input (n) {  // convert numerals to ASCII
-  return n
+
+const defilter_aaya_input = (n) =>  // convert numerals to ASCII
+  n
       .replace(/٠/g, '0')
       .replace(/١/g, '1')
       .replace(/٢/g, '2')
@@ -53,14 +53,13 @@ function defilter_aaya_input (n) {  // convert numerals to ASCII
       .replace(/٧/g, '7')
       .replace(/٨/g, '8')
       .replace(/٩/g, '9')
-}
 
-const sura_bgn_length = () => el_sura_bgn.value === ''? 0  :         suar_length[+el_sura_bgn.value]
-const sura_end_length = () => el_sura_end.value === ''? 0  :         suar_length[+el_sura_end.value]
-const sura_bgn_val    = () => el_sura_bgn.value === ''? '' :                     +el_sura_bgn.value
-const sura_end_val    = () => el_sura_end.value === ''? '' :                     +el_sura_end.value
-const aaya_bgn_val    = () => el_aaya_bgn.value === ''? '' : +defilter_aaya_input(el_aaya_bgn.value)
-const aaya_end_val    = () => el_aaya_end.value === ''? '' : +defilter_aaya_input(el_aaya_end.value)
+const sura_bgn_length = () => el_sura_bgn.value === '' ? 0  :         suar_length[+el_sura_bgn.value]
+const sura_end_length = () => el_sura_end.value === '' ? 0  :         suar_length[+el_sura_end.value]
+const sura_bgn_val    = () => el_sura_bgn.value === '' ? '' :                     +el_sura_bgn.value
+const sura_end_val    = () => el_sura_end.value === '' ? '' :                     +el_sura_end.value
+const aaya_bgn_val    = () => el_aaya_bgn.value === '' ? '' : +defilter_aaya_input(el_aaya_bgn.value)
+const aaya_end_val    = () => el_aaya_end.value === '' ? '' : +defilter_aaya_input(el_aaya_end.value)
 
 // }}}
 
@@ -251,18 +250,17 @@ function change_quizmode () {
   }
 }
 
-function remove_imla_additions (str) {
-  // removes tashkeel and ayat numbers
-  return str.replace(/[\u064B-\u0652\xA0\u06DD٠-٩]+/g, '')
-}
+// removes tashkeel and ayat numbers
+const remove_imla_additions = (str) =>
+  str.replace(/[\u064B-\u0652\xA0\u06DD٠-٩]+/g, '')
 
 function count_char (str, ch) {
   return str.replace(new RegExp('[^'+ch+']+', 'g'), '').length
 }
 
-function imlafilter_byletter (val) { return val }
-function imlafilter_byword   (val) { return val.replace(/\S*$/, '') }  // only check after space or newline
-function imlafilter_byaaya   (val) { return val.replace(/[^\n]*$/, '') }  // only check after newline
+const imlafilter_byletter = (val) => val
+const imlafilter_byword   = (val) => val.replace(/\S*$/, '')  // only check after space or newline
+const imlafilter_byaaya   = (val) => val.replace(/[^\n]*$/, '')  // only check after newline
 
 window.imlafilter = imlafilter_byletter  // the default
 
@@ -274,11 +272,10 @@ function change_feedbackrate () {
   zz_set('feedbackrate', el_feedbackrate.value)
 }
 
-function imla_match (correct, input, ifilter=window.imlafilter) {
-  // for now, assume no tashkeel (and remove it if found)
-  return remove_imla_additions(correct).startsWith(remove_imla_additions(ifilter(input)))
-  // later: check the tashkeel the user entered against the correct text, while ignoring the order of shadda
-}
+// for now, assume no tashkeel (and remove it if found)
+// later: check the tashkeel the user entered against the correct text, while ignoring the order of shadda
+const imla_match = (correct, input, ifilter=window.imlafilter) =>
+  remove_imla_additions(correct).startsWith(remove_imla_additions(ifilter(input)))
 
 const sync_uthm_class_with = (cls, pred) => el_uthm_txt.classList.toggle(cls, pred)
 
