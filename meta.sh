@@ -1,6 +1,7 @@
 #!/bin/sh
 
-URL='https://noureddin.github.io/recite/'
+# URL='https://noureddin.github.io/recite/'
+URL='https://www.noureddin.dev/recite/'
 TITLE='راجع ما تحفظ من القرآن الكريم | رسيت'
 DESC='تطبيق ويب مجاني لمراجعة حفظ القرآن الكريم بلا كتابة، للحاسوب والمحمول.'
 
