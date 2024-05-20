@@ -39,4 +39,4 @@ index.html: .index.html .scripts.gen.min.js style.min.css .minify.pl
 .PHONEY: clean
 
 clean:
-	rm -f index.html a.js data.js scripts.min.js style.min.css
+	rm -f index.html a.gen.js data.gen.js scripts.min.js style.min.css .scripts.gen.min.js .g.js
