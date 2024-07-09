@@ -34,15 +34,15 @@ function parse_quizmode (quizmode) {
 function parse_mv (mv) {
   mv = mv.toLowerCase()
   if (mv == ''
-   || mv == 'b') { return 'bottom' }
-  if (mv == 'r') { return 'right' }
-  if (mv == 'l') { return 'left' }
+   || mv == 'b') { return 'b' }
+  if (mv == 'r') { return 'r' }
+  if (mv == 'l') { return 'l' }
 }
 
 function _tajlorligilumilo (params) {
   let dark             // dark mode: d/dark; l/light (default).
-  let color = 'taj'    // color of text: c/color = t/taj/tajweed (default); b/bas/basic; n/no/none.
-  let mv = 'bottom'    // position of buttons: m/mv/mvbtns = b (bottom; default); r (right); l (left).
+  let color            // color of text: c/color = t/taj/tajweed (default); b/bas/basic; n/no/none.
+  let mv               // position of buttons: m/mv/mvbtns = b (bottom; default); r (right); l (left).
   let quizmode         // quiz mode: q/qz/quizmode = u/uthm/uthmani (no-typing; default); i/imla/imlaai (typing)
   let fbrate           // imlaai-mode feedback rate: 'l' (by letter; default), 'w' (by word), 'a' (by aaya)
   let nolinebreaks     // uthmani-mode linebreaks between ayat (default: linebreaks)
@@ -117,9 +117,17 @@ function _tajlorligilumilo (params) {
 function tajlorligilumi () {
   const opts = _tajlorligilumilo(L.hash || L.search)
   //
-  opts.quizmode = opts.quizmode != null ? opts.quizmode : el_quizmode.value
-  el_quizmode.value = opts.quizmode
-  el_quizmode.onchange()
+  if (opts.quizmode == null) {
+    if (S.imla) {
+      el_quizmode.value = 'imla'
+      el_quizmode.onchange()
+    }
+  }
+  else {
+    el_quizmode.value = opts.quizmode
+    el_quizmode.onchange()
+    store_bool('imla', opts.quizmode === 'imla')
+  }
   //
   if (opts.highcontrast) {
     el_body.classList.add('highcontrast')
@@ -129,11 +137,14 @@ function tajlorligilumi () {
     el_body.classList.add('lowcontrast')
   }
   //
-  if (opts.dark == null) {  // no overriding; follow system preference initially
+  if (opts.dark == null && S.dark == null) {  // no overriding; follow system preference initially
     opts.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
   }
-  el_darkmode_input.checked = opts.dark
-  el_darkmode_input.onchange()
+  else {
+    if (opts.dark != null) { S.setItem('dark', opts.dark ? 'Y' : 'N') }
+    el_darkmode_input.checked = opts.dark || S.dark === 'Y'
+    el_darkmode_input.onchange()
+  }
   //
   // TODO: add a url param for this '^_^
   window.prefers_reduced_motion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -142,25 +153,36 @@ function tajlorligilumi () {
       ? {}
       : { behavior: 'smooth' }
   //
-  el_teacher_input.checked = opts.teacher
+  if (opts.teacher == null) {
+    el_teacher_input.checked = !!S.teacher
+  }
+  else {
+    el_teacher_input.checked = opts.teacher
+    store_bool('teacher', opts.teacher)
+  }
   //
-  el_qaris.value = opts.qari
+  el_qaris.value = opts.qari != null ? opts.qari : S.qari
   if (!el_qaris.value) { el_qaris.value = '' }  // if unset or is a bad value
+  if (el_qaris.value !== '') { S.setItem('qari', el_qaris.value) }
   el_qaris.oninput()
   //
-  if (opts.qariurl) { el_qaris.value = '_' }  // an invalid value to hide "With audio"
+  if (opts.qariurl) { el_qaris.value = '_' }  // an invalid value to hide "Without audio"
   el_qariurl.value = opts.qariurl ? opts.qariurl : ''
   //
-  el_textclr_input.value = opts.color
+  el_textclr_input.value = opts.color != null ? opts.color : S.notajweed ? 'no' : 'taj'
+  if (el_textclr_input.value !== 'taj') { S.setItem('notajweed', 'Y') }
   el_textclr_input.onchange()
   //
-  el_mvbtns_input.value = opts.mv
+  const mv = el_mvbtns_input.value = opts.mv != null ? opts.mv : S.mvbtns ? S.mvbtns : 'b'
+  if (mv === 'b') { S.removeItem('mvbtns') } else { S.setItem('mvbtns', mv) }
   el_mvbtns_input.onchange()
   //
-  el_feedbackrate.value = opts.fbrate === 'a' ? 'aaya' : opts.fbrate === 'w' ? 'word' : ''
+  const fb = el_feedbackrate.value = opts.fbrate != null ? opts.fbrate : S.fbrate ? S.fbrate : 'l'
+  if (fb === 'l') { S.removeItem('fbrate') } else { S.setItem('fbrate', fb) }
   el_feedbackrate.onchange()
   //
-  el_linebreaks_input.checked = !opts.nolinebreaks
+  el_linebreaks_input.checked = opts.nolinebreaks != null ? !opts.nolinebreaks : !S.nolinebreaks
+  store_bool('nolinebreaks', !el_linebreaks_input.checked)
   el_linebreaks_input.onchange()
   //
   const hide = (e) => e.style.display = 'none'
@@ -174,11 +196,20 @@ function tajlorligilumi () {
     Qall('.mode_options_title').forEach(hide)
   }
   //
-  // options that don't have a visible ui input (in addition to qariurl)
+  // options that don't have a visible ui input (in addition to qariurl & high/low contrast)
   window.allow_cheating = !opts.disablecheat  // cheating is allowed by default
   if (opts.emulate && mappings[opts.emulate]) { window.emulate = opts.emulate }
   if (opts.fullpage) { el_body.classList.add('fullpage') }
   if (opts.cn) { el_cn.value = opts.cn ? '1' : '' }
   if (opts.zz) { el_zz.value = opts.zz ? '1' : '' }
+  //
+  // options currently changeable from the ui but not from the url params
+  el_ayatnum_input.checked = !S.noayatnumcolor
+  store_bool('noayatnumcolor', !el_ayatnum_input.checked)
+  el_ayatnum_input.onchange()
+  //
+  el_tl_input.checked = !S.notajweedlegend
+  store_bool('notajweedlegend', !el_tl_input.checked)
+  el_tl_input.onchange()
 }
 tajlorligilumi()

@@ -173,7 +173,7 @@ These are not changeable from the UI, only from the URL parameters; they are exp
 
     - `zz_set_title(title)`: called on start to set the parent window's title to the current recitation content, the same as the Recite's window's title without `| رسيت` and the title appearing above the header buttons.
     - `zz_set_quizmode(uthm_or_imla)`: called when the user changes the quiz mode selector. Either `"uthm"` for Uthmani (the default) or `"imla"` for Imlaai.
-    - `zz_set_feedbackrate(emptystring_or_word)`: called when the user changes the feedback rate selector for the Imlaai mode. Empty string (`""`) is for by-letter (the default) and `"word"` is for by-word.
+    - `zz_set_feedbackrate(fbrate)`: called when the user changes the feedback rate selector for the Imlaai mode. Empty string (`""`) is for by-letter (the default), `"word"` is for by-word, and `"aaya"` is for by-aaya.
     - `zz_set_tajweed(t_or_b_or_n)`: called when the user changes the text colorization selector for the Uthmani mode. `"t"` for Tajweed (the default), `"b"` for Basic (parts of characters), and `"n"` for None.
     - `zz_set_dark(boolean)`: called when the user changes the dark mode checkbox. Either `true` for the dark mode, or `false` for the light mode (the default).
     - `zz_set_mvbtns(b_or_r_or_l)`: called when the user changes the movement buttons for the Uthmani mode. `"b"` for Bottom (the default), `"r"` for Right, and `"l"` for Left.

@@ -29,7 +29,7 @@
     <label for="darkmode_input">الوضع الليلي؟&ensp;</label><input id="darkmode_input" type="checkbox" onchange="change_dark()">
   </div>
   <div id="teacher_option" class="option maybe-inline">
-    <label for="teacher_input">معلم؟ (التلاوة الصوتية قبل الآية)&ensp;</label><input id="teacher_input" type="checkbox" onchange="">
+    <label for="teacher_input">معلم؟ (التلاوة الصوتية قبل الآية)&ensp;</label><input id="teacher_input" type="checkbox" onchange="change_teacher()">
   </div>
 
   <!-- from: http://www.everyayah.com/data/recitations.js -->
@@ -57,9 +57,9 @@
 
     <div class="option">
       <label for="mvbtns_input">موضع أزار التسميع:&ensp;</label><select id="mvbtns_input" onchange="change_mvbtns()">
-        <option value="bottom" selected>أسفل</option>
-        <option value="right">يمين</option>
-        <option value="left">يسار</option>
+        <option value="b" selected>أسفل</option>
+        <option value="r">يمين</option>
+        <option value="l">يسار</option>
       </select>
     </div>
 
@@ -90,9 +90,9 @@
 
     <div class="option">
       <label for="feedbackrate">مراجعة الأخطاء كل:&ensp;</label><select id="feedbackrate" onchange="change_feedbackrate()">
-        <option value="" selected>حرف</option>
-        <option value="word">كلمة (صعب)</option>
-        <option value="aaya">آية (شديد الصعوبة)</option>
+        <option value="l" selected>حرف</option>
+        <option value="w">كلمة (صعب)</option>
+        <option value="a">آية (شديد الصعوبة)</option>
       </select>
     </div>
 

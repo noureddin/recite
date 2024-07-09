@@ -13,6 +13,20 @@ function Qall (selector) { return document.querySelectorAll(selector) }
 function Qid  (id)       { return document.getElementById(id) }
 
 const L = location
+const S = localStorage
+// defaults are not stored:
+//   qari = none
+//   teacher = false
+//   quizmode = uthmani
+//   mvbtns = b
+//   text colors = taj
+//   feedbackrate = l (by letter)
+//   colorize end of ayah = true
+//   line breaks in uthmani = true
+//   show tajweed legend = true
+//   darkmode: follows the system (the default), unless changed by the user
+
+const store_bool = (name, b=true) => { if (b) { S.setItem(name, 'Y') } else { S.removeItem(name) } }
 
 const el_dark = Qid("dark")
 const el_body = Qid("body")
@@ -300,12 +314,14 @@ function zz_set (prop, val) {
 
 function change_qari () {
   const val = el_qaris.value
+  if (val !== '') { S.setItem('qari', val) } else { S.removeItem('qari') }
   audio.update_qari(val)
   zz_set('qari', val)
 }
 
 function change_quizmode () {
   zz_set('quizmode', el_quizmode.value)
+  store_bool('imla', el_quizmode.value === 'imla')
   if (el_quizmode.value === 'imla') {
     /* hide */ el_uthm_options.style.display = 'none'
     /* show */ el_imla_options.style.display = 'block'
@@ -331,11 +347,13 @@ const imlafilter_byaaya   = (val) => val.replace(/[^\n]*$/, '')  // only check a
 window.imlafilter = imlafilter_byletter  // the default
 
 function change_feedbackrate () {
-  window.imlafilter = el_feedbackrate.value === 'aaya' ? imlafilter_byaaya
-                    : el_feedbackrate.value === 'word' ? imlafilter_byword
+  const fb = el_feedbackrate.value
+  window.imlafilter = fb === 'a' ? imlafilter_byaaya
+                    : fb === 'w' ? imlafilter_byword
                     : imlafilter_byletter
   if (el_imla_txt.value && el_imla_txt.oninput) { el_imla_txt.oninput() }
-  zz_set('feedbackrate', el_feedbackrate.value)
+  if (fb === 'l') { S.removeItem('fbrate') } else { S.setItem('fbrate', fb) }
+  zz_set('feedbackrate', fb)
 }
 
 // for now, assume no tashkeel (and remove it if found)
@@ -347,42 +365,54 @@ const sync_uthm_class_with = (cls, pred) => el_uthm_txt.classList.toggle(cls, pr
 
 function change_tajweed () {
   const tval = el_textclr_input.value
+  store_bool('notajweed', tval !== 'taj')  // TODO: parts
   sync_uthm_class_with('letter-parts',   tval === 'bas')
   sync_uthm_class_with('letter-nocolor', tval === 'no')
   zz_set('tajweed', tval.slice(0,1))
 }
 
+function change_teacher () {
+  const teacher = el_teacher_input.checked
+  store_bool('teacher', teacher)
+  zz_set('teacher', teacher)
+}
+
 function change_ayatnum () {
-  const ayatnum = el_ayatnum_input.checked
-  sync_uthm_class_with('ayat-nocolor', !ayatnum)
-  zz_set('ayatnum', ayatnum)
+  const noayatnum = !el_ayatnum_input.checked
+  store_bool('noayatnumcolor', noayatnum)
+  sync_uthm_class_with('ayat-nocolor', noayatnum)
+  zz_set('ayatnum', !noayatnum)
 }
 
 function change_linebreaks() {
   const nb = !el_linebreaks_input.checked
+  store_bool('nolinebreaks', nb)
   sync_uthm_class_with('nb', nb)
   zz_set('linebreaks', !nb)
 }
 
 function change_dark () {
   const dark = el_darkmode_input.checked
+  S.setItem('dark', dark ? 'Y' : 'N')
   el_dark.checked = dark
   zz_set('dark', dark)
 }
 
 function change_mvbtns () {
   const mv = el_mvbtns_input.value
+  if (mv === 'b') { S.removeItem('mvbtns') } else { S.setItem('mvbtns', mv) }
   const mv_cls =
-    mv === 'right' ? 'sidebtns rightside' :
-    mv === 'left'  ? 'sidebtns leftside'  :
-                     ''  /* no class for 'bottom' */
+    mv === 'r' ? 'sidebtns rightside' :
+    mv === 'l' ? 'sidebtns leftside'  :
+                 ''  /* no class for 'bottom' */
   el_mvbtns.classList = mv_cls
   el_uthm_txt.classList.toggle('sidebtns', mv_cls)
-  el_tl.classList.toggle('right', mv === 'left')
-  zz_set('mvbtns', mv.slice(0,1))
+  el_tl.classList.toggle('right', mv === 'l')
+  zz_set('mvbtns', mv)
 }
 
 function change_tajweedlegend () {
+  store_bool('notajweedlegend', !el_tl_input.checked)
   if (el_tl_input.checked) {
     if (!el_uthm_txt.hidden) {
       el_tl.style.display = ''
