@@ -214,7 +214,7 @@ function kind_of_portion (last_two_chars) {
   const last_one_char = last_two_chars.slice(-1)
   return last_one_char  === ''  ? 'a' :  // start of text
          last_one_char  === '\n'? 'a' :  // end of aaya
-         last_two_chars.match(/[\u06D7-\u06DC]\t/) ? 'j' :  // waqf signs
+         last_two_chars.match(/[\u06D6-\u06DC]\t/) ? 'j' :  // waqf signs
          ''  // normal word
 }  // }}}
 

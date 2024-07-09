@@ -14,6 +14,14 @@ function restart_reciting () {
   recite(opts.st, opts.en)
 }
 
+document.body.addEventListener('click', (ev) => {
+  if (ev.target.tagName === 'BUTTON') {
+    ev.target.id === 'new'
+      ? el_ok.focus()
+      : ev.target.blur()
+  }
+})
+
 function input_trigger_x (ev) {
   // this fn is connected to onkeyup and onmouseup. it handles three "events"
 
@@ -388,8 +396,8 @@ function _recite_uthm () {
 
     if      (kb_fwd) { if (kb_mod) { aaya_fwd() } else { word_fwd() } }
     else if (kb_bck) { if (kb_mod) { aaya_bck() } else { word_bck() } }
-    else if (key === '0' && !kb_mod) { jmla_fwd() }
-    else if (key === '1' && !kb_mod) { jmla_bck() }
+    else if ((key === '0' || key === '[') && !kb_mod) { jmla_fwd() }
+    else if ((key === '1' || key === ']') && !kb_mod) { jmla_bck() }
 
   }
 
@@ -461,8 +469,13 @@ const show_selectors = function () {
 }
 
 const clear_screen = function () {
-  el_uthm_txt.innerHTML = ''
+  // if was in uthmani mode
+  el_uthm_txt.hidden = true
+  document.onkeyup = null
+  document.ondblclick = null
+  // if was in imlaai mode
   el_imla_txt_container.hidden = true
+  // if either mode
   el_endmsg.hidden = true
 }
 
