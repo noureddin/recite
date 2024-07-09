@@ -38,6 +38,7 @@ const el_mvbtns_input = Qid("mvbtns_input")
 const el_textclr_input = Qid("textclr_input")
 const el_ayatnum_input = Qid("ayatnum_input")
 const el_linebreaks_input = Qid("linebreaks_input")
+const el_tl_input = Qid("tl_input")
 const el_imla_options = Qid("imla_options")
 const el_imla_options_title = Qid("imla_options_title")
 const el_feedbackrate = Qid("feedbackrate")
@@ -68,6 +69,15 @@ const el_prevword = Qid("prevword")
 const el_nextword = Qid("nextword")
 const el_nextjmla = Qid("nextjmla")
 const el_nextaaya = Qid("nextaaya")
+const el_tl = Qid("tl")
+const el_N = Qid("N")
+const el_X = Qid("X")
+const el_R = Qid("R")
+const el_Q = Qid("Q")
+const el_L = Qid("L")
+const el_W = Qid("W")
+const el_J = Qid("J")
+const el_T = Qid("T")
 
 
 const __scroll_top = (el) => el.scrollTo({ top: 0 })
@@ -368,7 +378,19 @@ function change_mvbtns () {
                      ''  /* no class for 'bottom' */
   el_mvbtns.classList = mv_cls
   el_uthm_txt.classList.toggle('sidebtns', mv_cls)
+  el_tl.classList.toggle('right', mv === 'left')
   zz_set('mvbtns', mv.slice(0,1))
+}
+
+function change_tajweedlegend () {
+  if (el_tl_input.checked) {
+    if (!el_uthm_txt.hidden) {
+      el_tl.style.display = ''
+    }
+  }
+  else {
+      el_tl.style.display = 'none'
+  }
 }
 
 function decode_contact () {

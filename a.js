@@ -314,7 +314,19 @@ function change_mvbtns () {
                      ''  /* no class for 'bottom' */
   el_mvbtns.classList = mv_cls
   el_uthm_txt.classList.toggle('sidebtns', mv_cls)
+  el_tl.classList.toggle('right', mv === 'left')
   zz_set('mvbtns', mv.slice(0,1))
+}
+
+function change_tajweedlegend () {
+  if (el_tl_input.checked) {
+    if (!el_uthm_txt.hidden) {
+      el_tl.style.display = ''
+    }
+  }
+  else {
+      el_tl.style.display = 'none'
+  }
 }
 
 function decode_contact () {

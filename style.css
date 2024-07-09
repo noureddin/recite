@@ -71,6 +71,8 @@ body {
   --background-translucent: rgba(var(--background-rgb), 0.66);
   --details-bg: white; --details-shadow: black;
   --title-rgb: 0, 0, 0;
+  --tl-open: #fff8;
+  --tl-closed: #fff2;
   /* tajweed */
   --L: #bb6666; --W: red;     --J: orangered; --T: #ff9900;    --N: #009000;
   --X: #9595a0; --R: #2222e0; --Q: #00a5e7;   --A: darkorange; --D: navy;
@@ -94,6 +96,8 @@ body {
   --uitext: #ccc;  --txt: #eee;  --background-rgb: 26, 20, 20; --content-rgb: 23, 23, 23;
   --details-bg: black; --details-shadow: white;
   --title-rgb: 255, 255, 255;
+  --tl-open: #0008;
+  --tl-closed: #0002;
   /* tajweed */
   --L: #bb5555;  --W: red    ;  --J: #ff6600;  --T: #ffbb00;  --N: #00ff00;
   --X: #808080;  --R: #4477ff;  --Q: #00d6ff;  --A: #ff8c00;  --D: #ffffff;
@@ -343,6 +347,44 @@ button:disabled {
 #dark:checked ~ #body button,
 #dark:checked ~ #body select { filter: invert(1) hue-rotate(180deg) }
 
+/* begin: svg#tl -- tajweed legend */
+svg #L { fill: var(--L) }
+svg #W { fill: var(--W) }
+svg #J { fill: var(--J) }
+svg #T { fill: var(--T) }
+svg #N { fill: var(--N) }
+svg #X { fill: var(--X) }
+svg #R { fill: var(--R) }
+svg #Q { fill: var(--Q) }
+
+text {
+  font-family: KacstOne;
+  fill: var(--txt);
+  font-size: 38px;  /* available width is 400px */
+}
+
+line { stroke: var(--txt); stroke-width: 2px }
+
+#tl {
+  position: fixed;
+  bottom: 4em;
+  left: 0;
+  height: 7em;
+  margin: 0 auto;
+  display: block;
+  z-index: 100;
+  background: var(--tl-closed);
+  cursor: pointer;
+}
+#tl[aria-expanded="true"] {
+  background: var(--tl-open);
+}
+#tl.right {
+  left: initial;
+  right: 0;
+}
+/* end: svg#tl -- tajweed legend */
+
 #uthm_txt.letter-parts {
   --txt-font: AmiriQuranColoredWeb;
   --L: var(--txt); --W: var(--txt); --J: var(--txt); --T: var(--txt);
@@ -402,7 +444,7 @@ summary::marker { color: #c00; }
 
 #mvbtns {
   position: fixed;
-  bottom: 1rem;
+  bottom: 1em;
   height: 2em;
   /* right: calc(50vw - 0.5 * var(--mvbtns-width)); */
   right: calc(50vw - var(--all-width) / 2);

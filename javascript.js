@@ -22,6 +22,25 @@ document.body.addEventListener('click', (ev) => {
   }
 })
 
+el_tl.onclick = () => {
+  if (el_tl.getAttribute('aria-expanded') === 'true') {
+    el_tl.setAttribute('aria-expanded', false)
+    el_tl.querySelectorAll('circle').forEach(c =>
+      c.setAttribute('cx', c.getAttribute('cx') == 950 ? 105 : 35))
+    el_tl.querySelectorAll('text').forEach(t => { t.style.display = 'none' })
+    el_tl.querySelector('line').style.display = 'none'
+    el_tl.setAttribute('viewBox', '0 0 140 400')
+  }
+  else {
+    el_tl.setAttribute('aria-expanded', true)
+    el_tl.querySelectorAll('circle').forEach(c =>
+      c.setAttribute('cx', c.getAttribute('cx') < 50 ? 450 : 950))
+    el_tl.querySelectorAll('text').forEach(t => { t.style.display = '' })
+    el_tl.querySelector('line').style.display = ''
+    el_tl.setAttribute('viewBox', '0 0 1000 400')
+  }
+}
+
 function input_trigger_x (ev) {
   // this fn is connected to onkeyup and onmouseup. it handles three "events"
 
@@ -335,6 +354,8 @@ function _recite_uthm () {
   el_uthm_txt.focus()
   audio.set_index(teacher ? 0 : -1)
 
+  if (el_tl_input.checked) { el_tl.style.display = '' }
+
   let words = make_words_list(st, en, cn)
 
   const fwd = function (kind) {
@@ -464,6 +485,7 @@ const show_selectors = function () {
   el_ok.hidden = false
   el_mvbtns.hidden = true
   el_title.style.display = 'none'
+  el_tl.style.display = 'none'  // tajweed legend
   validate_aaya_sura_input({}) /* to enable #ok for easier repeating */
 }
 
@@ -497,6 +519,8 @@ onload = function () {
   Qall('input, select').forEach(e => e.onchange && e.onchange())
   decode_contact()
   versligilumi()
+  el_tl.onclick()  // close
+  el_tl.style.display = 'none'
   el_imla_txt.spellcheck = false
   // fix help opening
   Qall('details').forEach(el => {
