@@ -119,9 +119,8 @@ function recite (st, en) {
 
   const stpair = idx2aya(st-1)
   const enpair = idx2aya(en-1)
-  const [title, titleclass] = make_title(...stpair, ...enpair)
+  const title = make_title(...stpair, ...enpair)
   el_title.innerHTML = title
-  el_title.classList = titleclass
   sync_ui(stpair, enpair, title, preserve_url)
   init_audio(stpair, enpair, qari, qariurl, preserve_url)
 

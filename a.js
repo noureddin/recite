@@ -327,15 +327,6 @@ function decode_contact () {
 
 function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {  // {{{
 
-  //// the longest strings (some are impossible):
-  // return ["تسميع الآية ٣٠٠ الأخيرة من سورة العنكبوت", 'oneaaya']
-  // return ["تسميع سورة العنكبوت كاملة", 'onesura']
-  // return ["تسميع سورة العنكبوت من الآية ٣٠٠ حتى الآية ٣٠٠ الأخيرة", 'manyaaya']
-  // return ["تسميع سورتي العنكبوت والعنكبوت كاملتين", 'twosura']
-  // return ["تسميع السور من العنكبوت حتى العنكبوت", 'manysura']
-  // return ["تسميع من سورة العنكبوت الآية ٣٠٠ الأخيرة حتى سورة العنكبوت الآية ٣٠٠ الأخيرة", 'manymany']
-  // return ["تسميع الآيتين ٣٠٠ الأخيرة و٣٠٠ الأخيرة من سورة العنكبوت", 'twoaaya']
-
   const nbsp = '\xa0'
   // all numbers are 1-based
   sura_bgn = +sura_bgn
@@ -347,37 +338,32 @@ function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {  // {{{
   const s_bgn_txt = suar_name[sura_bgn - 1]
   const s_end_txt = suar_name[sura_end - 1]
   // converts to Eastern Arabic numerals, and state the first and last in words
-  const a_bgn_txt = aaya_bgn === 1? 'الأولى' : aaya_bgn === s_bgn_len?  filter_aaya_input(aaya_bgn) + ' الأخيرة' : filter_aaya_input(aaya_bgn)
-  const a_end_txt = aaya_end === 1? 'الأولى' : aaya_end === s_end_len?  filter_aaya_input(aaya_end) + ' الأخيرة' : filter_aaya_input(aaya_end)
+  const a_bgn_txt = aaya_bgn === 1? 'الأولى' : aaya_bgn === s_bgn_len? filter_aaya_input(aaya_bgn) + nbsp+'الأخيرة' : filter_aaya_input(aaya_bgn)
+  const a_end_txt = aaya_end === 1? 'الأولى' : aaya_end === s_end_len? filter_aaya_input(aaya_end) + nbsp+'الأخيرة' : filter_aaya_input(aaya_end)
   //
-  if (sura_bgn === sura_end) {
-    // if exactly one aaya
+  if (sura_bgn === sura_end) {  // if exactly one aaya
     if (aaya_bgn === aaya_end) {
-      return [`تسميع الآية${nbsp}${a_bgn_txt} من${nbsp}سورة${nbsp}${s_bgn_txt}`, '']
+      return `تسميع الآية${nbsp}${a_bgn_txt} من${nbsp}سورة${nbsp}${s_bgn_txt}`
     }
-    // if exactly two ayat
-    if (aaya_end === aaya_bgn + 1) {
-      return [`تسميع الآيتين${nbsp}${a_bgn_txt} و${a_end_txt} من${nbsp}سورة${nbsp}${s_bgn_txt}`, '']
+    if (aaya_end === aaya_bgn + 1) {  // if exactly two ayat
+      return `تسميع الآيتين${nbsp}${a_bgn_txt} و${a_end_txt} من${nbsp}سورة${nbsp}${s_bgn_txt}`
     }
-    // if one complete sura
-    if (aaya_bgn === 1 && aaya_end === s_end_len) {
-      return [`تسميع سورة ${s_bgn_txt} كاملة`, '']
+    if (aaya_bgn === 1 && aaya_end === s_end_len) {  // if one complete sura
+      return `تسميع سورة ${s_bgn_txt} كاملة`
     }
     // otherwise: one partial sura
-    return [`تسميع سورة${nbsp}${s_bgn_txt} من${nbsp}الآية${nbsp}${a_bgn_txt} حتى${nbsp}الآية${nbsp}${a_end_txt}`, '']
+    return `تسميع سورة${nbsp}${s_bgn_txt} من${nbsp}الآية${nbsp}${a_bgn_txt} حتى${nbsp}الآية${nbsp}${a_end_txt}`
   }
   // more than one sura:
-  // if multiple complete suar
-  if (aaya_bgn === 1 && aaya_end === s_end_len) {
-    // if exactly two
-    if (sura_end === sura_bgn + 1) {
-      return [`تسميع سورتي ${s_bgn_txt} و${s_end_txt} كاملتين`, '']
+  if (aaya_bgn === 1 && aaya_end === s_end_len) {  // if multiple complete suar
+    if (sura_end === sura_bgn + 1) {  // if exactly two
+      return `تسميع سورتي ${s_bgn_txt} و${s_end_txt} كاملتين`
     }
     // otherwise: more than two (one is handled previously)
-    return [`تسميع السور من${nbsp}${s_bgn_txt} حتى${nbsp}${s_end_txt}`, '']
+    return `تسميع السور من${nbsp}${s_bgn_txt} حتى${nbsp}${s_end_txt}`
   }
   // otherwise
-  return [`تسميع من${nbsp}سورة${nbsp}${s_bgn_txt} الآية${nbsp}${a_bgn_txt} حتى${nbsp}سورة${nbsp}${s_end_txt} الآية${nbsp}${a_end_txt}`, 'manymany']
+  return `تسميع من${nbsp}سورة${nbsp}${s_bgn_txt} الآية${nbsp}${a_bgn_txt} حتى${nbsp}سورة${nbsp}${s_end_txt} الآية${nbsp}${a_end_txt}`
 }  // }}}
 
 // vim: set sw=2 ts=2 et fdm=marker colorcolumn=80:
