@@ -681,3 +681,7 @@ details[open] > .details-content {
   transition: none !important;
 }
 }
+
+@media (max-width: 301px) {
+  #prevaaya, #nextaaya { display: none }
+}
