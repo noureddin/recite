@@ -612,6 +612,7 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   right: calc(var(--big-width) + var(--label-gap));
   top: calc(-1*var(--height) - 2*var(--padding));
   margin-bottom: calc(-1*var(--height)); /* remove the space created by removing it */
+  z-index: 21;  /* workaround for some browsers */
 }
 
 .contentcontainer {
