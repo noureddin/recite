@@ -536,7 +536,7 @@ details > :last-child  { margin-bottom: 0.8rem; }
     padding-right: 5%;
 }
 
-b {
+#help b {
   display: block;
   color: black;
   margin: 0.8rem 0 0.2rem 0;
@@ -794,6 +794,10 @@ details[open] > .details-content {
     position: absolute;  /* relative to #tvc */
     top: calc(25vh);
     right: calc(50% - 2em);
+}
+
+#tvtxt[dir="ltr"], #tvtxt[dir="ltr"] * {
+  text-align: left;
 }
 
 /* end: tafsir */

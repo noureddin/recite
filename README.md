@@ -188,7 +188,9 @@ These are not changeable from the UI, only from the URL parameters; they are exp
 
 Many thanks for [Khaled Hosny](https://github.com/khaledhosny/) for his work on [Quran Data](https://github.com/aliftype/quran-data) and [Amiri Font](https://www.amirifont.org/).
 
-Tafasir are [from Ayat](https://gist.github.com/noureddin/36742c87431e4312957b8e42d28ff9f4).
+Arabic Tafsir Muyassar is from [KFGQPC](https://qurancomplex.gov.sa/techquran/dev/).
+Arabic Tafsir Jalalayn, and all translations, are from [Tanzil](https://tanzil.net/trans/).
+All other Arabic Tafasir are [from Ayat](https://gist.github.com/noureddin/36742c87431e4312957b8e42d28ff9f4).
 
 Heartfelt thanks for the [Verse By Verse MP3 Quran](http://www.versebyversequran.com/) project,
 for providing the audio recitations for every project that needs them,
