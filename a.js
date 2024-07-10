@@ -265,12 +265,23 @@ function change_quizmode () {
   if (el_quizmode.value === 'imla') {
     /* hide */ el_uthm_options.style.display = 'none'
     /* show */ el_imla_options.style.display = 'block'
-    el_tafsirhint.hidden = true
+    el_tafsirhint.hidden = el_uthm_txt.hidden || el_endmsg.hidden
+    // u e t  u e t
+    // V V V  F F F
+    // V H H  F T T
+    // H V H  T F T
+    // H H H  T T T
   }
   else {  /* uthmani */
     /* hide */ el_imla_options.style.display = 'none'
     /* show */ el_uthm_options.style.display = 'block'
     el_tafsirhint.hidden = el_selectors.hidden
+    el_tafsirhint.hidden = el_uthm_txt.hidden ^ el_endmsg.hidden
+    // u e t  u e t
+    // V V V  F F F
+    // V H H  F T T
+    // H V H  T F T
+    // H H V  T T F
   }
 }
 

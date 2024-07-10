@@ -357,6 +357,8 @@ function _recite_uthm () {
   el_uthm_txt.focus()
   audio.set_index(teacher ? 0 : -1)
 
+  el_tafsirhint.style.marginTop = '2em'  // shows after end of recitation
+
   if (el_tl_input.checked) { el_tl.style.display = '' }
 
   let words = make_words_list(st, en, cn)
@@ -499,6 +501,7 @@ const clear_screen = function () {
   el_uthm_txt.hidden = true
   document.onkeyup = null
   document.ondblclick = null
+  el_tafsirhint.style.marginTop = '4em'  // shows on an empty page
   // if was in imlaai mode
   el_imla_txt_container.hidden = true
   // if either mode
