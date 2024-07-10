@@ -63,7 +63,7 @@ body {
   /* general */
   --btn-base-width: min(35vw, 10rem);
   --faint-btn: #666;
-  --uitext: #233; --txt: #111;
+  --uitxt: #233; --txt: #111;
   --txt-font: AmiriQuranWeb;
   --background-rgb: 249, 246, 231; /* old: 249, 244, 214; */
   --content-rgb:    252, 250, 241;
@@ -93,7 +93,7 @@ body {
 #dark:checked ~ #body {
   /* general */
   --faint-btn: #555;
-  --uitext: #ccc;  --txt: #eee;  --background-rgb: 26, 20, 20; --content-rgb: 23, 23, 23;
+  --uitxt: #ccc;  --txt: #eee;  --background-rgb: 26, 20, 20; --content-rgb: 23, 23, 23;
   --details-bg: black; --details-shadow: white;
   --title-rgb: 255, 255, 255;
   --tl-open: #000c;
@@ -113,13 +113,13 @@ body {
 #dark:checked ~ #body.highcontrast {
   /* general */
   --faint-btn: #333;
-  --uitext: #eee;  --txt: #fff;  --background-rgb: 0,0,0; --content-rgb: 23, 23, 23;
+  --uitxt: #eee;  --txt: #fff;  --background-rgb: 0,0,0; --content-rgb: 23, 23, 23;
   /* tajweed */
   --L: #ee8888;  --W: #ff4444;  --J: #ffaa44;  --T: #ffee66;  --N: #66ffaa;
   --X: #aaaaaa;  --R: #66bbff;  --Q: #22eeff;
 }
 
-:not(input, button, select) { color: var(--uitext); } /* are just inverted */
+:not(input, button, select) { color: var(--uitxt); } /* are just inverted */
 #uthm_txt { color: var(--txt); }
 
 .L { color: var(--L) } .W { color: var(--W) } .J { color: var(--J) } .T { color: var(--T) }
@@ -141,9 +141,12 @@ body {
 /* https://bits.theorem.co/css-pro-tips-responsive-font-sizes-and-when-to-use-which-units */
 html { font-size: calc(16px + 0.5vw) }
 
-* {
+* { font-family: KacstOne, serif }
+#aaya_bgn, #aaya_end { font-family: KacstOne }
+
+label, select, input, button {
   font-family: Cortoba, serif;
-  font-size: inherit; /* some widgets default to another value */
+  font-size: inherit;
 }
 
 #uthm_txt, #uthm_txt * { font-family: var(--txt-font); font-size: 1.5rem; }
@@ -158,7 +161,7 @@ html { font-size: calc(16px + 0.5vw) }
 #endmsg {
   font-size: min(5vw, 2rem);
   text-align: center;
-  color: var(--uitext);
+  color: var(--uitxt);
   margin: 1rem auto 2rem;
 }
 
@@ -180,11 +183,8 @@ html { font-size: calc(16px + 0.5vw) }
   margin-bottom: 0.5rem;
   color: rgb(var(--title-rgb));
   position: relative; z-index: 3;  /* above #header */
-  font-family: KacstOne;
   font-size: min(calc(20px + 0.5vw), calc(var(--all-width) / 14));
 }
-
-#aaya_bgn, #aaya_end { font-family: KacstOne; }
 
 /* suar/ayat selection */
 #selectors > div label:first-child { /* من سورة and إلى سورة */
@@ -260,6 +260,7 @@ html { font-size: calc(16px + 0.5vw) }
 #mvbtns_input  { width: calc(100% -  9.40em) }
 #textclr_input { width: calc(100% -  6.45em) }
 #feedbackrate  { width: calc(100% -  9.25em) }
+#tafsir        { width: calc(100% -  4.30em) }
 
 #imla_txt { background: var(--background); color: var(--txt); transition: background 1s }
 
@@ -363,12 +364,11 @@ svg #Q { fill: var(--Q) }
 }
 
 text {
-  font-family: KacstOne;
   fill: var(--txt);
   font-size: 38px;  /* available width is 400px */
 }
 
-line { stroke: var(--txt); stroke-width: 2px }
+#tl line { stroke: var(--txt); stroke-width: 2px }
 
 #tl {
   position: fixed;
@@ -377,7 +377,7 @@ line { stroke: var(--txt); stroke-width: 2px }
   height: 7em;
   margin: 0 auto;
   display: block;
-  z-index: 100;
+  z-index: 1;
 }
 
 #tl rect {
@@ -434,7 +434,6 @@ a * { color: inherit !important }
 .help-part::before { content: ".: "; }
 
 details * {
-  font-family: KacstOne;
   color: #008;
 }
 
@@ -728,3 +727,71 @@ details[open] > .details-content {
 @media (max-width: 301px) {
   #prevaaya, #nextaaya { display: none }
 }
+
+/* begin: tafsir */
+.A { cursor: help }
+
+#tvc {  /* tafsir-view container */
+  display: none;
+  visibility: none;  opacity: 0;  transition: 1s opacity;
+  position: fixed;  top: 0;  right: 0;  width: 100%;  height: 100%;
+  overflow: scroll;
+  z-index: 50;  /* above everything */
+  background: rgb(var(--background-rgb));
+}
+
+#tv {
+  padding: 1em;
+  padding-right: 2em;
+  width: var(--all-width);
+  margin: 0 auto;
+}
+#tv > * {
+  font-size: 1.25em;
+}
+#tv > * * {
+  font-family: inherit;
+  font-size: inherit;
+}
+#tvtxt {  /* tafsir content -- if there is tafsir */
+  text-align: right;
+  line-height: 1.8;
+}
+
+#tvx {  /* tafsir-view close-button */
+  opacity: 25%;  transition: 0.75s opacity;
+  position: fixed;  top: 0.5em;  left: 0.5em;
+  cursor: pointer;
+  width: 2em;
+  height: 2em;
+}
+
+#tvx:hover, #tvx:focus { opacity: 100% }
+
+#tvx line { stroke: rgb(var(--background-rgb)) }
+#tvx circle { fill: var(--uitxt) }
+
+#tafsirhint {
+  margin-top: 4em;
+  transition: opacity 1s ease-in-out;
+}
+.aya {  /* aaya in #tv, and aaya-end in #tafsirhint */
+  font-family: AmiriQuranWeb;
+}
+
+#tafsirnote { font-size: 0.70em }
+
+#spinner { animation: spin 1.6s infinite linear; stroke: var(--uitxt) }
+@keyframes spin {
+    0% { stroke-dashoffset:    0; }
+  100% { stroke-dashoffset: -210; }
+}
+#spinner-svg {
+    height: 4em;
+    vertical-align: bottom;
+    position: absolute;  /* relative to #tvc */
+    top: calc(25vh);
+    right: calc(50% - 2em);
+}
+
+/* end: tafsir */

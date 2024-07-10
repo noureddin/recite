@@ -1,5 +1,5 @@
 define get_reserved
-push @a, /\bon\w+="([^"]+)\(/; END { printf "[%s]\n", join ",", uniq sort @a }
+push @a, /\bon\w+="([^"]+)\(/; END { printf "[%s]\n", join ",", uniq sort "tv", @a }
 endef
 
 R=$(shell perl -MList::Util=uniq -nle '$(get_reserved)' .index.html)
@@ -30,7 +30,7 @@ index.html: .index.html .scripts.gen.min.js style.min.css .minify.pl
 %.gen.js: %.js
 	$P "$<" > "$@"
 
-.scripts.gen.min.js: .scripts.js .g.js a.gen.js mappings.js tajlorligilumi.js data.gen.js versligilumi.js res/confetti.min.js javascript.js z.js
+.scripts.gen.min.js: .scripts.js .g.js a.gen.js mappings.js tafsir.js tajlorligilumi.js data.gen.js versligilumi.js res/confetti.min.js javascript.js z.js
 	$P "$<" | perl -CDAS -pe 's/const +say += +console\.log//' | $J | perl -pe 's/;?\s*\Z//' > "$@"
 
 .g.js: .g.ts .g.sh

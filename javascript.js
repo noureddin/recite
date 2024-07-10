@@ -31,8 +31,10 @@ el_tl.onclick = (ev) => {
     el_tl.Qall('text').forEach(t => hide_el(t))
     hide_el(el_tl.Q('line'))
     el_tl.Q('rect').setAttribute('width', 140)
+    setTimeout(() => el_tl.setAttribute('viewBox', '0 0 140 400'), 500)
   }
   else {
+    el_tl.setAttribute('viewBox', '0 0 1000 400')
     el_tl.setAttribute('aria-expanded', true)
     el_tl.Qall('circle').forEach(c =>
       c.setAttribute('cx', c.getAttribute('cx') < 50 ? 450 : 950))
@@ -455,6 +457,7 @@ const hide_selectors = function (quizmode) {
   el_endmsg.hidden = true
   el_ok.hidden = true
   el_title.style.display = 'inline-block'
+  el_tafsirhint.hidden = true
   const d = document.documentElement
   if (quizmode === 'imla') {
     el_imla_txt_container.style.height = fullpage ? '100vh' : '95vh'
@@ -488,6 +491,7 @@ const show_selectors = function () {
   el_title.style.display = 'none'
   el_tl.style.display = 'none'  // tajweed legend
   validate_aaya_sura_input({}) /* to enable #ok for easier repeating */
+  el_tafsirhint.hidden = el_quizmode.value !== 'uthm'  // show if uthmani
 }
 
 const clear_screen = function () {

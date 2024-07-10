@@ -164,6 +164,7 @@ function make_words_list (st, en, cn) {  // uthmani
   return (
     ayat.uthm
       .slice(st-1, en)
+      .map((aya, i) => aya.replace(/A/, (i+st)+'A'))  // for tafsir
       .reduce((arr, aya, i) => {
         // https://stackoverflow.com/a/38528645
         if (aya.startsWith('#')) {
@@ -183,6 +184,7 @@ function make_words_list (st, en, cn) {  // uthmani
       .map(a => tajweed_colorize_aaya(a))
       .map(a => a.replace(/ /g, '\t<SPC>') + '\n')
       .map(a => a.replace(/_/g, ' '))  // for tajweed
+      .map(a => a.replace(/([0-9]+)(<span)/, '$2 onclick="tv($1)"'))  // for tafsir
       .reduce((arr, aya) => {
         arr.push(...aya.split('<SPC>', -1))  // split and flatten
         return arr

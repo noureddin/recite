@@ -39,6 +39,7 @@ const el_help = Qid("help")
 const el_helptoggle = Qid("helptoggle")
 const el_optiontoggle = Qid("optiontoggle")
 const el_options = Qid("options")
+const el_guide = Qid("guide")
 const el_darkmode_option = Qid("darkmode_option")
 const el_darkmode_input = Qid("darkmode_input")
 const el_teacher_option = Qid("teacher_option")
@@ -47,11 +48,11 @@ const el_qaris = Qid("qaris")
 const el_qariurl = Qid("qariurl")
 const el_cn = Qid("cn")
 const el_zz = Qid("zz")
-const el_guide = Qid("guide")
 const el_quizmode_option = Qid("quizmode_option")
 const el_quizmode = Qid("quizmode")
 const el_uthm_options = Qid("uthm_options")
 const el_uthm_options_title = Qid("uthm_options_title")
+const el_tafsir = Qid("tafsir")
 const el_mvbtns_input = Qid("mvbtns_input")
 const el_textclr_input = Qid("textclr_input")
 const el_ayatnum_input = Qid("ayatnum_input")
@@ -75,6 +76,7 @@ const el_zzignore = Qid("zzignore")
 const el_new = Qid("new")
 const el_repeat = Qid("repeat")
 const el_end_of_header = Qid("end_of_header")
+const el_tafsirhint = Qid("tafsirhint")
 const el_uthm_txt = Qid("uthm_txt")
 const el_imla_txt_container = Qid("imla_txt_container")
 const el_imla_txt = Qid("imla_txt")
@@ -96,6 +98,9 @@ const el_L = Qid("L")
 const el_W = Qid("W")
 const el_J = Qid("J")
 const el_T = Qid("T")
+const el_tvc = Qid("tvc")
+const el_tv = Qid("tv")
+const el_tvx = Qid("tvx")
 
 
 const __scroll_top = (el) => el.scrollTo({ top: 0 })
@@ -329,10 +334,12 @@ function change_quizmode () {
   if (el_quizmode.value === 'imla') {
     /* hide */ el_uthm_options.style.display = 'none'
     /* show */ el_imla_options.style.display = 'block'
+    el_tafsirhint.hidden = true
   }
   else {  /* uthmani */
     /* hide */ el_imla_options.style.display = 'none'
     /* show */ el_uthm_options.style.display = 'block'
+    el_tafsirhint.hidden = el_selectors.hidden
   }
 }
 
@@ -413,6 +420,12 @@ function change_mvbtns () {
   el_uthm_txt.classList.toggle('sidebtns', mv_cls)
   el_tl.classList.toggle('right', mv === 'l')
   zz_set('mvbtns', mv)
+}
+
+function change_tafsir () {
+  const t = el_tafsir.value
+  if (t === 'ar_muyassar') { S.removeItem('tafsir') } else { S.setItem('tafsir', t) }
+  zz_set('tafsir', t)
 }
 
 function change_tajweedlegend () {

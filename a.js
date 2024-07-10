@@ -265,10 +265,12 @@ function change_quizmode () {
   if (el_quizmode.value === 'imla') {
     /* hide */ el_uthm_options.style.display = 'none'
     /* show */ el_imla_options.style.display = 'block'
+    el_tafsirhint.hidden = true
   }
   else {  /* uthmani */
     /* hide */ el_imla_options.style.display = 'none'
     /* show */ el_uthm_options.style.display = 'block'
+    el_tafsirhint.hidden = el_selectors.hidden
   }
 }
 
@@ -349,6 +351,12 @@ function change_mvbtns () {
   el_uthm_txt.classList.toggle('sidebtns', mv_cls)
   el_tl.classList.toggle('right', mv === 'l')
   zz_set('mvbtns', mv)
+}
+
+function change_tafsir () {
+  const t = el_tafsir.value
+  if (t === 'ar_muyassar') { S.removeItem('tafsir') } else { S.setItem('tafsir', t) }
+  zz_set('tafsir', t)
 }
 
 function change_tajweedlegend () {

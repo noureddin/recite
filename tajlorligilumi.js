@@ -54,6 +54,7 @@ function _tajlorligilumilo (params) {
   let disablecheat     // disable the ability to press '!' ten times to show one letter in imlaai mode
   let highcontrast     // high-contrast, dark colorscheme
   let lowcontrast      // use a lower contrast imlaai bg color when wrong (not incompatible with highcontrast)
+  let tafsir           // select tafsir
   let emulate          // keyboard layout emulation; see https://noureddin.github.io/kbt (same ids, w/o '-ar')
   let fullpage         // make imla_txt fill the entire page while quizzing, like Recite Desktop (PyQt5, in the `master` branch)
   let cn               // continuation; ie, append a "phrase" from the next aaya if in the same sura
@@ -87,6 +88,7 @@ function _tajlorligilumilo (params) {
       else if (is_of('emu', 'emulate', 'emulation')) {         emulate = e[1]                             }
       else if (is_of('qari'))                        {            qari = e[1]                             }
       else if (is_of('qariurl'))                     {         qariurl = e[1]                             }
+      else if (is_of('tafsir'))                      {          tafsir = e[1]                             }
       else if (is_of('fp', 'fullpage'))              {        fullpage = true                             }
       else if (is_of('cn'))                          {              cn = true                             }
       else if (is_of('zz'))                          {              zz = true                             }
@@ -114,6 +116,19 @@ function _tajlorligilumilo (params) {
   return opts
 }
 
+function update_options (el, param, stored, Default) {
+  el.value = param != null ? param : S.getItem(stored)
+  if (!el.value) { el.value = Default }  // if unset or is a bad value
+  if (el.value !== Default) { S.setItem(stored, el.value) }
+  el.onchange()
+}
+
+function update_bool_default_true (el, param, stored) {
+  el.checked = param != null ? !param : !S.getItem(stored)
+  store_bool(stored, !el.checked)
+  el.onchange()
+}
+
 function tajlorligilumi () {
   const opts = _tajlorligilumilo(L.hash || L.search)
   //
@@ -137,14 +152,14 @@ function tajlorligilumi () {
     el_body.classList.add('lowcontrast')
   }
   //
-  if (opts.dark == null && S.dark == null) {  // no overriding; follow system preference initially
+  if (opts.dark == null && S.getItem('dark') == null) {  // no overriding; follow system preference initially
     opts.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
   }
   else {
     if (opts.dark != null) { S.setItem('dark', opts.dark ? 'Y' : 'N') }
-    el_darkmode_input.checked = opts.dark || S.dark === 'Y'
-    el_darkmode_input.onchange()
   }
+  el_darkmode_input.checked = opts.dark || S.dark === 'Y'
+  el_darkmode_input.onchange()
   //
   // TODO: add a url param for this '^_^
   window.prefers_reduced_motion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -161,10 +176,10 @@ function tajlorligilumi () {
     store_bool('teacher', opts.teacher)
   }
   //
-  el_qaris.value = opts.qari != null ? opts.qari : S.qari
-  if (!el_qaris.value) { el_qaris.value = '' }  // if unset or is a bad value
-  if (el_qaris.value !== '') { S.setItem('qari', el_qaris.value) }
-  el_qaris.oninput()
+  update_options(el_tafsir, opts.tafsir, 'tafsir', 'ar_muyassar')
+  update_options(el_qaris, opts.qari, 'qari', '')
+  update_options(el_mvbtns_input, opts.mv, 'mvbtns', 'b')
+  update_options(el_feedbackrate, opts.fbrate, 'fbrate', 'l')
   //
   if (opts.qariurl) { el_qaris.value = '_' }  // an invalid value to hide "Without audio"
   el_qariurl.value = opts.qariurl ? opts.qariurl : ''
@@ -173,17 +188,9 @@ function tajlorligilumi () {
   if (el_textclr_input.value !== 'taj') { S.setItem('notajweed', 'Y') }
   el_textclr_input.onchange()
   //
-  const mv = el_mvbtns_input.value = opts.mv != null ? opts.mv : S.mvbtns ? S.mvbtns : 'b'
-  if (mv === 'b') { S.removeItem('mvbtns') } else { S.setItem('mvbtns', mv) }
-  el_mvbtns_input.onchange()
-  //
-  const fb = el_feedbackrate.value = opts.fbrate != null ? opts.fbrate : S.fbrate ? S.fbrate : 'l'
-  if (fb === 'l') { S.removeItem('fbrate') } else { S.setItem('fbrate', fb) }
-  el_feedbackrate.onchange()
-  //
-  el_linebreaks_input.checked = opts.nolinebreaks != null ? !opts.nolinebreaks : !S.nolinebreaks
-  store_bool('nolinebreaks', !el_linebreaks_input.checked)
-  el_linebreaks_input.onchange()
+  update_bool_default_true(el_linebreaks_input, opts.nolinebreaks, 'nolinebreaks')
+  update_bool_default_true(el_ayatnum_input, null, 'noayatnumcolor')  // no url params yet
+  update_bool_default_true(el_tl_input, null, 'notajweedlegend')  // no url params yet
   //
   const hide = (e) => e.style.display = 'none'
   //
@@ -202,14 +209,5 @@ function tajlorligilumi () {
   if (opts.fullpage) { el_body.classList.add('fullpage') }
   if (opts.cn) { el_cn.value = opts.cn ? '1' : '' }
   if (opts.zz) { el_zz.value = opts.zz ? '1' : '' }
-  //
-  // options currently changeable from the ui but not from the url params
-  el_ayatnum_input.checked = !S.noayatnumcolor
-  store_bool('noayatnumcolor', !el_ayatnum_input.checked)
-  el_ayatnum_input.onchange()
-  //
-  el_tl_input.checked = !S.notajweedlegend
-  store_bool('notajweedlegend', !el_tl_input.checked)
-  el_tl_input.onchange()
 }
 tajlorligilumi()
