@@ -645,14 +645,14 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
 #optiontoggle:not(checked) ~ #options {
   overflow: hidden;
   max-height: 0;
-  transition: max-height 0.55s ease-out,
-              visibility 0.55s step-end;
+  transition: max-height 1s cubic-bezier(0, 1.0, 0, 1.0),
+              visibility 1s step-end;
   visibility: hidden;
 }
 #optiontoggle:checked ~ #options {
-  max-height: 21rem;
-  transition: max-height 0.5s linear,
-              visibility 0.5s step-start;
+  max-height: 32766px;
+  transition: max-height 3s ease-in,
+              visibility 3s step-start;
   visibility: visible;
 }
 
