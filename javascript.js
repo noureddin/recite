@@ -22,22 +22,23 @@ document.body.addEventListener('click', (ev) => {
   }
 })
 
-el_tl.onclick = () => {
+el_tl.onclick = (ev) => {
+  if (ev.target === el_tl) { return }  // if clicked on the transparent part of a closed legend
   if (el_tl.getAttribute('aria-expanded') === 'true') {
     el_tl.setAttribute('aria-expanded', false)
-    el_tl.querySelectorAll('circle').forEach(c =>
+    el_tl.Qall('circle').forEach(c =>
       c.setAttribute('cx', c.getAttribute('cx') == 950 ? 105 : 35))
-    el_tl.querySelectorAll('text').forEach(t => { t.style.display = 'none' })
-    el_tl.querySelector('line').style.display = 'none'
-    el_tl.setAttribute('viewBox', '0 0 140 400')
+    el_tl.Qall('text').forEach(t => hide_el(t))
+    hide_el(el_tl.Q('line'))
+    el_tl.Q('rect').setAttribute('width', 140)
   }
   else {
     el_tl.setAttribute('aria-expanded', true)
-    el_tl.querySelectorAll('circle').forEach(c =>
+    el_tl.Qall('circle').forEach(c =>
       c.setAttribute('cx', c.getAttribute('cx') < 50 ? 450 : 950))
-    el_tl.querySelectorAll('text').forEach(t => { t.style.display = '' })
-    el_tl.querySelector('line').style.display = ''
-    el_tl.setAttribute('viewBox', '0 0 1000 400')
+    el_tl.Qall('text').forEach(t => show_el(t))
+    show_el(el_tl.Q('line'))
+    el_tl.Q('rect').setAttribute('width', 1000)
   }
 }
 
@@ -104,7 +105,7 @@ function tab_toggled (el) {
 
 function sync_ui (stpair, enpair, title, preserve_url) {
   if (!preserve_url) { L.hash = stpair.join('/') + '-' + enpair.join('/') }
-  document.querySelector('title').innerHTML = title + ' | رسيت'
+  Q('title').innerHTML = title + ' | رسيت'
   zz_set('title', title)
   //
   el_sura_bgn.value = stpair[0]-1; el_aaya_bgn.value = filter_aaya_input(stpair[1])
@@ -519,7 +520,7 @@ onload = function () {
   Qall('input, select').forEach(e => e.onchange && e.onchange())
   decode_contact()
   versligilumi()
-  el_tl.onclick()  // close
+  el_tl.onclick({})  // close
   el_tl.style.display = 'none'
   el_imla_txt.spellcheck = false
   // fix help opening
@@ -539,7 +540,7 @@ function resize_imlaai_done () {
   const g = getComputedStyle
   const f = parseFloat
   const sel = f(g(el_selectors).height)
-            + f(g(el_selectors.querySelector('hr')).marginBottom)
+            + f(g(el_selectors.Q('hr')).marginBottom)
   const before = isNaN(sel) /* zz-mode */
                ? f(g(el_header).height)
                : sel

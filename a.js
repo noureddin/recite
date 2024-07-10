@@ -12,6 +12,10 @@ function Q    (selector) { return document.querySelector(selector) }
 function Qall (selector) { return document.querySelectorAll(selector) }
 function Qid  (id)       { return document.getElementById(id) }
 
+Element.prototype.Q    = Element.prototype.querySelector
+Element.prototype.Qall = Element.prototype.querySelectorAll
+// Element.prototype.Qid  = Element.prototype.getElementById
+
 const L = location
 const S = localStorage
 // defaults are not stored:
@@ -355,6 +359,7 @@ function change_tajweedlegend () {
     }
   }
   else {
+      if (el_tl.getAttribute('aria-expanded') === 'true') { el_tl.onclick({}) }  // close
       el_tl.style.display = 'none'
   }
 }

@@ -357,6 +357,11 @@ svg #X { fill: var(--X) }
 svg #R { fill: var(--R) }
 svg #Q { fill: var(--Q) }
 
+#tl * {
+  transition: 0.5s;
+  cursor: pointer;
+}
+
 text {
   font-family: KacstOne;
   fill: var(--txt);
@@ -373,11 +378,13 @@ line { stroke: var(--txt); stroke-width: 2px }
   margin: 0 auto;
   display: block;
   z-index: 100;
-  background: var(--tl-closed);
-  cursor: pointer;
 }
-#tl[aria-expanded="true"] {
-  background: var(--tl-open);
+
+#tl rect {
+  fill: var(--tl-closed);
+}
+#tl[aria-expanded="true"] rect {
+  fill: var(--tl-open);
 }
 #tl.right {
   left: initial;
