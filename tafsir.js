@@ -58,7 +58,7 @@ function get_tafsir (name, i, callback) {
 
 function load_tafsir (name, i, callback) {
   if (whole.has(name)) {
-    if (tafsir[name]) { callback(tafsir[name][i]); return }
+    if (tafsir[name]) { callback(tafsir[name][i-1]); return }
     G('rt/'+name+'.gz').then((txt) => {
       tafsir[name] = txt.split('\n')
       callback(tafsir[name][i])
