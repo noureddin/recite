@@ -775,7 +775,7 @@ details[open] > .details-content {
   margin-top: 4em;
   transition: opacity 1s ease-in-out;
 }
-.aya {  /* aaya in #tv, and aaya-end in #tafsirhint */
+.aya, #tvtxt .aya {  /* aaya in #tv, and aaya-end in #tafsirhint, and in many #tvtxt */
   font-family: AmiriQuranWeb;
 }
 
