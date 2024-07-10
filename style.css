@@ -371,6 +371,7 @@ text {
 #tl line { stroke: var(--txt); stroke-width: 2px }
 
 #tl {
+  display: none;
   position: fixed;
   bottom: 4em;
   left: 0;

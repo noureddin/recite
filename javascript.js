@@ -525,7 +525,6 @@ onload = function () {
   decode_contact()
   versligilumi()
   el_tl.onclick({})  // close
-  el_tl.style.display = 'none'
   el_imla_txt.spellcheck = false
   // fix help opening
   Qall('details').forEach(el => {
