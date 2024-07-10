@@ -71,7 +71,7 @@ body {
   --background-translucent: rgba(var(--background-rgb), 0.66);
   --details-bg: white; --details-shadow: black;
   --title-rgb: 0, 0, 0;
-  --tl-open: #fff8;
+  --tl-open: #fffc;
   --tl-closed: #fff2;
   /* tajweed */
   --L: #bb6666; --W: red;     --J: orangered; --T: #ff9900;    --N: #009000;
@@ -96,7 +96,7 @@ body {
   --uitext: #ccc;  --txt: #eee;  --background-rgb: 26, 20, 20; --content-rgb: 23, 23, 23;
   --details-bg: black; --details-shadow: white;
   --title-rgb: 255, 255, 255;
-  --tl-open: #0008;
+  --tl-open: #000c;
   --tl-closed: #0002;
   /* tajweed */
   --L: #bb5555;  --W: red    ;  --J: #ff6600;  --T: #ffbb00;  --N: #00ff00;
