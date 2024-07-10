@@ -163,10 +163,6 @@ function tajlorligilumi () {
   //
   // TODO: add a url param for this '^_^
   window.prefers_reduced_motion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  window.scroll_behavior =
-    window.prefers_reduced_motion
-      ? {}
-      : { behavior: 'smooth' }
   //
   if (opts.teacher == null) {
     el_teacher_input.checked = !!S.teacher

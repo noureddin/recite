@@ -25,7 +25,8 @@ const part_num = (i) => sep_ayah.findIndex(a => i <= a)  // assumption: 0 <= i <
 
 function tv (i) {
   const name = el_tafsir.value
-  const title = el_tafsir.Q('[value="'+el_tafsir.value+'"]').innerText
+  // const title = el_tafsir.Q('[value="'+el_tafsir.value+'"]').innerText
+  const title = el_tafsir.innerHTML.match('value="'+el_tafsir.value+'"[^<>]*>([^<>]+)')[1]
   // show tafsir
   el_tvc.style.display = 'block'
   show_el(el_tvc)

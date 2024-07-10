@@ -531,7 +531,10 @@ onload = function () {
   Qall('details').forEach(el => {
     el.addEventListener('toggle', ev => {
       if (el.open) {
-        el.scrollIntoView({ ...window.scroll_behavior, block: "nearest", inline: "nearest" })
+        if (window.prefers_reduced_motion)
+          el.scrollIntoView({ block: "nearest", inline: "nearest" })
+        else
+          el.scrollIntoView({ behavior: 'smooth', block: "nearest", inline: "nearest" })
       }
     })
   })
@@ -556,8 +559,8 @@ function resize_imlaai_done () {
   el_imla_txt_container.style.height = (all - before - after - 0.1*one_em) + 'px'
 }
 
-if (visualViewport) {
-  visualViewport.addEventListener('resize', (ev) => {
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', (ev) => {
     if (!el_imla_txt_container.hidden) {  // if imlaai mode
       if (el_endmsg.hidden) {  // if currently quizzing
         el_imla_txt_container.style.height =

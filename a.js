@@ -41,8 +41,8 @@ const body_scroll_to_top    = () =>   __scroll_top(el_body)
 const body_scroll_to_bottom = () =>   __scroll_bot(el_body)
 const imla_scroll_to_bottom = () => { __scroll_bot(el_body); __scroll_bot(el_imla_txt) }
 
-const hide_el = (el) => { el.style.visibility = 'hidden';  el.style.opacity =   '0%' }
-const show_el = (el) => { el.style.visibility = 'visible'; el.style.opacity = '100%' }
+const hide_el = (el) => { el.style.visibility = 'hidden';  el.style.opacity = '0' }
+const show_el = (el) => { el.style.visibility = 'visible'; el.style.opacity = '1' }
 
 // tr num & fields() {{{
 // TODO see: https://stackoverflow.com/q/10726638
@@ -347,7 +347,7 @@ function change_mvbtns () {
     mv === 'r' ? 'sidebtns rightside' :
     mv === 'l' ? 'sidebtns leftside'  :
                  ''  /* no class for 'bottom' */
-  el_mvbtns.classList = mv_cls
+  el_mvbtns.className = mv_cls
   el_uthm_txt.classList.toggle('sidebtns', mv_cls)
   el_tl.classList.toggle('right', mv === 'l')
   zz_set('mvbtns', mv)

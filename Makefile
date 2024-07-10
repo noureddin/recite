@@ -32,6 +32,7 @@ index.html: .index.html .scripts.gen.min.js style.min.css .minify.pl
 
 .scripts.gen.min.js: .scripts.js .g.js a.gen.js mappings.js tafsir.js tajlorligilumi.js data.gen.js versligilumi.js res/confetti.min.js javascript.js z.js
 	$P "$<" | perl -CDAS -pe 's/const +say += +console\.log//' | $J | perl -pe 's/;?\s*\Z//' > "$@"
+	# $P "$<" > "$@"
 
 .g.js: .g.ts .g.sh
 	bash .g.sh
