@@ -144,7 +144,7 @@ html { font-size: calc(16px + 0.5vw) }
 * { font-family: KacstOne, serif }
 #aaya_bgn, #aaya_end { font-family: KacstOne }
 
-label, select, input, button {
+label, label *, select, input, button {
   font-family: Cortoba, serif;
   font-size: inherit;
 }
@@ -197,9 +197,18 @@ label, select, input, button {
   min-width: 40%;
   margin: 0.1rem 0;
 }
-#aaya_bgn, #aaya_end { width: 1.5em; }
+#aaya_bgn, #aaya_end { width: 3em; }
 /* #sura_bgn, #sura_end { width: 6.5em; } */
 #sura_bgn, #sura_end { width: 35%; }
+
+@media (max-width: 312px) {
+  .sura { display: none }
+  #selectors > div label:first-child { width: 1.6em }  /* من سورة and إلى سورة */
+}
+
+@media (max-width: 225px) {
+  .aaya { display: none }
+}
 
 #options .option { margin-top: 0.5em; }
 #options .option:first-child { margin-top: 1.5em; }

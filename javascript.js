@@ -45,7 +45,7 @@ el_tl.onclick = (ev) => {
 }
 
 function input_trigger_x (ev) {
-  // this fn is connected to onkeyup and onmouseup. it handles three "events"
+  // this fn is connected to onkeyup and onmouseup
 
   const id = ev.target.id
   const key = ev.key
@@ -62,15 +62,6 @@ function input_trigger_x (ev) {
      id === 'sura_end' ? el_aaya_end :
      id === 'aaya_end' ? el_ok       :
      1).focus()
-    return
-  }
-
-  // Up or Down on an ayat-input, increase or decrease it
-  if (on_ayat) {
-    let el = Qid(id)
-    if (key === 'ArrowUp')   { el.value = 1 + +defilter_aaya_input(el.value) }
-    if (key === 'ArrowDown') { el.value = 1 - +defilter_aaya_input(el.value) }
-    validate_aaya_sura_input(ev)  // handles the filtering and the limits
     return
   }
 }
@@ -110,8 +101,10 @@ function sync_ui (stpair, enpair, title, preserve_url) {
   Q('title').innerHTML = title + ' | رسيت'
   zz_set('title', title)
   //
-  el_sura_bgn.value = stpair[0]-1; el_aaya_bgn.value = filter_aaya_input(stpair[1])
-  el_sura_end.value = enpair[0]-1; el_aaya_end.value = filter_aaya_input(enpair[1])
+  el_sura_bgn.value = stpair[0]-1
+  el_sura_end.value = enpair[0]-1
+  set_aayaat(el_aaya_bgn, sura_bgn_length(), stpair[1])
+  set_aayaat(el_aaya_end, sura_end_length(), enpair[1])
 }
 
 function init_audio (stpair, enpair, qari, qariurl) {
@@ -447,10 +440,33 @@ el_repeat.onmouseup = restart_reciting
 el_repeat.onclick   = restart_reciting
 
 function init_inputs () {
-  el_sura_bgn.value   = el_aaya_bgn.value   = el_sura_end.value   = el_aaya_end.value   = ''
+  el_aaya_bgn.innerHTML = el_aaya_end.innerHTML = make_aayaat(suar_length[0])
+  el_aaya_end.value   = suar_length[0]
+  el_aaya_bgn.value   = 1
+  el_sura_bgn.value   = el_sura_end.value   = 0
+  //
   el_sura_bgn.oninput = el_aaya_bgn.oninput = el_sura_end.oninput = el_aaya_end.oninput = validate_aaya_sura_input
   el_sura_bgn.onblur  = el_aaya_bgn.onblur  = el_sura_end.onblur  = el_aaya_end.onblur  = validate_aaya_sura_input
   el_sura_bgn.onkeyup = el_aaya_bgn.onkeyup = el_sura_end.onkeyup = el_aaya_end.onkeyup = input_trigger_x
+  //
+  // support keyboard searching the aayaat fields with ASCII numerals
+  let k = '', t = 0
+  el_aaya_bgn.onkeydown = el_aaya_end.onkeydown = (ev) => {
+    if (ev.key.match(/[0-9]/)) {
+      const now = (new Date).getTime()
+      now - t < 500
+        ? (k += ev.key, t = now)
+        : (k  = ev.key, t = now)
+      const len = +ev.target.lastChild.value
+      if (k >= 1 && k <= len) {
+        ev.target.value = k
+      }
+      else if (ev.key >= 1 && ev.key <= len) {
+        ev.target.value = k = ev.key
+        t = now
+      }
+    }
+  }
 }
 
 const hide_selectors = function (quizmode) {
@@ -492,7 +508,6 @@ const show_selectors = function () {
   el_mvbtns.hidden = true
   el_title.style.display = 'none'
   el_tl.style.display = 'none'  // tajweed legend
-  validate_aaya_sura_input({}) /* to enable #ok for easier repeating */
   el_tafsirhint.hidden = el_quizmode.value !== 'uthm'  // show if uthmani
 }
 
@@ -520,14 +535,12 @@ el_zzback.onclick   = () => { clear_screen(); parent.zz_done()   }
 el_zzignore.onclick = () => { clear_screen(); parent.zz_ignore() }
 
 onload = function () {
-  el_ok.disabled = true
   init_inputs()
   // To update the styles, as we don't reset these
   // inputs, so they keep their values on refresh:
   Qall('input, select').forEach(e => e.onchange && e.onchange())
   decode_contact()
   versligilumi()
-  el_tl.onclick({})  // close
   el_tl.style.display = 'none'
   el_imla_txt.spellcheck = false
   // fix help opening

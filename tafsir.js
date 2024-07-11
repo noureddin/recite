@@ -24,7 +24,7 @@ function tv (i) {
   // compose header
   const s = sura_of(i) - 1
   const aya = ayat.uthm[i-1].replace(/[#A-Z<>]+/g, '')
-  const head = `<p>${t} للآية ${filter_aaya_input(i - sura_offset[s])} من سورة ${suar_name[s]}</p><p id="tafsirnote">(يمكن تغيير التفسير من «الخيارات» في أعلى الصفحة بعد إغلاق التفسير)</p><p class="aya">${aya}</p><hr>`
+  const head = `<p>${t} للآية ${toarab(i - sura_offset[s])} من سورة ${suar_name[s]}</p><p id="tafsirnote">(يمكن تغيير التفسير من «الخيارات» في أعلى الصفحة بعد إغلاق التفسير)</p><p class="aya">${aya}</p><hr>`
   // loading screen
   el_tv.innerHTML = head + spinner
   // get the tafsir
