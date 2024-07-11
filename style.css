@@ -791,7 +791,7 @@ details[open] > .details-content {
   font-family: "Noto Sans Arabic", "Noto Sans", sans;
 }
 
-#tv .aya, #tvtxt .aya {  /* aaya in #tv, and aaya-end in #tafsirhint, and in many #tvtxt */
+.aya, #tv .aya, #tvtxt .aya {  /* aayah in #tv, and aayah-end in #tafsirhint, and in many #tvtxt */
   font-family: AmiriQuranWeb;
 }
 
