@@ -805,11 +805,9 @@ details[open] > .details-content {
   100% { stroke-dashoffset: -210; }
 }
 #spinner-svg {
-    height: 4em;
+    width: 4em;
+    margin: 1em auto;
     vertical-align: bottom;
-    position: absolute;  /* relative to #tvc */
-    top: calc(25vh);
-    right: calc(50% - 2em);
 }
 
 #tvtxt[dir="ltr"], #tvtxt[dir="ltr"] * {
