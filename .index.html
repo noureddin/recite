@@ -56,30 +56,8 @@
     <span id="uthm_options_title" class="mode_options_title">خيارات وضع التسميع العثماني (بلا كتابة):</span>
 
     <div class="option">
-      <label for="tafsir">تفسير:&ensp;</label><select id="tafsir" onchange="change_tafsir()">
-        <option value="ar_muyassar" selected>التفسير الميسر</option>
-        <option value="ar_jalalayn">تفسير الجلالين</option>
-        <option value="ar_ma3any">معاني الكلمات</option>
-        <option value="katheer">تفسير ابن كثير</option>
-        <option value="sa3dy">تفسير السعدي</option>
-        <option value="baghawy">تفسير البغوي</option>
-        <option value="waseet">التفسير الوسيط</option>
-        <option value="tabary">تفسير الطبري</option>
-        <option value="qortoby">تفسير القرطبي</option>
-        <option value="tanweer">تفسير التحرير والتنوير لابن عاشور</option>
-        <option value="e3rab">إعراب القرآن</option>
-        <option value="en_yusufali">English: Yusuf Ali</option>
-        <option value="en_pickthall">English: Pickthall</option>
-        <option value="en_hilali">English: Hilali &amp; Khan</option>
-        <option value="en_sahih">English: Saheeh International</option>
-        <option value="en_sarwar">English: Sarwar</option>
-        <option value="en_transliteration">English: Transliteration</option>
-        <option value="fr_hamidullah">Français: Hamidullah</option>
-        <option value="id_indonesian">B. Indonesia: Kementerian Agama RI</option>
-        <option value="id_jalalayn">B. Indonesia: Tafsir Jalalayn</option>
-        <option value="ms_basmeih">B. Malaysia: Basmeih</option>
-        <option value="tr_diyanet">Türkçe: Diyanet İşleri</option>
-        <option value="tr_vakfi">Türkçe: Diyanet Vakfı</option>
+      <label for="tafsir">تفسير أو ترجمة:&ensp;</label><select id="tafsir" onchange="change_tafsir()">
+        <<!! cat res/tafasir | while read v; do read t; printf '<option value="%s">%s</option>' "$v" "$t"; done >>
       </select>
     </div>
 

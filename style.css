@@ -269,7 +269,7 @@ label, label *, select, input, button {
 #mvbtns_input  { width: calc(100% -  9.40em) }
 #textclr_input { width: calc(100% -  6.45em) }
 #feedbackrate  { width: calc(100% -  9.25em) }
-#tafsir        { width: calc(100% -  4.30em) }
+#tafsir        { width: calc(100% -  7.90em) }
 
 #imla_txt { background: var(--background); color: var(--txt); transition: background 1s }
 
@@ -786,9 +786,16 @@ details[open] > .details-content {
   margin-bottom: 1em;
   transition: opacity 1s ease-in-out;
 }
-.aya, #tvtxt .aya {  /* aaya in #tv, and aaya-end in #tafsirhint, and in many #tvtxt */
+
+#tv [lang] {
+  font-family: "Noto Sans Arabic", "Noto Sans", sans;
+}
+
+#tv .aya, #tvtxt .aya {  /* aaya in #tv, and aaya-end in #tafsirhint, and in many #tvtxt */
   font-family: AmiriQuranWeb;
 }
+
+#tafsir { font-family: sans }
 
 #tafsirnote { font-size: 0.70em }
 
