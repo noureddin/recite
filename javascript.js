@@ -140,6 +140,11 @@ function recite (st, en) {
   init_audio(stpair, enpair, qari, qariurl, preserve_url)
 
   if (zz) { parent.zz_show() }
+
+  el_mvbtns.Qall('button').forEach(e => e.disabled = true)
+  el_uthm_txt.style.textAlign = 'center'
+  el_uthm_txt.append(spinner)
+
   const _recite = quizmode === 'imla' ? _recite_imla : _recite_uthm
   load(quizmode.slice(0,1) /* 'u' or 'i' */, _recite)
 }
@@ -346,6 +351,9 @@ function _recite_uthm () {
   const cn = !!el_cn.value
   const teacher = el_teacher_input.checked
 
+  el_mvbtns.Qall('button').forEach(e => e.disabled = false)
+  el_uthm_txt.style.textAlign = ''
+  el_uthm_txt.innerHTML = ''
   el_uthm_txt.classList.remove('done')
   el_uthm_txt.focus()
   audio.set_index(teacher ? 0 : -1)
