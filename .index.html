@@ -25,7 +25,7 @@
 
 <div id="options" class="contentcontainer">
 
-  <hr id="guide">
+  <!-- <hr id="guide"> -->
 
   <div id="darkmode_option" class="option maybe-inline">
     <label for="darkmode_input">الوضع الليلي؟&ensp;</label><input id="darkmode_input" type="checkbox" onchange="change_dark()">
@@ -130,16 +130,12 @@
 
   <div>
     <label for="sura_bgn">من<span class="sura">&nbsp;سورة</span>:&thinsp;</label>
-    <select id="sura_bgn">
-      <<!!sh -c 'i=0; cat res/suar-names | while read sura; do printf "<option value=%s>%s</option>" $i "$sura"; i=$((i + 1)); done | sed "1s/>/ selected>/" | tr -d "\n"'>>
-    </select>&thinsp;<label for="aaya_bgn"><span class="aaya">الآية:&thinsp;</span></label><select id="aaya_bgn"></select>
+    <select id="sura_bgn"></select>&thinsp;<label for="aaya_bgn"><span class="aaya">الآية:&thinsp;</span></label><select id="aaya_bgn"></select>&thinsp;<button class="search">🔍<span class="srcttl"> ابحث</span></button>
   </div>
 
   <div>
     <label for="sura_end">إلى<span class="sura">&nbsp;سورة</span>:&thinsp;</label>
-    <select id="sura_end">
-      <<!!sh -c 'i=0; cat res/suar-names | while read sura; do printf "<option value=%s>%s</option>" $i "$sura"; i=$((i + 1)); done | sed "1s/>/ selected>/" | tr -d "\n"'>>
-    </select>&thinsp;<label for="aaya_end"><span class="aaya">الآية:&thinsp;</span></label><select id="aaya_end"></select>
+    <select id="sura_end"></select>&thinsp;<label for="aaya_end"><span class="aaya">الآية:&thinsp;</span></label><select id="aaya_end"></select>&thinsp;<button class="search">🔍<span class="srcttl"> ابحث</span></button>
   </div>
 
 <button title="حدد ما تريد مراجعته أو تسميعه، ثم اضغط على هذا الزر." id="ok">ابدأ</button>
@@ -193,9 +189,21 @@
   <circle cx="105" cy="350" r="35" id="T" /><text x="880" y="350" style="visibility: hidden; opacity: 0">مد حركتين</text>
 </svg>
 
-<div id="tvc"><!-- tafsir-view container -->
-<div id="tv"></div><!-- tafsir-view -->
-<svg id="tvx" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><!-- tafsir-view close-button -->
+<div id="tvc" class="popup"><!-- tafsir-view container -->
+<div id="tv" class="pc"></div><!-- tafsir-view -->
+<svg class="x" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><!-- tafsir-view close-button -->
+<circle cx="5" cy="5" r="5" />
+<line x1="2" y1="2" x2="8" y2="8" stroke-width="1.25" />
+<line x1="8" y1="2" x2="2" y2="8" stroke-width="1.25" />
+</svg>
+</div>
+
+<div id="sxc" class="popup"><!-- search container -->
+<div id="sx" class="pc"><!-- search -->
+<div id="sxi"><select id="sura_sx"></select><input id="sxq"></div>
+<div id="sxr"></div><!-- search results -->
+</div>
+<svg class="x" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><!-- search close-button -->
 <circle cx="5" cy="5" r="5" />
 <line x1="2" y1="2" x2="8" y2="8" stroke-width="1.25" />
 <line x1="8" y1="2" x2="2" y2="8" stroke-width="1.25" />
@@ -205,11 +213,7 @@
 </div>
 </div>
 
-<script>window.goatcounter={path:location.href.replace(/[?#].*/,''),allow_frame:true}</script>
-<!-- privacy-friendly statistics, no tracking of personal data, no need for GDPR consent; see goatcounter.com -->
-<script data-goatcounter="https://recite.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
-
 <script><<!!cat .scripts.gen.min.js>></script>
+
 </body>
 </html>

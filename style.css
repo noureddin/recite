@@ -7,6 +7,7 @@
   font-weight: 400;
   src: url('woff/AmiriQuran.woff2') format('woff2'),
        url('woff/AmiriQuran.woff')  format('woff');
+  font-display: swap;
 }
 @font-face {
   font-family: AmiriQuranColoredWeb;
@@ -14,6 +15,7 @@
   font-weight: 400;
   src: url('woff/AmiriQuranColored.woff2') format('woff2'),
        url('woff/AmiriQuranColored.woff')  format('woff');
+  font-display: swap;
 }
 
 /* The following two fonts are from: https://sourceforge.net/projects/arabeyes/files/Fonts/ */
@@ -25,6 +27,7 @@
   font-weight: 400;
   src: url('woff/KacstOne-subset.woff2') format('woff2'),
        url('woff/KacstOne-subset.woff')  format('woff');
+  font-display: swap;
 }
 @font-face {
   font-family: Cortoba;  /* version 2.1 */
@@ -32,6 +35,7 @@
   font-weight: 400;
   src: url('woff/ae_Cortoba-subset.woff2') format('woff2'),
        url('woff/ae_Cortoba-subset.woff')  format('woff');
+  font-display: swap;
 }
 
 /* general */
@@ -73,6 +77,7 @@ body {
   --title-rgb: 0, 0, 0;
   --tl-open: #fffc;
   --tl-closed: #fff2;
+  --selection: rgba(0, 0, 255, 0.15);
   /* tajweed */
   --L: #bb6666; --W: red;     --J: orangered; --T: #ff9900;    --N: #009000;
   --X: #9595a0; --R: #2222e0; --Q: #00a5e7;   --A: darkorange; --D: navy;
@@ -88,6 +93,13 @@ body {
   --tab-active-txt: var(--tab-txt);
   --tab: gold;
   --tab-active: yellow;
+  /* search */
+  --sxsa: rgba(var(--background-rgb), 0.6);
+  --sxr:  #ffdde0;  /* each aya search results */
+  --sxrh: brightness(1.075);  /* hover */
+  --sxra-shadow: 0 0 0.25rem black,
+    inset 0  0.5rem 1rem #fff,
+    inset 0 -0.5rem 1rem #0004;
 }
 
 #dark:checked ~ #body {
@@ -98,6 +110,7 @@ body {
   --title-rgb: 255, 255, 255;
   --tl-open: #000c;
   --tl-closed: #0002;
+  --selection: rgba(0, 0, 255, 0.4);
   /* tajweed */
   --L: #bb5555;  --W: red    ;  --J: #ff6600;  --T: #ffbb00;  --N: #00ff00;
   --X: #808080;  --R: #4477ff;  --Q: #00d6ff;  --A: #ff8c00;  --D: #ffffff;
@@ -108,6 +121,13 @@ body {
   --tab-active-txt: white;
   --tab: #A1761B;  /* a very dark goldenrod; from: https://colorcodes.io/yellow/goldenrod-color-codes/ */
   --tab-active: darkgoldenrod;
+  /* search */
+  --sxsa: rgba(var(--background-rgb), 0.75);
+  --sxr:  #400000;  /* each aya search results */
+  --sxrh: brightness(1.25);  /* hover */
+  --sxra-shadow: 0 0 0.2rem white,
+      inset 0  0.5rem 1rem #fff4,
+      inset 0 -0.5rem 1rem #000f;
 }
 
 #dark:checked ~ #body.highcontrast {
@@ -118,6 +138,8 @@ body {
   --L: #ee8888;  --W: #ff4444;  --J: #ffaa44;  --T: #ffee66;  --N: #66ffaa;
   --X: #aaaaaa;  --R: #66bbff;  --Q: #22eeff;
 }
+
+option { background: var(--details-bg) }  /* for Blink, especially in darkmode */
 
 :not(input, button, select) { color: var(--uitxt); } /* are just inverted */
 #uthm_txt { color: var(--txt); }
@@ -136,7 +158,7 @@ body {
 
 /* general */
 #body { scroll-behavior: smooth; }
-::selection { background: rgba(0,0,255,0.1); }
+::selection { background: var(--selection); }
 
 /* https://bits.theorem.co/css-pro-tips-responsive-font-sizes-and-when-to-use-which-units */
 html { font-size: calc(16px + 0.5vw) }
@@ -168,19 +190,17 @@ label, label *, select, input, button {
 #selectors,
 #header {
   padding: 0;
-  padding-top: 0.5rem;
   position: var(--sticky);  /* static (default) in imlaai; sticky in uthmani */
   background-color: var(--background-translucent);
   top:        -10rem;
   margin-top: -10rem;
-  padding-top: 10rem;
+  padding-top: 11rem;
   z-index: 2;
 }
 
 #title {
   display: none;
-  margin-top: 0;
-  margin-bottom: 0.5rem;
+  margin: 0;
   color: rgb(var(--title-rgb));
   position: relative; z-index: 3;  /* above #header */
   font-size: min(calc(20px + 0.5vw), calc(var(--all-width) / 14));
@@ -191,11 +211,30 @@ label, label *, select, input, button {
   display: inline-block;
   width: 4em;
 }
+
+/* search buttons in #selectors */
+.srcttl { font-family: inherit; color: inherit }
+#selectors > div > button { width: initial; padding: 0 1em }
+@media (max-width: 580px) { #selectors > div > button { padding: 0 0.25em } }
+@media (max-width: 440px) {
+.srcttl {  /* .sr-only -- hide visually but keep it for screenreaders */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+}
+
 #selectors > div {
   display: inline-block;
-  max-width: 15em;
+  max-width: 20em;
   min-width: 40%;
-  margin: 0.1rem 0;
+  white-space: nowrap;
+  margin: 0.1em 0;
 }
 #aaya_bgn, #aaya_end { width: 3em; }
 /* #sura_bgn, #sura_end { width: 6.5em; } */
@@ -344,7 +383,7 @@ button {
 
 #mvbtns svg { width: 1em; height: 1em; }
 
-button, select, input, input[type=checkbox] + label {
+button, select, input[type=checkbox] + label {
   cursor: pointer;
 }
 
@@ -738,10 +777,8 @@ details[open] > .details-content {
   #prevaaya, #nextaaya { display: none }
 }
 
-/* begin: tafsir */
-.A { cursor: help }
-
-#tvc {  /* tafsir-view container */
+/* begin: common styling for popups: tafsir & search */
+.popup {  /* the container */
   display: none;
   visibility: none;  opacity: 0;  transition: 1s opacity;
   position: fixed;  top: 0;  right: 0;  width: 100%;  height: 100%;
@@ -750,25 +787,21 @@ details[open] > .details-content {
   background: rgb(var(--background-rgb));
 }
 
-#tv {
+.pc {  /* popup content */
   padding: 1em;
   padding-right: 2em;
   width: var(--all-width);
   margin: 0 auto;
 }
-#tv > * {
+.pc > * {
   font-size: 1.25em;
 }
-#tv > * * {
+.pc > * * {
   font-family: inherit;
   font-size: inherit;
 }
-#tvtxt {  /* tafsir content -- if there is tafsir */
-  text-align: right;
-  line-height: 1.8;
-}
 
-#tvx {  /* tafsir-view close-button */
+.x {  /* popup close-button */
   opacity: 25%;  transition: 0.75s opacity;
   position: fixed;  top: 0.5em;  left: 0.5em;
   cursor: pointer;
@@ -776,28 +809,10 @@ details[open] > .details-content {
   height: 2em;
 }
 
-#tvx:hover, #tvx:focus { opacity: 100% }
+.x:hover, .x:focus { opacity: 100% }
 
-#tvx line { stroke: rgb(var(--background-rgb)) }
-#tvx circle { fill: var(--uitxt) }
-
-#tafsirhint {
-  margin-top: 4em;
-  margin-bottom: 1em;
-  transition: opacity 1s ease-in-out;
-}
-
-#tv [lang] {
-  font-family: "Noto Sans Arabic", "Noto Sans", sans;
-}
-
-.aya, #tv .aya, #tvtxt .aya {  /* aayah in #tv, and aayah-end in #tafsirhint, and in many #tvtxt */
-  font-family: AmiriQuranWeb;
-}
-
-#tafsir { font-family: sans }
-
-#tafsirnote { font-size: 0.70em }
+.x line { stroke: rgb(var(--background-rgb)) }
+.x circle { fill: var(--uitxt) }
 
 #spinner { animation: spin 1.6s infinite linear; stroke: var(--uitxt) }
 @keyframes spin {
@@ -810,8 +825,105 @@ details[open] > .details-content {
     vertical-align: bottom;
 }
 
+/* aayah in #tv, and aayah-end in #tafsirhint, and in many #tvtxt */
+/* #tafsirhint .aya, #tv .aya, #tvtxt .aya, #sxr .aya { font-family: AmiriQuranWeb } */
+.aya { font-family: AmiriQuranWeb !important }
+
+/* end: common styling for popups: tafsir & search */
+
+/* begin: tafsir */
+.A { cursor: help }
+#tafsirhint .A { cursor: initial }
+
+#tvtxt {  /* tafsir content -- only if there is tafsir */
+  text-align: right;
+  line-height: 1.8;
+}
+
+#tafsirhint {
+  margin-top: 4em;
+  margin-bottom: 1em;
+  transition: opacity 1s ease-in-out;
+}
+
+/* to accomodate the various languages (our KacstOne is subsetted); */
+/* scripts other than Latin and Perso-Arabic use an available font on the system */
+#tafsir /* selector */, #tafsir > option,
+#tv [lang] /* title & content */ {
+  font-family: "Noto Sans Arabic", "Noto Sans";
+}
+
+#tafsirnote { font-size: 0.70em }
+
 #tvtxt[dir="ltr"], #tvtxt[dir="ltr"] * {
   text-align: left;
 }
 
 /* end: tafsir */
+
+/* begin: search */
+/* see also: "search buttons in #selectors" */
+
+#sx * { font-family: KacstOne }
+/* except #sxr .aya */
+
+#sxi {
+  width: var(--all-width);
+  display: flex;
+  flex: row;
+}
+
+#sura_sx {
+  font-family: Cortoba;  /* like #sura_{bgn,end}; b/c overriden by ".pc > * *" */
+  width: 6em;
+  margin-left: 0.5em;
+}
+
+#sx input {
+  flex-grow: 100; /* all the space it can have */
+}
+
+#sx center { margin: 2em  0 }  /* messages, not search results */
+#sx svg + center { margin-top: 0 }  /* if waiting after user input */
+
+#sxr .ac {
+  text-align: right;
+  background: var(--sxr);
+  border-radius: 1rem;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  overflow: hidden;  /* hide the excess part of .s_a */
+  position: relative;
+  transition: 0.25s filter;
+}
+#sxr .ac:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  margin: -1rem 0;  /* to counter the padding of the parent */
+  box-shadow: var(--sxra-shadow);
+}
+
+#sxr .ac:hover, #sxr .ac:active {
+  filter: var(--sxrh);
+}
+
+#sxr .s_a {
+  background: var(--sxsa);
+  border-radius: 0 1rem 0 1rem;
+  padding: 3rem 1rem 0.5rem 0.75rem;
+  margin: 0 -1rem 0 1rem;
+}
+
+#sxr .aya {
+  line-height: 2.75;
+}
+
+#sxr:hover, #sxr:focus {
+  cursor: pointer;
+}
+
+/* end: search */

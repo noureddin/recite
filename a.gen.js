@@ -4,7 +4,6 @@
 // with similar names, eg scroll_to_top. I also use it for variables and consts.
 // The only exception is the Q* shorthand functions defined next.
 
-// const say = console.log
 const range = (i) => [...Array(i).keys()]
 
 // Q*, el_*
@@ -15,6 +14,27 @@ function Qid  (id)       { return document.getElementById(id) }
 Element.prototype.Q    = Element.prototype.querySelector
 Element.prototype.Qall = Element.prototype.querySelectorAll
 // Element.prototype.Qid  = Element.prototype.getElementById
+
+function make_elem (tag, opts={}) {
+  const el = document.createElement(tag)
+  for (let opt in opts)
+    if (opt === 'data')
+      for (let k in opts[opt])
+        el.dataset[k] = opts[opt][k]
+    else
+      el[opt] = opts[opt]
+  return el
+}
+
+function make_svgelem (tag, attrs={}, opts={}) {
+  const el = document.createElementNS("http://www.w3.org/2000/svg", tag)
+  for (let attr in attrs)
+    el.setAttribute(attr, attrs[attr])
+  return el
+}
+
+const spinner = make_svgelem('svg', { id: 'spinner-svg', viewBox: '0 0 100 100' })
+spinner.appendChild(make_svgelem('circle', { id: 'spinner', cx: 50, cy: 50, r: 35, fill: 'none', 'stroke-width': '10', 'stroke-dasharray': '40 30' }))
 
 const L = location
 const S = localStorage
@@ -100,7 +120,12 @@ const el_J = Qid("J")
 const el_T = Qid("T")
 const el_tvc = Qid("tvc")
 const el_tv = Qid("tv")
-const el_tvx = Qid("tvx")
+const el_sxc = Qid("sxc")
+const el_sx = Qid("sx")
+const el_sxi = Qid("sxi")
+const el_sura_sx = Qid("sura_sx")
+const el_sxq = Qid("sxq")
+const el_sxr = Qid("sxr")
 
 
 const __scroll_top = (el) => el.scrollTo({ top: 0 })
@@ -143,8 +168,8 @@ const toascii = (n) =>  // convert numerals to ASCII
       .replace(/٨/g, '8')
       .replace(/٩/g, '9')
 
-const sura_bgn_length = () => el_sura_bgn.value === '' ? 0  : suar_length[+el_sura_bgn.value]
-const sura_end_length = () => el_sura_end.value === '' ? 0  : suar_length[+el_sura_end.value]
+const sura_bgn_length = () => el_sura_bgn.value === '' ? 0  : sura_length[+el_sura_bgn.value]
+const sura_end_length = () => el_sura_end.value === '' ? 0  : sura_length[+el_sura_end.value]
 const sura_bgn_val    = () => el_sura_bgn.value === '' ? '' :             +el_sura_bgn.value
 const sura_end_val    = () => el_sura_end.value === '' ? '' :             +el_sura_end.value
 const aaya_bgn_val    = () => el_aaya_bgn.value === '' ? '' :             +el_aaya_bgn.value
@@ -278,8 +303,8 @@ function valid_inputs (sura_bgn, aaya_bgn, sura_end, aaya_end) {  // {{{
     sura_end !== '' && aaya_end !== '' &&
     sura_bgn <= sura_end &&
     (aaya_bgn <= aaya_end || sura_bgn < sura_end) &&
-    1 <= aaya_bgn && aaya_bgn <= suar_length[sura_bgn] &&
-    1 <= aaya_end && aaya_end <= suar_length[sura_end]
+    1 <= aaya_bgn && aaya_bgn <= sura_length[sura_bgn] &&
+    1 <= aaya_end && aaya_end <= sura_length[sura_end]
   )
 }  // }}}
 
@@ -435,10 +460,10 @@ function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {  // {{{
   aaya_bgn = +aaya_bgn
   sura_end = +sura_end
   aaya_end = +aaya_end
-  const s_bgn_len = suar_length[sura_bgn - 1]
-  const s_end_len = suar_length[sura_end - 1]
-  const s_bgn_txt = suar_name[sura_bgn - 1]
-  const s_end_txt = suar_name[sura_end - 1]
+  const s_bgn_len = sura_length[sura_bgn - 1]
+  const s_end_len = sura_length[sura_end - 1]
+  const s_bgn_txt = sura_name[sura_bgn - 1]
+  const s_end_txt = sura_name[sura_end - 1]
   // converts to Eastern Arabic numerals, and state the first and last in words
   const a_bgn_txt = aaya_bgn === 1? 'الأولى' : aaya_bgn === s_bgn_len? toarab(aaya_bgn) + nbsp+'الأخيرة' : toarab(aaya_bgn)
   const a_end_txt = aaya_end === 1? 'الأولى' : aaya_end === s_end_len? toarab(aaya_end) + nbsp+'الأخيرة' : toarab(aaya_end)

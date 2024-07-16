@@ -141,7 +141,7 @@ function recite (st, en) {
 
   if (zz) { parent.zz_show() }
   const _recite = quizmode === 'imla' ? _recite_imla : _recite_uthm
-  load(quizmode, st, en, _recite)
+  load(quizmode.slice(0,1) /* 'u' or 'i' */, _recite)
 }
 
 document.addEventListener('keyup', (ev) => {
@@ -440,15 +440,19 @@ el_repeat.onmouseup = restart_reciting
 el_repeat.onclick   = restart_reciting
 
 function init_inputs () {
-  el_aaya_bgn.innerHTML = el_aaya_end.innerHTML = make_aayaat(suar_length[0])
-  el_aaya_end.value   = suar_length[0]
+  // suar
+  const sura_options = sura_name.map((t, i) => `<option value="${i}">${t}</option>`).join('')
+  el_sura_bgn.innerHTML = el_sura_end.innerHTML = sura_options
+  el_sura_sx.innerHTML = '<option value="">كل السور</option>' + sura_options
+  // aayaat
+  el_aaya_bgn.innerHTML = el_aaya_end.innerHTML = make_aayaat(sura_length[0])
+  el_aaya_end.value   = sura_length[0]
   el_aaya_bgn.value   = 1
   el_sura_bgn.value   = el_sura_end.value   = 0
-  //
+  // suar/aayaat essential interactivity
   el_sura_bgn.oninput = el_aaya_bgn.oninput = el_sura_end.oninput = el_aaya_end.oninput = validate_aaya_sura_input
   el_sura_bgn.onblur  = el_aaya_bgn.onblur  = el_sura_end.onblur  = el_aaya_end.onblur  = validate_aaya_sura_input
   el_sura_bgn.onkeyup = el_aaya_bgn.onkeyup = el_sura_end.onkeyup = el_aaya_end.onkeyup = input_trigger_x
-  //
   // support keyboard searching the aayaat fields with ASCII numerals
   let k = '', t = 0
   el_aaya_bgn.onkeydown = el_aaya_end.onkeydown = (ev) => {
@@ -467,6 +471,13 @@ function init_inputs () {
       }
     }
   }
+  // searching
+  Qall('.search').forEach(el => el.onclick = ({ target }) => {
+    if (target.tagName === 'SPAN') { target = target.parentElement }
+    const el_aaya = target.previousElementSibling
+    const el_sura = el_aaya.previousElementSibling.previousElementSibling
+    show_search(el_sura, el_aaya)
+  })
 }
 
 const hide_selectors = function (quizmode) {
@@ -524,6 +535,7 @@ const clear_screen = function () {
 }
 
 const new_select = function () {
+  L.hash = ''
   show_selectors()
   clear_screen()
 }
