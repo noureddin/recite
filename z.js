@@ -31,15 +31,18 @@ var ayat = {}
 // i: imlaai text with tashkeel etc
 // p: plain imlaai for searching (generated from imlaai)
 
+function z (lzma_file, callback) {
+  fetch(lzma_file)
+    .then((res) => res.ok ? res.arrayBuffer() : null)
+    .then((buf) => {
+      callback(LZMA.decompress(new Uint8Array(buf)).split('\n').slice(0,-1))
+    })
+}
+
 function load (name, callback) {
   // console.assert(name === 'u' || name === 'i', 'load called with bad name:', name)
   if (ayat[name]) { callback(); return }
-  fetch(`res/${name}.lzma`)
-    .then((res) => res.ok ? res.arrayBuffer() : null)
-    .then((buf) => {
-      ayat[name] = LZMA.decompress(new Uint8Array(buf)).split('\n').slice(0,-1)
-      callback()
-    })
+  z(`res/${name}.lzma`, (txt) => { ayat[name] = txt; callback() })
 }
 
 function load_plain (callback) {

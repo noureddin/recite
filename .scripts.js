@@ -16,11 +16,7 @@
 <<!!cat search.js>>
 <<!!cat javascript.js>>
 
-// gunzipSync from fflate with a few modifications (check .g.ts)
-// MIT License; original source: https://github.com/101arrowz/fflate
-<<!!cat .g.js>>
-
-// lmza-d-min.js from LZMA-JS by Nathan Rugg; v2.3.0; License: MIT.
+// lzma-d-min.js from LZMA-JS by Nathan Rugg; v2.3.0; License: MIT.
 // https://github.com/LZMA-JS/LZMA-JS/blob/master/src/lzma-d-min.js
 <<!!cat .lzma-d-min.js>>
 

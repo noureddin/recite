@@ -1,13 +1,17 @@
 'use strict'
 
-// all are the first ayah of a sura. the last three are the first ayah of a juz.
-const sep_ayah = [ 0, 7, 293, 493, 669, 789, 954, 1160, 1235, 1364, 1473, 1596, 1707, 1750, 1802, 1901, 2029, 2140, 2250, 2348, 2483, 2595, 2673, 2791, 2855, 2932, 3159, 3252, 3340, 3409, 3469, 3503, 3533, 3606, 3660, 3705, 3788, 3970, 4058, 4133, 4218, 4272, 4325, 4414, 4473, 4510, 4545, 4583, 4612, 4630, 4675, 4735, 4784, 4846, 4901, 4979, 5075, 5104, 5241, 5672, 6236 ]
+const qwSet = (s) => new Set(s.split(' '))
 
-const RTL = new Set('dv fa ku ps sd ug ur'.split(' '))
+const big = [ 0, 7, 107, 217, 293, 493, 669, 789, 954, 1160, 1235, 1364, 1473, 1596, 1707, 1750, 1901, 2029, 2140, 2250, 2348, 2483, 2595, 2673, 2791, 2855, 2932, 3159, 3252, 3340, 3409, 3533, 3606, 3705, 3970, 4058, 4133, 4272, 4472, 4583, 4630, 4901, 5104, 5163, 5241, 5447, 5672, 5993, 6130, 6236 ]
+
+const small = [ 0, 493, 954, 1473, 2140, 2932, 3788, 4735, 6236 ]
+
+const Big =  // tafasir that are big and thus are split into 50 files; others are split into 8 parts only.
+  qwSet('tanweer tabary qortoby waseet katheer baghawy sa3dy fa_khorramdel')
+
+const RTL = qwSet('dv fa ku ps sd ug ur')
 
 const tafsir = {}
-
-const part_num = (i) => sep_ayah.findIndex(a => i <= a)  // assumption: 0 <= i <= 6236
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -49,15 +53,13 @@ function get_tafsir (name, i, callback) {
 }
 
 function load_tafsir (name, i, callback) {
-  const part = part_num(i)
+  const seps = Big.has(name) ? big : small
+  const part = seps.findIndex(a => i <= a)  // assumption: 0 < i <= 6236; returns 1-based
   const p = part-1
-  const cb = () => callback(tafsir[name][p][i-sep_ayah[p]-1])
+  const cb = () => callback(tafsir[name][p][i-seps[p]-1])
   //
   if (tafsir[name] == null) { tafsir[name] = [] }
   if (tafsir[name][p]) { cb(); return }
-  G('rt/'+name+'-'+part+'.gz').then((txt) => {
-    tafsir[name][p] = txt.split('\n')
-    cb()
-  })
+  z(`rt/${name}-${part}.lzma`, (txt) => { tafsir[name][p] = txt; cb() })
 }
 
