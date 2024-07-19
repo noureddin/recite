@@ -494,7 +494,6 @@ const hide_selectors = function (quizmode) {
   el_endmsg.hidden = true
   el_ok.hidden = true
   el_title.style.display = 'inline-block'
-  el_tafsirhint.hidden = true
   const d = document.documentElement
   if (quizmode === 'imla') {
     el_imla_txt_container.style.height = fullpage ? '100vh' : '95vh'
@@ -517,6 +516,7 @@ const hide_selectors = function (quizmode) {
     d.style.setProperty('--sticky', 'sticky')
     // el_nextword.focus()
   }
+  show_or_hide_tafsirhint()
   body_scroll_to_bottom()
 }
 
@@ -527,7 +527,7 @@ const show_selectors = function () {
   el_mvbtns.hidden = true
   el_title.style.display = 'none'
   el_tl.style.display = 'none'  // tajweed legend
-  el_tafsirhint.hidden = el_quizmode.value !== 'uthm'  // show if uthmani
+  show_or_hide_tafsirhint()
 }
 
 const clear_screen = function () {

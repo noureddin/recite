@@ -252,24 +252,12 @@ function change_quizmode () {
   if (el_quizmode.value === 'imla') {
     /* hide */ el_uthm_options.style.display = 'none'
     /* show */ el_imla_options.style.display = 'block'
-    el_tafsirhint.hidden = el_uthm_txt.hidden || el_endmsg.hidden
-    // u e t  u e t
-    // V V V  F F F
-    // V H H  F T T
-    // H V H  T F T
-    // H H H  T T T
   }
   else {  /* uthmani */
     /* hide */ el_imla_options.style.display = 'none'
     /* show */ el_uthm_options.style.display = 'block'
-    el_tafsirhint.hidden = el_selectors.hidden
-    el_tafsirhint.hidden = el_uthm_txt.hidden ^ el_endmsg.hidden
-    // u e t  u e t
-    // V V V  F F F
-    // V H H  F T T
-    // H V H  T F T
-    // H H V  T T F
   }
+  show_or_hide_tafsirhint()
 }
 
 // removes tashkeel and ayat numbers
@@ -303,8 +291,23 @@ const imla_match = (correct, input, ifilter=window.imlafilter) =>
 
 const sync_uthm_class_with = (cls, pred) => el_uthm_txt.classList.toggle(cls, pred)
 
+function show_or_hide_tafsirhint () {
+  // shown only if EITHER of these conditions is met:
+  // - just finished quizzing in the Uthmani mode :: endmsg && uthm_txt
+  // - not started quizzing yet (or "New" is clicked) AND quizmode is Uthmani
+  //   :: !endmsg && selectors && el_quizmode.value === 'uthm'
+  // where endmsg = !el_endmsg.hidden and so on.
+  //
+  const EH = el_endmsg.hidden
+  const UH = el_uthm_txt.hidden
+  const SH = el_selectors.hidden
+  const QU = el_quizmode.value === 'uthm'
+  // !( (!EH && !UH) || (EH && !SH && QU) ) === (EH || UH) && (!EH || SH || !QU)
+  el_tafsirhint.hidden = (EH || UH) && (!EH || SH || !QU)
+}
+
 function show_or_hide_tajweedlegend () {
-  // shown only when all these conditions are met:
+  // shown only when ALL of these conditions are met:
   // - tajweed legend is enabled :: el_tl_input.checked
   // - text is colored according to tajweed rules :: el_textclr_input.value === 'taj'
   // - currently quizzing, in the Uthmani mode :: !el_uthm_txt.hidden
