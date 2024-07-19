@@ -130,7 +130,7 @@ function update_bool_default_true (el, param, stored) {
 }
 
 function tajlorligilumi () {
-  const opts = _tajlorligilumilo(L.hash || L.search)
+  const opts = _tajlorligilumilo(L.search + L.hash.replace(/^#/, '&'))
   //
   if (opts.quizmode == null) {
     if (S.imla) {

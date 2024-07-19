@@ -377,11 +377,34 @@ const imla_match = (correct, input, ifilter=window.imlafilter) =>
 
 const sync_uthm_class_with = (cls, pred) => el_uthm_txt.classList.toggle(cls, pred)
 
+function show_or_hide_tajweedlegend () {
+  // shown only when all these conditions are met:
+  // - tajweed legend is enabled :: el_tl_input.checked
+  // - text is colored according to tajweed rules :: el_textclr_input.value === 'taj'
+  // - currently quizzing, in the Uthmani mode :: !el_uthm_txt.hidden
+  // also, when tajweed legend is disabled (!el_tl_input.checked), it's closed.
+  //
+  if (!el_tl_input.checked) {  // close and hide
+    if (el_tl.getAttribute('aria-expanded') === 'true') { el_tl.onclick({}) }  // close
+    el_tl.style.display = 'none'
+  }
+  else {
+    el_tl.style.display =
+      !el_uthm_txt.hidden && el_textclr_input.value === 'taj'
+        ? ''      // show
+        : 'none'  // hide
+  }
+}
+
 function change_tajweed () {
   const tval = el_textclr_input.value
-  store_bool('notajweed', tval !== 'taj')  // TODO: parts
+  const notaj = tval !== 'taj'
+  store_bool('notajweed', notaj)  // TODO: parts
   sync_uthm_class_with('letter-parts',   tval === 'bas')
   sync_uthm_class_with('letter-nocolor', tval === 'no')
+  el_tl_input.disabled = notaj
+  el_tl_input.previousElementSibling.classList.toggle('disabled', notaj)  // its label
+  show_or_hide_tajweedlegend()
   zz_set('tajweed', tval.slice(0,1))
 }
 
@@ -433,15 +456,7 @@ function change_tafsir () {
 
 function change_tajweedlegend () {
   store_bool('notajweedlegend', !el_tl_input.checked)
-  if (el_tl_input.checked) {
-    if (!el_uthm_txt.hidden) {
-      el_tl.style.display = ''
-    }
-  }
-  else {
-      if (el_tl.getAttribute('aria-expanded') === 'true') { el_tl.onclick({}) }  // close
-      el_tl.style.display = 'none'
-  }
+  show_or_hide_tajweedlegend()
 }
 
 function decode_contact () {

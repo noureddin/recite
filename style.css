@@ -66,7 +66,8 @@ body {
 #body {
   /* general */
   --btn-base-width: min(35vw, 10rem);
-  --faint-btn: #666;
+  --faint-btn: #aaa;
+  --faint-txt: #aaa;
   --uitxt: #233; --txt: #111;
   --txt-font: AmiriQuranWeb;
   --background-rgb: 249, 246, 231; /* old: 249, 244, 214; */
@@ -104,7 +105,8 @@ body {
 
 #dark:checked ~ #body {
   /* general */
-  --faint-btn: #555;
+  --faint-btn: #aaa;  /* inverted */
+  --faint-txt: #555;
   --uitxt: #ccc;  --txt: #eee;  --background-rgb: 26, 20, 20; --content-rgb: 23, 23, 23;
   --details-bg: black; --details-shadow: white;
   --title-rgb: 255, 255, 255;
@@ -132,7 +134,8 @@ body {
 
 #dark:checked ~ #body.highcontrast {
   /* general */
-  --faint-btn: #333;
+  --faint-btn: #888;  /* inverted */
+  --faint-txt: #777;
   --uitxt: #eee;  --txt: #fff;  --background-rgb: 0,0,0; --content-rgb: 23, 23, 23;
   /* tajweed */
   --L: #ee8888;  --W: #ff4444;  --J: #ffaa44;  --T: #ffee66;  --N: #66ffaa;
@@ -387,8 +390,12 @@ button, select, input[type=checkbox] + label {
   cursor: pointer;
 }
 
-button:disabled {
+:disabled {
   cursor: not-allowed;
+}
+
+label.disabled {
+  color: var(--faint-txt);
 }
 
 #dark:checked ~ #body kbd,

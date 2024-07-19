@@ -360,7 +360,7 @@ function _recite_uthm () {
 
   el_tafsirhint.style.marginTop = '2em'  // shows after end of recitation
 
-  if (el_tl_input.checked) { el_tl.style.display = '' }
+  show_or_hide_tajweedlegend()
 
   let words = make_words_list(st, en, cn)
 
@@ -561,7 +561,6 @@ onload = function () {
   Qall('input, select').forEach(e => e.onchange && e.onchange())
   decode_contact()
   versligilumi()
-  el_tl.style.display = 'none'
   el_imla_txt.spellcheck = false
   // fix help opening
   Qall('details').forEach(el => {
