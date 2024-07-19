@@ -248,7 +248,7 @@ label, label *, select, input, button {
   #selectors > div label:first-child { width: 1.6em }  /* من سورة and إلى سورة */
 }
 
-@media (max-width: 225px) {
+@media (max-width: 279px) {
   .aaya { display: none }
 }
 
@@ -433,6 +433,10 @@ text {
   margin: 0 auto;
   display: block;
   z-index: 1;
+}
+
+@media (max-width: 300px) {
+  #tl { height: calc(100vw * 2/5) }  /* make it the same width as the screen */
 }
 
 #tl rect {
@@ -796,7 +800,6 @@ details[open] > .details-content {
 
 .pc {  /* popup content */
   padding: 1em;
-  padding-right: 2em;
   width: var(--all-width);
   margin: 0 auto;
 }
@@ -874,20 +877,23 @@ details[open] > .details-content {
 #sx * { font-family: KacstOne }
 /* except #sxr .aya */
 
-#sxi {
-  width: var(--all-width);
-  display: flex;
-  flex: row;
-}
+#sxi { width: var(--all-width) }
+#sx input { min-width: 8em }
 
 #sura_sx {
   font-family: Cortoba;  /* like #sura_{bgn,end}; b/c overriden by ".pc > * *" */
-  width: 6em;
   margin-left: 0.5em;
+  width: 6em;
 }
 
-#sx input {
-  flex-grow: 100; /* all the space it can have */
+#sxi { display: flex; flex: row }
+#sx input { flex-grow: 100 /* all the space it can have */ }
+
+@media (max-width: 428px) { #sura_sx { font-size: 90% } }
+@media (max-width: 409px) { /* make it two lines */
+  #sxi { display: block }
+  #sura_sx { margin-bottom: 0.5em }
+  #sx input { width: 97% /* full row;  100% is too wide */ }
 }
 
 #sx center { margin: 2em  0 }  /* messages, not search results */
@@ -918,11 +924,19 @@ details[open] > .details-content {
   filter: var(--sxrh);
 }
 
-#sxr .s_a {
+.s_a {  /* sura-aaya title in #sxr */
   background: var(--sxsa);
   border-radius: 0 1rem 0 1rem;
   padding: 3rem 1rem 0.5rem 0.75rem;
   margin: 0 -1rem 0 1rem;
+}
+
+@media (max-width: 359px) {
+  .s_a {  /* make it full line */
+    display: block;
+    padding: 1rem;
+    margin: -1rem -1rem 0 -1rem;
+  }
 }
 
 #sxr .aya {

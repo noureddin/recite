@@ -43,7 +43,7 @@ function arabic_fold (txt) {  // takes string, return a regex
     .replace(/x/g, '['+hmz)
 }
 
-const sx_init_msg = '<center>أدخل جزءًا من آية للبحث عنها</center>'
+const sx_init_msg = '<center>أدخل جزءًا من&nbsp;آية للبحث&nbsp;عنها</center>'
 
 function show_search (el_sura, el_aaya) {
 
@@ -76,13 +76,13 @@ function show_search (el_sura, el_aaya) {
       .map((a, i) => st <= i && i < en && a.match(q) ? i : -1)
       .filter(i => i !== -1)
     if (r.length > 50) {
-      el_sxr.innerHTML = '<center>يطابق بحثك '+toarab(r.length)+' من الآيات، وهو أكثر من ٥٠؛ حاول التحديد أكثر</center>'
+      el_sxr.innerHTML = '<center>يطابق بحثك '+toarab(r.length)+' من&nbsp;الآيات، وهو أكثر من&nbsp;٥٠؛ حاول التحديد أكثر</center>'
     }
     else if (r.length === 0) {
       el_sxr.innerHTML = '<center>تعذر إيجاد العبارة التي أدخلتها</center>'
     }
     else {
-      el_sxr.innerHTML = `<center>يوجد ${toarab(r.length)} من الآيات</center>` 
+      el_sxr.innerHTML = `<center>يوجد ${toarab(r.length)} من&nbsp;الآيات</center>` 
       const aa = range(r.length).map(a => make_elem('div', { className: 'ac' }))
       aa.forEach((a,j) => {
         const i = r[j]  // 0-based
@@ -96,7 +96,7 @@ function show_search (el_sura, el_aaya) {
           close_search()
         }
         a.append(
-          make_elem('span', { className: 's_a', innerHTML: `سورة ${name} آية ${anum}:` }),
+          make_elem('span', { className: 's_a', innerHTML: `سورة ${name} آية&nbsp;${anum}:` }),
           make_elem('span', { className: 'aya', innerHTML: '<span>يحمّل</span>' }),
         )
       })
