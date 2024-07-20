@@ -31,14 +31,11 @@ index.html: .index.html .scripts.gen.min.js style.min.css .minify.pl
 %.gen.js: %.js
 	$P "$<" > "$@"
 
-.scripts.gen.min.js: .scripts.js .g.js a.gen.js mappings.js tafsir.js search.js tajlorligilumi.js data.gen.js versligilumi.js res/confetti.min.js javascript.js z.js
+.scripts.gen.min.js: .scripts.js a.gen.js mappings.js tafsir.js search.js tajlorligilumi.js data.gen.js versligilumi.js res/confetti.min.js javascript.js z.js
 	$P "$<" | perl -CDAS -pe 's/const +say += +console\.log//' | $J | perl -pe 's/;?\s*\Z//' > "$@"
 	# $P "$<" > "$@"
-
-.g.js: .g.ts .g.sh
-	bash .g.sh
 
 .PHONEY: clean
 
 clean:
-	rm -f index.html a.gen.js data.gen.js scripts.min.js style.min.css .scripts.gen.min.js .g.js
+	rm -f index.html a.gen.js data.gen.js scripts.min.js style.min.css .scripts.gen.min.js

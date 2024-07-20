@@ -210,7 +210,7 @@ function _recite_imla () {
 
     if (pasted) {
       el_imla_txt.value = el_imla_txt.value
-        // restore NBSP because it's copied as a normal, ASCII space
+        // restore NBSP, because it's copied as a normal, ASCII space
         .replace(/ \u06dd/g, '\xa0\u06dd')
         // remove all invalid characters
         .replace(/[^ \xA0\nء-غف-\u0652٠-٩\u06DD]+/g, '')

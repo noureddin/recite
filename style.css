@@ -826,8 +826,8 @@ details[open] > .details-content {
 
 #spinner { animation: spin 1.6s infinite linear; stroke: var(--uitxt) }
 @keyframes spin {
-    0% { stroke-dashoffset:    0; }
-  100% { stroke-dashoffset: -210; }
+    0% { transform: rotate(0turn) }
+  100% { transform: rotate(1turn) }
 }
 #spinner-svg {
     width: 4em;

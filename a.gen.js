@@ -33,8 +33,8 @@ function make_svgelem (tag, attrs={}, opts={}) {
   return el
 }
 
-const spinner = make_svgelem('svg', { id: 'spinner-svg', viewBox: '0 0 100 100' })
-spinner.appendChild(make_svgelem('circle', { id: 'spinner', cx: 50, cy: 50, r: 35, fill: 'none', 'stroke-width': '10', 'stroke-dasharray': '40 30' }))
+const spinner = make_svgelem('svg', { id: 'spinner-svg', viewBox: '-50 -50 100 100' })
+spinner.appendChild(make_svgelem('circle', { id: 'spinner', cx: 0, cy: 0, r: 35, fill: 'none', 'stroke-width': '10', 'stroke-dasharray': '40 30' }))
 
 const L = location
 const S = localStorage
@@ -186,7 +186,7 @@ const set_aayaat = (el, len, v) => {
 
 // validate_aaya_sura_input {{{
 // called oninput and onblur with the element; only called for {sura,aaya}_{bgn,end} inputs.
-// sometimes updates the input fields. and enables #ok if the inputs are valid.
+// may update the input fields.
 function validate_aaya_sura_input (ev) {
   const el = ev.target
   const blur = ev.type === 'blur'
