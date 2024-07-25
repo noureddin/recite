@@ -18,7 +18,7 @@ Element.prototype.Qall = Element.prototype.querySelectorAll
 function make_elem (tag, opts={}) {
   const el = document.createElement(tag)
   for (let opt in opts)
-    if (opt === 'data')
+    if (opt === 'Dataset')
       for (let k in opts[opt])
         el.dataset[k] = opts[opt][k]
     else

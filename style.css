@@ -233,11 +233,11 @@ label, label *, select, input, button {
 }
 
 #selectors > div {
-  display: inline-block;
+  display: block;
   max-width: 20em;
   min-width: 40%;
   white-space: nowrap;
-  margin: 0.1em 0;
+  margin: 0.1em auto;
 }
 #aaya_bgn, #aaya_end { width: 3em; }
 /* #sura_bgn, #sura_end { width: 6.5em; } */
@@ -827,7 +827,7 @@ details[open] > .details-content {
 #spinner { animation: spin 1.6s infinite linear; stroke: var(--uitxt) }
 @keyframes spin {
     0% { transform: rotate(0turn) }
-  100% { transform: rotate(1turn) }
+  100% { transform: rotate(1turn) } 
 }
 #spinner-svg {
     width: 4em;

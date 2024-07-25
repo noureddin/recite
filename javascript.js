@@ -483,7 +483,7 @@ function init_inputs () {
   Qall('.search').forEach(el => el.onclick = ({ target }) => {
     if (target.tagName === 'SPAN') { target = target.parentElement }
     const el_aaya = target.previousElementSibling
-    const el_sura = el_aaya.previousElementSibling.previousElementSibling
+    const el_sura = el_aaya.previousElementSibling.previousElementSibling  // skip label
     show_search(el_sura, el_aaya)
   })
 }
