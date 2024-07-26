@@ -762,8 +762,8 @@ details[open] > .details-content {
   animation: fade-in .5s ease-in-out;
 }
 @keyframes fade-in {
-  0%    { opacity: 0; }
-  100%  { opacity: 1; }
+  0%    { opacity: 0 }
+  100%  { opacity: 1 }
 }
 
 #zzback { display: block; margin: auto; margin-top: 0.5em; }
@@ -791,7 +791,7 @@ details[open] > .details-content {
 /* begin: common styling for popups: tafsir & search */
 .popup {  /* the container */
   display: none;
-  visibility: none;  opacity: 0;  transition: 1s opacity;
+  visibility: hidden;  opacity: 0;  transition: 1s opacity;
   position: fixed;  top: 0;  right: 0;  width: 100%;  height: 100%;
   overflow: scroll;
   z-index: 50;  /* above everything */
@@ -812,14 +812,14 @@ details[open] > .details-content {
 }
 
 .x {  /* popup close-button */
-  opacity: 25%;  transition: 0.75s opacity;
+  opacity: 0.25;  transition: 0.75s opacity;
   position: fixed;  top: 0.5em;  left: 0.5em;
   cursor: pointer;
   width: 2em;
   height: 2em;
 }
 
-.x:hover, .x:focus { opacity: 100% }
+.x:hover, .x:focus { opacity: 1 }
 
 .x line { stroke: rgb(var(--background-rgb)) }
 .x circle { fill: var(--uitxt) }
