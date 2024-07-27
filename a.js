@@ -412,7 +412,7 @@ function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {  // {{{
   const a_bgn_txt = aaya_bgn === 1? 'الأولى' : aaya_bgn === s_bgn_len? toarab(aaya_bgn) + nbsp+'الأخيرة' : toarab(aaya_bgn)
   const a_end_txt = aaya_end === 1? 'الأولى' : aaya_end === s_end_len? toarab(aaya_end) + nbsp+'الأخيرة' : toarab(aaya_end)
   //
-  if (sura_bgn === sura_end) {  // if exactly one aaya
+  if (sura_bgn === sura_end) {  // if exactly one sura
     if (aaya_bgn === aaya_end) {
       return `تسميع الآية${nbsp}${a_bgn_txt} من${nbsp}سورة${nbsp}${s_bgn_txt}`
     }
@@ -432,6 +432,10 @@ function make_title (sura_bgn, aaya_bgn, sura_end, aaya_end) {  // {{{
     }
     // otherwise: more than two (one is handled previously)
     return `تسميع السور من${nbsp}${s_bgn_txt} حتى${nbsp}${s_end_txt}`
+  }
+  // if two ayat crossing suar, ie last aaya of sura and the first aaya of the next sura
+  if (sura_end === sura_bgn + 1 && aaya_bgn == s_bgn_len && aaya_end == 1) {
+    return `تسميع الآية${nbsp}${a_bgn_txt} من سورة${nbsp}${s_bgn_txt} والآية ${a_end_txt} من سورة${nbsp}${s_end_txt}`
   }
   // otherwise
   return `تسميع من${nbsp}سورة${nbsp}${s_bgn_txt} الآية${nbsp}${a_bgn_txt} حتى${nbsp}سورة${nbsp}${s_end_txt} الآية${nbsp}${a_end_txt}`
