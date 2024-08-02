@@ -15,6 +15,10 @@ const tafsir = {}
 
 ////////////////////////////////////////////////////////////////////////////////
 
+let last_tafsir
+// because showing a tafsir remembers the scroll position, which is the wrong behavior,
+// unless re-openning the same tafsir with the same aayah.
+
 function tv (i) {
   const name = el_tafsir.value
   const lang = (() => { const m = name.match(/^([a-z]+)_/); return m ? m[1] : 'ar' })()
@@ -25,6 +29,10 @@ function tv (i) {
   // show tafsir
   el_tvc.style.display = 'block'
   show_el(el_tvc)
+  // reset scroll position unless same tafsir and same aayah
+  const this_tafsir = i + ';' + name
+  if (last_tafsir !== this_tafsir) { __scroll_top(el_tvc) }
+  last_tafsir = this_tafsir
   // compose header
   const s = sura_of(i) - 1
   const aya = ayat.u[i-1].replace(/[#A-Z<>]+/g, '')
