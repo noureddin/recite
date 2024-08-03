@@ -165,10 +165,10 @@ function tajlorligilumi () {
   window.prefers_reduced_motion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   //
   if (opts.teacher == null) {
-    el_teacher_input.checked = !!S.teacher
+    el_teacher.checked = !!S.teacher
   }
   else {
-    el_teacher_input.checked = opts.teacher
+    el_teacher.checked = opts.teacher
     store_bool('teacher', opts.teacher)
   }
   //

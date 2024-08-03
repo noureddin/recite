@@ -63,7 +63,7 @@ const el_guide = Qid("guide")
 const el_darkmode_option = Qid("darkmode_option")
 const el_darkmode_input = Qid("darkmode_input")
 const el_teacher_option = Qid("teacher_option")
-const el_teacher_input = Qid("teacher_input")
+const el_teacher = Qid("teacher")
 const el_qaris = Qid("qaris")
 const el_qariurl = Qid("qariurl")
 const el_cn = Qid("cn")
@@ -240,17 +240,22 @@ const audio = (function () {  // {{{
     // el_title.innerText = list[cur_idx]  // for debugging
     el_player.src = audio_url()
     el_player.addEventListener('loadeddata', () => fetch(cur_idx + 1))
-    el_player.play()
+    el_player.play().catch(() => {})
   }
 
-  function set_idx (i) { cur_idx = i; fetch() }
+  function set_idx (i) {
+    const ii = +i
+    if (isNaN(ii)) { return }
+    cur_idx = ii
+    fetch()
+  }
 
   function show_or_hide_player () {
     invalid_state() ? hide_el(el_player) : show_el(el_player)
   }
 
   function update_qari (qari) {
-    base_url = qari? `https://www.everyayah.com/data/${qari}/` : undefined
+    base_url = qari ? `https://www.everyayah.com/data/${qari}/` : undefined
     fetch()
   }
 
@@ -412,7 +417,7 @@ function change_tajweed () {
 }
 
 function change_teacher () {
-  const teacher = el_teacher_input.checked
+  const teacher = el_teacher.checked
   store_bool('teacher', teacher)
   zz_set('teacher', teacher)
 }

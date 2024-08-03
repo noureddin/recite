@@ -121,7 +121,7 @@ function recite (st, en) {
   const qari = el_qaris.value
   const qariurl = el_qariurl.value
   const quizmode = el_quizmode.value
-  const teacher = el_teacher_input.checked
+  const teacher = el_teacher.checked
 
   const preserve_url = !!L.search || !!L.hash
 
@@ -163,7 +163,7 @@ document.addEventListener('keyup', (ev) => {
 function _recite_imla () {
   const st = opts.st
   const en = opts.en
-  const teacher = el_teacher_input.checked
+  const teacher = el_teacher.checked
 
   el_imla_txt.focus()
   let correct_text = imlaai_ayat(st, en)
@@ -349,7 +349,7 @@ function _recite_uthm () {
   const st = opts.st
   const en = opts.en
   const cn = !!el_cn.value
-  const teacher = el_teacher_input.checked
+  const teacher = el_teacher.checked
 
   el_mvbtns.Qall('button').forEach(e => e.disabled = false)
   el_uthm_txt.style.textAlign = ''
@@ -376,7 +376,7 @@ function _recite_uthm () {
       txt += new_word
       new_word_kind = kind_of_portion( new_word.slice(-2) )
     } while (isnt_the_kind(new_word_kind))
-    if (new_word_kind === 'a') { audio.next(); audio.play() }
+    if (new_word_kind === 'a') { audio.next(); audio.play() }  // if shown the last word of an aaya
     el_uthm_txt.innerHTML += txt
     if (words.length === 0) { show_done() }
     body_scroll_to_bottom()

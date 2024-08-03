@@ -184,6 +184,7 @@ label, label *, select, input, button {
   margin-bottom: 1em;  /* same as margin above */
 }
 #endmsg {
+  font-family: Cortoba, KacstOne, serif;
   font-size: min(5vw, 2rem);
   text-align: center;
   color: var(--uitxt);

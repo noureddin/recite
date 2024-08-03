@@ -10,7 +10,7 @@
 <<!!cat res/confetti.min.js>>
 
 <<!!#cat test.js>>
-// remove the '#' in the previous line to perform the tests
+// remove the '#' in the previous line to perform some tests
 
 <<!!cat tafsir.js>>
 <<!!cat search.js>>
