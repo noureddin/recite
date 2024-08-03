@@ -389,6 +389,12 @@ function _recite_uthm () {
   const bck = function (kind) {
     let uthm = el_uthm_txt.innerHTML
     if (uthm.length === 0 || !el_endmsg.hidden) { return }
+    const isnt_the_kind =
+      kind === 'a' ? (k) => k !== 'a' :
+      kind === 'j' ? (k) => k !== 'a' && k !== 'j' :
+                     (k) => false
+    const get_current_aaya_index = () =>
+      el_uthm_txt.innerHTML.split(/\u06dd/).length - 1
     while (uthm.length > 0) {
       const last_word = uthm.match(/(?:^|\t|\n)([^\n\t]+(?:\t|\n))$/)[1]
       words.unshift(last_word)
@@ -398,7 +404,9 @@ function _recite_uthm () {
         if (teacher) { audio.play() }
       }
       const new_kind = kind_of_portion(uthm.slice(-2))
-      if (kind === new_kind || (kind === 'j' && new_kind === 'a')) { break }
+      audio.set_index(get_current_aaya_index() + el_teacher.checked)
+      if (new_kind === 'a') { audio.play() }  // if shown the first word of an aaya
+      if (!isnt_the_kind(new_kind)) { break }
     }
     el_uthm_txt.innerHTML = uthm
   }
