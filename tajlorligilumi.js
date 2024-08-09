@@ -57,6 +57,7 @@ function _tajlorligilumilo (params) {
   let tafsir           // select tafsir
   let emulate          // keyboard layout emulation; see https://noureddin.github.io/kbt (same ids, w/o '-ar')
   let fullpage         // make imla_txt fill the entire page while quizzing, like Recite Desktop (PyQt5, in the `master` branch)
+  let noborder         // make imla_txt without border or outline
   let cn               // continuation; ie, append a "phrase" from the next aaya if in the same sura
   let zz               // enable embedded integration: zz (cannot be disabled if enabled)
   params
@@ -90,6 +91,7 @@ function _tajlorligilumilo (params) {
       else if (is_of('qariurl'))                     {         qariurl = e[1]                             }
       else if (is_of('tafsir'))                      {          tafsir = e[1]                             }
       else if (is_of('fp', 'fullpage'))              {        fullpage = true                             }
+      else if (is_of('noborder'))                    {        noborder = true                             }
       else if (is_of('cn'))                          {              cn = true                             }
       else if (is_of('zz'))                          {              zz = true                             }
     })
@@ -110,6 +112,7 @@ function _tajlorligilumilo (params) {
     qari,
     qariurl,
     fullpage,
+    noborder,
     cn,
     zz,
   }
@@ -203,6 +206,7 @@ function tajlorligilumi () {
   window.allow_cheating = !opts.disablecheat  // cheating is allowed by default
   if (opts.emulate && mappings[opts.emulate]) { window.emulate = opts.emulate }
   if (opts.fullpage) { el_body.classList.add('fullpage') }
+  if (opts.noborder) { el_imla_txt.classList.add('noborder') }
   if (opts.cn) { el_cn.value = opts.cn ? '1' : '' }
   if (opts.zz) { el_zz.value = opts.zz ? '1' : '' }
 }

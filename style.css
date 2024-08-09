@@ -316,6 +316,8 @@ label, label *, select, input, button {
 
 #imla_txt { background: var(--background); color: var(--txt); transition: background 1s }
 
+#imla_txt.noborder { border: none; outline: none }
+
                       .done #imla_txt  { background: lightgreen }
 #dark:checked ~ #body .done #imla_txt  { background: #004400 }
 
