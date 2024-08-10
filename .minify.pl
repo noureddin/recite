@@ -15,6 +15,7 @@ sub minify_html { my $t = shift;
     $t =~ s|\s+| |g;
     ## remove horizontal spaces around punctuation
     $t =~ s| <|<|g;   # note: this changes the behavior of the html; I'm relying on that
+    $t =~ s|&newline;|\n|g;
     $t =~ s/(<(?:script|style)>) /$1/g;
     $t =~ s/ (<\/(?:script|style)>)/$1/g;
     ## old:

@@ -3,6 +3,13 @@ let opts = {}
 const fullpage = el_body.classList.contains('fullpage')
 // ^ never changes because it can be set only from url params
 
+function show_first () {
+  if (!valid_inputs(sura_bgn_val(), aaya_bgn_val(), sura_end_val(), aaya_end_val())) { return }
+  const st = sura_offset[sura_bgn_val()] + aaya_bgn_val()
+  const en = sura_offset[sura_end_val()] + aaya_end_val()
+  preview(st, en)
+}
+
 function start_reciting () {
   if (!valid_inputs(sura_bgn_val(), aaya_bgn_val(), sura_end_val(), aaya_end_val())) { return }
   const st = sura_offset[sura_bgn_val()] + aaya_bgn_val()
@@ -70,7 +77,7 @@ function show_done () {
   if (el_endmsg.hidden) {
     el_endmsg.hidden = false
     confetti.start(1200, 50, 150)
-    if (el_zzback.hidden) {  /* not zz-mode */
+    if (el_zzback.style.display === 'none') {  /* not zz-mode */
       show_selectors()
       setTimeout(() => el_ok.focus(), 500)
     }
@@ -112,12 +119,36 @@ function init_audio (stpair, enpair, qari, qariurl) {
   audio.fill(make_audio_list(stpair[0]-1, stpair[1], enpair[0]-1, enpair[1]))
 }
 
+function preview (st, en) {
+  opts.st = st ? st : opts.st
+  opts.en = en ? en : opts.en
+  const preserve_url = !!L.search || !!L.hash
+
+  hide_selectors('preview')
+
+  const stpair = idx2aya(st-1)
+  const enpair = idx2aya(en-1)
+  const title = make_title(...stpair, ...enpair).replace(/تسميع/g, 'عرض')
+  el_title.innerHTML = title
+  sync_ui(stpair, enpair, title, preserve_url)
+
+  load('u', () => {
+    const st = opts.st
+    const en = opts.en
+    const cn = !!el_cn.value
+    el_uthm_txt.style.textAlign = ''
+    el_uthm_txt.innerHTML = ''
+    el_uthm_txt.classList.remove('done')
+    el_tafsirhint.style.marginTop = '2em'  // shows after end of recitation
+    show_or_hide_tajweedlegend()
+    el_uthm_txt.innerHTML = make_words_list(st, en, cn).join('')
+  })
+}
+
 function recite (st, en) {
   opts.st = st ? st : opts.st
   opts.en = en ? en : opts.en
 
-  const cn = !!el_cn.value
-  const zz = !!el_zz.value
   const qari = el_qaris.value
   const qariurl = el_qariurl.value
   const quizmode = el_quizmode.value
@@ -127,11 +158,6 @@ function recite (st, en) {
 
   hide_selectors(quizmode)
 
-  el_zzback.style.display = zz ? 'block' : 'none'
-  el_zzback.hidden = !zz
-  el_zzignore.hidden = !zz
-  el_new.hidden = !!zz  // only hide if ignore is shown
-
   const stpair = idx2aya(st-1)
   const enpair = idx2aya(en-1)
   const title = make_title(...stpair, ...enpair)
@@ -139,7 +165,7 @@ function recite (st, en) {
   sync_ui(stpair, enpair, title, preserve_url)
   init_audio(stpair, enpair, qari, qariurl, preserve_url)
 
-  if (zz) { parent.zz_show() }
+  if (el_zz.value) { parent.zz_show() }
 
   el_mvbtns.Qall('button').forEach(e => e.disabled = true)
   el_uthm_txt.style.textAlign = 'center'
@@ -451,6 +477,8 @@ function _recite_uthm () {
 }
 
 el_ok.onclick  = start_reciting
+el_show.onclick  = show_first
+el_reshow.onclick  = show_first
 
 el_repeat.onmouseup = restart_reciting
 el_repeat.onclick   = restart_reciting
@@ -496,33 +524,59 @@ function init_inputs () {
   })
 }
 
-const hide_selectors = function (quizmode) {
+const hide_selectors = function (quizmode) {  // quizmode must be 'preview', 'imla', 'uthm'
   el_selectors.hidden = true
   el_header.hidden = false
   el_endmsg.hidden = true
-  el_ok.hidden = true
   el_title.style.display = 'inline-block'
+  el_zzback.style.display = el_zz.value ? 'block' : 'none'
+  el_zzignore.style.display = el_zz.value ? '' : 'none'
+  el_new.style.display = el_zz.value ? 'none' : ''  // only hide if ignore is shown
   const d = document.documentElement
-  if (quizmode === 'imla') {
-    el_imla_txt_container.style.height = fullpage ? '100vh' : '95vh'
-    el_imla_txt.value = ""
-    el_imla_txt.disabled = false
-    el_imla_txt_container.classList = ''
-    el_imla_txt_container.hidden = false
-    el_uthm_txt.hidden = true
-    el_mvbtns.hidden = true
-    el_end_of_header.style.color = 'transparent'  // to keep some space
-    d.style.setProperty('--sticky', '')
-    el_imla_txt.focus()
-  }
-  else {  /* uthmani */
+  if (quizmode === 'preview') {  // 2 buttons only
+    el_repeat.innerText = 'ابدأ الاختبار'
+    el_repeat.title = 'ابدأ في تسميع الآيات.'
+    el_reshow.style.display = 'none'
+    el_hb.classList.remove('b3')
+    //
     el_uthm_txt.hidden = false
     el_uthm_txt.innerHTML = ''
-    el_mvbtns.hidden = false
+    el_mvbtns.hidden = true
     el_imla_txt_container.hidden = true
     el_end_of_header.style.color = ''
     d.style.setProperty('--sticky', 'sticky')
-    // el_nextword.focus()
+  }
+  else {  // 3 buttons
+    el_repeat.innerText = 'إعادة'
+    el_repeat.title = 'اضغط لإعادة هذا الاختبار من البداية.'
+    if (el_show.style.display !== 'none') {  // if preview is not disabled
+      el_reshow.style.display = ''
+      el_hb.classList.add('b3')
+    }
+    else {  // preview is disabled
+      el_reshow.style.display = 'none'
+    }
+    if (quizmode === 'imla') {
+      el_imla_txt_container.style.height = fullpage ? '100vh' : '95vh'
+      el_imla_txt.value = ""
+      el_imla_txt.disabled = false
+      el_imla_txt_container.classList = ''
+      el_imla_txt_container.hidden = false
+      el_uthm_txt.hidden = true
+      el_mvbtns.hidden = true
+      el_end_of_header.style.color = 'transparent'  // to keep some space
+      d.style.setProperty('--sticky', '')
+      el_imla_txt.focus()
+    }
+    else {  /* uthmani */
+      el_uthm_txt.hidden = false
+      el_uthm_txt.innerHTML = ''
+      el_mvbtns.hidden = false
+      el_imla_txt_container.hidden = true
+      el_end_of_header.style.color = ''
+      d.style.setProperty('--sticky', 'sticky')
+      // el_nextword.focus()
+    }
   }
   show_or_hide_tafsirhint()
   body_scroll_to_bottom()
@@ -531,7 +585,6 @@ const hide_selectors = function (quizmode) {
 const show_selectors = function () {
   el_selectors.hidden = false
   el_header.hidden = true
-  el_ok.hidden = false
   el_mvbtns.hidden = true
   el_title.style.display = 'none'
   el_tl.style.display = 'none'  // tajweed legend

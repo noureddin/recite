@@ -91,10 +91,13 @@ const el_aaya_bgn = Qid("aaya_bgn")
 const el_sura_end = Qid("sura_end")
 const el_aaya_end = Qid("aaya_end")
 const el_ok = Qid("ok")
+const el_show = Qid("show")
 const el_header = Qid("header")
-const el_zzignore = Qid("zzignore")
-const el_new = Qid("new")
+const el_hb = Qid("hb")
+const el_reshow = Qid("reshow")
 const el_repeat = Qid("repeat")
+const el_new = Qid("new")
+const el_zzignore = Qid("zzignore")
 const el_end_of_header = Qid("end_of_header")
 const el_tafsirhint = Qid("tafsirhint")
 const el_uthm_txt = Qid("uthm_txt")
@@ -373,6 +376,7 @@ const sync_uthm_class_with = (cls, pred) => el_uthm_txt.classList.toggle(cls, pr
 function show_or_hide_tafsirhint () {
   // shown only if EITHER of these conditions is met:
   // - just finished quizzing in the Uthmani mode :: endmsg && uthm_txt
+  // - previewing :: uthm_txt && repeat button is called 'ابدأ الاختبار'
   // - not started quizzing yet (or "New" is clicked) AND quizmode is Uthmani
   //   :: !endmsg && selectors && el_quizmode.value === 'uthm'
   // where endmsg = !el_endmsg.hidden and so on.
@@ -380,9 +384,11 @@ function show_or_hide_tafsirhint () {
   const EH = el_endmsg.hidden
   const UH = el_uthm_txt.hidden
   const SH = el_selectors.hidden
-  const QU = el_quizmode.value === 'uthm'
-  // !( (!EH && !UH) || (EH && !SH && QU) ) === (EH || UH) && (!EH || SH || !QU)
-  el_tafsirhint.hidden = (EH || UH) && (!EH || SH || !QU)
+  const QI = el_quizmode.value !== 'uthm'
+  const RE = !el_repeat.innerText.startsWith('ابدأ')
+  el_tafsirhint.hidden = (UH || RE && EH) && (!EH || SH || QI)
+  // (EH || UH) && (UH || RE)  ===  (UH || (EH && RE))
+
 }
 
 function show_or_hide_tajweedlegend () {

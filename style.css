@@ -196,9 +196,9 @@ label, label *, select, input, button {
   padding: 0;
   position: var(--sticky);  /* static (default) in imlaai; sticky in uthmani */
   background-color: var(--background-translucent);
-  top:        -10rem;
-  margin-top: -10rem;
-  padding-top: 11rem;
+  top:        -12rem;
+  margin-top: -12rem;
+  padding-top: 12rem;
   z-index: 2;
 }
 
@@ -211,15 +211,15 @@ label, label *, select, input, button {
 }
 
 /* suar/ayat selection */
-#selectors > div label:first-child { /* من سورة and إلى سورة */
+.ss label:first-child { /* من سورة and إلى سورة */
   display: inline-block;
   width: 4em;
 }
 
 /* search buttons in #selectors */
 .srcttl { font-family: inherit; color: inherit }
-#selectors > div > button { width: initial; padding: 0 1em }
-@media (max-width: 580px) { #selectors > div > button { padding: 0 0.25em } }
+.search { width: initial; padding: 0 1em }
+@media (max-width: 580px) { .search { padding: 0 0.25em } }
 @media (max-width: 440px) {
 .srcttl {  /* .sr-only -- hide visually but keep it for screenreaders */
   position: absolute;
@@ -233,7 +233,7 @@ label, label *, select, input, button {
 }
 }
 
-#selectors > div {
+.ss {
   display: block;
   max-width: 20em;
   min-width: 40%;
@@ -244,9 +244,9 @@ label, label *, select, input, button {
 /* #sura_bgn, #sura_end { width: 6.5em; } */
 #sura_bgn, #sura_end { width: 35%; }
 
-@media (max-width: 312px) {
+@media (max-width: 359px) {
   .sura { display: none }
-  #selectors > div label:first-child { width: 1.6em }  /* من سورة and إلى سورة */
+  .ss label:first-child { width: 1.6em }  /* من سورة and إلى سورة */
 }
 
 @media (max-width: 279px) {
@@ -335,7 +335,7 @@ label, label *, select, input, button {
   font-size: 1.5rem;
   text-align: right;
   padding: 0.5em;
-  padding-bottom: 2em;
+  padding-bottom: min(20vh, 4em);
   box-sizing: border-box;
   font-family: AmiriQuranWeb;
   width: 100%;
@@ -350,9 +350,8 @@ label, label *, select, input, button {
   margin-bottom: 1rem;
 }
 
-#imla_txt_container #imla_txt.done {
-  padding-bottom: 0;
-  margin-bottom: 0;
+#imla_txt_container.done #imla_txt {
+  padding-bottom: 0.5em;
 }
 
 /* #body.fullpage and not #imla_txt_container.fullpage because */
@@ -543,10 +542,25 @@ summary::marker { color: #c00; }
   right: calc(100vw - 0.05 * var(--btn-base-width));
 }
 
-#ok {
-  display: block;
-  margin: 1rem auto; /* center */
+.bh button {
+  display: inline-block;
+  margin: 0.5em;
+  width: 10em;
+  max-width: 35vw;
+  padding: 0.5em;
 }
+
+@media (max-width: 359px) {  /* make it two rows */
+.bh button { display: block; margin: 1em auto; max-width: 70vw }
+.bh { margin-top: 1em }
+}
+
+select, .bh { margin: 0.5em 0 }
+hr { margin-top: 1em }
+
+.b3 { display: flex; justify-content: center }
+.b3 button { width: 8em; margin: 0 0.5em }
+@media (max-width: 519px) { .b3 button { white-space: pre } }
 
 #header button {
   margin: 0.25rem;
@@ -951,3 +965,4 @@ details[open] > .details-content {
 }
 
 /* end: search */
+

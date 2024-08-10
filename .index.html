@@ -128,28 +128,33 @@
 
 <div id="selectors">
 
-  <div>
+  <div class=ss>
     <label for="sura_bgn">من<span class="sura">&nbsp;سورة</span>:&thinsp;</label>
     <select id="sura_bgn"></select>&thinsp;<label for="aaya_bgn"><span class="aaya">الآية:&thinsp;</span></label><select id="aaya_bgn"></select>&thinsp;<button class="search">🔍<span class="srcttl"> ابحث</span></button>
   </div>
 
-  <div>
+  <div class=ss>
     <label for="sura_end">إلى<span class="sura">&nbsp;سورة</span>:&thinsp;</label>
     <select id="sura_end"></select>&thinsp;<label for="aaya_end"><span class="aaya">الآية:&thinsp;</span></label><select id="aaya_end"></select>&thinsp;<button class="search">🔍<span class="srcttl"> ابحث</span></button>
   </div>
 
-<button title="حدد ما تريد مراجعته أو تسميعه، ثم اضغط على هذا الزر." id="ok">ابدأ</button>
+<div class=bh>
+  <button title="اختر الآيات التي تريد مراجعتها، ثم اضغط على هذا الزر لبدء الاختبار بغير رؤيتها أولا." id="ok">ابدأ الاختبار</button>
+  <button title="اختر الآيات التي تريد مراجعتها، ثم اضغط على هذا الزر لرؤيتها قبل بدء الاختبار." id="show">اعرض الآيات</button>
+</div>
+
 <hr>
 
 </div>
 
 <div hidden id="header">
-<div>
-<button id="zzignore" hidden>تجاهل</button>
-<button title="اضغط لبدء مراجعة جديدة" id="new">جديد</button>
-<button title="اضغط لإعادة هذا التسميع من البداية" id="repeat">إعادة</button>
-</div>
-<hr id="end_of_header">
+  <div id="hb" class="bh">
+  <button title="اضغط لقراءة الآيات بالكامل." id="reshow">اعرض&newline;الآيات</button>
+  <button title="اضغط لإعادة هذا الاختبار من البداية." id="repeat">إعادة</button>
+  <button title="اضغط لبدء اختبار جديد." id="new">تغيير&newline;الاختبار</button>
+  <button title="اضغط لعدم اعتبار هذا التسميع في برنامج التحفيظ." id="zzignore">تجاهل</button>
+  </div>
+  <hr id="end_of_header">
 </div>
 
 <div id="tafsirhint">💡&nbsp;اضغط&nbsp;على علامة&nbsp;الآية&nbsp;<span class="A aya">&#x6dd;</span> لإظهار&nbsp;تفسيرها</div>

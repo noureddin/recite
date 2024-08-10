@@ -31,6 +31,9 @@ index.html: .index.html .scripts.gen.min.js style.min.css .minify.pl
 %.gen.js: %.js
 	$P "$<" > "$@"
 
+a.gen.js: a.js .index.html
+	$P "$<" > a.gen.js
+
 .scripts.gen.min.js: .scripts.js a.gen.js mappings.js tafsir.js search.js tajlorligilumi.js data.gen.js versligilumi.js res/confetti.min.js javascript.js z.js
 	$P "$<" | perl -CDAS -pe 's/const +say += +console\.log//' | $J | perl -pe 's/;?\s*\Z//' > "$@"
 	# $P "$<" > "$@"

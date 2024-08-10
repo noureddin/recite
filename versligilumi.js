@@ -206,6 +206,7 @@ function _versligilumilo (params) {
   let a = 0; let b = 0
   // - b: before, a number of ayat to add before whatever you select. 0-inf.
   // - a: after,  a number of ayat to add before whatever you select. 0-inf.
+  let preview  // just show the aayaat; don't start the quiz
   params
     .slice(1)  // remove the first character (`?` or `#`)
     .split('&')
@@ -213,7 +214,8 @@ function _versligilumilo (params) {
     //.reduce((obj, cur, i) => { i == 0 ? {} : (obj[cur[0]] = cur[1], obj), {})
     .forEach((e, i) => {
       const is_of = (...params) => params.includes(e[0])
-           if (is_of('a')) { a = isNaN(+e[1]) ? a : +e[1] }
+           if (is_of('p', 'preview')) { preview = true }
+      else if (is_of('a')) { a = isNaN(+e[1]) ? a : +e[1] }
       else if (is_of('b')) { b = isNaN(+e[1]) ? b : +e[1] }
       else if (is_of('p')) { [st, en] = pages_to_ayat(...range_to_pair(e[1])) || [st, en] }
       else if (is_of('s')) { [st, en] = suras_to_ayat(...range_to_pair(e[1])) || [st, en] }
@@ -227,13 +229,13 @@ function _versligilumilo (params) {
   st -= b; en += a
   if (st <= 0)    { st = 1    }
   if (en >  6236) { en = 6236 }
-  return [st, en]
+  return [st, en, preview]
 }
 
 function versligilumi () {
-  const [st, en] = _versligilumilo(L.search + L.hash.replace(/^#/, '&'))
+  const [st, en, view] = _versligilumilo(L.search + L.hash.replace(/^#/, '&'))
   //
   // if no ayat are selected
   if (st == null || en == null) { return }
-  recite(st, en)
+  view ? preview(st, en) : recite(st, en)
 }

@@ -51,6 +51,7 @@ function _tajlorligilumilo (params) {
   let teacher          // teacher mode (audio recitation before ayah): t/teach/teacher (true); n/noteach/noteacher (false; default)
   let disableteacher   // remove teacher mode selector from the UI, teacher mode can still be set from the URL: dt/disableteacher
   let disablequizmode  // remove quiz mode selector from the UI, quiz mode can still be set from the URL: dq/disablequizmode
+  let disablepreview   // disable the ability to preview ayat (doesn't prevent the use of the url param p/preview)
   let disablecheat     // disable the ability to press '!' ten times to show one letter in imlaai mode
   let highcontrast     // high-contrast, dark colorscheme
   let lowcontrast      // use a lower contrast imlaai bg color when wrong (not incompatible with highcontrast)
@@ -83,6 +84,7 @@ function _tajlorligilumilo (params) {
       else if (is_of('n', 'noteach', 'noteacher'))   {         teacher = false                            }
       else if (is_of('dt', 'disableteacher'))        {  disableteacher = true                             }
       else if (is_of('dq', 'disablequizmode'))       { disablequizmode = true                             }
+      else if (is_of('dp', 'disablepreview'))        {  disablepreview = true                             }
       else if (is_of('dc', 'disablecheat'))          {    disablecheat = true                             }
       else if (is_of('hc', 'highcontrast'))          {    highcontrast = true                             }
       else if (is_of('lc', 'lowcontrast'))           {     lowcontrast = true                             }
@@ -105,6 +107,7 @@ function _tajlorligilumilo (params) {
     teacher,
     disableteacher,
     disablequizmode,
+    disablepreview,
     disablecheat,
     highcontrast,
     lowcontrast,
@@ -200,6 +203,10 @@ function tajlorligilumi () {
   if (opts.disablequizmode) {
     hide(el_quizmode_option)
     Qall('.mode_options_title').forEach(hide)
+  }
+  //
+  if (opts.disablepreview) {
+    hide(el_show)
   }
   //
   // options that don't have a visible ui input (in addition to qariurl & high/low contrast)
