@@ -30,24 +30,23 @@ document.body.addEventListener('click', (ev) => {
 })
 
 el_tl.onclick = (ev) => {
-  if (ev.target === el_tl) { return }  // if clicked on the transparent part of a closed legend
   if (el_tl.getAttribute('aria-expanded') === 'true') {
     el_tl.setAttribute('aria-expanded', false)
     el_tl.Qall('circle').forEach(c =>
-      c.setAttribute('cx', c.getAttribute('cx') == 950 ? 105 : 35))
+      c.setAttribute('cx', c.getAttribute('cx') == 875 ? 125 : 45))
     el_tl.Qall('text').forEach(t => hide_el(t))
     hide_el(el_tl.Q('line'))
-    el_tl.Q('rect').setAttribute('width', 140)
-    setTimeout(() => el_tl.setAttribute('viewBox', '0 0 140 400'), 500)
+    el_tl.Q('rect').setAttribute('width', 155)
+    setTimeout(() => el_tl.setAttribute('viewBox', '0 0 155 400'), 500)
   }
   else {
-    el_tl.setAttribute('viewBox', '0 0 1000 400')
+    el_tl.setAttribute('viewBox', '0 0 925 400')
     el_tl.setAttribute('aria-expanded', true)
     el_tl.Qall('circle').forEach(c =>
-      c.setAttribute('cx', c.getAttribute('cx') < 50 ? 450 : 950))
+      c.setAttribute('cx', c.getAttribute('cx') < 50 ? 400 : 875))
     el_tl.Qall('text').forEach(t => show_el(t))
     show_el(el_tl.Q('line'))
-    el_tl.Q('rect').setAttribute('width', 1000)
+    el_tl.Q('rect').setAttribute('width', 925)
   }
 }
 

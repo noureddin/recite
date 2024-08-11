@@ -419,16 +419,18 @@ label.disabled {
 #dark:checked ~ #body select { filter: invert(1) hue-rotate(180deg) }
 
 /* begin: svg#tl -- tajweed legend */
-svg #L { fill: var(--L) }
-svg #W { fill: var(--W) }
-svg #J { fill: var(--J) }
-svg #T { fill: var(--T) }
-svg #N { fill: var(--N) }
-svg #X { fill: var(--X) }
-svg #R { fill: var(--R) }
-svg #Q { fill: var(--Q) }
+svg #L { stroke: var(--L) }
+svg #W { stroke: var(--W) }
+svg #J { stroke: var(--J) }
+svg #T { stroke: var(--T) }
+svg #N { stroke: var(--N) }
+svg #X { stroke: var(--X) }
+svg #R { stroke: var(--R) }
+svg #Q { stroke: var(--Q) }
 
-#tl * {
+#tl[aria-expanded="false"] { opacity: 0.25 }
+
+#tl, #tl * {
   transition: 0.5s;
   cursor: pointer;
 }
@@ -438,6 +440,7 @@ text {
   font-size: 38px;  /* available width is 400px */
 }
 
+#tl circle { stroke-width: 10px }
 #tl line { stroke: var(--txt); stroke-width: 2px }
 
 #tl {
