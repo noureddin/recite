@@ -161,7 +161,7 @@ function recite (st, en) {
   const stpair = idx2aya(st-1)
   const enpair = idx2aya(en-1)
 
-  L.hash = stpair.join('/') + '-' + enpair.join('/') + '&q=' + qz
+  L.hash = stpair.join('/') + '-' + enpair.join('/')
 
   const title = make_title(...stpair, ...enpair)
   el_title.innerHTML = title
