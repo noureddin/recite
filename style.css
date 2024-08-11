@@ -43,7 +43,7 @@ html, body {
   padding: 0;
   margin: 0;
   overflow: hidden;
-  --all-width: clamp(10rem, 80vw, 35rem);
+  --all-width: min(80vw, 35rem);
 }
 
 body {
@@ -374,9 +374,14 @@ button {
   touch-action: manipulation; /* disable double-tap zooming; https://stackoverflow.com/a/53236027 */
 }
 
-#mvbtns button {
+#mvbtns, #mvbtns button {
   --width: calc(var(--all-width) / 7.5);
+  --mv-all-width: calc(var(--width)*7 + 1.25em);
+}
+
+#mvbtns button {
   margin: 0 0.25em;
+  height: 2em;
   fill: var(--faint-btn);
 }
 
@@ -387,6 +392,14 @@ button {
 }
 
 #mvbtns svg { width: 1em; height: 1em; }
+
+@media (max-width: 319px) { /* TODO: sidebtns */
+  #prevaaya, #nextaaya { display: none }
+  #mvbtns, #mvbtns button {
+    --width: calc(var(--all-width) / 5.5);
+    --mv-all-width: calc(var(--width)*5 + 0.75em);
+  }
+}
 
 button, select, input[type=checkbox] + label {
   cursor: pointer;
@@ -514,18 +527,15 @@ summary::marker { color: #c00; }
   bottom: 1em;
   height: 2em;
   /* right: calc(50vw - 0.5 * var(--mvbtns-width)); */
-  right: calc(50vw - var(--all-width) / 2);
+  right: calc(48vw - var(--mv-all-width) / 2);
   margin: 0;
   transition: opacity 0.1s ease-in-out;
   z-index: 1;
 }
 
-@media (max-width: 432px) { #mvbtns:not(.sidebtns) { right: calc(50vw - var(--all-width) / 1.95) } }
-@media (max-width: 324px) { #mvbtns:not(.sidebtns) { right: calc(50vw - var(--all-width) / 1.9) } }
-
 #mvbtns.sidebtns {
   --btn-base-width: min(35vh, 10rem);
-  --all-width: clamp(10rem, 80vh, 35rem);
+  --all-width: min(80vh, 35rem);  /* same as the initial definition, but with vh instead of vw */
   position: fixed;
   width: 100vh;
   top: 0;
@@ -534,12 +544,14 @@ summary::marker { color: #c00; }
   z-index: 11;
 }
 
-#mvbtns.sidebtns.rightside {
-  right: calc(0.25 * var(--btn-base-width));
+#mvbtns.sidebtns.rightside { right: 3em }
+@media (max-width: 519px) {
+#mvbtns.sidebtns.rightside { right: 2em /* button height */ }
 }
 
-#mvbtns.sidebtns.leftside {
-  right: calc(100vw - 0.05 * var(--btn-base-width));
+#mvbtns.sidebtns.leftside { right: calc(100vw - 1em) }
+@media (max-width: 519px) {
+#mvbtns.sidebtns.leftside { right: 100vw }
 }
 
 .bh button {
@@ -550,17 +562,14 @@ summary::marker { color: #c00; }
   padding: 0.5em;
 }
 
-@media (max-width: 359px) {  /* make it two rows */
-.bh button { display: block; margin: 1em auto; max-width: 70vw }
-.bh { margin-top: 1em }
-}
-
 select, .bh { margin: 0.5em 0 }
 hr { margin-top: 1em }
 
-.b3 { display: flex; justify-content: center }
-.b3 button { width: 8em; margin: 0 0.5em }
+.bh { display: flex; justify-content: center }
+.bh button { width: 0; flex-basis: 8em; margin: 0 0.5em }
 @media (max-width: 519px) { .b3 button { white-space: pre } }
+@media (max-width: 359px) { .bh button { white-space: pre } } /* 2 buttons */
+@media (max-width: 319px) { .b3 button { font-size: 80% } }
 
 #header button {
   margin: 0.25rem;
@@ -799,10 +808,6 @@ details[open] > .details-content {
   animation: none !important;
   transition: none !important;
 }
-}
-
-@media (max-width: 301px) {
-  #prevaaya, #nextaaya { display: none }
 }
 
 /* begin: common styling for popups: tafsir & search */

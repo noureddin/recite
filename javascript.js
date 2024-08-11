@@ -534,7 +534,7 @@ const hide_selectors = function (quizmode) {  // quizmode must be 'preview', 'im
   el_new.style.display = el_zz.value ? 'none' : ''  // only hide if ignore is shown
   const d = document.documentElement
   if (quizmode === 'preview') {  // 2 buttons only
-    el_repeat.innerText = 'ابدأ الاختبار'
+    el_repeat.innerHTML = 'ابدأ\nالاختبار'
     el_repeat.title = 'ابدأ في تسميع الآيات.'
     el_reshow.style.display = 'none'
     el_hb.classList.remove('b3')
