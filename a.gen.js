@@ -72,7 +72,7 @@ const el_quizmode_option = Qid("quizmode_option")
 const el_quizmode = Qid("quizmode")
 const el_uthm_options = Qid("uthm_options")
 const el_uthm_options_title = Qid("uthm_options_title")
-const el_tafsir = Qid("tafsir")
+const el_tafsir_option = Qid("tafsir_option")
 const el_mvbtns_input = Qid("mvbtns_input")
 const el_textclr_input = Qid("textclr_input")
 const el_ayatnum_input = Qid("ayatnum_input")
@@ -123,6 +123,8 @@ const el_J = Qid("J")
 const el_T = Qid("T")
 const el_tvc = Qid("tvc")
 const el_tv = Qid("tv")
+const el_tvh = Qid("tvh")
+const el_tvt = Qid("tvt")
 const el_sxc = Qid("sxc")
 const el_sx = Qid("sx")
 const el_sxi = Qid("sxi")
@@ -463,7 +465,7 @@ function change_mvbtns () {
 }
 
 function change_tafsir () {
-  const t = el_tafsir.value
+  const t = el_tafsir_option.value
   if (t === 'ar_muyassar') { S.removeItem('tafsir') } else { S.setItem('tafsir', t) }
   zz_set('tafsir', t)
 }

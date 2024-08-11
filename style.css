@@ -312,7 +312,7 @@ label, label *, select, input, button {
 #mvbtns_input  { width: calc(100% -  9.40em) }
 #textclr_input { width: calc(100% -  6.45em) }
 #feedbackrate  { width: calc(100% -  9.25em) }
-#tafsir        { width: calc(100% -  7.90em) }
+.tafsir        { width: calc(100% -  7.90em) }
 
 #imla_txt { background: var(--background); color: var(--txt); transition: background 1s }
 
@@ -880,12 +880,10 @@ details[open] > .details-content {
 
 /* to accomodate the various languages (our KacstOne is subsetted); */
 /* scripts other than Latin and Perso-Arabic use an available font on the system */
-#tafsir /* selector */, #tafsir > option,
+.tafsir /* selector */, .tafsir > option,
 #tv [lang] /* title & content */ {
   font-family: "Noto Sans Arabic", "Noto Sans";
 }
-
-#tafsirnote { font-size: 0.70em }
 
 #tvtxt[dir="ltr"], #tvtxt[dir="ltr"] * {
   text-align: left;

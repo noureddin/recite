@@ -56,7 +56,7 @@
     <span id="uthm_options_title" class="mode_options_title">خيارات وضع التسميع العثماني (بلا كتابة):</span>
 
     <div class="option">
-      <label for="tafsir">تفسير أو ترجمة:&ensp;</label><select id="tafsir" onchange="change_tafsir()">
+      <label for="tafsir_option">تفسير أو ترجمة:&ensp;</label><select class="tafsir" id="tafsir_option" onchange="change_tafsir()">
         <<!! cat res/tafasir | while read v; do read t; printf '<option value="%s">%s</option>' "$v" "$t"; done >>
       </select>
     </div>
@@ -195,7 +195,10 @@
 </svg>
 
 <div id="tvc" class="popup"><!-- tafsir-view container -->
-<div id="tv" class="pc"></div><!-- tafsir-view -->
+<div id="tv" class="pc"><!-- tafsir-view -->
+<div id="tvh"></div><!-- header -->
+<div id="tvt"></div><!-- text -->
+</div>
 <svg class="x" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><!-- tafsir-view close-button -->
 <circle cx="5" cy="5" r="5" />
 <line x1="2" y1="2" x2="8" y2="8" stroke-width="1.25" />

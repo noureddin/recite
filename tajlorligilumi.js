@@ -178,7 +178,7 @@ function tajlorligilumi () {
     store_bool('teacher', opts.teacher)
   }
   //
-  update_options(el_tafsir, opts.tafsir, 'tafsir', 'ar_muyassar')
+  update_options(el_tafsir_option, opts.tafsir, 'tafsir', 'ar_muyassar')
   update_options(el_qaris, opts.qari, 'qari', '')
   update_options(el_mvbtns_input, opts.mv, 'mvbtns', 'b')
   update_options(el_feedbackrate, opts.fbrate, 'fbrate', 'l')

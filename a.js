@@ -386,7 +386,7 @@ function change_mvbtns () {
 }
 
 function change_tafsir () {
-  const t = el_tafsir.value
+  const t = el_tafsir_option.value
   if (t === 'ar_muyassar') { S.removeItem('tafsir') } else { S.setItem('tafsir', t) }
   zz_set('tafsir', t)
 }
