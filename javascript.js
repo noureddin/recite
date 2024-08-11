@@ -103,8 +103,7 @@ function tab_toggled (el) {
   }
 }
 
-function sync_ui (stpair, enpair, title, preserve_url) {
-  if (!preserve_url) { L.hash = stpair.join('/') + '-' + enpair.join('/') }
+function sync_ui (stpair, enpair, title) {
   Q('title').innerHTML = title + ' | رسيت'
   zz_set('title', title)
   //
@@ -122,15 +121,17 @@ function init_audio (stpair, enpair, qari, qariurl) {
 function preview (st, en) {
   opts.st = st ? st : opts.st
   opts.en = en ? en : opts.en
-  const preserve_url = !!L.search || !!L.hash
 
   hide_selectors('preview')
 
   const stpair = idx2aya(st-1)
   const enpair = idx2aya(en-1)
+
+  L.hash = stpair.join('/') + '-' + enpair.join('/') + '&p'
+
   const title = make_title(...stpair, ...enpair).replace(/تسميع/g, 'عرض')
   el_title.innerHTML = title
-  sync_ui(stpair, enpair, title, preserve_url)
+  sync_ui(stpair, enpair, title)
 
   load('u', () => {
     const st = opts.st
@@ -154,16 +155,19 @@ function recite (st, en) {
   const quizmode = el_quizmode.value
   const teacher = el_teacher.checked
 
-  const preserve_url = !!L.search || !!L.hash
+  const qz = quizmode.slice(0,1) /* 'u' or 'i' */
 
   hide_selectors(quizmode)
 
   const stpair = idx2aya(st-1)
   const enpair = idx2aya(en-1)
+
+  L.hash = stpair.join('/') + '-' + enpair.join('/') + '&q=' + qz
+
   const title = make_title(...stpair, ...enpair)
   el_title.innerHTML = title
-  sync_ui(stpair, enpair, title, preserve_url)
-  init_audio(stpair, enpair, qari, qariurl, preserve_url)
+  sync_ui(stpair, enpair, title)
+  init_audio(stpair, enpair, qari, qariurl)
 
   if (el_zz.value) { parent.zz_show() }
 
@@ -172,7 +176,7 @@ function recite (st, en) {
   el_uthm_txt.append(spinner)
 
   const _recite = quizmode === 'imla' ? _recite_imla : _recite_uthm
-  load(quizmode.slice(0,1) /* 'u' or 'i' */, _recite)
+  load(qz, _recite)
 }
 
 document.addEventListener('keyup', (ev) => {
