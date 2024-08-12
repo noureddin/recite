@@ -54,9 +54,9 @@ function _tajlorligilumilo (params) {
   let disablepreview   // disable the ability to preview ayat (doesn't prevent the use of the url param p/preview)
   let disablecheat     // disable the ability to press '!' ten times to show one letter in imlaai mode
   let highcontrast     // high-contrast, dark colorscheme
-  let lowcontrast      // use a lower contrast imlaai bg color when wrong (not incompatible with highcontrast)
-  let tafsir           // select tafsir
-  let emulate          // keyboard layout emulation; see https://noureddin.github.io/kbt (same ids, w/o '-ar')
+  let lowcontrast      // use a lower contrast imlaai bg color when wrong (can be used with highcontrast)
+  let tafsir           // select tafsir; the ascii smallcase IDs found in odd-numbered lines in res/tafasir, eg 'katheer' or 'en_sahih'
+  let emulate          // keyboard layout emulation; see https://www.noureddin.dev/kbt/ (same ids, w/o '-ar')
   let fullpage         // make imla_txt fill the entire page while quizzing, like Recite Desktop (PyQt5, in the `master` branch)
   let noborder         // make imla_txt without border or outline
   let cn               // continuation; ie, append a "phrase" from the next aaya if in the same sura

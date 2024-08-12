@@ -7,7 +7,7 @@
 
 This is the web version of [Recite for desktop](https://github.com/noureddin/recite/tree/master), but for the Quran only, and with much, much more features.
 
-Use it at: [noureddin.github.io/recite](https://noureddin.github.io/recite).
+Use it at: [noureddin.dev/recite](https://www.noureddin.dev/recite).
 
 ---
 
@@ -37,7 +37,7 @@ Use it at: [noureddin.github.io/recite](https://noureddin.github.io/recite).
 
 ### URL Parameters (for advanced users)
 
-> `https://noureddin.github.io/recite/?PARAMS`
+> `https://www.noureddin.dev/recite/?PARAMS`
 
 Examples of `PARAMS`:
 
@@ -113,9 +113,11 @@ Other parameters you can add to pre-configure the preferences:
 
 - `qari=`: select the Qari for the audio recitation; any invalid value (including no value) is considered as "no audio recitation". The [Qaris file](res/qaris) contains, for each audio recitation, its address followed by its name. The valid values for this option are the addresses (the lines that are all-English with no spaces).
 
-    **Note:** Browsers don't allow any page to play audio before a user starts interacting with it, unless the user gave that domain the permission, so, if you use these parameters to select ayat, and a qari, _and_ enable teacher mode, then you won't hear the first ayah. Click anywhere inside the page then press Escape to hear the first ayah. Or allow `noureddin.github.io` to autoplay audio.
+    **Note:** Browsers don't allow any page to play audio before a user starts interacting with it, unless the user gave that domain the permission, so, if you use these parameters to select ayat, and a qari, _and_ enable teacher mode, then you won't hear the first ayah. Click anywhere inside the page then press Escape to hear the first ayah. Or allow `www.noureddin.dev` to autoplay audio.
 
     **Tip:** Pressing <kbd>Escape</kbd> anytime repeats the current audio recitation, which is particularly useful in the teacher mode.
+
+- `tafsir=`: select tafsir or translation; any invalid value (including no value) is considered as the Arabic "التفسير الميسر". The [Tafsir file](res/tafsir) contains, for each tafsir or translation, its ID followed by its title. The valid values for this option are the IDs (the lines that are all lowercase English (ASCII) letters with no spaces), like `katheer` and `en_sahih`.
 
 - `linebreaks` to separate each ayah in its line in the Uthmani mode (the default; use only to annul a previous `nolinebreaks`).
 - `nolinebreaks` to make all ayat flow in the Uthmani mode.
