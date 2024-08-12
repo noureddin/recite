@@ -132,6 +132,10 @@ function preview (st, en) {
   el_title.innerHTML = title
   sync_ui(stpair, enpair, title)
 
+  el_tafsirhint.style.marginTop = '2em'  // shows after end of recitation
+  el_uthm_txt.style.textAlign = 'center'
+  el_uthm_txt.append(spinner)
+
   load('u', () => {
     const st = opts.st
     const en = opts.en
@@ -139,7 +143,6 @@ function preview (st, en) {
     el_uthm_txt.style.textAlign = ''
     el_uthm_txt.innerHTML = ''
     el_uthm_txt.classList.remove('done')
-    el_tafsirhint.style.marginTop = '2em'  // shows after end of recitation
     show_or_hide_tajweedlegend()
     el_uthm_txt.innerHTML = make_words_list(st, en, cn).join('')
   })
