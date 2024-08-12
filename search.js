@@ -156,6 +156,22 @@ function show_search (el_sura, el_aaya) {
     wait()
   }
 
+  el_sxq.onkeydown = (ev) => {
+    const unmodified = !ev.altKey && !ev.ctrlKey
+    if (unmodified && ev.key.length === 1) {
+      ev.preventDefault()
+      const k = window.emulate
+        && mappings[window.emulate]
+        && mappings[window.emulate][ev.code]
+         ? mappings[window.emulate][ev.code][+ev.shiftKey]
+         : ev.key
+      if (k.match(/^[ \nء-غف-\u0652]$|^ل[اأإآ]$/)) {  // the lam-alefs for emulated IBM kb
+        insert_in_field(el_sxq, k)
+        el_sxq.oninput()
+      }
+    }
+  }
+
   el_sura_sx.oninput = () => {
     const q = filter_query(el_sxq.value)
     if (q !== '' && q !== ' ') {  // has a valid query
