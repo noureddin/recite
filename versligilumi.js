@@ -237,5 +237,5 @@ function versligilumi () {
   //
   // if no ayat are selected
   if (st == null || en == null) { return }
-  view ? preview(st, en) : recite(st, en)
+  view ? preview(st, en, true) : recite(st, en, true)  // true == from_url
 }

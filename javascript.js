@@ -117,7 +117,7 @@ function init_audio (stpair, enpair, qari, qariurl) {
   audio.fill(make_audio_list(stpair[0]-1, stpair[1], enpair[0]-1, enpair[1]))
 }
 
-function preview (st, en) {
+function preview (st, en, from_url) {
   opts.st = st ? st : opts.st
   opts.en = en ? en : opts.en
 
@@ -126,7 +126,8 @@ function preview (st, en) {
   const stpair = idx2aya(st-1)
   const enpair = idx2aya(en-1)
 
-  L.hash = stpair.join('/') + '-' + enpair.join('/') + '&p'
+  // don't update url params if launched directly from the url
+  if (!from_url) { L.hash = stpair.join('/') + '-' + enpair.join('/') + '&p' }
 
   const title = make_title(...stpair, ...enpair).replace(/تسميع/g, 'عرض')
   el_title.innerHTML = title
@@ -148,7 +149,7 @@ function preview (st, en) {
   })
 }
 
-function recite (st, en) {
+function recite (st, en, from_url) {
   opts.st = st ? st : opts.st
   opts.en = en ? en : opts.en
 
@@ -164,7 +165,8 @@ function recite (st, en) {
   const stpair = idx2aya(st-1)
   const enpair = idx2aya(en-1)
 
-  L.hash = stpair.join('/') + '-' + enpair.join('/')
+  // don't update url params if launched directly from the url
+  if (!from_url) { L.hash = stpair.join('/') + '-' + enpair.join('/') }
 
   const title = make_title(...stpair, ...enpair)
   el_title.innerHTML = title
