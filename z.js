@@ -94,9 +94,16 @@ function make_words_list (st, en, cn) {  // uthmani
       .map((aya, i) => aya.replace(/A/, (i+st)+'A'))  // for tafsir
       .reduce((arr, aya, i) => {
         // https://stackoverflow.com/a/38528645
-        if (aya.startsWith('#')) {
+        if (aya.startsWith('#')) {  // start of all suar except sura 1 and sura 9
           arr.push(basmala+'<br>')
           aya = aya.replace('#', '')
+        }
+        else if (aya.startsWith('\u06de\xa0بَ')) {  // start of sura 9
+          aya = '<br>'+aya
+          // force a line break before the beginning of sura 9,
+          // in place of the non-existent basmala.
+          // only has an effect if linebreaks are disabled (#linebreaks_input),
+          // and the reciting/previewing starts before it and ends at it or later.
         }
         if (cn && i === en-st) {
           // based on kind_of_portion() in a.js
