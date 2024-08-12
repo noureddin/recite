@@ -593,7 +593,6 @@ const show_selectors = function () {
   el_header.hidden = true
   el_mvbtns.hidden = true
   el_title.style.display = 'none'
-  el_tl.style.display = 'none'  // tajweed legend
   show_or_hide_tafsirhint()
 }
 
@@ -611,6 +610,7 @@ const clear_screen = function () {
 
 const new_select = function () {
   L.hash = ''
+  el_tl.style.display = 'none'  // tajweed legend
   show_selectors()
   clear_screen()
 }
