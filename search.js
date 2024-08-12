@@ -10,6 +10,7 @@ function close_search () {
 Q('#sxc > .x').onclick = close_search
 
 
+// make final-word alef after waw optional
 // fold final-word heh <=> teh <=> teh marbuta
 // fold alef => alef maqsura, alef hamza, alef hamza below, alef madd
 // fold alef maqsura => alef, yeh, yeh hamza, alef hamza, alef hamza below
@@ -22,7 +23,8 @@ Q('#sxc > .x').onclick = close_search
 const hmz = 'آأإئؤء]'  // = "any hamza letter" + char-class closing
 function arabic_fold (txt) {  // takes string, return a regex
   return txt
-    .replace(/[هتة]\b/g, 'T')
+    .replace(/وا?(?= |$)/g, 'U')
+    .replace(/[هتة](?= |$)/g, 'T')
     .replace(/ا/g, 'A')
     .replace(/ى/g, 'Y')
     .replace(/ي/g, 'I')
@@ -32,6 +34,7 @@ function arabic_fold (txt) {  // takes string, return a regex
     .replace(/ؤ/g, 'w')
     .replace(/ء/g, 'x')
     //
+    .replace(/U/g, 'وا?')
     .replace(/T/g, '[هتة]')
     .replace(/A/g, '[اىأإآ]')
     .replace(/Y/g, '[ايىئأإ]')
