@@ -429,6 +429,7 @@ svg #R { fill: var(--R) }
 svg #Q { fill: var(--Q) }
 
 #tl[aria-expanded="false"] { opacity: 0.5 }
+#tl:hover { opacity: 1 }
 
 #tl, #tl * {
   transition: 0.5s;
