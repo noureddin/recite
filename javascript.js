@@ -50,8 +50,7 @@ el_tl.onclick = (ev) => {
   }
 }
 
-function input_trigger_x (ev) {
-  // this fn is connected to onkeyup and onmouseup
+function input_trigger_x (ev) {  // connected to {sura,aaya}_{bgn,end}.onkeyup
 
   const id = ev.target.id
   const key = ev.key
@@ -490,12 +489,11 @@ function _recite_uthm () {
   if (teacher) { audio.play(0) }
 }
 
-el_ok.onclick  = start_reciting
-el_show.onclick  = show_first
-el_reshow.onclick  = show_first
+el_ok.onclick = start_reciting
+el_show.onclick = show_first
+el_reshow.onclick = show_first
 
-el_repeat.onmouseup = restart_reciting
-el_repeat.onclick   = restart_reciting
+el_repeat.onclick = restart_reciting
 
 function init_inputs () {
   // suar
