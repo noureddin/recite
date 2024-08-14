@@ -448,6 +448,7 @@ function _recite_uthm () {
       if (!isnt_the_kind(new_kind)) { break }
     }
     el_uthm_txt.innerHTML = uthm
+    body_scroll_to_bottom()
   }
 
   const word_bck = () => bck('')
