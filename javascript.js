@@ -73,6 +73,7 @@ function input_trigger_x (ev) {
 }
 
 function show_done () {
+  removeEventListener('beforeunload', before_unload)
   if (el_endmsg.hidden) {
     el_endmsg.hidden = false
     confetti.start(1200, 50, 150)
@@ -194,7 +195,11 @@ document.addEventListener('keyup', (ev) => {
   }
 })
 
+// https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
+const before_unload = (ev) => { ev.preventDefault(); ev.returnValue = '' }
+
 function _recite_imla () {
+  addEventListener('beforeunload', before_unload)
   const st = opts.st
   const en = opts.en
   const teacher = el_teacher.checked
@@ -611,14 +616,27 @@ const clear_screen = function () {
 }
 
 const new_select = function () {
-  L.hash = ''
-  el_tl.style.display = 'none'  // tajweed legend
-  show_selectors()
-  clear_screen()
+  const has_no_progress =  // now only affects Imlaai; Uthmani quizes are allowed to be lost, for now.
+    // done, in whatever mode
+    !el_endmsg.hidden ||
+    // Imlaai, with no content
+    !el_imla_txt_container.hidden && el_imla_txt.value === '' ||
+    // preview, or an Uthmani quiz
+    !el_uthm_txt.hidden
+    // // preview
+    // !el_uthm_txt.hidden && el_repeat.innerText.startsWith('ابدأ') ||
+    // // uthmani, with no content
+    // !el_uthm_txt.hidden && el_uthm_txt.innerHTML === ''
+  if (has_no_progress || confirm('هل تريد حقا بدء اختبار جديد وترك هذا؟')) {
+    removeEventListener('beforeunload', before_unload)
+    L.hash = ''
+    el_tl.style.display = 'none'  // tajweed legend
+    show_selectors()
+    clear_screen()
+  }
 }
 
-el_new.onmouseup = new_select
-el_new.onclick   = new_select
+el_new.onclick = new_select
 
 el_zzback.onclick   = () => { clear_screen(); parent.zz_done()   }
 el_zzignore.onclick = () => { clear_screen(); parent.zz_ignore() }
