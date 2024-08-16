@@ -4,12 +4,9 @@ let current_tafsir_aayah
 
 const tsel_ujo = el_tafsir_option.parentElement.cloneNode(true)  /* deep clone */
 const tsel = tsel_ujo.Q('select')
-delete tsel.id
+tsel_ujo.id = 'tsel_ujo'
+tsel.id = 'tsel'
 tsel.value = el_tafsir_option.value
-//
-tsel_ujo.style.fontSize = '80%'
-tsel_ujo.style.width = '75%'
-tsel_ujo.style.margin = 'auto'
 //
 tsel.onchange = () => {
   el_tafsir_option.value = tsel.value

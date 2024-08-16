@@ -888,6 +888,16 @@ details[open] > .details-content {
   font-family: "Noto Sans Arabic", "Noto Sans";
 }
 
+#tsel_ujo {
+  font-size: 80%;
+  margin: auto;
+  width: 25em;
+  min-width:  75%;
+  max-width: 100%;
+}
+
+@media (max-width: 359px) { #tsel { display: block; width: 100%; } }
+
 #tvtxt[dir="ltr"], #tvtxt[dir="ltr"] * {
   text-align: left;
 }
