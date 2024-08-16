@@ -25,5 +25,5 @@
 if (!(L.search + L.hash).split(/[?&#]/).includes('nostats')) {
   window.goatcounter = { path: L.href.replace(/[?#].*/,''), allow_frame: true }
   // privacy-friendly statistics, no tracking of personal data, no need for GDPR consent; see goatcounter.com
-  document.body.append(make_elem('script', { Dataset: { goatcounter: 'https://recite.goatcounter.com/count' }, async: true, src: '//gc.zgo.at/count.js' }))
+  document.body.append(make_elem('script', { Dataset: { goatcounter: 'https://recite.goatcounter.com/count' }, async: true, src: 'count.js' }))
 }
