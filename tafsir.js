@@ -42,6 +42,7 @@ let last_tafsir
 function tv (i) { show_tafsir(i) }
 
 function show_tafsir (i) {
+  let old_tafsir_aayah = current_tafsir_aayah
   current_tafsir_aayah = i
   //
   const name = el_tafsir_option.value
@@ -69,7 +70,14 @@ function show_tafsir (i) {
     make_elem('hr'),
   )
   // loading screen
-  el_tvt.append(spinner)
+  //   el_tvt has content here in two cases:
+  //     changing the tafsir, and changing the aya.
+  //   if changing the tafsir but not the aya,
+  //     show a spinner at the top without removing the old tafsir.
+  //   if changing the aya (with or without the tafsir),
+  //     clear the old tafsir before showing the spinner.
+  if (old_tafsir_aayah !== current_tafsir_aayah) { el_tvt.innerHTML = '' }
+  el_tvt.prepend(spinner)
   // get the tafsir
   get_tafsir(name, i, (content) => { el_tvt.innerHTML = '<div'+attr+'id="tvtxt">'+content+'</div>' })
 }
