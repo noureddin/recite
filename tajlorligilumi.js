@@ -114,6 +114,7 @@ function _tajlorligilumilo (params) {
     emulate,
     qari,
     qariurl,
+    tafsir,
     fullpage,
     noborder,
     cn,
