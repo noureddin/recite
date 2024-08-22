@@ -876,9 +876,13 @@ details[open] > .details-content {
 }
 
 #tafsirhint {
+  margin: 0.5em auto 0;
+  opacity: 0.5;
+}
+
+#tafsirhint.f {  /* on the Front (empty) page */
   margin-top: 4em;
-  margin-bottom: 1em;
-  transition: opacity 1s ease-in-out;
+  opacity: 1;
 }
 
 /* to accomodate the various languages (our KacstOne is subsetted); */
