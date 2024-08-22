@@ -122,6 +122,12 @@ Other parameters you can add to pre-configure the preferences:
 - `linebreaks` to separate each ayah in its line in the Uthmani mode (the default; use only to annul a previous `nolinebreaks`).
 - `nolinebreaks` to make all ayat flow in the Uthmani mode.
 
+- `tl` or `tawjeedlegend` to show the tajweed colors legend when reciting in the Uthmani mode (the default; use only to annul a previous `notajweedlegnd`).
+- `notl` or `notawjeedlegend` to hide the tajweed colors legend.
+
+- `nc` or `numcolor` to colorize ayat numbers when reciting in the Uthmani mode (the default; use only to annul a previous `nonumcolor`).
+- `nonc` or `nonumcolor` to not colorize ayat numbers.
+
 Please note that all these parameters only change the default; all of them are still changeable from the preferences window.
 (But take a look at "Even more advanced URL parameters" below.)
 

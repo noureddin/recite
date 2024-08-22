@@ -59,6 +59,8 @@ function _tajlorligilumilo (params) {
   let emulate          // keyboard layout emulation; see https://www.noureddin.dev/kbt/ (same ids, w/o '-ar')
   let fullpage         // make imla_txt fill the entire page while quizzing, like Recite Desktop (PyQt5, in the `master` branch)
   let noborder         // make imla_txt without border or outline
+  let nonumcolor       // disable colorization of ayat numbers in Uthmani mode
+  let notajweedlegend  // don't show the tajweed colors legend in Uthmani mode
   let cn               // continuation; ie, append a "phrase" from the next aaya if in the same sura
   let zz               // enable embedded integration: zz (cannot be disabled if enabled)
   params
@@ -94,6 +96,10 @@ function _tajlorligilumilo (params) {
       else if (is_of('tafsir'))                      {          tafsir = e[1]                             }
       else if (is_of('fp', 'fullpage'))              {        fullpage = true                             }
       else if (is_of('noborder'))                    {        noborder = true                             }
+      else if (is_of('nc', 'numcolor'))              {      nonumcolor = false                            }
+      else if (is_of('nonc', 'nonumcolor'))          {      nonumcolor = true                             }
+      else if (is_of('tl', 'tajweedlegend'))         { notajweedlegend = false                            }
+      else if (is_of('notl', 'notajweedlegend'))     { notajweedlegend = true                             }
       else if (is_of('cn'))                          {              cn = true                             }
       else if (is_of('zz'))                          {              zz = true                             }
     })
@@ -117,6 +123,8 @@ function _tajlorligilumilo (params) {
     tafsir,
     fullpage,
     noborder,
+    nonumcolor,
+    notajweedlegend,
     cn,
     zz,
   }
@@ -186,9 +194,9 @@ function tajlorligilumi () {
   if (el_textclr_input.value !== 'taj') { S.setItem('notajweed', 'Y') }
   el_textclr_input.onchange()
   //
-  update_bool_default_true(el_linebreaks_input, opts.nolinebreaks,           'nolinebreaks')
-  update_bool_default_true(el_ayatnum_input,    null /* no url param yet */, 'noayatnumcolor')
-  update_bool_default_true(el_tl_input,         null /* no url param yet */, 'notajweedlegend')
+  update_bool_default_true(el_linebreaks_input, opts.nolinebreaks,    'nolinebreaks')
+  update_bool_default_true(el_ayatnum_input,    opts.nonumcolor,      'noayatnumcolor')
+  update_bool_default_true(el_tl_input,         opts.notajweedlegend, 'notajweedlegend')
   //
   const hide = (e) => e.style.display = 'none'
   //
