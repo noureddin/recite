@@ -80,7 +80,7 @@ body {
   --tl-closed: #fff2;
   --selection: rgba(0, 0, 255, 0.15);
   /* tajweed */
-  --L: #bb6666; --W: red;     --J: orangered; --T: #ff9900;    --N: #009000;
+  --L: #bb0066; --W: red;     --J: #ff8800; --T: #d8b800;    --N: #009000;
   --X: #9595a0; --R: #2222e0; --Q: #00a5e7;   --A: darkorange; --D: navy;
   /* ayat number color */
   --A-shadow: 1px  1px  1px gold,
@@ -114,7 +114,7 @@ body {
   --tl-closed: #0002;
   --selection: rgba(0, 0, 255, 0.4);
   /* tajweed */
-  --L: #bb5555;  --W: red    ;  --J: #ff6600;  --T: #ffbb00;  --N: #00ff00;
+  --L: #c60088;  --W: red    ;  --J: #ff8800;  --T: #ffc800;  --N: #00ff00;
   --X: #808080;  --R: #4477ff;  --Q: #00d6ff;  --A: #ff8c00;  --D: #ffffff;
   /* ayat number color */
   /* --A: #ff8c00; --D: #ffffff; */
