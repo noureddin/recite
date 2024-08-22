@@ -388,7 +388,7 @@ button {
 #mvbtns #nextword {
   /* --width: calc(0.50 * var(--btn-base-width)); */
   width: calc(2*var(--width));
-  fill: #000;  /* inverted in darkmode; thus becomes #fff */
+  fill: #333;  /* inverted in darkmode; thus becomes #dedede */
 }
 
 #mvbtns svg { width: 1em; height: 1em; }

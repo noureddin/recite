@@ -151,13 +151,8 @@ function tajlorligilumi () {
     store_bool('imla', opts.quizmode === 'imla')
   }
   //
-  if (opts.highcontrast) {
-    el_body.classList.add('highcontrast')
-  }
-  //
-  if (opts.lowcontrast) {
-    el_body.classList.add('lowcontrast')
-  }
+  if (opts.highcontrast) { el_body.classList.add('highcontrast') }
+  if (opts.lowcontrast)  { el_body.classList.add('lowcontrast') }
   //
   if (opts.dark == null && S.getItem('dark') == null) {  // no overriding; follow system preference initially
     opts.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -180,9 +175,9 @@ function tajlorligilumi () {
   }
   //
   update_options(el_tafsir_option, opts.tafsir, 'tafsir', 'ar_muyassar')
-  update_options(el_qaris, opts.qari, 'qari', '')
-  update_options(el_mvbtns_input, opts.mv, 'mvbtns', 'b')
-  update_options(el_feedbackrate, opts.fbrate, 'fbrate', 'l')
+  update_options(el_qaris,         opts.qari,   'qari',   '')
+  update_options(el_mvbtns_input,  opts.mv,     'mvbtns', 'b')
+  update_options(el_feedbackrate,  opts.fbrate, 'fbrate', 'l')
   //
   if (opts.qariurl) { el_qaris.value = '_' }  // an invalid value to hide "Without audio"
   el_qariurl.value = opts.qariurl ? opts.qariurl : ''
@@ -191,9 +186,9 @@ function tajlorligilumi () {
   if (el_textclr_input.value !== 'taj') { S.setItem('notajweed', 'Y') }
   el_textclr_input.onchange()
   //
-  update_bool_default_true(el_linebreaks_input, opts.nolinebreaks, 'nolinebreaks')
-  update_bool_default_true(el_ayatnum_input, null, 'noayatnumcolor')  // no url params yet
-  update_bool_default_true(el_tl_input, null, 'notajweedlegend')  // no url params yet
+  update_bool_default_true(el_linebreaks_input, opts.nolinebreaks,           'nolinebreaks')
+  update_bool_default_true(el_ayatnum_input,    null /* no url param yet */, 'noayatnumcolor')
+  update_bool_default_true(el_tl_input,         null /* no url param yet */, 'notajweedlegend')
   //
   const hide = (e) => e.style.display = 'none'
   //
@@ -208,6 +203,7 @@ function tajlorligilumi () {
   //
   if (opts.disablepreview) {
     hide(el_show)
+    // el_reshow is hidden in hide_selectors()
   }
   //
   // options that don't have a visible ui input (in addition to qariurl & high/low contrast)
