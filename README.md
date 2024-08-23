@@ -107,7 +107,7 @@ Other parameters you can add to pre-configure the preferences:
 
 - `txt`: a shorthand for `quizmode=imlaai` or `qz=i`.
 
-- `p` or `preview`: just show the ayat; don't start the quiz. Only has effect if you've chosen an ayat range.
+- `v` or `preview`: just show the ayat; don't start the quiz. Only has effect if you've chosen an ayat range.
 
 - `by=`: change the feedback rate in the Imlaai mode; it takes the following values:
 
@@ -162,7 +162,7 @@ These are not changeable from the UI, only from the URL parameters; they are exp
 
     **Warning:** It's still changeable from the JavaScript console; I couldn't disable this yet.
 
-- `dp`, or `disablepreview`: to remove the preview buttons (which shows all the ayat you selected) from the front page and the quiz page. This can be used together with `p`/`preview` in order to show one preview before the quiz, without the ability to preview the ayat again later.
+- `dv`, or `disablepreview`: to remove the preview buttons (which shows all the ayat you selected) from the front page and the quiz page. This can be used together with `p`/`preview` in order to show one preview before the quiz, without the ability to preview the ayat again later.
 
     **Warning:** It's still changeable from the JavaScript console; I couldn't disable this yet.
 

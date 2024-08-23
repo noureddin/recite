@@ -86,7 +86,7 @@ function _tajlorligilumilo (params) {
       else if (is_of('n', 'noteach', 'noteacher'))   {         teacher = false                            }
       else if (is_of('dt', 'disableteacher'))        {  disableteacher = true                             }
       else if (is_of('dq', 'disablequizmode'))       { disablequizmode = true                             }
-      else if (is_of('dp', 'disablepreview'))        {  disablepreview = true                             }
+      else if (is_of('dv', 'dp', 'disablepreview'))  {  disablepreview = true                             }
       else if (is_of('dc', 'disablecheat'))          {    disablecheat = true                             }
       else if (is_of('hc', 'highcontrast'))          {    highcontrast = true                             }
       else if (is_of('lc', 'lowcontrast'))           {     lowcontrast = true                             }

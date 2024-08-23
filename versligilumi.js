@@ -218,7 +218,7 @@ function _versligilumilo (params) {
       e = e.map(sh)
       const is_of = (...params) => params.includes(e[0])
            if (is_of('p') && e[1] == null) { preview = true }
-      else if (is_of('preview'))           { preview = true }
+      else if (is_of('v', 'preview'))      { preview = true }
       else if (is_of('a')) { a = isNaN(+e[1]) ? a : +e[1] }
       else if (is_of('b')) { b = isNaN(+e[1]) ? b : +e[1] }
       else if (is_of('p')) { [st, en] = pages_to_ayat(...range_to_pair(e[1])) || [st, en] }
