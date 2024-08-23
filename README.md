@@ -64,9 +64,11 @@ Examples of `PARAMS`:
 - `r=10//7`: the eighth (last) rub in the 10th juz (when the Mushaf writes «ثلاثة أرباع» (¾) in the margin).
 - `r=10//0-10//1`: the first two rubs in the 10th juz.
 - `r=10//6-10//7`: the last two rubs in the 10th juz.
+- `r=10//6--7`: shorthand for the previous one.
 - `1/2`: only the second ayah of the first sura.
 - `1/1-1/3`: from the first ayah of first sura, till the third ayah of the first sura.
 - `2/1-4/3`: from the first ayah of second sura, till the third ayah of the fourth sura.
+- `1/1--4`: shorthand for `1/1-1/4`; ie, the first four ayat of the first sura.
 
 Any of these parameters can have `a=` to add ayat from *after* the specified region, and/or `b=` to add ayat from *before* the specified region. Examples:
 
@@ -74,6 +76,11 @@ Any of these parameters can have `a=` to add ayat from *after* the specified reg
 - `j=15&a=36`: the entire 15th juz, and 36 ayah after it.
 - `j=2&b=5`: the entire second juz, and five ayat before it.
 - `p=3&b=1&a=2`: the third page, one ayah before it, and two ayat after it.
+
+The `a=` and `b=` parameters can be nagative, to subtract ayat from either end. Example:
+
+- `p=1&a=-1`: the first page except the final ayah.
+- `p=1&b=-1`: the first page except the first ayah.
 
 Other parameters you can add to pre-configure the preferences:
 

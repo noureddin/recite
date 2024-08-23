@@ -207,14 +207,18 @@ function _versligilumilo (params) {
   // - b: before, a number of ayat to add before whatever you select. 0-inf.
   // - a: after,  a number of ayat to add before whatever you select. 0-inf.
   let preview  // just show the aayaat; don't start the quiz
+  // support shorthand: 1/1--7 <=> 1/1-1/7 & 1//2--4 <=> 1//2-1//4
+  const sh = (e) => e.replace(/^([0-9]+\/+)([0-9]+)--([0-9]+)$/, '$1$2-$1$3')
   params
     .slice(1)  // remove the first character (`?` or `#`)
     .split('&')
     .map(p => p.split('='))
     //.reduce((obj, cur, i) => { i == 0 ? {} : (obj[cur[0]] = cur[1], obj), {})
     .forEach((e, i) => {
+      e = e.map(sh)
       const is_of = (...params) => params.includes(e[0])
-           if (is_of('p', 'preview')) { preview = true }
+           if (is_of('p') && e[1] == null) { preview = true }
+      else if (is_of('preview'))           { preview = true }
       else if (is_of('a')) { a = isNaN(+e[1]) ? a : +e[1] }
       else if (is_of('b')) { b = isNaN(+e[1]) ? b : +e[1] }
       else if (is_of('p')) { [st, en] = pages_to_ayat(...range_to_pair(e[1])) || [st, en] }
