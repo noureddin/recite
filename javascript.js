@@ -137,6 +137,10 @@ function preview (st, en, from_url) {
   el_uthm_txt.style.textAlign = 'center'
   el_uthm_txt.append(spinner)
 
+  // these are set in Uthmani; need to override if used Uthmani before Preview without reloading the page
+  document.onkeyup = null
+  document.ondblclick = null
+
   load('u', () => {
     const st = opts.st
     const en = opts.en
