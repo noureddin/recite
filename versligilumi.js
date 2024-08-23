@@ -229,6 +229,7 @@ function _versligilumilo (params) {
   st -= b; en += a
   if (st <= 0)    { st = 1    }
   if (en >  6236) { en = 6236 }
+  if (st > en) { st = en = null }  // don't swap; the user's intention is something else entirely
   return [st, en, preview]
 }
 
