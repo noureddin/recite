@@ -80,8 +80,8 @@ body {
   --tl-closed: #fff2;
   --selection: rgba(0, 0, 255, 0.15);
   /* tajweed */
-  --L: #bb0066; --W: red;     --J: #ff8800; --T: #d8b800;    --N: #009000;
-  --X: #9595a0; --R: #2222e0; --Q: #00a5e7;   --A: darkorange; --D: navy;
+  --L: #bb0066; --W: red;     --J: #ff8800;   --T: #c6b000;    --N: #00bb00;
+  --X: #9595a0; --R: #2222e0; --Q: #009ea7;   --A: darkorange; --D: navy;
   /* ayat number color */
   --A-shadow: 1px  1px  1px gold,
               1px -1px  1px gold,
