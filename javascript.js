@@ -402,8 +402,6 @@ function _recite_uthm () {
 
   el_tafsirhint.className = ''
 
-  show_or_hide_tajweedlegend()
-
   let words = make_words_list(st, en, cn)
 
   const fwd = function (kind) {
@@ -594,6 +592,7 @@ const hide_selectors = function (quizmode) {  // quizmode must be 'preview', 'im
       // el_nextword.focus()
     }
   }
+  show_or_hide_tajweedlegend()
   show_or_hide_tafsirhint()
   body_scroll_to_bottom()
 }
