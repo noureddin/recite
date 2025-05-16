@@ -225,7 +225,7 @@ function kind_of_portion (last_two_chars) {
   const last_one_char = last_two_chars.slice(-1)
   return last_one_char  === ''  ? 'a' :  // start of text
          last_one_char  === '\n'? 'a' :  // end of aaya
-         last_two_chars.match(/[\u06D6-\u06DC]\t/) ? 'j' :  // waqf signs
+         last_two_chars.match(/[;\u06D6-\u06DC]\t/) ? 'j' :  // waqf signs; the semicolon is for gaps
          ''  // normal word
 }  // }}}
 
@@ -264,7 +264,7 @@ function change_quizmode () {
     /* hide */ el_imla_options.style.display = 'none'
     /* show */ el_uthm_options.style.display = 'block'
   }
-  show_or_hide_tafsirhint()
+  show_or_hide_uthmani_hints()
 }
 
 // removes tashkeel and ayat numbers
@@ -298,7 +298,7 @@ const imla_match = (correct, input, ifilter=window.imlafilter) =>
 
 const sync_uthm_class_with = (cls, pred) => el_uthm_txt.classList.toggle(cls, pred)
 
-function show_or_hide_tafsirhint () {
+function show_or_hide_uthmani_hints () {
   // shown only if EITHER of these conditions is met:
   // - just finished quizzing in the Uthmani mode :: endmsg && uthm_txt
   // - previewing :: uthm_txt && uthm_txt has class 'preview'
@@ -311,9 +311,11 @@ function show_or_hide_tafsirhint () {
   const sel = !el_selectors.hidden
   const qz_uthm = el_quizmode.value === 'uthm'
   const preview = utx && el_uthm_txt.classList.contains('preview')
+  const prlines = el_lines_input.value === 'pr'
   //
   const visible = end && utx || preview || !end && sel && qz_uthm
   el_tafsirhint.hidden = !visible
+  el_prlinehint.hidden = !visible || prlines || S.getItem('pr')
 }
 
 function show_or_hide_tajweedlegend () {
@@ -360,11 +362,17 @@ function change_ayatnum () {
   zz_set('ayatnum', !noayatnum)
 }
 
-function change_linebreaks() {
-  const nb = !el_linebreaks_input.checked
-  store_bool('nolinebreaks', nb)
-  sync_uthm_class_with('nb', nb)
-  zz_set('linebreaks', !nb)
+function change_lines () {
+  const ln = el_lines_input.value
+  ln === 'ay'
+    ? S.removeItem('lines')
+    : S.setItem('lines', ln)
+  if (ln !== 'ay') { S.setItem('pr', 'Y') }  // don't show pr-line hints again
+  sync_uthm_class_with('nb', ln==='nb')
+  sync_uthm_class_with('pr', ln==='pr')
+  show_or_hide_uthmani_hints()
+  zz_set('linebreaks', ln !== 'nb')
+  if (onresize) { onresize() }
 }
 
 function change_dark () {

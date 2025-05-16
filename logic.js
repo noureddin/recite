@@ -160,6 +160,7 @@ function preview (st, en, from_url) {
   sync_ui(stpair, enpair)
 
   el_tafsirhint.className = ''
+  el_prlinehint.className = ''
   el_uthm_txt.style.textAlign = 'center'
   el_uthm_txt.append(spinner)
 
@@ -175,6 +176,47 @@ function preview (st, en, from_url) {
     el_uthm_txt.classList.remove('done')
     show_or_hide_tajweedlegend()
     el_uthm_txt.innerHTML = make_words_list(st, en, window.get_continuation).join('')
+    // console.log(ascii_debug_uthm(el_uthm_txt.innerHTML))
+    onresize()  // update uthmani font-size if lines=pr
+  })
+}
+
+function testlonglines () {
+
+  hide_selectors('preview')
+  requestAnimationFrame(() => {
+    el_tafsirhint.hidden = true
+    el_prlinehint.hidden = true
+    el_tl.style.display = 'none'  // hide tajweed legend
+  })
+
+  set_title('اختبار أطوال الأسطر')
+  el_uthm_txt.style.textAlign = 'center'
+  el_uthm_txt.append(spinner)
+
+  // these are set in Uthmani; need to override if used Uthmani before Preview without reloading the page
+  document.onkeyup = null
+  document.ondblclick = null
+
+  load('u', () => {
+    el_uthm_txt.style.textAlign = ''
+    el_uthm_txt.innerHTML = ''
+    el_uthm_txt.classList.remove('done')
+    el_uthm_txt.innerHTML = make_words_list(0, 6235).join('')
+    el_uthm_txt.classList.add('pr')  // force printed-like lines, without affect user preference
+    // almost all user choices & url params are ignored or irrelavant;
+    // the only one that affects the results is the experimental gaps.
+    el_uthm_txt.innerHTML = make_words_list(1, 6236).join('')
+    const lines = el_uthm_txt.querySelectorAll('pr-line')
+    if (lines.length === 0) { return }
+    const widths = Array.from(lines).map((ln,i) => [ln.scrollWidth, i]).sort((a,b) => b[0] - a[0])
+    console.log(lines[0].clientWidth)
+    widths.slice(0,20).forEach(([wid,idx],n) =>
+      console.log((n+1+'.').padStart(3, ' '), wid,
+        lines[idx].innerHTML.replace(/<[^<>]*>/g, '').replace(/[\t\n]+/g, ' ').replace(/&nbsp;/g, '\xa0'))
+    )
+    el_uthm_txt.innerHTML = ''; el_uthm_txt.append(...widths.slice(0,20).map(([wid,idx]) => lines[idx]))
+    // see `longestline_txt` near the end of this file, in the definition of onresize() and before it.
   })
 }
 
@@ -450,8 +492,26 @@ function _recite_uthm () {
   audio.set_index(teacher ? 0 : -1)
 
   el_tafsirhint.className = ''
+  el_prlinehint.className = ''
+
+  onresize()  // update uthmani font-size if lines=pr
 
   let words = make_words_list(st, en, window.get_continuation)
+
+  let utxt = ''
+  const openphantom  = '<span class="phantom">'
+  const closephantom = '</span>'
+  const nextphantom = () => {
+      let phantom = ''
+      for (let i = 0; i < words.length; ++i) {
+        let w = words[i]
+        phantom += w
+        if (w.match(/<\/pr-line>/)) { break }
+      }
+      return openphantom + phantom
+          .replace(/<\/pr-line>/g, closephantom+'$&')
+          .replace(/<pr-line[^<>]*>/g, '$&'+openphantom)
+  }
 
   const fwd = function (kind) {
     if (words.length === 0) { return }
@@ -460,13 +520,20 @@ function _recite_uthm () {
       kind === 'j' ? (k) => k !== 'a' && k !== 'j' :
                      (k) => false
     let new_word_kind, txt = ''
-    do {
+    while (words.length) {
       let new_word = words.shift()
       txt += new_word
-      new_word_kind = kind_of_portion( new_word.slice(-2) )
-    } while (isnt_the_kind(new_word_kind))
+      new_word_kind = kind_of_portion( new_word.replace(/<\/(?:pr-line|span)[^<>]*>/g,'').slice(-2) )
+      // console.log( new_word.replace(/<\/pr-line[^<>]*>/g,'').slice(-2).replace('\n', '\\n') )
+      if (!isnt_the_kind(new_word_kind)) { break }
+    }
     if (new_word_kind === 'a') { audio.next(); audio.play() }  // if shown the last word of an aaya
-    el_uthm_txt.innerHTML += txt
+
+    utxt += txt
+
+    // console.log(debug_uthm(txt))
+
+    el_uthm_txt.innerHTML = utxt + nextphantom()  // the browser auto-closes <pr-line> in utxt
 
     if (words.length === 0) { show_done() }
     body_scroll_to_bottom()
@@ -479,17 +546,16 @@ function _recite_uthm () {
   if (window.show_words) { for (let i = 0; i < window.show_words; ++i) { word_fwd() } }
 
   const bck = function (kind) {
-    let uthm = el_uthm_txt.innerHTML
-    if (uthm.length === 0 || !el_endmsg.hidden) { return }
+    if (utxt.length === 0 || !el_endmsg.hidden) { return }
     const isnt_the_kind =
       kind === 'a' ? (k) => k !== 'a' :
       kind === 'j' ? (k) => k !== 'a' && k !== 'j' :
                      (k) => false
-    while (uthm.length > 0) {
-      const old_word = uthm.match(/(?:^|\t|\n)([^\n\t]+(?:\t|\n))$/)[1]
+    while (utxt.length > 0) {
+      const old_word = utxt.match(/(?:^|\t|\n)([^\n\t]+(?:\t|\n|\t<\/pr-line>))$/)[1]
       words.unshift(old_word)
-      uthm = uthm.substring(0, uthm.length - old_word.length)
-      const old_word_kind = kind_of_portion( old_word.slice(-2) )
+      utxt = utxt.substring(0, utxt.length - old_word.length)
+      const old_word_kind = kind_of_portion( utxt.slice(-50).replace(/<\/pr-line[^<>]*>/g,'').slice(-2) )
       if (old_word_kind === 'a') {  // if shown the first word of an aaya
         if (teacher) { audio.prev(); audio.play() }
         else         { audio.play(); audio.prev() }
@@ -497,7 +563,7 @@ function _recite_uthm () {
       }
       if (!isnt_the_kind(old_word_kind)) { break }
     }
-    el_uthm_txt.innerHTML = uthm
+    el_uthm_txt.innerHTML = utxt + nextphantom()
     body_scroll_to_bottom()
   }
 
@@ -657,7 +723,7 @@ const hide_selectors = function (quizmode) {  // quizmode must be 'preview', 'im
     }
   }
   show_or_hide_tajweedlegend()
-  show_or_hide_tafsirhint()
+  show_or_hide_uthmani_hints()
   body_scroll_to_bottom()
 }
 
@@ -666,7 +732,7 @@ const show_selectors = function () {
   el_header.hidden = true
   el_mvbtns.hidden = true
   el_title.style.display = 'none'
-  show_or_hide_tafsirhint()
+  show_or_hide_uthmani_hints()
 }
 
 const clear_screen = function () {
@@ -675,6 +741,7 @@ const clear_screen = function () {
   document.onkeyup = null
   document.ondblclick = null
   el_tafsirhint.className = 'f'  // on the Front (empty) page
+  el_prlinehint.className = 'f'  // on the Front (empty) page
   // if was in imlaai mode
   el_imla_txt_container.hidden = true
   // if either mode
@@ -746,6 +813,52 @@ function resize_imlaai_done () {
   const v = visualViewport
   const all = v ? v.height : document.body.clientHeight
   el_imla_txt_container.style.height = (all - before - after - 0.1*one_em) + 'px'
+}
+
+const longestline_txt = 'یُرِیدُ ٱلۡإِنسَـٰنُ لِیَفۡجُرَ أَمَامَهُۥ ۝٥ یَسۡءَلُ أَیَّانَ یَوۡمُ ٱلۡقِیَـٰمَةِ ۝٦ فَإِذَا بَرِقَ ٱلۡبَصَرُ'
+// We use this line in onresize() to calibrate the font size.
+// It's not really the line of maximum scrollWidth, but it's the 7th.
+// With the clientWidth as 637, these are the longest 20 `scrollWidth`s
+// out of all the muṣħaf lines with the default font size (with the 7th bracketed):
+//   751 746 741 731 724 719 [715] 714 714 712
+//   710 708 707 705 704 704 703 703 702 702
+// Thus this avoids the outliers, while not noticeably overflow the few wider lines.
+// Using this instead of the line of max width also reduces the big inter-word space
+// in many lines.
+
+const longestline_gaps_txt = 'یَوۡمَ تُبۡلَى ٱلسَّرَاۤئِرُ ۝٩ فَمَا لَهُۥ مِن قُوَّةࣲ وَلَا نَاصِرࣲ ۝١٠ وَٱلسَّمَاۤءِ ذَاتِ ٱلرَّجۡعِ ۝١١'
+// But with the experimental gaps, more lines are longer than the longest line without gaps.
+// The longest 20 lines with gaps (with the 7th bracketed) are:
+//   933 925 923 917 908 908 [902] 901 897 889
+//   889 889 889 888 888 886 885 885 882 879
+// I choose the 7th line, as it's an empirically good compromise.
+
+const el_longest = document.createElement('pr-line')
+el_longest.innerText = window.uthmani_gaps ? longestline_gaps_txt : longestline_txt
+el_longest.style.visibility = 'hidden'
+
+let i_resize
+onresize = () => {
+  if (i_resize) { clearTimeout(i_resize); i_resize = null }
+  if (el_lines_input.value !== 'pr' || el_uthm_txt.hidden) {
+    el_uthm_txt.style.setProperty('--size', '1.5rem')
+    return
+  }
+  i_resize = setTimeout(() => {
+    i_resize = null
+    //
+    el_longest.style.fontSize = '1.5rem'
+    el_uthm_txt.appendChild(el_longest)
+    const fsz = parseFloat(getComputedStyle(el_longest).fontSize)
+    const F = 0.05*fsz
+    let f = fsz
+    while (f > 10 && el_longest.clientWidth < el_longest.scrollWidth) {
+      el_longest.style.fontSize = (f -= F) + 'px'
+    }
+    el_longest.remove()
+    //
+    el_uthm_txt.style.setProperty('--size', f+'px')
+  }, 50)
 }
 
 if (window.visualViewport) {

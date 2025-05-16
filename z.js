@@ -34,13 +34,13 @@ var ayat = {}
 // i: imlaai text with tashkeel etc
 // p: plain imlaai for searching (generated from imlaai)
 
-// function unzstd (path, callback) {  // zstd-compressed files
-//   fetch(path)
-//     .then((res) => res.ok ? res.arrayBuffer() : null)
-//     .then((buf) => {
-//       callback( (new TextDecoder).decode( fzstd.decompress(new Uint8Array(buf)) ).split('\n').slice(0,-1) )
-//     })
-// }
+function unzstd (path, callback) {  // zstd-compressed files
+  fetch(path)
+    .then((res) => res.ok ? res.arrayBuffer() : null)
+    .then((buf) => {
+      callback( (new TextDecoder).decode( fzstd.decompress(new Uint8Array(buf)) ).split('\n').slice(0,-1) )
+    })
+}
 
 function unlzma (path, callback) {  // lzma-compressed files
   fetch(path)
@@ -53,8 +53,8 @@ function unlzma (path, callback) {  // lzma-compressed files
 function load (name, callback) {
   // console.assert(name === 'u' || name === 'i', 'load called with bad name:', name)
   if (ayat[name]) { callback(); return }
-  // unzstd(`res/${name}.zst?h=${zhash[name]}`, (txt) => { ayat[name] = txt; callback() })
-  unlzma(`res/${name}.lzma`, (txt) => { ayat[name] = txt; callback() })
+  unzstd(`res/${name}.zst?h=${zhash[name]}`, (txt) => { ayat[name] = txt; callback() })
+  // unlzma(`res/${name}.lzma`, (txt) => { ayat[name] = txt; callback() })
 }
 
 function load_plain (callback) {
@@ -98,12 +98,40 @@ const font_improve = (a) => a
     // joining letter + optional shadda + kasra + final hah/khah/jeem; eg سبّح نفخ يلج
     .replace(/([ب-خس-غف-هی]>?\u0651?>?\u0650>?)([جحخ][\u064b-\u0652\u06e1\u08f0-\u08f2][\x1d-\x1f \u06D6-\u06DC])/g, '$1\u0640$2')
 
-const unmark = (a) => font_improve(a.replace(/[#A-Z<>]+/g, '').trim())  // showing aya in search & tafsir
+const unmark = (a) => font_improve(a.replace(/[#A-Z<>]+/g, '').replace(/[\x1d-\x1f\x03-\x06]/g, ' ').trim())  // showing aya in search & tafsir
 
 const parse_aaya = (a) => a
+  .replace(/\x1f/g, '</pr-line> <pr-line_class="really-short">')
+  .replace(/\x1e/g, '</pr-line> <pr-line_class="short">')
+  .replace(/\x1d/g, '</pr-line> <pr-line>')
+  .replace(/\x03/g, '</pr-line>')  // last aya in sura
+  .replace(/\x04/g, '<pr-line>')  // first aya in sura
+  .replace(/\x05/g, '<pr-line_class="short">')  // first aya in sura 2
+  .replace(/\x06/g, '<pr-line_class="really-short">')  // first aya in sura 1
+  // re-attach aaya mark to the prev word; it's separated in the text b/c an aya mark can start a line
+  .replace(/ (<pr-line[^<>]*>[0-9]+A<[^<>]*>D<[^<>]*>)/g, '_$1')                 // if starts a line
+  .replace(/([0-9]+A<[^<>]*>D<[^<>]*><\/pr-line>) (<pr-line[^<>]*>)/g, '$1_$2')  // if ends a line
+  .replace(/ ([0-9]+A<[^<>]*>D<[^<>]*>)/g, '_$1')                                // anywhere else
+  // re-attach rub-el-hizb mark to the next word
+  .replace(/(<pr-line[^<>]*>\u06de) /g, '$1_')                 // if starts a line
+  .replace(/(\u06de<\/pr-line>) (<pr-line[^<>]*>)/g, '$1_$2')  // if ends a line (non-existent)
+  .replace(/(\u06de) /g, '$1_')                                // anywhere else
+  // re-attach sajda mark (it's now before the aaya mark) to the prev word
+  .replace(/ (<pr-line[^<>]*>\u06e9)/g, '_$1')                 // if starts a line
+  .replace(/(\u06e9<\/pr-line>) (<pr-line[^<>]*>)/g, '$1_$2')  // if ends a line
+  .replace(/ (\u06e9)/g, '_$1')                                // anywhere else
   // tajweed colorize
   .replace(/([A-Z])<([^>]+)>/g, '<span_class="$1">$2</span>')
 
+const pagebreak_html = (p) => {
+  let [cls, n] = p % 2 == 0
+    ? ['o', 3]
+    : ['i', 1]
+  const ante = '\u066d_'.repeat(n)
+  const post = '_\u066d'.repeat(n)
+  if (p === 1) { cls += '_short' }
+  return `<page-break_class="${cls}">${ ante + toarab(p) + post }</page-break>`
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // uthmani loading
@@ -125,6 +153,7 @@ function make_words_list (st, en, cn) {  // uthmani
   // all spaces are a single space in html;
   // let's make tab ('\t') separates the words,
   // and newline ('\n' with 'whitespace: pre-line') separates the ayat.
+  // (but it's more complex than that to support printed-like lines)
 
   const basmala = 'بِسۡمِ ٱللَّهِ ٱX<ل>R<رَّ>حۡمَT<ـٰ>نِ ٱX<ل>R<رَّ>حِJ<ی>مِ A<۝>D<١>'  /* uthm[0] */
       .replace(/\xa0.*/, '').replace(/ /g, '\xa0')
@@ -134,32 +163,55 @@ function make_words_list (st, en, cn) {  // uthmani
       .slice(st-1, en)
       .reduce((arr, aya, i) => {
         aya = aya.replace(/A/, (i+st)+'A')  // for tafsir
+        const p = pages.indexOf(i+st-1)
+        let pbr = arr.length && p !== -1 ? pagebreak_html(p) : ''
+        let [prefix] = aya.match(/^([\x04-\x06 ]*)/)
+        aya = aya.slice(prefix.length)
         // https://stackoverflow.com/a/38528645
         if (aya.startsWith('#')) {  // start of all suar except sura 1 and sura 9
-          arr.push(basmala+'<br>')
+          const snumber = sura_of(st+i)
+          const nam = '<pr-line_class="suraname">('+toarab(snumber)+')_سورة_' + sura_name[snumber-1].replace(/ /, '_') + '</pr-line>'
+          const bsm = '<pr-line_class="really-short_basmala">' + basmala + '</pr-line>'
+          arr.push(
+            pbr && pagebreak_after_suraname.has(snumber)
+              ? nam + pbr + bsm
+              : pbr + nam + bsm
+            // TODO: suar that has a pagebreak between name & basmala:
+            //       doesn't show the break if you start with it;
+            //       e.g. recite/?s=86&p doesn't show the break.
+            // probably a WONTFIX?
+          )
+          pbr = ''
           aya = aya.replace('#', '')
         }
-        else if (aya.startsWith('\u06de\xa0بَ')) {  // start of sura 9
-          aya = '<br>'+aya
-          // force a line break before the beginning of sura 9,
-          // in place of the non-existent basmala.
-          // only has an effect if linebreaks are disabled (#linebreaks_input),
-          // and the reciting/previewing starts before it and ends at it or later.
+        else if (aya.startsWith('بِسۡمِ')) {  // start of sura 1
+          pbr += '<pr-line_class="suraname">(١)_سورة_الفاتحة</pr-line>'
         }
+        else if (aya.startsWith('\u06de بَ')) {  // start of sura 9
+          pbr += '_<pr-line_class="suraname">(٩)_سورة_التوبة</pr-line>'
+        }
+        if (pbr !== '') {
+          prefix = pbr + '_' + prefix
+        }
+        //
         if (cn && i === en-st) {
           if (continuation_twophrases.has(en-1)) {
-            console.log(aya)
-            aya = aya.replace(/([\u06D6\u06D7\u06D8\u06DA\u06DB] .*?[\u06D6\u06D7\u06D8\u06DA\u06DB]) .*/, '$1')  // sakta (high seen) does NOT separate phrases
-            console.log(aya)
+            aya = aya.replace(/([\u06D6-\u06DB][\x1d-\x1f ].*?[\u06D6-\u06DB][\x1d-\x1f ]).*/, '$1')  // sakta (u06DC HIGH SEEN) does NOT separate phrases
           }
           else if (continuation_fullaaya.has(en-1)) {
             // do nothing; ie keep the full aaya
           }
           else {
-            aya = aya.replace(/([\u06D6\u06D7\u06D8\u06DA\u06DB]) .*/, '$1')  // sakta (high seen) does NOT separate phrases
+            aya = aya.replace(/([\u06D6-\u06DB][\x1d-\x1f ]).*/, '$1')  // sakta (high seen) does NOT separate phrases
+            aya = aya.replace(/ $/, '')
           }
         }
         //
+        if (window.uthmani_gaps) {
+            aya = aya.replace(/([\u06D6-\u06DB]|\u06DC(?=\u06D7? ))/g, '$1&nbsp;&emsp;')
+            // first branch: any waqf sign (except sakta and split waqf)
+            // second branch: sakta, ie, high seen if followed by a space or by QLA and a space
+        }
         aya = font_improve(aya)
         //
         if (window.blink_engine) {  // work around text rendering issues with Blink
@@ -178,7 +230,7 @@ function make_words_list (st, en, cn) {  // uthmani
           //
           // 1. it doesn't colorize vowel marks and waqf signs separately from the previous letter.
           //    the sequence AlefMaqsura + DaggerAlef + Madda:
-          //      Moṣħaf Dar-ul-Ma’rifa colorizes them all in red. I color only the DaggerAlef + Madda,
+          //      Muṣħaf Dar-ul-Ma‘refa colorizes them all in red. I color only the DaggerAlef + Madda,
           //      because, logically, the DaggerAlef replaces the Yeh/AlefMaqsura,
           //      just like in «سوّاها» (written as «سواىها» with a DaggerAlef on the gray Yeh/AlefMaqsura).
           //    I'll add something before the mark to have it colored separately:
@@ -199,17 +251,16 @@ function make_words_list (st, en, cn) {  // uthmani
           aya = aya.replace(/([A-Z]<[^<>]*>)([\u064b-\u0652\u06e1\u08f0-\u08f2][\x1d-\x1f ][0-9]+A<)/g,
                   '$1\ufeff$2')
           //    - waqf signs, if preceded by a colorized letter
-          aya = aya.replace(/>([\u064b-\u0652]?[\u06DC\u06D6\u06D7\u06D8\u06DA\u06DB])/g, '>\ufeff$1')
+          aya = aya.replace(/>([\u064b-\u0652]?[\u06D6-\u06DC])/g, '>\ufeff$1')
           //
           //
           // 2. it stretches intra-word NBSP like normal space when text-align is justify
           //aya = aya.replace(/\xA0/g, '\u202f\u202f')  // replace NBSP with a number of Narrow NBSP
           // ^ that would not be good with DaggerAlef with Madda (test with, eg, aya 2/47)
-          // aya = aya.replace(/[^\x1d-\x1f ]+\xA0[^\x1d-\x1f ]+/g, '<span_style="display:inline-block">$&</span>')
-          // ^ TODO: currently disabled, because it's only needed for a future feature.
+          aya = aya.replace(/[^\x1d-\x1f ]+\xA0[^\x1d-\x1f ]+/g, '<span_style="display:inline-block">$&</span>')
         }
         //
-        arr.push(aya)
+        arr.push(prefix+aya)
         return arr
       }, [])
       .map(aya => parse_aaya(aya)
@@ -219,6 +270,49 @@ function make_words_list (st, en, cn) {  // uthmani
           + '\n'
       )
       .reduce((arr, aya, i, allayat) => {
+
+        // line-ending aya ends with '</pr-line> <pr-line*>\n'
+        if (arr.length) {
+          const match = arr[arr.length-1].match(/^(.*) (<pr-line[^<>]*>)\n$/)
+          if (match) {
+            const [_, pre, post] = match
+            arr[arr.length-1] = pre + '\n'
+            aya = post + aya
+          }
+        }
+
+        // put <page-break> outside <pr-line>
+        aya = aya.replace(/^(<pr-line[^<>]*>)(<page-break[^<>]*>[^<>]*<\/page-break>) /, '$2$1')
+
+        // complete the first line; b/c an aya can start in the middle of a line
+        if (i === 0 && !aya.startsWith('<pr-line')) {
+          let j = st - 2
+          let a = parse_aaya(ayat.u[j])
+          while (a.match(/<pr-line/) == null) { --j; a = parse_aaya(ayat.u[j]) + ' ' + a }
+          aya = a
+            .replace(/_/g, ' ')
+            .replace(/#/g, '')  // irrelevant in this context
+            .replace(/^.*<\/pr-line> /, '')
+            .replace(/^<pr-line[^<>]*>/g, '$&<span class="outer-phantom">')
+            + '</span> '
+            + aya
+        }
+
+        // complete the last line; b/c an aya can end in the middle of a line
+        if (i === allayat.length-1 && aya.match(/<\/?pr-line[^<>]*>\n$/) == null) {
+          const CN = cn && !aya.match(/\u06dd/)  // end of aya
+          let j = en + (CN ? -1 : 0)
+          let a = CN
+            ? parse_aaya(ayat.u[j].replace(/^.*?[\u06D6-\u06DC][\x1d-\x1f ]/, ''))
+            : parse_aaya(ayat.u[j])
+          while (a.match(/<\/pr-line>/) == null) { ++j; a = a + ' ' + parse_aaya(ayat.u[j]) }
+          aya = aya + '<span class="outer-phantom">' + a
+            .replace('#', '')
+            .replace(/_/g, ' ')
+            .replace(/ <pr-line.*$/, '')
+            + '</span> '
+        }
+
         arr.push(...aya.split('<SPC>', -1))  // split and flatten
         return arr
       }, [])

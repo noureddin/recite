@@ -8,9 +8,9 @@
 
 const sura_name = [<<!!sed "s/^/'/;s/$/',/" res/suar-names | tr -d '\n' >>]
 
-// const zhash = {
-//   <<!!# bash -c 'for i in i u; do printf '%s:' $i; sha256sum res/$i.zst | sed -E "s/(.{7}).*/\"\1\",/"; done' >>
-// }
+const zhash = {
+  <<!!# bash -c 'for i in i u; do printf '%s:' $i; sha256sum res/$i.zst | sed -E "s/(.{7}).*/\"\1\",/"; done' >>
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // my includes
@@ -42,7 +42,7 @@ const sura_name = [<<!!sed "s/^/'/;s/$/',/" res/suar-names | tr -d '\n' >>]
 
 // fzstd-0.1.1.js from fzstd by 101arrowz; v0.1.1; License: MIT.
 // https://github.com/101arrowz/fzstd
-<<!!# cat res/fzstd-0.1.1.js>>
+<<!!cat res/fzstd-0.1.1.js>>
 
 ////////////////////////////////////////////////////////////////////////////////
 // additional scripting

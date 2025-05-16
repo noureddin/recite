@@ -39,6 +39,7 @@
     <input type="hidden" id="qariurl" value="">
   </div>
 
+  <hr class="opt-sep">
   <div id="quizmode_option" class="option">
     <label for="quizmode">وضع التسميع:&ensp;</label><select id="quizmode" onchange="change_quizmode()">
       <option value="uthm" selected>عثماني (بلا كتابة) &mdash; تغييره يتطلب إعادة التسميع</option>
@@ -47,7 +48,34 @@
   </div>
 
   <div class="mode_options" id="uthm_options">
-    <span id="uthm_options_title" class="mode_options_title">خيارات وضع التسميع العثماني (بلا كتابة):</span>
+    <!-- <span id="uthm_options_title" class="mode_options_title">خيارات وضع التسميع العثماني (بلا كتابة):</span> -->
+
+    <div class="option">
+      <label for="mvbtns_input">موضع أزار التسميع:&ensp;</label><select id="mvbtns_input" onchange="change_mvbtns()">
+        <option value="b" selected>أسفل</option>
+        <option value="r">يمين</option>
+        <option value="l">يسار</option>
+      </select>
+    </div>
+
+  </div>
+
+  <div class="mode_options" id="imla_options" style="display:none">
+    <!-- <span id="imla_options_title" class="mode_options_title">خيارات وضع التسميع الإملائي (كتابة):</span> -->
+
+    <div class="option">
+      <label for="feedbackrate">مراجعة الأخطاء كل:&ensp;</label><select id="feedbackrate" onchange="change_feedbackrate()">
+        <option value="l" selected>حرف</option>
+        <option value="w">كلمة (صعب)</option>
+        <option value="a">آية (شديد الصعوبة)</option>
+      </select>
+    </div>
+
+  </div>
+
+  <hr class="opt-sep">
+  <div class="mode_options">
+    <span class="mode_options_title">خيارات الرسم العثماني (التسميع وعرض الآيات):</span>
 
     <div class="option">
       <label for="tafsir_option">تفسير أو ترجمة:&ensp;</label><select class="tafsir" id="tafsir_option" onchange="change_tafsir()">
@@ -56,10 +84,10 @@
     </div>
 
     <div class="option">
-      <label for="mvbtns_input">موضع أزار التسميع:&ensp;</label><select id="mvbtns_input" onchange="change_mvbtns()">
-        <option value="b" selected>أسفل</option>
-        <option value="r">يمين</option>
-        <option value="l">يسار</option>
+      <label for="lines_input">فصل الأسطر:&ensp;</label><select id="lines_input" onchange="change_lines()">
+        <option value="ay" selected>كل آية تبدأ سطرًا جديدًا</option>
+        <option value="pr">السطور موافقة لمصحف المدينة</option>
+        <option value="nb">النص يتدفق بغير فصل الأسطر مسبقًا</option>
       </select>
     </div>
 
@@ -76,28 +104,10 @@
     </div>
 
     <div class="option maybe-inline">
-      <label for="linebreaks_input">فصل الآيات في أسطر؟&ensp;</label><input id="linebreaks_input" type="checkbox" checked onchange="change_linebreaks()">
-    </div>
-
-    <div class="option maybe-inline">
       <label for="tl_input">دلالات ألوان التجويد؟&ensp;</label><input id="tl_input" type="checkbox" checked onchange="change_tajweedlegend()">
     </div>
 
   </div>
-
-  <div class="mode_options" id="imla_options" style="display:none">
-    <span id="imla_options_title" class="mode_options_title">خيارات وضع التسميع الإملائي (كتابة):</span>
-
-    <div class="option">
-      <label for="feedbackrate">مراجعة الأخطاء كل:&ensp;</label><select id="feedbackrate" onchange="change_feedbackrate()">
-        <option value="l" selected>حرف</option>
-        <option value="w">كلمة (صعب)</option>
-        <option value="a">آية (شديد الصعوبة)</option>
-      </select>
-    </div>
-
-  </div>
-
 </div>
 
 <dl class="contentcontainer" id="helpcontent">
@@ -152,6 +162,8 @@
 </div>
 
 <div id="tafsirhint" class="f">💡&nbsp;اضغط&nbsp;على علامة&nbsp;الآية&nbsp;<span class="A aya">&#x6dd;</span> لإظهار&nbsp;تفسيرها</div>
+
+<div id="prlinehint" class="f">⭐&nbsp;جديد: يمكن جعل الأسطر توافق&nbsp;المصحف&nbsp;المطبوع.&nbsp;📖<br>«أظهر&nbsp;الخيارات» واجعل «فصل&nbsp;الأسطر» =&nbsp;«السطور&nbsp;موافقة&nbsp;لمصحف&nbsp;المدينة».</div>
 
 <div hidden id="uthm_txt"></div>
 
@@ -216,7 +228,7 @@
 </div>
 </div>
 
-<script src="_scripts.min.js?h=<<!!bash -c "sha256sum _scripts.min.js | sed -E 's/(.{7}).*/\1/' | tr -d $'\n'">>"></script>
+<script src="scripts.min.js?h=<<!!bash -c "sha256sum scripts.min.js | sed -E 's/(.{7}).*/\1/' | tr -d $'\n'">>"></script>
 
 </body>
 </html>

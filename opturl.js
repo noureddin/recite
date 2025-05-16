@@ -69,9 +69,15 @@ function __opturl (params) {
       else if (is_of('byletter'))  o.fbrate = 'l'
       else if (is_of('by'))        o.fbrate = parse_fbrate(e[1]) || o.fbrate
 
-      // uthmani-mode linebreaks between ayat (default: linebreaks)
-      else if (is_of('  linebreaks'))  o.nolinebreaks = false
-      else if (is_of('nolinebreaks'))  o.nolinebreaks = true
+      // uthmani-mode linebreaks mode: default 'ay' (between ayat); 'pr' (like printed Muṣħaf al-Madīna); 'nb' (flowing w/o forced breaks)
+      else if (is_of('  linebreaks'))     o.lines = 'ay'
+      else if (is_of('nolinebreaks nb'))  o.lines = 'nb'
+      else if (is_of('printlines pr'))    o.lines = 'pr'
+      else if (is_of('lines'))            o.lines = parse_lines(e[1]) || o.lines || 'pr'
+
+      // uthmani-mode gaps after waqf signs (EXPERIMENTAL, and not even exactly like Muṣħaf Dar-ul-Ma‘refa)
+      else if (is_of('  gaps'))  o.gaps = true
+      else if (is_of('nogaps'))  o.gaps = false
 
       // select tafsir; the ascii smallcase IDs found in odd-numbered lines in res/tafasir, eg 'katheer' or 'en_sahih'
       else if (is_of('tafsir'))  o.tafsir = e[1]
@@ -140,6 +146,10 @@ function __opturl (params) {
 
       // advance (show) first N words of the first aaya (only if embedded)
       else if (is_of('words'))  o.words = +e[1]
+
+      // test the lengths of printed-like lines
+      else if (is_of('testlonglines'))  o.testlonglines = true
+
     })
   return o
 }
@@ -200,6 +210,7 @@ function parse_opturl () {
   update_options(el_qaris,         o.qari,   'qari',   '')
   update_options(el_mvbtns_input,  o.mv,     'mvbtns', 'b')
   update_options(el_feedbackrate,  o.fbrate, 'fbrate', 'l')
+  update_options(el_lines_input,   o.lines,  'lines',  'ay')
   //
   if (o.qariurl) { el_qaris.value = '_' }  // an invalid value to hide "Without audio"
   el_qariurl.value = o.qariurl ? o.qariurl : ''
@@ -208,7 +219,6 @@ function parse_opturl () {
   if (el_textclr_input.value !== 'taj') { S.setItem('notajweed', 'Y') }
   el_textclr_input.onchange()
   //
-  update_bool_default_true(el_linebreaks_input, o.nolinebreaks,    'nolinebreaks')
   update_bool_default_true(el_ayatnum_input,    o.nonumcolor,      'noayatnumcolor')
   update_bool_default_true(el_tl_input,         o.notajweedlegend, 'notajweedlegend')
   //
@@ -231,6 +241,7 @@ function parse_opturl () {
   // options that don't have a visible ui input (in addition to qariurl & high/low contrast)
   window.allow_cheating = !o.disablecheat  // cheating is allowed by default
   window.dont_show_title = !!o.notitle
+  window.uthmani_gaps = !!o.gaps
   window.random_recitation = !!o.rr
   window.get_continuation = !!o.cn
   window.is_embedded = window.random_recitation || !!o.zz
@@ -246,6 +257,10 @@ function parse_opturl () {
   else {
     const ua = window.navigator.userAgent
     window.blink_engine = ua.includes('Chrome') // || ua.includes('Safari') // Safari is much more broken
+  }
+  //
+  if (o.testlonglines) {
+    addEventListener('load', testlonglines)
   }
 }
 parse_opturl()

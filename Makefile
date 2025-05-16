@@ -22,20 +22,23 @@ P=perl -CSAD -nE 'while(s/<<!!(.*?)>>/`$$1`/ge){} print'
 # All of that concerns only index.html, because it needs .minify.pl too;
 #   other files using the preprocesser are unaffected.
 
-index.html: .index.html _scripts.min.js _style.min.css .minify.pl meta.sh res/qaris res/tafasir processhelp.pl help.xmd res/*.svg
+index.html: .index.html scripts.min.js style.min.css .minify.pl meta.sh res/qaris res/tafasir processhelp.pl help.xmd res/*.svg
 	$A "$<" | $M | $P > "$@"
 
-_style.min.css: style.css
+style.min.css: .style.css
 	$C "$<" > "$@"
 
 # %.min.js: %.js
 # 	$J "$<" > "$@"
 
-_scripts.min.js: scripts.jsx [^_]*.js res/*.js .index.html res/suar-names #res/[ui].zst
+scripts.min.js: .scripts.jsx *[^n].js res/*.js .index.html res/suar-names res/u.zst res/i.zst
 	$P "$<" | $J | perl -pe 's/;?\s*\Z//' > "$@"
 	# $P "$<" > "$@"
+
+res/u.zst: res/.lines.sh res/.splitter.pl res/u
+	sh -c 'cd res/; bash .lines.sh; rm -f ulines'
 
 .PHONEY: clean
 
 clean:
-	rm -f index.html _style.min.css _scripts.min.js
+	rm -f index.html style.min.css scripts.min.js

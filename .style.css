@@ -83,6 +83,11 @@ body {
   /* tajweed */
   --L: #bb0066; --W: red;     --J: #ff8800;   --T: #c6b000;    --N: #00bb00;
   --X: #9595a0; --R: #2222e0; --Q: #009ea7;   --A: darkorange; --D: navy;
+  /* sura name color */
+  --suraname-fill: #fb2;  /* light orange */
+  --suraname-stroke: maroon;
+  --ipagebreak: hsl(80deg, 80%, 35%);
+  --opagebreak: hsl(50deg, 80%, 35%);
   /* ayat number color */
   --A-shadow: 0.025em  0.025em  0.025em gold,
               0.025em -0.025em  0.025em gold,
@@ -102,6 +107,10 @@ body {
   --sxra-shadow: 0 0 0.25rem black,
     inset 0  0.5rem 1rem #fff,
     inset 0 -0.5rem 1rem #0004;
+  /* options */
+  --opt-title: #b80;
+  --opt-sep: #b80;
+  --opt-sep-w: 2px;
 }
 
 #dark:checked ~ #body {
@@ -120,6 +129,9 @@ body {
   --X: #808080;  --R: #4477ff;  --Q: #00d6ff;  --A: #ff8c00;  --D: #ffffff;
   /* ayat number color */
   /* --A: #ff8c00; --D: #ffffff; */
+  /* sura name color */
+  --suraname-fill: #c60;  /* darker than darkorange */
+  --suraname-stroke: yellow;
   /* help & options : tab label */
   --tab-txt: #ddb;
   --tab-active-txt: white;
@@ -132,6 +144,10 @@ body {
   --sxra-shadow: 0 0 0.2rem white,
       inset 0  0.5rem 1rem #fff4,
       inset 0 -0.5rem 1rem #000f;
+  /* options */
+  --opt-title: darkgoldenrod;
+  --opt-sep: darkgoldenrod;
+  --opt-sep-w: 1px;
 }
 
 #dark:checked ~ #body.highcontrast {
@@ -159,10 +175,16 @@ option { background: var(--details-bg) }  /* for Blink, especially in darkmode *
 .A { color: var(--A); text-shadow: var(--A-shadow) }
 .D { color: var(--D); text-shadow: var(--D-shadow) }
 
+#uthm_txt.pr { white-space: normal }  /* see pr-line below */
 #uthm_txt    { white-space: pre-line }
 #uthm_txt.nb { white-space: normal }
 #uthm_txt    > br { display: none }
 #uthm_txt.nb > br { display: block }
+#uthm_txt.nb > pr-line.basmala,
+#uthm_txt    > pr-line.suraname { display: block }
+
+#uthm_txt > .suraname { margin-top: 0.5em }
+#uthm_txt.pr > .suraname { margin-top: 1em }
 
 #uthm_txt.nb .D:after { content: '\200f'; margin-right: 0.25em }
 
@@ -181,13 +203,16 @@ label, label *, select, input, button {
   font-size: inherit;
 }
 
-#uthm_txt, #uthm_txt * { font-family: var(--txt-font); font-size: 1.5rem; }
+#uthm_txt * { font-family: inherit; font-size: inherit }
 #uthm_txt {
+  font-family: var(--txt-font);
+  --size: 1.5rem; font-size: var(--size);  /* updated in resize() in logic.js */
   text-align: right;
   margin: 1rem 1rem;
-  margin-bottom: 4rem;
+  margin-bottom: 6rem;
   line-height: 2.7;  /* slightly wider than the default for Amiri Quran */
 }
+#uthm_txt > pr-line.suraname { line-height: initial }
 #uthm_txt.done, #uthm_txt.sidebtns {
   margin-bottom: 1rem;  /* same as margin above */
 }
@@ -267,7 +292,7 @@ label, label *, select, input, button {
 }
 
 #options .option { margin-top: 0.5em; }
-#options .option:first-child { margin-top: 1.5em; }
+#options > .option:first-child { margin-top: 1.5em; }
 
 #options .mode_options_title {
   display: block;
@@ -276,6 +301,7 @@ label, label *, select, input, button {
   margin-top: 0.3em;
   font-family: Cortoba;
   font-weight: normal;
+  color: var(--opt-title);
 }
 
 #guide { display: none }  /* used for debugging */
@@ -316,13 +342,23 @@ label, label *, select, input, button {
   margin: 0 1em;
 }
 
-#mode_options {
+.opt-sep {
+  border: none;
+  border-top: var(--opt-sep-w) solid var(--opt-sep);
+  box-sizing: border-box;
+  height: 2px; /* the largest --opt-sep-w; to make its size unchanging */
+  width: 1000%;
+  margin: 0.5em -500% -0.125em;
+}
+
+.mode_options {
   padding: 0; margin: 0;
 }
 
 #qaris         { width: calc(100% -  6.80em) }
 #quizmode      { width: calc(100% -  7.35em) }
 #mvbtns_input  { width: calc(100% -  9.40em) }
+#lines_input   { width: calc(100% -  6.75em) }
 #textclr_input { width: calc(100% -  6.45em) }
 #feedbackrate  { width: calc(100% -  9.25em) }
 .tafsir        { width: calc(100% -  7.90em) }
@@ -884,20 +920,11 @@ details[open] > .details-content {
 /* begin: tafsir */
 .A { cursor: help }
 #tafsirhint .A { cursor: initial }
+.outer-phantom .A { cursor: initial }
 
 #tvtxt {  /* tafsir content -- only if there is tafsir */
   text-align: right;
   line-height: 1.8;
-}
-
-#tafsirhint {
-  margin: 0.5em auto 0;
-  opacity: 0.5;
-}
-
-#tafsirhint.f {  /* on the Front (empty) page */
-  margin-top: 4em;
-  opacity: 1;
 }
 
 /* to accomodate the various languages (our KacstOne is subsetted); */
@@ -922,6 +949,53 @@ details[open] > .details-content {
 }
 
 /* end: tafsir */
+
+/* begin: uthmani-related hints */
+
+#tafsirhint {
+  margin: 0.5em auto 0.5em;
+  opacity: 0.5;
+}
+#dark:checked ~ #body #tafsirhint {
+  opacity: 0.4;
+}
+
+#prlinehint {
+  margin: 0.5em auto 0.5em;
+  opacity: 0.3;
+}
+#dark:checked ~ #body #prlinehint {
+  opacity: 0.25;
+}
+
+#tafsirhint.f {  /* on the Front (empty) page */
+  margin-top: 4em;
+  opacity: 1;
+}
+
+#prlinehint.f {  /* on the Front (empty) page */
+  margin-top: 2em;
+  opacity: 0.5;
+}
+#dark:checked ~ #body #prlinehint.f {
+  opacity: 0.6;
+}
+
+#prlinehint, #tafsirhint {
+  transition: 1s opacity;
+}
+
+#prlinehint:hover, #tafsirhint:hover {
+  opacity: 1 !important;
+}
+
+
+@media (max-width: 489px) { #tafsirhint, #prlinehint { font-size: 90% } }
+@media (max-width: 429px) { #tafsirhint, #prlinehint { font-size: 80% } }
+@media (max-width: 369px) { #tafsirhint, #prlinehint { font-size: 75% } }
+@media (max-width: 349px) { #tafsirhint, #prlinehint { font-size: 70% } }
+
+/* end: uthmani-related hints */
 
 /* begin: search */
 /* see also: "search buttons in #selectors" */
@@ -1000,5 +1074,69 @@ details[open] > .details-content {
 }
 
 /* end: search */
+
+/* begin: printed (mosħaf) lines */
+
+#uthm_txt > .suraname {
+  font-family: Cortoba;
+  color: var(--suraname-fill);
+  text-shadow: -0.0025em 0.0025em 0.05em var(--suraname-stroke);
+}
+
+#uthm_txt.pr > .suraname { text-align-last: center }
+
+#uthm_txt > pr-line {
+  display: inline;
+}
+
+#uthm_txt.pr > pr-line {
+  display: block;
+  white-space: nowrap;
+  text-align-last: justify;
+  margin: 0 auto;
+}
+.short {  /* #uthm_txt.pr > ( pr-line and page-break ) */
+  /* text-align-last: center; */
+  width: 70%;
+}
+.really-short {   /* #uthm_txt.pr > pr-line */
+  /* text-align-last: center; */
+  width: 45%;
+}
+#uthm_txt.pr > pr-line.basmala {
+  text-align-last: center;
+}
+
+/* phantoms are used to keep the words in the printed-lines positioned properly */
+
+/* inside the recitation range, but not shown yet */
+.phantom { display: none }
+#uthm_txt.pr .phantom {
+  display: initial;
+  visibility: hidden;
+}
+
+/* out the recitation: ayat on the same line as the first or last */
+.outer-phantom { display: none }
+#uthm_txt.pr .outer-phantom {
+  display: initial;
+  opacity: 0.65;
+  filter: blur(calc(var(--size) / 2));
+  user-select: none; /* it shouldn't be selectable */
+}
+
+#uthm_txt > page-break {
+  display: none;
+}
+
+#uthm_txt.pr > page-break {
+  display: block;
+  text-align-last: justify;
+  margin: 0 auto;
+}
+page-break.i { color: var(--ipagebreak) }
+page-break.o { color: var(--opagebreak) }
+
+/* end: mosħaf lines */
 
 body.nocursor * { cursor: none }  /* hide when using the keyboard */
