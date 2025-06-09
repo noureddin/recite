@@ -106,8 +106,17 @@ function make_words_list (st, en, cn) {  // uthmani
           // and the reciting/previewing starts before it and ends at it or later.
         }
         if (cn && i === en-st) {
-          // based on kind_of_portion() in a.js
-          aya = aya.replace(/([\u06DC\u06D6\u06D7\u06D8\u06DA\u06DB]) .*/, '$1')
+          if (continuation_twophrases.has(en-1)) {
+            console.log(aya)
+            aya = aya.replace(/([\u06D6\u06D7\u06D8\u06DA\u06DB] .*?[\u06D6\u06D7\u06D8\u06DA\u06DB]) .*/, '$1')  // sakta (high seen) does NOT separate phrases
+            console.log(aya)
+          }
+          else if (continuation_fullaaya.has(en-1)) {
+            // do nothing; ie keep the full aaya
+          }
+          else {
+            aya = aya.replace(/([\u06D6\u06D7\u06D8\u06DA\u06DB]) .*/, '$1')  // sakta (high seen) does NOT separate phrases
+          }
         }
         arr.push(aya)
         return arr
