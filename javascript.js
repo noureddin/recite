@@ -343,14 +343,29 @@ function _recite_imla () {
 
   }
 
-  let bang = 0
+  let bang = 0  // the '!' key
+  let commat = 0  // commercial-at, ie '@'
   let since_last_bang = 0
+  let since_last_commat = 0
 
   el_imla_txt.onkeydown = (ev) => {
     const unmodified = !ev.altKey && !ev.ctrlKey
 
     // cheating -- enabled by default unless disablecheat is passed as a url param
-    if (unmodified && ev.key === '!' && window.allow_cheating) {
+    if (unmodified && ev.key === '@' && window.allow_cheating && el_imla_txt.value === '') {
+      const now = (new Date()).getTime()
+      if (now - since_last_commat < 250) { return }
+      since_last_commat = now
+      commat += 1
+      if (commat === 3) {
+        commat = 0
+        // press '@' three times at the beggining to show exactly one word
+          el_imla_txt.value = correct_text.match(/^[^ \xA0]+. /)[0]
+          txt_changed()
+          imla_scroll_to_bottom()
+      }
+    }
+    else if (unmodified && ev.key === '!' && window.allow_cheating) {
       ev.preventDefault()
       // enforce at least 0.25 sec between each keydown of bang
       // because for some reason ev.repeat always returns false in my testing.
@@ -383,7 +398,9 @@ function _recite_imla () {
     else {
       // any key resets the counters; even a lone Shift.
       bang = 0
+      commat = 0
       since_last_bang = 0
+      since_last_commat = 0
     }
 
     // filtering & emulation
