@@ -130,14 +130,42 @@ const el_inputs = document.getElementById('inputs')
 
 init_range(document.querySelector('div.suar_range'))
 
-const el_more = document.getElementById('more')
+const last_range = () => el_inputs.children[el_inputs.childElementCount-1]
 
-el_more.onclick = (ev) => {
-  const el_old = el_inputs.children[el_inputs.childElementCount-1] // last row
-  const el_new = el_old.cloneNode(true)
+const add_new_range = () => {
+  const el_new = last_range().cloneNode(true)
   init_range(el_new)
   el_inputs.append(el_new)
+  return el_new
 }
+
+const given_ranges =
+  (location.search + location.hash)
+    .split(/[#?,]/).filter(e => e)
+
+if (given_ranges.length) {
+  let first = true
+  const put_range = (param) => {
+    const [a, z] = param.indexOf('-') === -1 ? [param, param] : param.split('-')
+    if ( (!isNaN(+a) && +a >= 1 && +a <= 114)
+     &&  (!isNaN(+z) && +z >= 1 && +z <= 114)
+     &&  (+a <= +z)
+    ) {
+      const el_range = first ? el_inputs.children[0] : add_new_range()
+      first = false
+      const [el_a, el_z] = el_range.querySelectorAll('select')
+      el_a.value = a
+      el_z.value = z
+    }
+  }
+  //
+  for (let i = 0; i < given_ranges.length; ++i) {
+    put_range(given_ranges[i])
+  }
+}
+
+const el_more = document.getElementById('more')
+el_more.onclick = add_new_range
 
 function create_it () {
   let y = ''
@@ -148,7 +176,6 @@ function create_it () {
   })
   window.open(`./rand.html?${y}`, '_blank')
 }
-
 
 </script>
 </body>

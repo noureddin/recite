@@ -19,9 +19,15 @@
 
   body {
     margin: 2em;
-    font-size: calc(2 * (16px + 0.5vw));
+    font-size: calc(16px + 0.5vw);
     font-family: Kacst, serif;
     text-align: center;
+  }
+
+  #b {
+    font-size: 200%;
+    margin-top: 2em;
+    margin-bottom: 2em;
   }
 
   body { background: #f8f8f0 }
@@ -41,7 +47,14 @@
 </style>
 </head>
 <body>
+<div id="b"></div>
+<div id="f"></div>
 <script>
+
+// non-data constants
+
+const B = document.getElementById('b')
+const F = document.getElementById('f')
 
 // utils
 
@@ -66,14 +79,29 @@ const entire_suar = (a,b) => b ? range(1+(+b)-a).flatMap(i => full_sura(i+(+a)))
 
 // user input
 
-const ayat =
+const given_ranges =
   (location.search + location.hash)
-    .split(/[#?,]/).filter(e => e)
+    .split(/[#?,]/).filter(e => {
+      if (!e) { return false }  // empty or null or zero
+      if (e.indexOf('-') === -1) {  // a single sura
+        return !isNaN(+e) && +e >= 1 && +e <= 114
+      }
+      const [a, z] = e.split('-')  // more than two are ignored everywhere (e.g, 1-5-8 is treated as 1-5 only)
+      return (
+        (!isNaN(+a) && +a >= 1 && +a <= 114) &&
+        (!isNaN(+z) && +z >= 1 && +z <= 114) &&
+        (+a <= +z)
+      )
+    })
+
+const ayat = given_ranges
     .flatMap(n => entire_suar(...n.split('-')))
 
 if (ayat.length === 0) {
   location.href = './randgen.html'
 }
+
+F.innerHTML = `<a target="_blank" href="./randgen.html?${given_ranges.join(',')}">غيّر سور التسميع</a>`
 
 function update() {
   let   a = ayat[rand_index(ayat.length)]
@@ -86,8 +114,8 @@ function update() {
   const rng = a + '-' + z
   //
   const opts = `notitle&nopr&q=u&cn&${rng}`
-  document.body.innerHTML = `<a target="_blank" onclick="update()" href="./?${opts}">ابدأ تسميعًا عشوائيًّا</a>`
-  document.getElementsByTagName('a')[0].focus()
+  B.innerHTML = `<a target="_blank" onclick="update()" href="./?${opts}">ابدأ تسميعًا عشوائيًّا</a>`
+  B.getElementsByTagName('a')[0].focus()
 }
 update()
 
