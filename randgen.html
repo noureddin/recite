@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>Generate a Random Recitation</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+
+  /* This font is from from: https://sourceforge.net/projects/arabeyes/files/Fonts/ */
+  /* Under GNU GPL v2. Converted from TrueType to WOFF using */
+  /* then subsetted and converted to WOFF & WOFF2 using glyphhanger */
+  @font-face {
+    font-family: Cortoba;  /* version 2.1 */
+    font-style: normal;
+    font-weight: 400;
+    src: url('woff/ae_Cortoba-subset.woff2') format('woff2'),
+         url('woff/ae_Cortoba-subset.woff')  format('woff');
+    font-display: swap;
+  }
+
+  body {
+    margin: 1em;
+  }
+
+  * { font-size: calc(16px + 0.5vw) }
+  * { font-family: Cortoba, serif }
+
+  /* suar/ayat selection */
+  label {
+    adisplay: inline-block;
+    amax-width: 20em;
+    amin-width: 40%;
+    white-space: nowrap;
+  }
+
+  .label { /* من سورة and إلى سورة */
+    display: inline-block;
+    width: 4em;
+  }
+
+  .suar_range {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 0.5em 1em;
+    justify-content: center;
+    amax-width: min(80vw, 35rem);
+    width: var(--w);
+    margin: 1em auto;
+  }
+
+  #content {
+    margin: 0 auto;
+    width: calc(2.5em + var(--w));
+  }
+
+  :root { --w: 21.5em }
+  @media (max-width: 479px) {
+    :root { --w: 10.5em }
+  }
+  @media (max-width: 259px) {
+    :root { --w: 8em }
+    .sura { display: none }
+    .label { width: 1.6em }
+  }
+
+  #ok {
+    display: block;
+    margin: 1em auto;
+    margin-top: 2em;
+    padding: 0.5em;
+  }
+
+  #inputs {
+    margin-top: 2em;
+    display: inline-block;
+  }
+
+  #more {
+    display: inline-block;
+    width: 2em;
+    font-weight: bold;
+    color: #0a0;
+    vertical-align: baseline;
+  }
+  
+  body { background: #f8f8f0; color: #101010 }
+
+  @media (prefers-color-scheme: dark) {
+    body { background: #101016; color: #eef }
+    button, select { filter: invert(1) }
+    #more { color: magenta /* inverted to green */ }
+  }
+
+</style>
+</head>
+<body>
+
+<div id="content">
+<div id="inputs">
+<div class="suar_range">
+  <label><span class="label">من<span class="sura">&nbsp;سورة</span>:&thinsp;</span><select class="sura_bgn"></select></label>
+  <label><span class="label">إلى<span class="sura">&nbsp;سورة</span>:&thinsp;</span><select class="sura_end"></select></label>
+</div>
+</div>
+<button id="more">+</button>
+</div>
+
+<button id="ok" onclick="create_it()">أنشئ صفحة التسميع العشوائي</button>
+
+<script>
+
+const sura_name = ['الفاتحة','البقرة','آل عمران','النساء','المائدة','الأنعام','الأعراف','الأنفال','التوبة','يونس','هود','يوسف','الرعد','إبراهيم','الحجر','النحل','الإسراء','الكهف','مريم','طه','الأنبياء','الحج','المؤمنون','النور','الفرقان','الشعراء','النمل','القصص','العنكبوت','الروم','لقمان','السجدة','الأحزاب','سبأ','فاطر','يس','الصافات','ص','الزمر','غافر','فصلت','الشورى','الزخرف','الدخان','الجاثية','الأحقاف','محمد','الفتح','الحجرات','ق','الذاريات','الطور','النجم','القمر','الرحمن','الواقعة','الحديد','المجادلة','الحشر','الممتحنة','الصف','الجمعة','المنافقون','التغابن','الطلاق','التحريم','الملك','القلم','الحاقة','المعارج','نوح','الجن','المزمل','المدثر','القيامة','الإنسان','المرسلات','النبأ','النازعات','عبس','التكوير','الانفطار','المطففين','الانشقاق','البروج','الطارق','الأعلى','الغاشية','الفجر','البلد','الشمس','الليل','الضحى','الشرح','التين','العلق','القدر','البينة','الزلزلة','العاديات','القارعة','التكاثر','العصر','الهمزة','الفيل','قريش','الماعون','الكوثر','الكافرون','النصر','المسد','الإخلاص','الفلق','الناس',]
+
+const opts = 'notitle&quizmode=uthmani&cn'
+
+const sura_options = sura_name.map((t, i) => `<option value="${i+1}">${t}</option>`).join('')
+
+const init_range = (el_range) => {
+  const el_bgn = el_range.querySelector('select.sura_bgn')
+  const el_end = el_range.querySelector('select.sura_end')
+  //
+  el_bgn.innerHTML = sura_options
+  el_end.innerHTML = sura_options
+  //
+  el_bgn.oninput = el_bgn.onblur = (ev) => { if (+el_end.value < +el_bgn.value) { el_end.value = el_bgn.value } }
+  el_end.oninput = el_end.onblur = (ev) => { if (+el_bgn.value > +el_end.value) { el_bgn.value = el_end.value } }
+}
+
+const el_inputs = document.getElementById('inputs')
+
+init_range(document.querySelector('div.suar_range'))
+
+const el_more = document.getElementById('more')
+
+el_more.onclick = (ev) => {
+  const el_old = el_inputs.children[el_inputs.childElementCount-1] // last row
+  const el_new = el_old.cloneNode(true)
+  init_range(el_new)
+  el_inputs.append(el_new)
+}
+
+function create_it () {
+  let y = ''
+  document.querySelectorAll('div.suar_range').forEach(r => {
+    const [a, z] = Array.from(r.querySelectorAll('select')).map(e => +e.value)
+    if (y) { y += ',' }
+    y += a === z ? a : (a + '-' + z)
+  })
+  window.open(`./rand.html?${y}`, '_blank')
+}
+
+
+</script>
+</body>
+</html>
+

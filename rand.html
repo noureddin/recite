@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>Random Recitation</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  /* This font is from from: https://sourceforge.net/projects/arabeyes/files/Fonts/ */
+  /* Under GNU GPL v2. Converted from TrueType to WOFF using */
+  /* then subsetted and converted to WOFF & WOFF2 using glyphhanger */
+  @font-face {
+    font-family: KacstOne; /* version 5.0 */
+    font-style: normal;
+    font-weight: 400;
+    src: url('woff/KacstOne-subset.woff2') format('woff2'),
+         url('woff/KacstOne-subset.woff')  format('woff');
+    font-display: swap;
+  }
+
+  body {
+    margin: 2em;
+    font-size: calc(2 * (16px + 0.5vw));
+    font-family: Kacst, serif;
+    text-align: center;
+  }
+
+  body { background: #f8f8f0 }
+  a { color: #00f }
+  a:focus { color: #04f }
+  a:hover { color: #08b }
+  a:active { color: #0b0 }
+
+  @media (prefers-color-scheme: dark) {
+    body { background: #101016 }
+    a { color: #44f }
+    a:focus { color: #2af }
+    a:hover { color: #2ff }
+    a:active { color: #2f2 }
+  }
+
+</style>
+</head>
+<body>
+<script>
+
+// utils
+
+const rand_index         =   (b) => Math.floor(         b     *Math.random())  // [0, b[
+const rand_int_inclusive = (a,b) => Math.floor(a + (1 + b - a)*Math.random())  // [a, b]
+
+const range = (n) => n ? [...Array(n).keys()] : []
+
+// data
+
+const sura_length = [7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6]
+
+function start_ (s) { return +sura_length.slice(0, s).reduce((a, b) => a + b, 0) }
+const sura_offset = range(115).map(start_)  // array mapping 0-based suar to how many ayat before it (eg 0 => 0, 1 => 7, 2 => 286+7)
+// thus sura_offset if given a 1-based sura gives the 1-based index of its last aaya
+function sura_of (a) { return range(115).find((i) => sura_offset[i] >= a) }  // takes 1-based aaya ∈ [1-6236], returns its 1-based sura
+
+// specific utils
+
+const full_sura = (n) => range(sura_length[n-1]).map(i => 1 + i + sura_offset[n-1])
+const entire_suar = (a,b) => b ? range(1+(+b)-a).flatMap(i => full_sura(i+(+a))) : full_sura(a)
+
+// user input
+
+const ayat =
+  (location.search + location.hash)
+    .split(/[#?,]/).filter(e => e)
+    .flatMap(n => entire_suar(...n.split('-')))
+
+if (ayat.length === 0) {
+  location.href = './randgen.html'
+}
+
+function update() {
+  let   a = ayat[rand_index(ayat.length)]
+  const sura_1based = sura_of(a)
+  const last_aya = sura_offset[sura_1based]
+  const z = Math.min(last_aya, a + rand_int_inclusive(3, 6))
+  const old_a = a
+  // note: z-a == 2 if it's three ayat to recite
+  while (z - a < 2 && sura_of(a-1) === sura_1based) { --a }
+  const rng = a + '-' + z
+  //
+  const opts = `notitle&nopr&q=u&cn&${rng}`
+  document.body.innerHTML = `<a target="_blank" onclick="update()" href="./?${opts}">ابدأ تسميعًا عشوائيًّا</a>`
+  document.getElementsByTagName('a')[0].focus()
+}
+update()
+
+</script>
+</body>
+</html>
+
