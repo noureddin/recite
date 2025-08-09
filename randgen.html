@@ -53,14 +53,26 @@
     width: calc(2.5em + var(--w));
   }
 
-  :root { --w: 21.5em }
-  @media (max-width: 479px) {
-    :root { --w: 10.5em }
+  .phantom.rm { display: none }
+  :root { --w: 25em }
+  @media (max-width: 560px) {
+    :root { --w: 14em }
+    .phantom.rm { display: inline-block }
   }
-  @media (max-width: 259px) {
-    :root { --w: 8em }
+  @media (max-width: 310px) {
+    :root { --w: 10.5em }
     .sura { display: none }
     .label { width: 1.6em }
+    select { width: 5.5em }
+  }
+
+  .holder.rm { display: none }
+  .suar_range:only-child > .rm {
+    &.real { display: none }
+    &.holder {
+      display: inline-block;
+      height: 1.3rem /* I have no idea why this height needs to be adjusted, but otherwise the #more button wouldn't be aligned vertically */
+    }
   }
 
   #ok {
@@ -75,10 +87,20 @@
     display: inline-block;
   }
 
-  #more {
+  .rm, #more {
     display: inline-block;
-    width: 2em;
+    width: 2rem;
+    height: 2rem;
     font-weight: bold;
+  }
+
+  .rm {
+    font-family: sans-serif;
+    font-size: 90%;
+    color: #a00
+  }
+
+  #more {
     color: #0a0;
     vertical-align: baseline;
   }
@@ -89,6 +111,7 @@
     body { background: #101016; color: #eef }
     button, select { filter: invert(1) }
     #more { color: magenta /* inverted to green */ }
+    .rm   { color: cyan    /* inverted to red */ }
   }
 
 </style>
@@ -98,7 +121,10 @@
 <div id="content">
 <div id="inputs">
 <div class="suar_range">
+  <div class="holder rm"></div>
+  <button class="real rm" onclick="this.parentElement.remove()">X</button>
   <label><span class="label">من<span class="sura">&nbsp;سورة</span>:&thinsp;</span><select class="sura_bgn"></select></label>
+  <div class="phantom rm"></div>
   <label><span class="label">إلى<span class="sura">&nbsp;سورة</span>:&thinsp;</span><select class="sura_end"></select></label>
 </div>
 </div>
