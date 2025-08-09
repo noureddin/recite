@@ -61,6 +61,7 @@ function _tajlorligilumilo (params) {
   let noborder         // make imla_txt without border or outline
   let nonumcolor       // disable colorization of ayat numbers in Uthmani mode
   let notajweedlegend  // don't show the tajweed colors legend in Uthmani mode
+  let notitle          // hide recitation range in words, for random quizzing purposes (currently doesn't affect preview)
   let cn               // continuation; ie, append a "phrase" from the next aaya if in the same sura
   let zz               // enable embedded integration: zz (cannot be disabled if enabled)
   params
@@ -100,6 +101,8 @@ function _tajlorligilumilo (params) {
       else if (is_of('nonc', 'nonumcolor'))          {      nonumcolor = true                             }
       else if (is_of('tl', 'tajweedlegend'))         { notajweedlegend = false                            }
       else if (is_of('notl', 'notajweedlegend'))     { notajweedlegend = true                             }
+      else if (is_of('noti', 'notitle'))             {         notitle = true                               }
+      else if (is_of('showtitle'))                   {         notitle = false                              }
       else if (is_of('cn'))                          {              cn = true                             }
       else if (is_of('zz'))                          {              zz = true                             }
     })
@@ -125,6 +128,7 @@ function _tajlorligilumilo (params) {
     noborder,
     nonumcolor,
     notajweedlegend,
+    notitle,
     cn,
     zz,
   }
@@ -216,6 +220,7 @@ function tajlorligilumi () {
   //
   // options that don't have a visible ui input (in addition to qariurl & high/low contrast)
   window.allow_cheating = !opts.disablecheat  // cheating is allowed by default
+  window.dont_show_title = opts.notitle
   if (opts.emulate && mappings[opts.emulate]) { window.emulate = opts.emulate }
   if (opts.fullpage) { el_body.classList.add('fullpage') }
   if (opts.noborder) { el_imla_txt.classList.add('noborder') }

@@ -1,5 +1,7 @@
 let opts = {}
 
+// TODO: notitle (dont_show_title): should hide suar names in reciting, if the first aaya of a recitation is the first aaya of the sura?
+
 const fullpage = el_body.classList.contains('fullpage')
 // ^ never changes because it can be set only from url params
 
@@ -75,7 +77,10 @@ function show_done () {
   removeEventListener('beforeunload', before_unload)
   if (el_endmsg.hidden) {
     el_endmsg.hidden = false
-    confetti.start(1200, 50, 150)
+    set_title('تم ' + opts.title)
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      confetti.start(1200, 50, 150)
+    }
     if (el_zzback.style.display === 'none') {  /* not zz-mode */
       show_selectors()
       setTimeout(() => el_ok.focus(), 500)
@@ -91,6 +96,7 @@ function show_done () {
     else {  /* uthmani mode */
       el_uthm_txt.classList.add('done')
     }
+    //
     return true
   }
   return false
@@ -102,10 +108,20 @@ function tab_toggled (el) {
   }
 }
 
-function sync_ui (stpair, enpair, title) {
-  Q('title').innerHTML = title + ' | رسيت'
+function set_title (title) {
+  if (title) {
+    el_title.innerHTML = title
+    el_title.style.display = 'block'
+  }
+  else {
+    el_title.innerHTML = ''
+    el_title.style.display = 'none'
+  }
+  Q('title').innerHTML = (title ? (title + ' | ') : '' ) + 'رسيت'
   zz_set('title', title)
-  //
+}
+
+function sync_ui (stpair, enpair) {
   el_sura_bgn.value = stpair[0]-1
   el_sura_end.value = enpair[0]-1
   set_aayaat(el_aaya_bgn, sura_bgn_length(), stpair[1])
@@ -130,8 +146,8 @@ function preview (st, en, from_url) {
   if (!from_url) { L.hash = stpair.join('/') + '-' + enpair.join('/') + '&p' }
 
   const title = make_title(...stpair, ...enpair).replace(/تسميع/g, 'عرض')
-  el_title.innerHTML = title
-  sync_ui(stpair, enpair, title)
+  set_title(title)  // TODO: should 'notitle' affect preview?
+  sync_ui(stpair, enpair)
 
   el_tafsirhint.className = ''
   el_uthm_txt.style.textAlign = 'center'
@@ -172,9 +188,9 @@ function recite (st, en, from_url) {
   // don't update url params if launched directly from the url
   if (!from_url) { L.hash = stpair.join('/') + '-' + enpair.join('/') }
 
-  const title = make_title(...stpair, ...enpair)
-  el_title.innerHTML = title
-  sync_ui(stpair, enpair, title)
+  opts.title = make_title(...stpair, ...enpair)
+  set_title(window.dont_show_title ? '' : opts.title)
+  sync_ui(stpair, enpair)
   init_audio(stpair, enpair, qari, qariurl)
 
   if (el_zz.value) { parent.zz_show() }
@@ -418,6 +434,7 @@ function _recite_uthm () {
     } while (isnt_the_kind(new_word_kind))
     if (new_word_kind === 'a') { audio.next(); audio.play() }  // if shown the last word of an aaya
     el_uthm_txt.innerHTML += txt
+
     if (words.length === 0) { show_done() }
     body_scroll_to_bottom()
   }
