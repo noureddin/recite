@@ -107,7 +107,7 @@ function update() {
   let   a = ayat[rand_index(ayat.length)]
   const sura_1based = sura_of(a)
   const last_aya = sura_offset[sura_1based]
-  const z = Math.min(last_aya, a + rand_int_inclusive(3, 6))
+  const z = Math.min(last_aya, a + rand_int_inclusive(2, 5))  /* 3-6 ayat */
   const old_a = a
   // note: z-a == 2 if it's three ayat to recite
   while (z - a < 2 && sura_of(a-1) === sura_1based) { --a }
