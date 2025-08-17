@@ -52,7 +52,7 @@
     a:active { color: #2f2 }
   }
 
-#R {
+#R, #K {
   display: none;
   position: fixed;
   top: 0;
@@ -62,12 +62,20 @@
   border: none;
 }
 
+#K {  /* blocks/disables the page without showing */
+  background: transparent;
+  cursor: wait;
+}
+
 </style>
 </head>
 <body>
+<main id="M">
 <div id="B"></div>
 <p>لثلاث إلى ست آيات من:<br><span id="T"></span></p>
 <div id="F"></div>
+</main>
+<div id="K"></div><!-- blocker -->
 <iframe id="R"></iframe>
 <script>
 
@@ -76,11 +84,25 @@
 const T = document.getElementById('T')
 const B = document.getElementById('B')
 const F = document.getElementById('F')
+
+const M = document.getElementById('M')
+const K = document.getElementById('K')
 const R = document.getElementById('R')
 
 // recite iframe interface
 
+const block_page = () => {  // to indicate loading
+  M.style.opacity = '0.35'
+  K.style.display = 'block'
+}
+
+const unblock_page = () => {
+  M.style.opacity = '1'
+  K.style.display = 'none'
+}
+
 const recite = (url) => {
+  block_page()
   // showing transparently before loading, b/c tajweedlegend needs to know the page's height to show properly,
   // otherwise it'd be too large at first.
   R.style.opacity = '0'
@@ -89,6 +111,7 @@ const recite = (url) => {
     R.style.opacity = '1'
     setTimeout(() => R.focus(), 0)
     // ^ without a timeout, an Enter on the Start url would show the first word inconsistently
+    unblock_page()
   }
   R.src = url + '&zz'
   window.zz_done = window.zz_ignore = () => { R.style.display = 'none' }
