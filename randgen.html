@@ -6,9 +6,17 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
 
-  /* This font is from from: https://sourceforge.net/projects/arabeyes/files/Fonts/ */
-  /* Under GNU GPL v2. Converted from TrueType to WOFF using */
-  /* then subsetted and converted to WOFF & WOFF2 using glyphhanger */
+  /* The following two fonts are from: https://sourceforge.net/projects/arabeyes/files/Fonts/ */
+  /* They are under GNU GPL v2. Both are converted from TrueType to WOFF using */
+  /* then both are subsetted and converted to WOFF & WOFF2 using glyphhanger */
+  @font-face {
+    font-family: KacstOne; /* version 5.0 */
+    font-style: normal;
+    font-weight: 400;
+    src: url('woff/KacstOne-subset.woff2') format('woff2'),
+         url('woff/KacstOne-subset.woff')  format('woff');
+    font-display: swap;
+  }
   @font-face {
     font-family: Cortoba;  /* version 2.1 */
     font-style: normal;
@@ -24,6 +32,15 @@
 
   * { font-size: calc(16px + 0.5vw) }
   * { font-family: Cortoba, serif }
+
+  p { font-family: KacstOne, serif }
+  b { font-family: Cortoba, serif; font-weight: normal }
+
+  section {
+    width: 35em;
+    max-width: 95%;
+    margin: 2em auto;
+  }
 
   /* suar/ayat selection */
   label {
@@ -75,7 +92,7 @@
     }
   }
 
-  #ok {
+  .ok {
     display: block;
     margin: 1em auto;
     margin-top: 2em;
@@ -131,7 +148,16 @@
 <button id="more">+</button>
 </div>
 
-<button id="ok" onclick="create_it()">أنشئ صفحة التسميع العشوائي</button>
+<button class="ok" onclick="create_it(true)">أنشئ صفحة تسميع عشوائي صارم</button>
+<button class="ok" onclick="create_it(false)">أنشئ صفحة تسميع عشوائي حر</button>
+
+<section>
+<p>حدد السور التي تريد أن تُختبر في آيات عشوائية منها (ثلاث إلى ست آيات في كل مرة).</p>
+<p>يمكن أن تضيف أي عدد من السور المتتابعة أو غير المتتابعة.</p>
+<p><b>التسميع العشوائي الصارم</b> يفرض عليك المدى المحدد من الآيات ولا تستطيع تغييره. ويضيف إلى رسيت زر «تجاهل» لترك التسميع، وزر «عودة» بعد إتمام التسميع للعودة إلى صفحة التسميع العشوائي.</p>
+<p><b>التسميع العشوائي الحر</b> يفتح تطبيق رسيت المعتاد بلا تغيير في سلوكه سوى إخفاء عنوان التسميع (السورة والآيات). لكن لا تغيير آخر، فتستطيع تغيير الاختبار، مثلا بزيادة آيات في أوله أو&nbsp;آخره.</p>
+<p>والتسميع الحر يفتح في صفحة جديدة أو لسان جديد في المتصفح، فعليك إغلاق صفحة رسيت بعد إتمام كل تسميع للعودة إلى صفحة التسميع.</p>
+</section>
 
 <script>
 
@@ -167,7 +193,7 @@ const add_new_range = () => {
 
 const given_ranges =
   (location.search + location.hash)
-    .split(/[#?,]/).filter(e => e)
+    .split(/[#?,&]/).filter(e => e)
 
 if (given_ranges.length) {
   let first = true
@@ -193,14 +219,14 @@ if (given_ranges.length) {
 const el_more = document.getElementById('more')
 el_more.onclick = add_new_range
 
-function create_it () {
+function create_it (zz=false) {
   let y = ''
   document.querySelectorAll('div.suar_range').forEach(r => {
     const [a, z] = Array.from(r.querySelectorAll('select')).map(e => +e.value)
     if (y) { y += ',' }
     y += a === z ? a : (a + '-' + z)
   })
-  window.open(`./rand.html?${y}`, '_blank')
+  window.open(`./rand${zz ? 'z' : ''}.html?${y}`, '_blank')
 }
 
 </script>
