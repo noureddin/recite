@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<title>Random Recitation</title>
+<title>تسميع عشوائي حر | رسيت</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
   /* This font is from from: https://sourceforge.net/projects/arabeyes/files/Fonts/ */
@@ -24,20 +24,28 @@
     text-align: center;
   }
 
-  #b {
-    font-size: 200%;
-    margin-top: 2em;
-    margin-bottom: 2em;
+  p {
+    line-height: 1.5;  /* slightly wide for Arabic */
   }
 
-  body { background: #f8f8f0 }
+  #B {
+    font-size: 200%;
+    margin-top: 2em;
+    margin-bottom: 1em;
+  }
+
+  #F {
+    margin-top: 2em;
+  }
+
+  body { background: #f8f8f0; color: #223 }
   a { color: #00f }
   a:focus { color: #04f }
   a:hover { color: #08b }
   a:active { color: #0b0 }
 
   @media (prefers-color-scheme: dark) {
-    body { background: #101016 }
+    body { background: #101016; color: #eee }
     a { color: #44f }
     a:focus { color: #2af }
     a:hover { color: #2ff }
@@ -47,14 +55,16 @@
 </style>
 </head>
 <body>
-<div id="b"></div>
-<div id="f"></div>
+<div id="B"></div>
+<p>لثلاث إلى ست آيات من:<br><span id="T"></span></p>
+<div id="F"></div>
 <script>
 
 // non-data constants
 
-const B = document.getElementById('b')
-const F = document.getElementById('f')
+const T = document.getElementById('T')
+const B = document.getElementById('B')
+const F = document.getElementById('F')
 
 // utils
 
@@ -66,6 +76,8 @@ const range = (n) => n ? [...Array(n).keys()] : []
 // data
 
 const sura_length = [7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6]
+
+const sura_name = ['الفاتحة','البقرة','آل عمران','النساء','المائدة','الأنعام','الأعراف','الأنفال','التوبة','يونس','هود','يوسف','الرعد','إبراهيم','الحجر','النحل','الإسراء','الكهف','مريم','طه','الأنبياء','الحج','المؤمنون','النور','الفرقان','الشعراء','النمل','القصص','العنكبوت','الروم','لقمان','السجدة','الأحزاب','سبأ','فاطر','يس','الصافات','ص','الزمر','غافر','فصلت','الشورى','الزخرف','الدخان','الجاثية','الأحقاف','محمد','الفتح','الحجرات','ق','الذاريات','الطور','النجم','القمر','الرحمن','الواقعة','الحديد','المجادلة','الحشر','الممتحنة','الصف','الجمعة','المنافقون','التغابن','الطلاق','التحريم','الملك','القلم','الحاقة','المعارج','نوح','الجن','المزمل','المدثر','القيامة','الإنسان','المرسلات','النبأ','النازعات','عبس','التكوير','الانفطار','المطففين','الانشقاق','البروج','الطارق','الأعلى','الغاشية','الفجر','البلد','الشمس','الليل','الضحى','الشرح','التين','العلق','القدر','البينة','الزلزلة','العاديات','القارعة','التكاثر','العصر','الهمزة','الفيل','قريش','الماعون','الكوثر','الكافرون','النصر','المسد','الإخلاص','الفلق','الناس',]
 
 function start_ (s) { return +sura_length.slice(0, s).reduce((a, b) => a + b, 0) }
 const sura_offset = range(115).map(start_)  // array mapping 0-based suar to how many ayat before it (eg 0 => 0, 1 => 7, 2 => 286+7)
@@ -100,6 +112,20 @@ const ayat = given_ranges
 if (ayat.length === 0) {
   location.href = './randgen.html'
 }
+
+// suar names
+T.innerHTML = given_ranges.map(e => {
+  const [a, z] = e.split('-')
+  if (z == null || +a === +z) {  // one sura
+    return 'سورة ' + sura_name[a-1]
+  }
+  else if (+a+1 === +z) {  // 2 suratan
+    return 'سورتي ' + sura_name[a-1] + ' و' + sura_name[a]  // note: oblique case
+  }
+  else {  // many suar
+    return 'السور من ' + sura_name[a-1] + ' إلى ' + sura_name[z-1]
+  }
+}).join('<br>و')
 
 F.innerHTML = `<a target="_blank" href="./randgen.html?${given_ranges.join(',')}">غيّر سور التسميع</a>`
 
