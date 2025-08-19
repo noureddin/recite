@@ -66,8 +66,6 @@ const el_teacher_option = Qid("teacher_option")
 const el_teacher = Qid("teacher")
 const el_qaris = Qid("qaris")
 const el_qariurl = Qid("qariurl")
-const el_cn = Qid("cn")
-const el_zz = Qid("zz")
 const el_quizmode_option = Qid("quizmode_option")
 const el_quizmode = Qid("quizmode")
 const el_uthm_options = Qid("uthm_options")
@@ -319,8 +317,9 @@ function valid_inputs (sura_bgn, aaya_bgn, sura_end, aaya_end) {  // {{{
 }  // }}}
 
 function zz_set (prop, val) {
-  prop = 'zz_set_'+prop
-  if (prop in parent) { parent[prop](val) }
+  prop = '_set_' + prop
+  if ('zz'+prop in parent) { parent['zz'+prop](val) }
+  if ('rr'+prop in parent) { parent['rr'+prop](val) }
 }
 
 function change_qari () {

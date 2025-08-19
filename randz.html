@@ -102,19 +102,24 @@ const unblock_page = () => {
 }
 
 const recite = (url) => {
-  block_page()
-  // showing transparently before loading, b/c tajweedlegend needs to know the page's height to show properly,
-  // otherwise it'd be too large at first.
-  R.style.opacity = '0'
-  R.style.display = 'block'
-  window.zz_show = () => {
-    R.style.opacity = '1'
-    setTimeout(() => R.focus(), 0)
-    // ^ without a timeout, an Enter on the Start url would show the first word inconsistently
-    unblock_page()
+  if (R.style.display !== 'block') {  // if NOT starting a new one from inside Recite
+    block_page()
+    // showing transparently before loading, b/c tajweedlegend needs to know the page's height to show properly,
+    // otherwise it'd be too large at first.
+    R.style.opacity = '0'
+    R.style.display = 'block'
+    window.rr_show = () => {
+      R.style.opacity = '1'
+      setTimeout(() => R.focus(), 50)
+      // ^ without a timeout, an Enter on the Start url would show the first word inconsistently
+      unblock_page()
+    }
+    window.rr_return = () => { R.style.display = 'none' }
+    window.rr_new    = () => {
+      B.getElementsByTagName('a')[0].click()
+    }
   }
-  R.src = url + '&zz'
-  window.zz_done = window.zz_ignore = () => { R.style.display = 'none' }
+  R.src = url
 }
 
 // utils
@@ -190,7 +195,7 @@ function update() {
   while (z - a < 2 && sura_of(a-1) === sura_1based) { --a }
   const rng = a + '-' + z
   //
-  const url = `./?notitle&nopr&q=u&cn&${rng}`
+  const url = `./?rr&notitle&nopr&q=u&cn&${rng}`
   B.innerHTML = `<a onclick="recite('${url}'); update(); return false" href="#" role="button">ابدأ تسميعًا عشوائيًّا</a>`
   B.getElementsByTagName('a')[0].focus()
 }

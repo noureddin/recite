@@ -240,8 +240,9 @@ function valid_inputs (sura_bgn, aaya_bgn, sura_end, aaya_end) {  // {{{
 }  // }}}
 
 function zz_set (prop, val) {
-  prop = 'zz_set_'+prop
-  if (prop in parent) { parent[prop](val) }
+  prop = '_set_' + prop
+  if ('zz'+prop in parent) { parent['zz'+prop](val) }
+  if ('rr'+prop in parent) { parent['rr'+prop](val) }
 }
 
 function change_qari () {

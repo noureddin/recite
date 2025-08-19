@@ -160,12 +160,11 @@ function preview (st, en, from_url) {
   load('u', () => {
     const st = opts.st
     const en = opts.en
-    const cn = !!el_cn.value
     el_uthm_txt.style.textAlign = ''
     el_uthm_txt.innerHTML = ''
     el_uthm_txt.classList.remove('done')
     show_or_hide_tajweedlegend()
-    el_uthm_txt.innerHTML = make_words_list(st, en, cn).join('')
+    el_uthm_txt.innerHTML = make_words_list(st, en, window.get_continuation).join('')
   })
 }
 
@@ -193,7 +192,7 @@ function recite (st, en, from_url) {
   sync_ui(stpair, enpair)
   init_audio(stpair, enpair, qari, qariurl)
 
-  if (el_zz.value) { parent.zz_show() }
+  if (window.is_embedded) { window.random_recitation ? parent.rr_show() : parent.zz_show() }
 
   el_mvbtns.Qall('button').forEach(e => e.disabled = true)
   el_uthm_txt.style.textAlign = 'center'
@@ -406,7 +405,6 @@ function _recite_imla () {
 function _recite_uthm () {
   const st = opts.st
   const en = opts.en
-  const cn = !!el_cn.value
   const teacher = el_teacher.checked
 
   el_mvbtns.Qall('button').forEach(e => e.disabled = false)
@@ -418,7 +416,7 @@ function _recite_uthm () {
 
   el_tafsirhint.className = ''
 
-  let words = make_words_list(st, en, cn)
+  let words = make_words_list(st, en, window.get_continuation)
 
   const fwd = function (kind) {
     if (words.length === 0) { return }
@@ -560,9 +558,20 @@ const hide_selectors = function (quizmode) {  // quizmode must be 'preview', 'im
   el_header.hidden = false
   el_endmsg.hidden = true
   el_title.style.display = 'inline-block'
-  el_zzback.style.display = el_zz.value ? 'block' : 'none'
-  el_zzignore.style.display = el_zz.value ? '' : 'none'
-  el_new.style.display = el_zz.value ? 'none' : ''  // only hide if ignore is shown
+  if (window.is_embedded) {
+    el_zzback.style.display = 'block'
+    el_zzignore.style.display = ''
+    el_new.style.display = 'none'  // only hide if ignore is shown
+    if (window.random_recitation) {
+      el_zzback.innerHTML = 'جديد'
+      el_zzignore.innerHTML = 'خروج'
+    }
+  }
+  else {
+    el_zzback.style.display = 'none'
+    el_zzignore.style.display = 'none'
+    el_new.style.display = ''  // only hide if ignore is shown
+  }
   const d = document.documentElement
   if (quizmode === 'preview') {  // 2 buttons only
     el_repeat.innerHTML = 'ابدأ\nالاختبار'
@@ -657,8 +666,8 @@ const new_select = function () {
 
 el_new.onclick = new_select
 
-el_zzback.onclick   = () => { clear_screen(); parent.zz_done()   }
-el_zzignore.onclick = () => { clear_screen(); parent.zz_ignore() }
+el_zzback.onclick   = () => { clear_screen(); window.random_recitation ? parent.rr_new()    : parent.zz_done()   }
+el_zzignore.onclick = () => { clear_screen(); window.random_recitation ? parent.rr_return() : parent.zz_ignore() }
 
 onload = function () {
   init_inputs()
