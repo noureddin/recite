@@ -183,12 +183,17 @@ label, label *, select, input, button {
 #uthm_txt.done, #uthm_txt.sidebtns {
   margin-bottom: 1em;  /* same as margin above */
 }
+
 #endmsg {
   font-family: Cortoba, KacstOne, serif;
   font-size: min(5vw, 2rem);
   text-align: center;
   color: var(--uitxt);
-  margin: 1rem auto 2rem;
+  margin: 1rem auto 4rem;
+}
+#endtitle {
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  margin: 1em 0 1em;
 }
 
 #selectors,
@@ -795,7 +800,7 @@ details[open] > .details-content {
   100%  { opacity: 1 }
 }
 
-#zzback { display: block; margin: auto; margin-top: 0.5em; }
+#zzback { display: block; margin: auto; margin-bottom: 1em; }
 
 #end_of_header {
   margin: 0;

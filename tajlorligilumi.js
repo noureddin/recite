@@ -65,6 +65,7 @@ function _tajlorligilumilo (params) {
   let cn               // continuation; ie, append a "phrase" from the next aaya if in the same sura
   let zz               // enable embedded integration: zz (cannot be disabled if enabled)
   let rr               // enable another kind of embedded integration
+  let words            // advance (show) first N words of the first aaya (only if embedded)
   params
     .slice(1)  // remove the first character (`?` or `#`)
     .split('&')
@@ -107,6 +108,7 @@ function _tajlorligilumilo (params) {
       else if (is_of('cn'))                          {              cn = true                             }
       else if (is_of('zz'))                          {              zz = true                             }
       else if (is_of('rr'))                          {              rr = true                             }
+      else if (is_of('words'))                       {           words = +e[1]                            }
     })
   let opts = {
     dark,
@@ -134,6 +136,7 @@ function _tajlorligilumilo (params) {
     cn,
     zz,
     rr,
+    words,
   }
   return opts
 }
@@ -230,5 +233,6 @@ function tajlorligilumi () {
   if (opts.emulate && mappings[opts.emulate]) { window.emulate = opts.emulate }
   if (opts.fullpage) { el_body.classList.add('fullpage') }
   if (opts.noborder) { el_imla_txt.classList.add('noborder') }
+  if (window.is_embedded && opts.words && !isNaN(opts.words)) { window.show_words = opts.words }
 }
 tajlorligilumi()

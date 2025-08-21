@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>إنشاء صفحة تسميع عشوائي | رسيت</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body { background: #000 !important }  /* see the comment at the end */
+
+  /* The following two fonts are from: https://sourceforge.net/projects/arabeyes/files/Fonts/ */
+  /* They are under GNU GPL v2. Both are converted from TrueType to WOFF using */
+  /* then both are subsetted and converted to WOFF & WOFF2 using glyphhanger */
+  @font-face {
+    font-family: KacstOne; /* version 5.0 */
+    font-style: normal;
+    font-weight: 400;
+    src: url('../../woff/KacstOne-subset.woff2') format('woff2'),
+         url('../../woff/KacstOne-subset.woff')  format('woff');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: Cortoba;  /* version 2.1 */
+    font-style: normal;
+    font-weight: 400;
+    src: url('../../woff/ae_Cortoba-subset.woff2') format('woff2'),
+         url('../../woff/ae_Cortoba-subset.woff')  format('woff');
+    font-display: swap;
+  }
+
+  body {
+    margin: 1em;
+  }
+
+  * { font-size: calc(16px + 0.5vw) }
+  * { font-family: Cortoba, serif }
+
+  p { font-family: KacstOne, serif }
+  b { font-family: Cortoba, serif; font-weight: normal }
+
+  section {
+    width: 35em;
+    max-width: 95%;
+    margin: 2em auto;
+    margin-bottom: 4em;
+  }
+
+  /* suar/ayat selection */
+  label {
+    /* display: inline-block; */
+    /* max-width: 20em; */
+    /* min-width: 40%; */
+    white-space: nowrap;
+  }
+
+  .label { /* من سورة and إلى سورة */
+    display: inline-block;
+    width: 4em;
+  }
+
+  .suar_range {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 0.5em 1em;
+    justify-content: center;
+    /* max-width: min(80vw, 35rem); */
+    width: var(--w);
+    margin: 1em auto;
+  }
+
+  #content {
+    margin: 0 auto;
+    width: calc(2.5em + var(--w));
+  }
+
+  .phantom.rm { display: none }
+  :root { --w: 25em }
+  @media (max-width: 560px) {
+    :root { --w: 14em }
+    .phantom.rm { display: inline-block }
+  }
+  @media (max-width: 310px) {
+    :root { --w: 10.5em }
+    .sura { display: none }
+    .label { width: 1.6em }
+    select { width: 5.5em }
+  }
+
+  .holder.rm { display: none }
+  .suar_range:only-child > .rm {
+    &.real { display: none }
+    &.holder {
+      display: inline-block;
+      height: 1.3rem /* I have no idea why this height needs to be adjusted, but otherwise the #more button wouldn't be aligned vertically */
+    }
+  }
+
+  .ok {
+    display: block;
+    margin: 1em auto;
+    margin-top: 2em;
+    padding: 0.5em;
+  }
+
+  #inputs {
+    margin-top: 2em;
+    display: inline-block;
+  }
+
+  .rm, #more {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    font-weight: bold;
+  }
+
+  .rm {
+    font-family: sans-serif;
+    font-size: 90%;
+    color: #a00
+  }
+
+  #more {
+    color: #0a0;
+    vertical-align: baseline;
+  }
+  
+  body { background: #f8f8f0 !important; color: #101010 }
+
+  @media (prefers-color-scheme: dark) {
+    body { background: #101016 !important; color: #eef }
+    button, select { filter: invert(1) }
+    #more { color: magenta /* inverted to green */ }
+    .rm   { color: cyan    /* inverted to red */ }
+  }
+
+  /* believe or not: important is needed in body's background,
+   * to reduce the probability of the browser flashing white on loading or reloading.
+   */
+
+</style>
+</head>
+<body>
+
+<div id="content">
+<div id="inputs">
+<div class="suar_range">
+  <div class="holder rm"></div>
+  <button class="real rm" onclick="this.parentElement.remove()">X</button>
+  <label><span class="label">من<span class="sura">&nbsp;سورة</span>:&thinsp;</span><select class="sura_bgn"></select></label>
+  <div class="phantom rm"></div>
+  <label><span class="label">إلى<span class="sura">&nbsp;سورة</span>:&thinsp;</span><select class="sura_end"></select></label>
+</div>
+</div>
+<button id="more">+</button>
+</div>
+
+<button class="ok" onclick="create_it(true)">أنشئ صفحة تسميع عشوائي صارم</button>
+<button class="ok" onclick="create_it(false)">أنشئ صفحة تسميع عشوائي حر</button>
+
+<section>
+<p>حدد السور التي تريد أن تُختبر في آيات عشوائية منها (ثلاث إلى ست آيات في كل مرة، مع الآية التالية أو جزء منها للربط).</p>
+<p>يمكن أن تختار أي عدد من السور المتتابعة أو غير المتتابعة.</p>
+<p><b>التسميع العشوائي الصارم</b> يفرض عليك النطاق المحدد من الآيات ولا تستطيع تغييره. ويضيف إلى رسيت زر «خروج» لترك التسميع في أي وقت، وزر «جديد» بعد إتمام التسميع لبَدء تسميع عشوائي جديد فورًا.</p>
+<p><b>التسميع العشوائي الحر</b> يفتح تطبيق رسيت المعتاد بلا تغيير في سلوكه سوى إخفاء عنوان التسميع (السورة والآيات). لكن لا تغيير آخر، فتستطيع تغيير الاختبار، مثلا بزيادة آيات في أوله أو&nbsp;آخره.</p>
+<p>والتسميع الحر يفتح في صفحة جديدة أو لسان جديد في المتصفح، فعليك إغلاق صفحة رسيت بعد إتمام كل تسميع للعودة إلى صفحة التسميع.</p>
+</section>
+
+<script>
+
+const sura_name = ['الفاتحة','البقرة','آل عمران','النساء','المائدة','الأنعام','الأعراف','الأنفال','التوبة','يونس','هود','يوسف','الرعد','إبراهيم','الحجر','النحل','الإسراء','الكهف','مريم','طه','الأنبياء','الحج','المؤمنون','النور','الفرقان','الشعراء','النمل','القصص','العنكبوت','الروم','لقمان','السجدة','الأحزاب','سبأ','فاطر','يس','الصافات','ص','الزمر','غافر','فصلت','الشورى','الزخرف','الدخان','الجاثية','الأحقاف','محمد','الفتح','الحجرات','ق','الذاريات','الطور','النجم','القمر','الرحمن','الواقعة','الحديد','المجادلة','الحشر','الممتحنة','الصف','الجمعة','المنافقون','التغابن','الطلاق','التحريم','الملك','القلم','الحاقة','المعارج','نوح','الجن','المزمل','المدثر','القيامة','الإنسان','المرسلات','النبأ','النازعات','عبس','التكوير','الانفطار','المطففين','الانشقاق','البروج','الطارق','الأعلى','الغاشية','الفجر','البلد','الشمس','الليل','الضحى','الشرح','التين','العلق','القدر','البينة','الزلزلة','العاديات','القارعة','التكاثر','العصر','الهمزة','الفيل','قريش','الماعون','الكوثر','الكافرون','النصر','المسد','الإخلاص','الفلق','الناس',]
+
+const opts = 'notitle&quizmode=uthmani&cn'
+
+const sura_options = sura_name.map((t, i) => `<option value="${i+1}">${t}</option>`).join('')
+
+const init_range = (el_range) => {
+  const el_bgn = el_range.querySelector('select.sura_bgn')
+  const el_end = el_range.querySelector('select.sura_end')
+  //
+  el_bgn.innerHTML = sura_options
+  el_end.innerHTML = sura_options
+  //
+  el_bgn.oninput = el_bgn.onblur = (ev) => { if (+el_end.value < +el_bgn.value) { el_end.value = el_bgn.value } }
+  el_end.oninput = el_end.onblur = (ev) => { if (+el_bgn.value > +el_end.value) { el_bgn.value = el_end.value } }
+}
+
+const el_inputs = document.getElementById('inputs')
+
+init_range(document.querySelector('div.suar_range'))
+
+const last_range = () => el_inputs.children[el_inputs.childElementCount-1]
+
+const add_new_range = () => {
+  const el_new = last_range().cloneNode(true)
+  init_range(el_new)
+  el_inputs.append(el_new)
+  return el_new
+}
+
+const given_ranges =
+  (location.search + location.hash)
+    .split(/[#?,&]/).filter(e => e)
+
+if (given_ranges.length) {
+  let first = true
+  const put_range = (param) => {
+    const [a, z] = param.indexOf('-') === -1 ? [param, param] : param.split('-')
+    if ( (!isNaN(+a) && +a >= 1 && +a <= 114)
+     &&  (!isNaN(+z) && +z >= 1 && +z <= 114)
+     &&  (+a <= +z)
+    ) {
+      const el_range = first ? el_inputs.children[0] : add_new_range()
+      first = false
+      const [el_a, el_z] = el_range.querySelectorAll('select')
+      el_a.value = a
+      el_z.value = z
+    }
+  }
+  //
+  for (let i = 0; i < given_ranges.length; ++i) {
+    put_range(given_ranges[i])
+  }
+}
+
+const el_more = document.getElementById('more')
+el_more.onclick = add_new_range
+
+function create_it (zz=false) {
+  let y = ''
+  document.querySelectorAll('div.suar_range').forEach(r => {
+    const [a, z] = Array.from(r.querySelectorAll('select')).map(e => +e.value)
+    if (y) { y += ',' }
+    y += a === z ? a : (a + '-' + z)
+  })
+  window.open(`../${zz ? 's' : 'f'}/?${y}`, '_blank')
+}
+
+</script>
+</body>
+</html>
+

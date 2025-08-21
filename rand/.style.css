@@ -1,0 +1,52 @@
+body { background: #000 !important }  /* see the comment at the end */
+
+/* This font is from from: https://sourceforge.net/projects/arabeyes/files/Fonts/ */
+/* Under GNU GPL v2. Converted from TrueType to WOFF using */
+/* then subsetted and converted to WOFF & WOFF2 using glyphhanger */
+@font-face {
+  font-family: KacstOne; /* version 5.0 */
+  font-style: normal;
+  font-weight: 400;
+  src: url('../woff/KacstOne-subset.woff2') format('woff2'),
+       url('../woff/KacstOne-subset.woff')  format('woff');
+  font-display: swap;
+}
+
+body {
+  margin: 2em;
+  font-size: calc(16px + 0.5vw);
+  font-family: Kacst, serif;
+  text-align: center;
+}
+
+p {
+  line-height: 1.5;  /* slightly wide lines for Arabic */
+}
+
+#B {
+  font-size: 200%;
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+#F {
+  margin-top: 2em;
+}
+
+body { background: #f8f8f0 !important; color: #223 }
+a { color: #00f }
+a:focus { color: #04f }
+a:hover { color: #08b }
+a:active { color: #0b0 }
+
+@media (prefers-color-scheme: dark) {
+  body { background: #101016 !important; color: #eee }
+  a { color: #44f }
+  a:focus { color: #2af }
+  a:hover { color: #2ff }
+  a:active { color: #2f2 }
+}
+
+/* believe or not: important is needed in body's background,
+ * to reduce the probability of the browser flashing white on loading or reloading.
+ */

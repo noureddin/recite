@@ -76,8 +76,8 @@ function input_trigger_x (ev) {  // connected to {sura,aaya}_{bgn,end}.onkeyup
 function show_done () {
   removeEventListener('beforeunload', before_unload)
   if (el_endmsg.hidden) {
-    el_endmsg.hidden = false
     set_title('تم ' + opts.title)
+    el_endmsg.hidden = false
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       confetti.start(1200, 50, 150)
     }
@@ -110,14 +110,17 @@ function tab_toggled (el) {
 
 function set_title (title) {
   if (title) {
+    if (window.get_continuation && !title.match(/كامل[ةت]/) && !title.match(/السور من/) && !title.match(/الأخيرة/)) { title += ' مع الربط بما يليها' }
     el_title.innerHTML = title
+    el_endtitle.innerHTML = title.replace(/^تم /, /*X*/ 'أتممت ').replace(/(مع) (الربط) (بما) (يليها)/, /* add NSBP */ '$1\xa0$2\xa0$3\xa0$4')
     el_title.style.display = 'block'
   }
   else {
     el_title.innerHTML = ''
+    el_endtitle.innerHTML = ''
     el_title.style.display = 'none'
   }
-  Q('title').innerHTML = (title ? (title + ' | ') : '' ) + 'رسيت'
+  document.title = (title ? (title + ' | ') : '' ) + 'رسيت'
   zz_set('title', title)
 }
 
@@ -440,6 +443,8 @@ function _recite_uthm () {
   const word_fwd = () => fwd('')
   const aaya_fwd = () => fwd('a')
   const jmla_fwd = () => fwd('j')
+
+  if (window.show_words) { for (let i = 0; i < window.show_words; ++i) { word_fwd() } }
 
   const bck = function (kind) {
     let uthm = el_uthm_txt.innerHTML
