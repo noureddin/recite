@@ -109,10 +109,17 @@ function tab_toggled (el) {
 }
 
 function set_title (title) {
+  let htitle = title.replace(/^تم /, '')
+  let endtitle = title.replace(/^تم /, /* "[Well Done!] You have completed..." */ 'أتممت ')
+  //
   if (title) {
-    if (window.get_continuation && !title.match(/كامل[ةت]/) && !title.match(/السور من/) && !title.match(/الأخيرة/)) { title += ' مع الربط بما يليها' }
-    el_title.innerHTML = title
-    el_endtitle.innerHTML = title.replace(/^تم /, /*X*/ 'أتممت ').replace(/(مع) (الربط) (بما) (يليها)/, /* add NSBP */ '$1\xa0$2\xa0$3\xa0$4')
+    if (window.get_continuation && !title.match(/كامل[ةت]/) && !title.match(/السور من/) && !title.match(/الأخيرة/)) {
+      htitle += ' مع الربط بما يليها'
+      endtitle += ' مع\xa0الربط\xa0بما\xa0يليها'  // NBSP
+    }
+    //
+    el_title.innerHTML = htitle
+    el_endtitle.innerHTML = endtitle
     el_title.style.display = 'block'
   }
   else {
@@ -120,8 +127,8 @@ function set_title (title) {
     el_endtitle.innerHTML = ''
     el_title.style.display = 'none'
   }
-  document.title = (title ? (title + ' | ') : '' ) + 'رسيت'
-  zz_set('title', title)
+  document.title = (htitle ? (htitle + ' | ') : '' ) + 'رسيت'
+  zz_set('title', htitle)
 }
 
 function sync_ui (stpair, enpair) {
