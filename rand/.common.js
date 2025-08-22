@@ -69,7 +69,7 @@ T.innerHTML = given_ranges.map(e => {
   }
 }).join('<br>و')
 
-F.innerHTML = `<a target="_blank" href="../gen/?${given_ranges.join(',')}">غيّر سور التسميع</a>`
+F.innerHTML = `<a target="_blank" href="../gen/?${given_ranges.join(',')}">غيّر سور التسميع أو نوعه</a>`
 
 function update () {
   let   a = ayat[rand_index(ayat.length)]

@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<title>إنشاء صفحة تسميع عشوائي | رسيت</title>
+<title>رتّل راسخًا | إنشاء صفحة تسميع عشوائي</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
   body { background: #000 !important }  /* see the comment at the end */
@@ -34,7 +34,16 @@
   * { font-size: calc(16px + 0.5vw) }
   * { font-family: Cortoba, serif }
 
-  p { font-family: KacstOne, serif }
+  h1 {
+    margin: 1em 0 -0.5em;
+    font-size: 200%;
+    text-align: center;
+    font-weight: normal;
+    letter-spacing: -0.1ex;
+    word-spacing: 0.35em;
+  }
+
+  p, p * { font-family: KacstOne, serif }
   b { font-family: Cortoba, serif; font-weight: normal }
 
   section {
@@ -97,8 +106,12 @@
   .ok {
     display: block;
     margin: 1em auto;
-    margin-top: 2em;
+    margin-top: 1.5rem;
     padding: 0.5em;
+  }
+
+  #btnF {
+    font-size: 80%;
   }
 
   #inputs {
@@ -125,9 +138,17 @@
   }
   
   body { background: #f8f8f0 !important; color: #101010 }
+  a { color: #00a }
+  a:focus { color: #04f }
+  a:hover { color: #08b }
+  a:active { color: #0b0 }
 
   @media (prefers-color-scheme: dark) {
     body { background: #101016 !important; color: #eef }
+    a { color: #a0a8ff }
+    a:focus { color: #4cf }
+    a:hover { color: #2ff }
+    a:active { color: #2f2 }
     button, select { filter: invert(1) }
     #more { color: magenta /* inverted to green */ }
     .rm   { color: cyan    /* inverted to red */ }
@@ -142,6 +163,7 @@
 <body>
 
 <div id="content">
+<h1>.: رتّـــل راســـخًـا :.</h2>
 <div id="inputs">
 <div class="suar_range">
   <div class="holder rm"></div>
@@ -154,15 +176,15 @@
 <button id="more">+</button>
 </div>
 
-<button class="ok" onclick="create_it(true)">أنشئ صفحة تسميع عشوائي صارم</button>
-<button class="ok" onclick="create_it(false)">أنشئ صفحة تسميع عشوائي حر</button>
+<button class="ok" id="btnS" onclick="create_it(true)">أنشئ صفحة تسميع عشوائي صارم</button>
+<button class="ok" id="btnF" onclick="create_it(false)">أنشئ صفحة تسميع عشوائي حر</button>
 
 <section>
 <p>حدد السور التي تريد أن تُختبر في آيات عشوائية منها (ثلاث إلى ست آيات في كل مرة، مع الآية التالية أو جزء منها للربط).</p>
 <p>يمكن أن تختار أي عدد من السور المتتابعة أو غير المتتابعة.</p>
-<p><b>التسميع العشوائي الصارم</b> يفرض عليك النطاق المحدد من الآيات ولا تستطيع تغييره. ويضيف إلى رسيت زر «خروج» لترك التسميع في أي وقت، وزر «جديد» بعد إتمام التسميع لبَدء تسميع عشوائي جديد فورًا.</p>
-<p><b>التسميع العشوائي الحر</b> يفتح تطبيق رسيت المعتاد بلا تغيير في سلوكه سوى إخفاء عنوان التسميع (السورة والآيات). لكن لا تغيير آخر، فتستطيع تغيير الاختبار، مثلا بزيادة آيات في أوله أو&nbsp;آخره.</p>
-<p>والتسميع الحر يفتح في صفحة جديدة أو لسان جديد في المتصفح، فعليك إغلاق صفحة رسيت بعد إتمام كل تسميع للعودة إلى صفحة التسميع.</p>
+<p><b>التسميع العشوائي الصارم</b> يفرض عليك النطاق المحدد من الآيات ولا تستطيع تغييره. ويضيف إلى <a href="../../../recite/">رسيت</a> زر «خروج» لترك التسميع في أي وقت، وزر «جديد» بعد إتمام التسميع لبَدء تسميع عشوائي جديد فورًا.</p>
+<p><b>التسميع العشوائي الحر</b> يفتح تطبيق <a href="../../../recite/">رسيت</a> المعتاد بلا تغيير في سلوكه سوى إخفاء عنوان التسميع (السورة والآيات). لكن لا تغيير آخر، فتستطيع تغيير الاختبار، مثلا بزيادة آيات في أوله أو&nbsp;آخره.</p>
+<p>والتسميع الحر يفتح في صفحة جديدة أو لسان جديد في المتصفح، فعليك إغلاق صفحة <a href="../../../recite/">رسيت</a> بعد إتمام كل تسميع للعودة إلى صفحة التسميع.</p>
 </section>
 
 <script>

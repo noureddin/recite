@@ -40,7 +40,7 @@ const recite = (url) => {
     window.rr_return = () => { R.style.display = 'none' }
     window.rr_new    = () => { A().click() }
     window.rr_set_title = (t) => {
-      document.title = (t ? t+' | ' : '') + 'تسميع عشوائي صارم | رسيت'
+      document.title = (t ? t+' | ' : '') + 'رتّل راسخًا | تسميع عشوائي'
     }
   }
   R.src = url

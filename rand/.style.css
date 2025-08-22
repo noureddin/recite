@@ -19,14 +19,20 @@ body {
   text-align: center;
 }
 
+h1 {
+  margin: 4rem 0 3rem;
+  font-weight: normal;
+  font-size: 175%;
+}
+
 p {
   line-height: 1.5;  /* slightly wide lines for Arabic */
 }
 
 #B {
   font-size: 200%;
-  margin-top: 2em;
-  margin-bottom: 1em;
+  margin-top: 3rem;  /* must be the same margin-bottom of the block above it (the h1) to avoid jumping on changing <a>'s content in rand/s/ */
+  margin-bottom: 3rem;
 }
 
 #F {
@@ -41,8 +47,8 @@ a:active { color: #0b0 }
 
 @media (prefers-color-scheme: dark) {
   body { background: #101016 !important; color: #eee }
-  a { color: #44f }
-  a:focus { color: #2af }
+  a { color: #68f }
+  a:focus { color: #4cf }
   a:hover { color: #2ff }
   a:active { color: #2f2 }
 }
