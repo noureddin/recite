@@ -2,7 +2,7 @@
 
 # URL='https://noureddin.github.io/recite/'
 URL='https://www.noureddin.dev/recite/'
-TITLE='راجع ما تحفظ من القرآن الكريم | رسيت'
+TITLE='رسيت | راجع ما تحفظ من القرآن الكريم'
 DESC='تطبيق وب مجاني لمراجعة حفظ القرآن الكريم بلا كتابة، للحاسوب والمحمول.'
 
 # https://iamturns.com/open-graph-image-size/
