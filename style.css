@@ -500,7 +500,7 @@ text {
 #dark:checked ~ #body summary::marker { color: #f66 }
 /* #dark:checked ~ #body .help-part      { color: #f22 } */
 /* #dark:checked ~ #body summary::marker { color: #f22 } */
-#dark:checked ~ #body details *       { color: #aaf }
+#dark:checked ~ #body details *       { color: #ccd }
 #dark:checked ~ #body a               { color: #adf }
 #dark:checked ~ #body kbd             { color: #000 }  /* inverted */
 #dark:checked ~ #body summary         { color: #fff }
