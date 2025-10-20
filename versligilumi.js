@@ -210,8 +210,6 @@ function _versligilumilo (params) {
   // support shorthand: 1/1--7 <=> 1/1-1/7 & 1//2--4 <=> 1//2-1//4
   const sh = (e) => e.replace(/^([0-9]+\/+)([0-9]+)--([0-9]+)$/, '$1$2-$1$3')
   params
-    .slice(1)  // remove the first character (`?` or `#`)
-    .split('&')
     .map(p => p.split('='))
     //.reduce((obj, cur, i) => { i == 0 ? {} : (obj[cur[0]] = cur[1], obj), {})
     .forEach((e, i) => {
@@ -238,7 +236,7 @@ function _versligilumilo (params) {
 }
 
 function versligilumi () {
-  const [st, en, view] = _versligilumilo(L.search + L.hash.replace(/^#/, '&'))
+  const [st, en, view] = _versligilumilo((L.search + L.hash).split(/[ ?&#]/))
   //
   // if no ayat are selected
   if (st == null || en == null) { return }

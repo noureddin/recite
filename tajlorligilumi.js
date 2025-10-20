@@ -67,8 +67,6 @@ function _tajlorligilumilo (params) {
   let rr               // enable another kind of embedded integration
   let words            // advance (show) first N words of the first aaya (only if embedded)
   params
-    .slice(1)  // remove the first character (`?` or `#`)
-    .split('&')
     .map(p => p.split('='))
     //.reduce((obj, cur, i) => { i == 0 ? {} : (obj[cur[0]] = cur[1], obj), {})
     .forEach((e, i) => {
@@ -155,7 +153,7 @@ function update_bool_default_true (el, param, stored) {
 }
 
 function tajlorligilumi () {
-  const opts = _tajlorligilumilo(L.search + L.hash.replace(/^#/, '&'))
+  const opts = _tajlorligilumilo((L.search + L.hash).split(/[ ?&#]/))
   //
   if (opts.quizmode == null) {
     if (S.imla) {
