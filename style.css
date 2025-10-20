@@ -991,3 +991,4 @@ details[open] > .details-content {
 
 /* end: search */
 
+body.nocursor * { cursor: none }  /* hide when using the keyboard */

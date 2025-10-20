@@ -212,6 +212,14 @@ function recite (st, en, from_url) {
   load(qz, _recite)
 }
 
+document.addEventListener('mousemove', (ev) => {
+  document.body.classList.remove('nocursor')
+})
+
+document.addEventListener('keyup', (ev) => {
+  document.body.classList.add('nocursor')
+})
+
 document.addEventListener('keyup', (ev) => {
   if (ev.key === 'Escape') {
     audio.play()
