@@ -1,45 +1,46 @@
-// ligilumi: to parse url parameters
-// tajlori: to personalize
-// tajlorligilumi: parsing preferences (not verses) url params
-
-const _fbrate_values = {
-  l: 'l', letter: 'l',
-  w: 'w', word: 'w',
-  a: 'a', aaya: 'a',
-}
+// parsing preferences (not verses) url params
 
 function parse_fbrate (fb) {
-  return _fbrate_values[ fb.toLowerCase() ]
+  switch (fb.toLowerCase()) {
+    case 'l': case 'ltr': case 'letter':  return 'l'
+    case 'w': case 'word':                return 'w'
+    case 'a': case 'aya': case 'aaya':    return 'a'
+  }
 }
 
-const _color_values = {
-  t: 'taj', taj: 'taj', tajweed: 'taj',
-  b: 'bas', bas: 'bas', basic: 'bas',
-  n: 'no',  no: 'no',   none: 'no',
+function parse_lines (ln) {
+  switch (ln.toLowerCase()) {
+    case '':   case 'pr':   return 'pr'
+    case 'nb': case 'no':   return 'nb'
+    case 'ay': case 'aya':  return 'ay'
+  }
 }
 
 function parse_color (color) {
-  return _color_values[ color.toLowerCase() ]
-}
-
-const _quizmode_values = {
-  i: 'imla', imla: 'imla', imlaai: 'imla',
-  u: 'uthm', uthm: 'uthm', uthmani: 'uthm',
+  switch (color.toLowerCase()) {
+    case 't': case 'taj': case 'tajweed':  return 'taj'
+    case 'b': case 'bas': case 'basic':    return 'bas'
+    case 'n': case 'no':  case 'none':     return 'no'
+  }
 }
 
 function parse_quizmode (quizmode) {
-  return _quizmode_values[ quizmode.toLowerCase() ]
+  switch (quizmode.toLowerCase()) {
+    case 'i': case 'imla': case 'imlaai':   return 'imla'
+    case 'u': case 'uthm': case 'uthmani':  return 'uthm'
+  }
 }
 
 function parse_mv (mv) {
-  mv = mv.toLowerCase()
-  if (mv == ''
-   || mv == 'b') { return 'b' }
-  if (mv == 'r') { return 'r' }
-  if (mv == 'l') { return 'l' }
+  switch (mv.toLowerCase()) {
+    case '':
+    case 'b':  return 'b'
+    case 'r':  return 'r'
+    case 'l':  return 'l'
+  }
 }
 
-function _tajlorligilumilo (params) {
+function __opturl (params) {
   let dark             // dark mode: d/dark; l/light (default).
   let color            // color of text: c/color = t/taj/tajweed (default); b/bas/basic; n/no/none.
   let mv               // position of buttons: m/mv/mvbtns = b (bottom; default); r (right); l (left).
@@ -142,7 +143,8 @@ function _tajlorligilumilo (params) {
 function update_options (el, param, stored, Default) {
   el.value = param != null ? param : S.getItem(stored)
   if (!el.value) { el.value = Default }  // if unset or is a bad value
-  if (el.value !== Default) { S.setItem(stored, el.value) }
+  if (el.value === Default) { S.removeItem(stored) }
+  else { S.setItem(stored, el.value) }
   el.onchange()
 }
 
@@ -152,8 +154,8 @@ function update_bool_default_true (el, param, stored) {
   el.onchange()
 }
 
-function tajlorligilumi () {
-  const opts = _tajlorligilumilo((L.search + L.hash).split(/[ ?&#]/))
+function parse_opturl () {
+  const opts = __opturl((L.search + L.hash).split(/[ ?#&]|%20/))
   //
   if (opts.quizmode == null) {
     if (S.imla) {
@@ -233,4 +235,4 @@ function tajlorligilumi () {
   if (opts.noborder) { el_imla_txt.classList.add('noborder') }
   if (window.is_embedded && opts.words && !isNaN(opts.words)) { window.show_words = opts.words }
 }
-tajlorligilumi()
+parse_opturl()

@@ -52,8 +52,6 @@ const S = localStorage
 
 const store_bool = (name, b=true) => { if (b) { S.setItem(name, 'Y') } else { S.removeItem(name) } }
 
-<<!!bash -c 'for id in $(grep -Po "(?<=id=\")([^\"]+)(?=\")" .index.html); do echo "const el_$id = Qid(\"$id\")"; done'>>
-
 const __scroll_top = (el) => el.scrollTo({ top: 0 })
 const __scroll_bot = (el) => el.scrollTo({ top: el.scrollHeight })
 

@@ -1,9 +1,12 @@
+more_reserved= tv #debug_uthm debug_uthm_raw
+
 define get_reserved
-push @a, /\bon\w+="([^"]+)\(/; END { printf "[%s]\n", join ",", uniq sort "tv", @a }
+push @a, /\bon\w+="([^"]+)\(/; END { printf "[%s]\n", join ",", uniq sort qw[ $(more_reserved) ], @a }
 endef
 
 R=$(shell perl -MList::Util=uniq -nle '$(get_reserved)' .index.html)
 J=deno run --quiet --allow-read --allow-env=UGLIFY_BUG_REPORT npm:uglify-js --compress top_retain=$R,passes=10 --mangle toplevel,reserved=$R
+J=deno run --quiet --allow-read --allow-env=UGLIFY_BUG_REPORT npm:uglify-js --compress top_retain=$R
 C=deno run --quiet --allow-read --allow-env=HTTP_PROXY,http_proxy npm:clean-css-cli
 M=perl -CSAD .minify.pl
 A=perl -CSAD -nE 'while(s/<<!!(?!cat )(.*?)>>/`$$1`/ge){} print'
@@ -18,24 +21,17 @@ P=perl -CSAD -nE 'while(s/<<!!(.*?)>>/`$$1`/ge){} print'
 # All of that concerns only index.html, because it needs .minify.pl too;
 #   other files using the preprocesser are unaffected.
 
-index.html: .index.html .scripts.gen.min.js style.min.css .minify.pl
+index.html: .index.html .scripts.gen.min.js .style.min.css .minify.pl
 	$A "$<" | $M | $P > "$@"
 
-%.min.css: %.css
+.style.min.css: style.css
 	$C "$<" > "$@"
-	# cat "$<" > "$@"
 
-%.min.js: %.js
-	$J "$<" > "$@"
+# %.min.js: %.js
+# 	$J "$<" > "$@"
 
-%.gen.js: %.js
-	$P "$<" > "$@"
-
-a.gen.js: a.js .index.html
-	$P "$<" > a.gen.js
-
-.scripts.gen.min.js: .scripts.js a.gen.js mappings.js tafsir.js search.js tajlorligilumi.js data.gen.js versligilumi.js res/confetti.min.js javascript.js z.js
-	$P "$<" | perl -CDAS -pe 's/const +say += +console\.log//' | $J | perl -pe 's/;?\s*\Z//' > "$@"
+.scripts.gen.min.js: scripts.jsx *.js res/*.js .index.html res/suar-names #res/[ui].zst
+	$P "$<" | $J | perl -pe 's/;?\s*\Z//' > "$@"
 	# $P "$<" > "$@"
 
 .PHONEY: clean

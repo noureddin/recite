@@ -8,4 +8,5 @@ range=20,21,28,29,2e,3a,640,64b-652,660-669,621-63a,641-64a
 pyftsubset "$input" --output-file="$output".woff2 --layout-features=* --flavor=woff2 --unicodes=$range
 pyftsubset "$input" --output-file="$output".woff  --layout-features=* --flavor=woff  --unicodes=$range --with-zopfli
 
+# then open in FontForge and generate again (ignore warnings) to avoid warnings in the browser's console.
 

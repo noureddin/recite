@@ -1,6 +1,4 @@
-// ligilumi: to parse url parameters
-// verso: a verse
-// versligilumi: parsing verses (not preferences) url params
+// parsing verses (not preferences) url params
 
 const MAX_JUZ  = 30
 const MAX_HIZB = 60
@@ -189,7 +187,7 @@ function hizbs_to_ayat (sthizb, enhizb) {  // each is 1-240 or 1/1-60/4 or 1//1-
   return [st, en]
 }
 
-function _versligilumilo (params) {
+function __ayaurl (params) {
   let st; let en  // start aaya and end aaya
   // possible params:
   // - p: page. 1-604.
@@ -204,10 +202,10 @@ function _versligilumilo (params) {
   // all previous parameters can be paired; e.g., r=1-2 means to the end of the 2nd rub.
   //
   let a = 0; let b = 0
-  // - b: before, a number of ayat to add before whatever you select. 0-inf.
-  // - a: after,  a number of ayat to add before whatever you select. 0-inf.
+  // - b: before, a number of ayat to add before whatever you select. +ve or -ve or 0.
+  // - a: after,  a number of ayat to add before whatever you select. +ve or -ve or 0.
   let preview  // just show the aayaat; don't start the quiz
-  // support shorthand: 1/1--7 <=> 1/1-1/7 & 1//2--4 <=> 1//2-1//4
+  // support shorthand: 1/1--7 == 1/1-1/7 && 1//2--4 == 1//2-1//4
   const sh = (e) => e.replace(/^([0-9]+\/+)([0-9]+)--([0-9]+)$/, '$1$2-$1$3')
   params
     .map(p => p.split('='))
@@ -235,8 +233,8 @@ function _versligilumilo (params) {
   return [st, en, preview]
 }
 
-function versligilumi () {
-  const [st, en, view] = _versligilumilo((L.search + L.hash).split(/[ ?&#]/))
+function parse_ayaurl () {
+  const [st, en, view] = __ayaurl((L.search + L.hash).split(/[ ?#&]|%20/))
   //
   // if no ayat are selected
   if (st == null || en == null) { return }

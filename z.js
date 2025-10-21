@@ -31,8 +31,16 @@ var ayat = {}
 // i: imlaai text with tashkeel etc
 // p: plain imlaai for searching (generated from imlaai)
 
-function z (lzma_file, callback) {
-  fetch(lzma_file)
+// function unzstd (path, callback) {  // zstd-compressed files
+//   fetch(path)
+//     .then((res) => res.ok ? res.arrayBuffer() : null)
+//     .then((buf) => {
+//       callback( (new TextDecoder).decode( fzstd.decompress(new Uint8Array(buf)) ).split('\n').slice(0,-1) )
+//     })
+// }
+
+function unlzma (path, callback) {  // lzma-compressed files
+  fetch(path)
     .then((res) => res.ok ? res.arrayBuffer() : null)
     .then((buf) => {
       callback(LZMA.decompress(new Uint8Array(buf)).split('\n').slice(0,-1))
@@ -42,22 +50,22 @@ function z (lzma_file, callback) {
 function load (name, callback) {
   // console.assert(name === 'u' || name === 'i', 'load called with bad name:', name)
   if (ayat[name]) { callback(); return }
-  z(`res/${name}.lzma`, (txt) => { ayat[name] = txt; callback() })
+  // unzstd(`res/${name}.zst?h=${zhash[name]}`, (txt) => { ayat[name] = txt; callback() })
+  unlzma(`res/${name}.lzma`, (txt) => { ayat[name] = txt; callback() })
 }
 
 function load_plain (callback) {
   if (ayat.p) { callback(); return }
   load('i', () => {
     ayat.p = ayat.i.map(a => a
-      .replace(/[^ ء-ي\n]/g, '')  // eliminate all except plain letters
-      .replace(/^|$/g, ' ')       // surround each aaya by space, so that spaces always delimit words
+      .replace(/[^ ء-غف-ي\n]/g, '')  // eliminate all except plain letters
+      .replace(/^|$/g, ' ')  // surround each aaya by space, so that spaces always delimit words, for searching
     )
     callback()
   })
 }
 
 function imlaai_ayat (st, en) {
-
   return (
     ayat.i
       .slice(st-1,en)
@@ -66,6 +74,19 @@ function imlaai_ayat (st, en) {
       + '\n'
   )
 }
+
+const debug_uthm = (a) => a
+  .replace(/[A-Z]<([^>]*)>/g, '$1')
+  .replace(/<\/?span[^<>]*>/g, '')
+  // .replace(/\u06dd([٠-٩]+)/g, (_,n) => '('+toarab(n)+')')
+  .replace(/\u06dd([٠-٩]+)/g, '($1)')
+  .replace(/[\u06de\u06e9]/g, '*')
+  .replace(/[\u06d6-\u06ed\u08f0-\u08f3]/g, '')
+  .replace(/\t/g, '⇆')
+  .replace(/\n/g, '⮐')
+
+const debug_uthm_raw = (a) => debug_uthm(parse_aaya(a))
+  // .replace(/[A-Z]<([^>]*)>/g, '$1')
 
 function make_words_list (st, en, cn) {  // uthmani
 
@@ -86,7 +107,7 @@ function make_words_list (st, en, cn) {  // uthmani
   // and newline ('\n' with 'whitespace: pre-line') separates the ayat.
 
   const basmala = 'بِسۡمِ ٱللَّهِ ٱX<ل>R<رَّ>حۡمَT<ـٰ>نِ ٱX<ل>R<رَّ>حِJ<ی>مِ A<۝>D<١>'  /* uthm[0] */
-      .replace(/\xa0.*/, '').replace(/ /g, '\xa0')  // '\ufdfd'
+      .replace(/\xa0.*/, '').replace(/ /g, '\xa0')
 
   return (
     ayat.u

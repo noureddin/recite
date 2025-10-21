@@ -1,5 +1,5 @@
-// versligilumi: parsing verses url parameters {{{
-function test_versligilumi () {
+// parsing verses url parameters {{{
+function test_ayaurl () {
   let fail=0, all=0
   ;[
     ['#p=1',            1,             7],
@@ -68,14 +68,14 @@ function test_versligilumi () {
     ['d',               null,          null],
   ]
   .forEach((t) => {
-    let [st, en] = _versligilumilo(t[0])
+    let [st, en] = __ayaurl(t[0].split(/[ ?#&]|%20/))
     if (st !== t[1] || en !== t[2]) {
-      console.log('versligilumi', t[0], ' got', st, en, ' exp', t[1], t[2])
+      console.log('ayaurl', t[0], ' got', st, en, ' exp', t[1], t[2])
       fail += 1
     }
     all += 1
   })
-  console.log('versligilumi test finished;', fail, 'failed out of', all)
+  console.log('ayaurl test finished;', fail, 'failed out of', all)
 }/**/ // }}}
 
 // make_title: human readable version of the range to recite {{{
@@ -98,7 +98,7 @@ function test_make_title () {
     [[1,1,3,199], 'تسميع من سورة الفاتحة الآية الأولى حتى سورة آل عمران الآية ١٩٩'],
   ]
   .forEach((t) => {
-    [out, cls] = make_title(...t[0])
+    out = make_title(...t[0])
     out = out.replace(/\xa0/g, ' ')  // NBSP
     if (out !== t[1]) {
       console.log('make_title', t[0], ' got', out, ' exp', t[1])
@@ -109,7 +109,7 @@ function test_make_title () {
   console.log('make_title test finished;', fail, 'failed out of', all)
 }/**/ // }}}
 
-test_versligilumi()
+test_ayaurl()
 test_make_title()
 
 // vim: fdm=marker :

@@ -712,7 +712,7 @@ onload = function () {
   // inputs, so they keep their values on refresh:
   Qall('input, select').forEach(e => e.onchange && e.onchange())
   decode_contact()
-  versligilumi()
+  parse_ayaurl()
   el_imla_txt.spellcheck = false
   // fix help opening
   Qall('details').forEach(el => {

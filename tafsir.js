@@ -2,6 +2,7 @@
 
 let current_tafsir_aayah
 
+// tsel = tafsir select element; ujo = container or parent element
 const tsel_ujo = el_tafsir_option.parentElement.cloneNode(true)  /* deep clone */
 const tsel = tsel_ujo.Q('select')
 tsel_ujo.id = 'tsel_ujo'
@@ -51,7 +52,7 @@ function show_tafsir (i) {
   // show tafsir
   el_tvc.style.display = 'block'
   show_el(el_tvc)
-  // reset scroll position unless same tafsir and same aayah
+  // reset scroll position unless it's the same tafsir and the same aayah
   const this_tafsir = i + ';' + name
   if (last_tafsir !== this_tafsir) { __scroll_top(el_tvc) }
   last_tafsir = this_tafsir
@@ -90,8 +91,8 @@ Q('#tvc > .x').onclick = () => {
 
 function get_tafsir (name, i, callback) {
   load_tafsir(name, i, (txt) => callback(txt === ''
-    ? '<center>(لا يوجد تفسير لهذه الآية؛ اختر تفسيرا آخر أو آية أخرى)</center>'
-    : txt.replace(/اً/g, 'ًا')
+    ? '<center>(ما من تفسير لهذه الآية؛ اختر تفسيرًا آخر أو آيةً أخرى)</center>'
+    : txt.replace(/([اى])\u064b/g, '\u064b$1')  // fix tanween fatha: on alef => before alef
   ))
 }
 
@@ -103,6 +104,6 @@ function load_tafsir (name, i, callback) {
   //
   if (tafsir[name] == null) { tafsir[name] = [] }
   if (tafsir[name][p]) { cb(); return }
-  z(`rt/${name}-${part}.lzma`, (txt) => { tafsir[name][p] = txt; cb() })
+  unlzma(`rt/${name}-${part}.lzma`, (txt) => { tafsir[name][p] = txt; cb() })
 }
 
