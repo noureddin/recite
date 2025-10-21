@@ -58,7 +58,7 @@ function show_tafsir (i) {
   last_tafsir = this_tafsir
   // compose header
   const s = sura_of(i) - 1
-  const aya = ayat.u[i-1].replace(/[#A-Z<>]+/g, '')
+  const aya = remove_markings(ayat.u[i-1])
   // const head = `<p>${t} للآية ${toarab(i - sura_offset[s])} من سورة ${sura_name[s]}</p><p id="tafsirnote">(يمكن تغيير التفسير من «الخيارات» في أعلى الصفحة بعد إغلاق التفسير)</p><p class="aya">${aya}</p><hr>`
   el_tvh.innerHTML = ''
   el_tvh.append(

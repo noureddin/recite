@@ -94,6 +94,8 @@ function imlaai_ayat (st, en, cn) {
 ////////////////////////////////////////////////////////////////////////////////
 // uthmani utils
 
+const remove_markings = (a) => a.replace(/[#A-Z<>]+/g, '').trim()  // showing aya in search & tafsir
+
 const parse_aaya = (a) => a
   // tajweed colorize
   .replace(/([A-Z])<([^>]+)>/g, '<span_class="$1">$2</span>')

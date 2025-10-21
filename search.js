@@ -107,7 +107,7 @@ function show_search (el_sura, el_aaya) {
       //
       load('u', () => {
         for (let i = 0; i < r.length; ++i) {
-          aa[i].Q('.aya').innerText = ayat.u[r[i]].replace(/[#A-Z<>]+/g, '')
+          aa[i].Q('.aya').innerText = remove_markings(ayat.u[r[i]])
         }
         el_sxr.removeChild(spinner)  // remove the spinner when all aayaat are rendered
       })
