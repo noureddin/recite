@@ -485,24 +485,23 @@ function _recite_uthm () {
       kind === 'a' ? (k) => k !== 'a' :
       kind === 'j' ? (k) => k !== 'a' && k !== 'j' :
                      (k) => false
-    const get_current_aaya_index = () =>
-      el_uthm_txt.innerHTML.split(/\u06dd/).length - 1
     while (uthm.length > 0) {
-      const last_word = uthm.match(/(?:^|\t|\n)([^\n\t]+(?:\t|\n))$/)[1]
-      words.unshift(last_word)
-      uthm = uthm.substring(0, uthm.length - last_word.length)
-      if (last_word.match(/\n$/)) {
-        audio.back()
-        if (teacher) { audio.play() }
+      const old_word = uthm.match(/(?:^|\t|\n)([^\n\t]+(?:\t|\n))$/)[1]
+      words.unshift(old_word)
+      uthm = uthm.substring(0, uthm.length - old_word.length)
+      const old_word_kind = kind_of_portion( old_word.slice(-2) )
+      if (old_word_kind === 'a') {  // if shown the first word of an aaya
+        if (teacher) { audio.prev(); audio.play() }
+        else         { audio.play(); audio.prev() }
+        // TODO: back in teacher should play the current aaya when you hide the first word of the current aaya?
       }
-      const new_kind = kind_of_portion(uthm.slice(-2))
-      audio.set_index(get_current_aaya_index() + el_teacher.checked)
-      if (new_kind === 'a') { audio.play() }  // if shown the first word of an aaya
-      if (!isnt_the_kind(new_kind)) { break }
+      if (!isnt_the_kind(old_word_kind)) { break }
     }
     el_uthm_txt.innerHTML = uthm
     body_scroll_to_bottom()
   }
+
+  // TODO: changing teacher should not need restarting the quiz
 
   const word_bck = () => bck('')
   const aaya_bck = () => bck('a')

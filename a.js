@@ -140,6 +140,8 @@ const audio = (function () {  // {{{
   let base_url
   let cur_idx
 
+  const dbg = false
+
   function index (i) { return i != null ? i : cur_idx }
 
   function invalid_state (idx) {
@@ -153,17 +155,18 @@ const audio = (function () {  // {{{
     return base_url + list[idx] + '.mp3'
   }
 
-  function fetch (idx) {
+  function load (idx) {
     idx = index(idx)
     if (invalid_state(idx)) { return }
+    if (dbg) { return }
     el_preloader.src = audio_url(idx)
   }
 
   function play () {
     if (invalid_state()) { return }
-    // el_title.innerText = list[cur_idx]  // for debugging
+    if (dbg) { console.log('play', list[cur_idx]); return }
     el_player.src = audio_url()
-    el_player.addEventListener('loadeddata', () => fetch(cur_idx + 1))
+    el_player.addEventListener('loadeddata', () => load(cur_idx + 1))
     el_player.play().catch(() => {})
   }
 
@@ -171,16 +174,16 @@ const audio = (function () {  // {{{
     const ii = +i
     if (isNaN(ii)) { return }
     cur_idx = ii
-    fetch()
+    load()
   }
 
   function show_or_hide_player () {
-    invalid_state() ? hide_el(el_player) : show_el(el_player)
+    dbg || invalid_state() ? hide_el(el_player) : show_el(el_player)
   }
 
   function update_qari (qari) {
     base_url = qari ? `https://www.everyayah.com/data/${qari}/` : undefined
-    fetch()
+    load()
   }
 
   return {
@@ -211,8 +214,8 @@ const audio = (function () {  // {{{
     },
 
     set_index: function (i) { set_idx(i) },
-    next: function () { set_idx(cur_idx + 1) },
-    back: function () { set_idx(cur_idx - 1) },
+    next: function () { if (dbg) { console.log('next') } set_idx(cur_idx + 1) },
+    prev: function () { if (dbg) { console.log('prev') } set_idx(cur_idx - 1) },
 
   }
 })()  // }}}
