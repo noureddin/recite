@@ -1,6 +1,5 @@
-function tajweed_colorize_aaya (a) {
-  return a.replace(/([A-Z])<([^>]+)>/g, '<span_class="$1">$2</span>')
-}
+////////////////////////////////////////////////////////////////////////////////
+// audio
 
 // returns ayat ref in the form sprintf("%03d%03d", sura_num, aaya_num)
 const make_audio_list = (sura_bgn, aaya_bgn, sura_end, aaya_end) =>
@@ -24,6 +23,10 @@ const make_audio_list = (sura_bgn, aaya_bgn, sura_end, aaya_end) =>
       list.push(...s)  // flatten
       return list
     }, [])
+
+
+////////////////////////////////////////////////////////////////////////////////
+// loading compressed files
 
 // const MX = 6236
 var ayat = {}
@@ -65,6 +68,9 @@ function load_plain (callback) {
   })
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// imlaai loading
+
 function imlaai_ayat (st, en, cn) {
 
   // continuation; ie, append a "phrase" from the next aaya if in the same sura
@@ -85,18 +91,16 @@ function imlaai_ayat (st, en, cn) {
   )
 }
 
-const debug_uthm = (a) => a
-  .replace(/[A-Z]<([^>]*)>/g, '$1')
-  .replace(/<\/?span[^<>]*>/g, '')
-  // .replace(/\u06dd([٠-٩]+)/g, (_,n) => '('+toarab(n)+')')
-  .replace(/\u06dd([٠-٩]+)/g, '($1)')
-  .replace(/[\u06de\u06e9]/g, '*')
-  .replace(/[\u06d6-\u06ed\u08f0-\u08f3]/g, '')
-  .replace(/\t/g, '⇆')
-  .replace(/\n/g, '⮐')
+////////////////////////////////////////////////////////////////////////////////
+// uthmani utils
 
-const debug_uthm_raw = (a) => debug_uthm(parse_aaya(a))
-  // .replace(/[A-Z]<([^>]*)>/g, '$1')
+const parse_aaya = (a) => a
+  // tajweed colorize
+  .replace(/([A-Z])<([^>]+)>/g, '<span_class="$1">$2</span>')
+
+
+////////////////////////////////////////////////////////////////////////////////
+// uthmani loading
 
 function make_words_list (st, en, cn) {  // uthmani
 
@@ -122,8 +126,8 @@ function make_words_list (st, en, cn) {  // uthmani
   return (
     ayat.u
       .slice(st-1, en)
-      .map((aya, i) => aya.replace(/A/, (i+st)+'A'))  // for tafsir
       .reduce((arr, aya, i) => {
+        aya = aya.replace(/A/, (i+st)+'A')  // for tafsir
         // https://stackoverflow.com/a/38528645
         if (aya.startsWith('#')) {  // start of all suar except sura 1 and sura 9
           arr.push(basmala+'<br>')
@@ -152,17 +156,120 @@ function make_words_list (st, en, cn) {  // uthmani
         arr.push(aya)
         return arr
       }, [])
-      .map(a => (
-          tajweed_colorize_aaya(a)
+      .map(aya => parse_aaya(aya)
           .replace(/ /g, '\t<SPC>')
+          .replace(/_/g, ' ')  // for spans
+          .replace(/([0-9]+)(<span)/, '$2 onclick="tv($1)"')  // for tafsir
           + '\n'
-        )
-        .replace(/_/g, ' ')  // for tajweed spans
-        .replace(/([0-9]+)(<span)/, '$2 onclick="tv($1)"')  // for tafsir
       )
-      .reduce((arr, aya) => {
+      .reduce((arr, aya, i, allayat) => {
         arr.push(...aya.split('<SPC>', -1))  // split and flatten
         return arr
       }, [])
   )
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// debug utils
+
+function say (...a) { return console.log(...a) }
+
+function debug_uthm (a) { return a
+  .replace(/[A-Z]<([^>]*)>/g, '$1')
+  .replace(/<\/?span[^<>]*>/g, '')
+  .replace(/\u06dd([٠-٩]+)/g, '($1)')
+  .replace(/[\u06de\u06e9]/g, '*')
+  .replace(/[\u06d6-\u06ed\u08f0-\u08f3]/g, '')
+  .replace(/\t/g, '⇆')
+  .replace(/\n/g, '⮐')
+}
+
+function ascii_debug_uthm (a) { return a  // not really ascii, but latin and latin-like
+  .replace(/[A-Z]<([^>]*)>/g, '$1')
+  .replace(/<\/?span[^<>]*>/g, '')
+  .replace(/\u06dd([٠-٩]+)/g, '($1)')
+
+  .replace(/<pr-line[^<>]*>/g, '<')
+  .replace(/<\/pr-line>/g, '>')
+
+  .replace(/ /g, '_')
+  .replace(/\t/g, '⇆ ')
+  .replace(/\n/g, '⮐\n')
+
+  .replace(/.\u06df/g, '')
+
+  .replace(/ٱ/g, 'ə')
+
+  .replace(/\u064e?ى/g, 'ä')
+  .replace(/\u064e?[\xa0\u0640]\u0670/g, 'ᵃᵃ')
+  .replace(/[\u064b\u08f0][اى]?/g, 'ᵃᴺ')
+  .replace(/\u064e\u06e2[اى]?/g, 'ᵃᵐ')
+  .replace(/\u064e/g, 'ᵃ')
+  .replace(/\u064e?ا\u06E0/g, 'a')
+  .replace(/\u064e?ا/g, 'ā')
+
+  // .replace(/\u064fو\u06df/g, 'ʷ')
+  .replace(/\u064fو/g, 'ū')
+  .replace(/و/g, 'w')
+  .replace(/\u064f\u0640\u08f3/g, 'ᵘᵘ')
+  .replace(/\u064f\u06e5/g, 'ᵘᵘ')
+  .replace(/[\u064c\u08f1]/g, 'ᵘᴺ')
+  .replace(/\u064f\u06e2/g, 'ᵘᵐ')
+  .replace(/\u064f/g, 'ᵘ')
+
+  // .replace(/\u0650ی\u06df/g, 'ʸ')
+  .replace(/\u0650ی/g, 'ī')
+  .replace(/ی/g, 'y')
+  .replace(/\u0650\u0640\u06e7/g, 'ⁱⁱ')
+  .replace(/\u0650\u06e6/g, 'ⁱⁱ')
+  .replace(/[\u064d\u08f2]/g, 'ⁱᴺ')
+  .replace(/\u0650\u06ed/g, 'ⁱᵐ')
+  .replace(/\u0650/g, 'ⁱ')
+
+  .replace(/\u0651/g, 'ː')
+
+  .replace(/[أإؤئ]/g, 'ɂ')
+  .replace(/ب/g, 'b')
+  .replace(/ت/g, 't') .replace(/ث/g, 'θ')
+  .replace(/ج/g, 'j')
+  .replace(/ح/g, 'ħ') .replace(/خ/g, 'x')
+  .replace(/د/g, 'd') .replace(/ذ/g, 'ð')
+  .replace(/ر/g, 'r') .replace(/ز/g, 'z')
+  .replace(/س/g, 's') .replace(/ش/g, 'ʃ')
+  .replace(/ص/g, 'S') .replace(/ض/g, 'D')
+  .replace(/ط/g, 'T') .replace(/ظ/g, 'Z')
+  .replace(/ع/g, 'ȝ') .replace(/غ/g, 'ğ')
+  .replace(/ف/g, 'f')
+  .replace(/ق/g, 'q') .replace(/ك/g, 'k')
+  .replace(/ل/g, 'l')
+  .replace(/م/g, 'm') .replace(/ن/g, 'n') .replace(/n\u06e2/g, 'ᵐ')
+  .replace(/ه/g, 'h') .replace(/ة/g, 'τ')
+
+  .replace(/[٠-٩]+/g, (n) => toascii(n))
+  .replace(/\u0305/g, '')
+  .replace(/\u06de/g, '*')
+
+  .replace(/\u06D6/g, 'ᴸ')    // ARABIC SMALL HIGH LIGATURE SAD WITH LAM WITH ALEF MAKSURA
+  .replace(/\u06D7/g, 'ᴳ')  // ARABIC SMALL HIGH LIGATURE QAF WITH LAM WITH ALEF MAKSURA
+  .replace(/\u06D8/g, 'ᴹ')  // ARABIC SMALL HIGH MEEM INITIAL FORM
+  .replace(/\u06DA/g, 'ᴶ')  // ARABIC SMALL HIGH JEEM
+  .replace(/\u06DB/g, '^')  // ARABIC SMALL HIGH THREE DOTS
+  .replace(/S\u06DC/g, 's')  // ARABIC SMALL HIGH SEEN
+  .replace(/\u06DC/g, 'ˢ')  // ARABIC SMALL HIGH SEEN
+  // .replace(/\u06DF/g, '')  // ARABIC SMALL HIGH ROUNDED ZERO
+  // .replace(/\u06E0/g, '')  // ARABIC SMALL HIGH UPRIGHT RECTANGULAR ZERO
+  .replace(/\u06E1/g, '')  // ARABIC SMALL HIGH DOTLESS HEAD OF KHAH -- removed
+  .replace(/\u06E3/g, '')  // ARABIC SMALL LOW SEEN -- removed
+  .replace(/\u06E4/g, '~')  // ARABIC SMALL HIGH MADDA
+  .replace(/\u06E8/g, 'ⁿ')  // ARABIC SMALL HIGH NOON
+// 006E9 ARABIC PLACE OF SAJDAH
+// 006EA ARABIC EMPTY CENTRE LOW STOP
+// 006EB ARABIC EMPTY CENTRE HIGH STOP
+// 006EC ARABIC ROUNDED HIGH STOP WITH FILLED CENTRE
+
+}
+
+function debug_uthm_raw (a) { return debug_uthm(parse_aaya(a))
+  // .replace(/[A-Z]<([^>]*)>/g, '$1')
+}
+
