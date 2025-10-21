@@ -35,6 +35,8 @@ Use it at: [noureddin.dev/recite](https://www.noureddin.dev/recite).
 
 9. (For developers) Easy to embed in other web apps. (Detailed below, under the "Even more advanced URL parameters" heading.)
 
+<a name="params"></a>
+
 ### URL Parameters (for advanced users)
 
 > `https://www.noureddin.dev/recite/?PARAMS`
