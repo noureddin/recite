@@ -63,6 +63,7 @@ function __opturl (params) {
   let nonumcolor       // disable colorization of ayat numbers in Uthmani mode
   let notajweedlegend  // don't show the tajweed colors legend in Uthmani mode
   let notitle          // hide recitation range in words, for random quizzing purposes (currently doesn't affect preview)
+  let wa               // text workarounds for Blink; search z.js for blink_engine
   let cn               // continuation; ie, append a "phrase" from the next aaya if in the same sura
   let zz               // enable embedded integration: zz (cannot be disabled if enabled)
   let rr               // enable another kind of embedded integration
@@ -72,42 +73,44 @@ function __opturl (params) {
     //.reduce((obj, cur, i) => { i == 0 ? {} : (obj[cur[0]] = cur[1], obj), {})
     .forEach((e, i) => {
       const is_of = (...params) => params.includes(e[0])
-           if (is_of('dark', 'd'))                   {            dark = true                             }
-      else if (is_of('light', 'l'))                  {            dark = false                            }
-      else if (is_of('color', 'c'))                  {           color = parse_color(e[1]) || color       }
-      else if (is_of('mvbtns', 'mv', 'm'))           {              mv = parse_mv(e[1]) || mv             }
-      else if (is_of('quizmode', 'qz', 'q'))         {        quizmode = parse_quizmode(e[1]) || quizmode }
-      else if (is_of('txt'))                         {        quizmode = parse_quizmode('imlaai')         }
-      else if (is_of('byaaya'))                      {          fbrate = 'a'                              }
-      else if (is_of('byword'))                      {          fbrate = 'w'                              }
-      else if (is_of('byletter'))                    {          fbrate = 'l'                              }
-      else if (is_of('by'))                          {          fbrate = parse_fbrate(e[1]) || fbrate     }
-      else if (is_of(  'linebreaks'))                {    nolinebreaks = false                            }
-      else if (is_of('nolinebreaks'))                {    nolinebreaks = true                             }
-      else if (is_of('t',   'teach',   'teacher'))   {         teacher = true                             }
-      else if (is_of('n', 'noteach', 'noteacher'))   {         teacher = false                            }
-      else if (is_of('dt', 'disableteacher'))        {  disableteacher = true                             }
-      else if (is_of('dq', 'disablequizmode'))       { disablequizmode = true                             }
-      else if (is_of('dv', 'dp', 'disablepreview'))  {  disablepreview = true                             }
-      else if (is_of('dc', 'disablecheat'))          {    disablecheat = true                             }
-      else if (is_of('hc', 'highcontrast'))          {    highcontrast = true                             }
-      else if (is_of('lc', 'lowcontrast'))           {     lowcontrast = true                             }
-      else if (is_of('emu', 'emulate', 'emulation')) {         emulate = e[1]                             }
-      else if (is_of('qari'))                        {            qari = e[1]                             }
-      else if (is_of('qariurl'))                     {         qariurl = e[1]                             }
-      else if (is_of('tafsir'))                      {          tafsir = e[1]                             }
-      else if (is_of('fp', 'fullpage'))              {        fullpage = true                             }
-      else if (is_of('noborder'))                    {        noborder = true                             }
-      else if (is_of('nc', 'numcolor'))              {      nonumcolor = false                            }
-      else if (is_of('nonc', 'nonumcolor'))          {      nonumcolor = true                             }
-      else if (is_of('tl', 'tajweedlegend'))         { notajweedlegend = false                            }
-      else if (is_of('notl', 'notajweedlegend'))     { notajweedlegend = true                             }
-      else if (is_of('noti', 'notitle'))             {         notitle = true                             }
-      else if (is_of('showtitle'))                   {         notitle = false                            }
-      else if (is_of('cn'))                          {              cn = true                             }
-      else if (is_of('zz'))                          {              zz = true                             }
-      else if (is_of('rr'))                          {              rr = true                             }
-      else if (is_of('words'))                       {           words = +e[1]                            }
+           if (is_of('dark', 'd'))                   {            dark = true                               }
+      else if (is_of('light', 'l'))                  {            dark = false                              }
+      else if (is_of('color', 'c'))                  {           color = parse_color(e[1]) || color         }
+      else if (is_of('mvbtns', 'mv', 'm'))           {              mv = parse_mv(e[1]) || mv               }
+      else if (is_of('quizmode', 'qz', 'q'))         {        quizmode = parse_quizmode(e[1]) || quizmode   }
+      else if (is_of('txt'))                         {        quizmode = parse_quizmode('imlaai')           }
+      else if (is_of('byaaya'))                      {          fbrate = 'a'                                }
+      else if (is_of('byword'))                      {          fbrate = 'w'                                }
+      else if (is_of('byletter'))                    {          fbrate = 'l'                                }
+      else if (is_of('by'))                          {          fbrate = parse_fbrate(e[1]) || fbrate       }
+      else if (is_of(  'linebreaks'))                {    nolinebreaks = false                              }
+      else if (is_of('nolinebreaks'))                {    nolinebreaks = true                               }
+      else if (is_of('t',   'teach',   'teacher'))   {         teacher = true                               }
+      else if (is_of('n', 'noteach', 'noteacher'))   {         teacher = false                              }
+      else if (is_of('dt', 'disableteacher'))        {  disableteacher = true                               }
+      else if (is_of('dq', 'disablequizmode'))       { disablequizmode = true                               }
+      else if (is_of('dv', 'dp', 'disablepreview'))  {  disablepreview = true                               }
+      else if (is_of('dc', 'disablecheat'))          {    disablecheat = true                               }
+      else if (is_of('hc', 'highcontrast'))          {    highcontrast = true                               }
+      else if (is_of('lc', 'lowcontrast'))           {     lowcontrast = true                               }
+      else if (is_of('emu', 'emulate', 'emulation')) {         emulate = e[1]                               }
+      else if (is_of('qari'))                        {            qari = e[1]                               }
+      else if (is_of('qariurl'))                     {         qariurl = e[1]                               }
+      else if (is_of('tafsir'))                      {          tafsir = e[1]                               }
+      else if (is_of('fp', 'fullpage'))              {        fullpage = true                               }
+      else if (is_of('noborder'))                    {        noborder = true                               }
+      else if (is_of('nc', 'numcolor'))              {      nonumcolor = false                              }
+      else if (is_of('nonc', 'nonumcolor'))          {      nonumcolor = true                               }
+      else if (is_of('tl', 'tajweedlegend'))         { notajweedlegend = false                              }
+      else if (is_of('notl', 'notajweedlegend'))     { notajweedlegend = true                               }
+      else if (is_of('noti', 'notitle'))             {         notitle = true                               }
+      else if (is_of('showtitle'))                   {         notitle = false                              }
+      else if (is_of('wa'))                          {              wa = true                               }
+      else if (is_of('nowa'))                        {              wa = false                              }
+      else if (is_of('cn'))                          {              cn = true                               }
+      else if (is_of('zz'))                          {              zz = true                               }
+      else if (is_of('rr'))                          {              rr = true                               }
+      else if (is_of('words'))                       {           words = +e[1]                              }
     })
   let opts = {
     dark,
@@ -132,6 +135,7 @@ function __opturl (params) {
     nonumcolor,
     notajweedlegend,
     notitle,
+    wa,
     cn,
     zz,
     rr,
@@ -234,5 +238,14 @@ function parse_opturl () {
   if (opts.fullpage) { el_body.classList.add('fullpage') }
   if (opts.noborder) { el_imla_txt.classList.add('noborder') }
   if (window.is_embedded && opts.words && !isNaN(opts.words)) { window.show_words = opts.words }
+  //
+  // text workarounds for Blink; search z.js for blink_engine
+  if (opts.wa != null) {
+    window.blink_engine = opts.wa
+  }
+  else {
+    const ua = window.navigator.userAgent
+    window.blink_engine = ua.includes('Chrome') // || ua.includes('Safari') // Safari is even more broken
+  }
 }
 parse_opturl()

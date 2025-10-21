@@ -153,6 +153,57 @@ function make_words_list (st, en, cn) {  // uthmani
             aya = aya.replace(/([\u06D6\u06D7\u06D8\u06DA\u06DB]) .*/, '$1')  // sakta (high seen) does NOT separate phrases
           }
         }
+        //
+        // // font clarity
+        // aya = aya.replace(/([ب-خس-غف-ي]>?\u0651?>?\u0650>?)([ح][\u064b-\u0652\u06e1\u08f0-\u08f2][\x1d-\x1f ])/g, '$1\u0640$2')  // joining letter + optional shadda + kasra + final hah; eg سبّح in 50/39
+        //
+        if (window.blink_engine) {  // work around text rendering issues with Blink
+          //
+          //    U+0640 ARABIC TATWEEL
+          //    U+0644 ARABIC LETTER LAM
+          //    U+0646 ARABIC LETTER NOON
+          //    U+0648 ARABIC LETTER WAW
+          //    U+0649 ARABIC LETTER ALEF MAKSURA
+          //    U+0670 ARABIC LETTER SUPERSCRIPT ALEF
+          //    U+06E2 ARABIC SMALL HIGH MEEM ISOLATED FORM
+          //    U+06E4 ARABIC SMALL HIGH MADDA
+          //    U+06ED ARABIC SMALL LOW MEEM
+          //    U+08F0 ARABIC OPEN FATHATAN
+          //    U+FEFF ZERO WIDTH NO-BREAK SPACE
+          //
+          // 1. it doesn't colorize vowel marks and waqf signs separately from the previous letter.
+          //    the sequence AlefMaqsura + DaggerAlef + Madda:
+          //      Moṣħaf Dar-ul-Ma’rifa colorizes them all in red. I color only the DaggerAlef + Madda,
+          //      because, logically, the DaggerAlef replaces the Yeh/AlefMaqsura,
+          //      just like in «سوّاها» (written as «سواىها» with a DaggerAlef on the gray Yeh/AlefMaqsura).
+          //    I'll add something before the mark to have it colored separately:
+          aya = aya.replace(/(\u0649)([A-Z])<(\u0670\u06e4)>/g, '$1$2<\ufeff$3>')  // eg, 2/51
+          //    - intraword X<AlefMaqsura> + T<DaggerAlef>
+          aya = aya.replace(/(X<\u0649>)([A-Z]<)(\u0670)/g, '$1$2\ufeff$3')
+          //    - intraword X<Waw> + T<DaggerAlef>
+          aya = aya.replace(/(X<\u0648>)([A-Z]<)(\u0670)/g, '$1$2\ufeff$3')
+          //    - N<HiMeem> (at the end of a word), like «من بعد» (eg, ayat 2/51--52).
+          aya = aya.replace(/(N<)(\u06E2>)([\x1d-\x1f ])/g, '$1\ufeff$2$3')
+          //    - N<LoMeem> (at the end of a word), like «كافرٍ به» (eg, aya 2/41).
+          aya = aya.replace(/(N<)(\u06ED>)([\x1d-\x1f ])/g, '$1\ufeff$2$3')
+          //    - intraword X<Noon> + N<HiMeem>, like «أنبئهم» (eg, twice in aya 2/33).
+          aya = aya.replace(/(X<\u0646>)(N<)(\u06E2>)/g, '$1$2\ufeff$3')
+          //    - open tanween
+          aya = aya.replace(/([A-Z]<)([\u08f0-\u08f2]>)/g, '$1\ufeff$2')
+          //    - Q<Letter> + Tashkeel at the end of aya.
+          aya = aya.replace(/([A-Z]<[^<>]*>)([\u064b-\u0652\u06e1\u08f0-\u08f2][\x1d-\x1f ][0-9]+A<)/g,
+                  '$1\ufeff$2')
+          //    - waqf signs, if preceded by a colorized letter
+          aya = aya.replace(/>([\u064b-\u0652]?[\u06DC\u06D6\u06D7\u06D8\u06DA\u06DB])/g, '>\ufeff$1')
+          //
+          //
+          // 2. it stretches intra-word NBSP like normal space when text-align is justify
+          //aya = aya.replace(/\xA0/g, '\u202f\u202f')  // replace NBSP with a number of Narrow NBSP
+          // ^ that would not be good with DaggerAlef with Madda (test with, eg, aya 2/47)
+          // aya = aya.replace(/[^\x1d-\x1f ]+\xA0[^\x1d-\x1f ]+/g, '<span_style="display:inline-block">$&</span>')
+          // ^ TODO: currently disabled, because it's only needed for a future feature.
+        }
+        //
         arr.push(aya)
         return arr
       }, [])
