@@ -615,6 +615,7 @@ const hide_selectors = function (quizmode) {  // quizmode must be 'preview', 'im
     el_reshow.style.display = 'none'
     el_hb.classList.remove('b3')
     //
+    el_uthm_txt.classList.add('preview')
     el_uthm_txt.hidden = false
     el_uthm_txt.innerHTML = ''
     el_mvbtns.hidden = true
@@ -645,6 +646,7 @@ const hide_selectors = function (quizmode) {  // quizmode must be 'preview', 'im
       el_imla_txt.focus()
     }
     else {  /* uthmani */
+      el_uthm_txt.classList.remove('preview')
       el_uthm_txt.hidden = false
       el_uthm_txt.innerHTML = ''
       el_mvbtns.hidden = false
@@ -695,6 +697,7 @@ const new_select = function () {
     removeEventListener('beforeunload', before_unload)
     L.hash = ''
     el_tl.style.display = 'none'  // tajweed legend
+    // TODO: ^ why not show_or_hide_tajweedlegend() ?
     show_selectors()
     clear_screen()
   }

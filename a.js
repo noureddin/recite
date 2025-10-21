@@ -301,19 +301,19 @@ const sync_uthm_class_with = (cls, pred) => el_uthm_txt.classList.toggle(cls, pr
 function show_or_hide_tafsirhint () {
   // shown only if EITHER of these conditions is met:
   // - just finished quizzing in the Uthmani mode :: endmsg && uthm_txt
-  // - previewing :: uthm_txt && repeat button is called 'ابدأ الاختبار'
+  // - previewing :: uthm_txt && uthm_txt has class 'preview'
   // - not started quizzing yet (or "New" is clicked) AND quizmode is Uthmani
   //   :: !endmsg && selectors && el_quizmode.value === 'uthm'
   // where endmsg = !el_endmsg.hidden and so on.
   //
-  const EH = el_endmsg.hidden
-  const UH = el_uthm_txt.hidden
-  const SH = el_selectors.hidden
-  const QI = el_quizmode.value !== 'uthm'
-  const RE = !el_repeat.innerText.startsWith('ابدأ')
-  el_tafsirhint.hidden = (UH || RE && EH) && (!EH || SH || QI)
-  // (EH || UH) && (UH || RE)  ===  (UH || (EH && RE))
-
+  const end = !el_endmsg.hidden
+  const utx = !el_uthm_txt.hidden
+  const sel = !el_selectors.hidden
+  const qz_uthm = el_quizmode.value === 'uthm'
+  const preview = utx && el_uthm_txt.classList.contains('preview')
+  //
+  const visible = end && utx || preview || !end && sel && qz_uthm
+  el_tafsirhint.hidden = !visible
 }
 
 function show_or_hide_tajweedlegend () {
