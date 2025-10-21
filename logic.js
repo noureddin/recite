@@ -241,7 +241,7 @@ function _recite_imla () {
   const teacher = el_teacher.checked
 
   el_imla_txt.focus()
-  let correct_text = imlaai_ayat(st, en)
+  let correct_text = imlaai_ayat(st, en, window.get_continuation)
   let pasted = false
 
   const get_current_aaya_index = () =>

@@ -65,7 +65,17 @@ function load_plain (callback) {
   })
 }
 
-function imlaai_ayat (st, en) {
+function imlaai_ayat (st, en, cn) {
+
+  // continuation; ie, append a "phrase" from the next aaya if in the same sura
+  const last_aya_of_sura = sura_offset[sura_of(en)]  // offset of the next sura == end aaya of the current sura
+  if (cn && en < last_aya_of_sura) {  // don't continue if at the end of sura
+    en += 1
+  }
+  // in imlaai, append the entire next aaya. only 1356 ayat have a partial continuation (22% of the Quran).
+  // but currently the imlaai mode has no concept of partial aaya, so the entire next aaya is added.
+  // continuation may not make a lot of sense in imlaai, but it's still useful for quizzing apps that embed Recite.
+
   return (
     ayat.i
       .slice(st-1,en)
