@@ -68,6 +68,7 @@ body {
   --btn-base-width: min(35vw, 10rem);
   --faint-btn: #aaa;
   --faint-txt: #aaa;
+  --scroll-rgb: 0, 0, 0;
   --uitxt: #233; --txt: #111;
   --txt-font: AmiriQuranWeb;
   --background-rgb: 249, 246, 231; /* old: 249, 244, 214; */
@@ -107,6 +108,7 @@ body {
   /* general */
   --faint-btn: #aaa;  /* inverted */
   --faint-txt: #555;
+  --scroll-rgb: 255, 255, 255;
   --uitxt: #ccc;  --txt: #eee;  --background-rgb: 26, 20, 20; --content-rgb: 23, 23, 23;
   --details-bg: black; --details-shadow: white;
   --title-rgb: 255, 255, 255;
@@ -143,6 +145,11 @@ body {
 }
 
 option { background: var(--details-bg) }  /* for Blink, especially in darkmode */
+
+/* https://css-tricks.com/custom-scrollbars-in-webkit/ */
+::-webkit-scrollbar { width: 12px }
+::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(var(--scroll-rgb),0.3) }
+::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 6px rgba(var(--scroll-rgb),0.5); border-radius: 10px }
 
 :not(input, button, select) { color: var(--uitxt); } /* are just inverted */
 #uthm_txt { color: var(--txt); }
