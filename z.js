@@ -94,7 +94,11 @@ function imlaai_ayat (st, en, cn) {
 ////////////////////////////////////////////////////////////////////////////////
 // uthmani utils
 
-const remove_markings = (a) => a.replace(/[#A-Z<>]+/g, '').trim()  // showing aya in search & tafsir
+const font_improve = (a) => a
+    // joining letter + optional shadda + kasra + final hah/khah/jeem; eg سبّح نفخ يلج
+    .replace(/([ب-خس-غف-هی]>?\u0651?>?\u0650>?)([جحخ][\u064b-\u0652\u06e1\u08f0-\u08f2][\x1d-\x1f \u06D6-\u06DC])/g, '$1\u0640$2')
+
+const unmark = (a) => font_improve(a.replace(/[#A-Z<>]+/g, '').trim())  // showing aya in search & tafsir
 
 const parse_aaya = (a) => a
   // tajweed colorize
@@ -156,8 +160,7 @@ function make_words_list (st, en, cn) {  // uthmani
           }
         }
         //
-        // // font clarity
-        // aya = aya.replace(/([ب-خس-غف-ي]>?\u0651?>?\u0650>?)([ح][\u064b-\u0652\u06e1\u08f0-\u08f2][\x1d-\x1f ])/g, '$1\u0640$2')  // joining letter + optional shadda + kasra + final hah; eg سبّح in 50/39
+        aya = font_improve(aya)
         //
         if (window.blink_engine) {  // work around text rendering issues with Blink
           //
