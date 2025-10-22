@@ -99,9 +99,9 @@ function __opturl (params) {
       else if (is_of('tafsir'))                      {          tafsir = e[1]                               }
       else if (is_of('fp', 'fullpage'))              {        fullpage = true                               }
       else if (is_of('noborder'))                    {        noborder = true                               }
-      else if (is_of('nc', 'numcolor'))              {      nonumcolor = false                              }
+      else if (is_of(  'nc',   'numcolor'))          {      nonumcolor = false                              }
       else if (is_of('nonc', 'nonumcolor'))          {      nonumcolor = true                               }
-      else if (is_of('tl', 'tajweedlegend'))         { notajweedlegend = false                              }
+      else if (is_of(  'tl',   'tajweedlegend'))     { notajweedlegend = false                              }
       else if (is_of('notl', 'notajweedlegend'))     { notajweedlegend = true                               }
       else if (is_of('noti', 'notitle'))             {         notitle = true                               }
       else if (is_of('showtitle'))                   {         notitle = false                              }
