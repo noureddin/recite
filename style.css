@@ -84,12 +84,12 @@ body {
   --L: #bb0066; --W: red;     --J: #ff8800;   --T: #c6b000;    --N: #00bb00;
   --X: #9595a0; --R: #2222e0; --Q: #009ea7;   --A: darkorange; --D: navy;
   /* ayat number color */
-  --A-shadow: 1px  1px  1px gold,
-              1px -1px  1px gold,
-             -1px  1px  1px gold,
-             -1px -1px  1px gold,
-              0    0    5px blue;
-  --D-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
+  --A-shadow: 0.025em  0.025em  0.025em gold,
+              0.025em -0.025em  0.025em gold,
+             -0.025em  0.025em  0.025em gold,
+             -0.025em -0.025em  0.025em gold,
+              0        0        0.125em blue;
+  --D-shadow: 0        0        0.250em rgba(0, 0, 255, 0.5);
   /* help & options : tab label */
   --tab-txt: #000;
   --tab-active-txt: var(--tab-txt);
@@ -164,7 +164,7 @@ option { background: var(--details-bg) }  /* for Blink, especially in darkmode *
 #uthm_txt    > br { display: none }
 #uthm_txt.nb > br { display: block }
 
-.D:after { content: '\200f'; margin-right: 0.35em }
+#uthm_txt.nb .D:after { content: '\200f'; margin-right: 0.25em }
 
 /* general */
 #body { scroll-behavior: smooth; }
@@ -184,11 +184,12 @@ label, label *, select, input, button {
 #uthm_txt, #uthm_txt * { font-family: var(--txt-font); font-size: 1.5rem; }
 #uthm_txt {
   text-align: right;
-  margin: 0 1em;
-  margin-bottom: 4em;
+  margin: 1rem 1rem;
+  margin-bottom: 4rem;
+  line-height: 2.7;  /* slightly wider than the default for Amiri Quran */
 }
 #uthm_txt.done, #uthm_txt.sidebtns {
-  margin-bottom: 1em;  /* same as margin above */
+  margin-bottom: 1rem;  /* same as margin above */
 }
 
 #endmsg {
@@ -300,7 +301,7 @@ label, label *, select, input, button {
 
 #options * {
   font-family: KacstOne, serif;  /* serif for latin, like in qaris */
-  font-weight: bold;
+  /* font-weight: bold; */
   line-height: 1.7;
 }
 
@@ -395,6 +396,10 @@ button {
   margin: 0 0.25em;
   height: 2em;
   fill: var(--faint-btn);
+}
+
+#mvbtns button:hover, #mvbtns button:focus, #mvbtns button:active {
+  fill: #333;  /* same as #nextword; inverted in darkmode; thus becomes #dedede */
 }
 
 #mvbtns #nextword {
@@ -694,13 +699,13 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   height: var(--height);
   background: var(--tab);
   color: var(--tab-txt);
-  box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0.03em 0.09em 0.12em #0005;
   border-radius: 0 0 1rem 1rem;
   z-index: 20;
   position: relative;
 }
 #dark:checked ~ #body .tab + label {
-  box-shadow: 1px 3px 4px rgba(255, 255, 255, 0.3);
+  box-shadow: 0.03em 0.09em 0.12em #fff5;
 }
 
 #optiontoggle + label {
@@ -720,7 +725,7 @@ a:active { color: red; text-shadow: 1pt 1pt 2pt lightblue; }
   padding: 0.1rem;
   padding-bottom: 1rem;
   background: rgb(var(--content-rgb));
-  box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0.03em 0.09em 0.12em #0005;
   margin: 0;
   margin-top: -1.1rem;
   z-index: 5;
@@ -779,15 +784,15 @@ kbd {
   font-size: 0.7rem;
   /* based on https://meta.superuser.com/q/4788 */
   background-color: #e7e7e7;
-  border: 1px solid #888;
+  border: 0.025em solid #888;
   border-radius: 0.5em;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.2),
-              0 0 0 2px #fff inset;
+  box-shadow: 0 0.025em 0 rgba(0,0,0,0.2),
+              0 0 0 0.050em #fff inset;
   color: #000;
   display: inline-block;
   margin: 0 0.1em;
   padding: 0.1em 0.6em;
-  text-shadow: 0 1px 0 #fff;
+  text-shadow: 0 0.025em 0 #fff;
 }
 
 .roman { font-size: 80%; }
@@ -814,21 +819,19 @@ details[open] > .details-content {
   margin-top: 0.2em
 }
 
-
-/* reduced motion */
-
-@media screen and (prefers-reduced-motion: reduce) {
-* {
+@media screen and (prefers-reduced-motion: reduce) { * {
+  /* scroll-behavior: smooth !important; */
   scroll-behavior: auto !important;
+  /** smooth scrolling is better for this application **/
   animation: none !important;
   transition: none !important;
-}
-}
+} }
 
 /* begin: common styling for popups: tafsir & search */
 .popup {  /* the container */
   display: none;
   visibility: hidden;  opacity: 0;  transition: 1s opacity;
+  /* the transition duration matches the close handler in search.js & tafsir.js */
   position: fixed;  top: 0;  right: 0;  width: 100%;  height: 100%;
   overflow: scroll;
   z-index: 50;  /* above everything */
@@ -898,7 +901,7 @@ details[open] > .details-content {
 }
 
 /* to accomodate the various languages (our KacstOne is subsetted); */
-/* scripts other than Latin and Perso-Arabic use an available font on the system */
+/* scripts other than non-extended Arabic use an available font on the system */
 .tafsir /* selector */, .tafsir > option,
 #tv [lang] /* title & content */ {
   font-family: "Noto Sans Arabic", "Noto Sans";
