@@ -3,11 +3,7 @@
 <head>
 <meta charset="utf8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<<!!# this file uses a small preprocessor to embed fonts and data; see index.html for the generated HTML file>>
 <<!!sh meta.sh>>
-<style>
-<<!!cat .style.min.css>>
-</style>
 </head>
 <body>
 <input type="checkbox" id="dark" hidden disabled>
@@ -220,7 +216,7 @@
 </div>
 </div>
 
-<script><<!!cat .scripts.gen.min.js>></script>
+<script src="_scripts.min.js?h=<<!!bash -c "sha256sum _scripts.min.js | sed -E 's/(.{7}).*/\1/' | tr -d $'\n'">>"></script>
 
 </body>
 </html>

@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# style
+echo '<link rel="stylesheet" type="text/css" href="_style.min.css?h='"$(sha256sum _style.min.css | sed -E "s/(.{7}).*/\1/")"'">'
+
+
 # URL='https://noureddin.github.io/recite/'
 URL='https://www.noureddin.dev/recite/'
 TITLE='رسيت | راجع ما تحفظ من القرآن الكريم'

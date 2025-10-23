@@ -30,10 +30,11 @@ sub minify_html { my $t = shift;
     ## for debugging
     # $t =~ s| <|█<|g;
     # $t =~ s|> |>█|g;
-    ## unquote attribute values if allowable (I use only double-quotes in html)
-    ## https://html.spec.whatwg.org/multipage/syntax.html#unquoted
-    $t =~ s|(\b\w+)="([^\s"'`<>=]+)"|$1=$2|g;
-    $t =~ s|(\b\w+)=""|$1|g;
+    # TODO: the following affects the hard-coded svg the html
+    # ## unquote attribute values if allowable (I use only double-quotes in html)
+    # ## https://html.spec.whatwg.org/multipage/syntax.html#unquoted
+    # $t =~ s|(\b\w+)="([^\s"'`<>=]+)"|$1=$2|g;
+    # $t =~ s|(\b\w+)=""|$1|g;
     return $t;
 }
 

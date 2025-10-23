@@ -9,7 +9,7 @@
 const sura_name = [<<!!sed "s/^/'/;s/$/',/" res/suar-names | tr -d '\n' >>]
 
 // const zhash = {
-//   <<!!# bash -c 'cd res; for f in [ui].zst; do sha256sum $f --tag | sed "s/^[A-Z0-9]* (\([^.]*\)[^)]*) = \(.*\)/\1:\x27\2\x27,/"; done'>>
+//   <<!!# bash -c 'for i in i u; do printf '%s:' $i; sha256sum res/$i.zst | sed -E "s/(.{7}).*/\"\1\",/"; done' >>
 // }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -38,11 +38,11 @@ const sura_name = [<<!!sed "s/^/'/;s/$/',/" res/suar-names | tr -d '\n' >>]
 
 // lzma-d-min.js from LZMA-JS by Nathan Rugg; v2.3.0; License: MIT.
 // https://github.com/LZMA-JS/LZMA-JS/blob/master/src/lzma-d-min.js
-<<!!cat .lzma-d-min.js>>
+<<!!cat res/lzma-d-min.js>>
 
 // fzstd-0.1.1.js from fzstd by 101arrowz; v0.1.1; License: MIT.
 // https://github.com/101arrowz/fzstd
-<<!!# cat .fzstd-0.1.1.js>>
+<<!!# cat res/fzstd-0.1.1.js>>
 
 ////////////////////////////////////////////////////////////////////////////////
 // additional scripting

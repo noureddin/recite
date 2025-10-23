@@ -12,6 +12,7 @@ M=perl -CSAD .minify.pl
 A=perl -CSAD -nE 'while(s/<<!!(?!cat )(.*?)>>/`$$1`/ge){} print'
 P=perl -CSAD -nE 'while(s/<<!!(.*?)>>/`$$1`/ge){} print'
 
+# TODO: the following comment and the described (still followed!) behavior is now mostly obsolete.
 # .minify.pl minifies HTML, but the transformations it applies are bad for SVG and JS.
 # It can be made to be more context-sensitive, but it's much better to separate them
 #   both into their files and not minify them at all.
@@ -21,20 +22,20 @@ P=perl -CSAD -nE 'while(s/<<!!(.*?)>>/`$$1`/ge){} print'
 # All of that concerns only index.html, because it needs .minify.pl too;
 #   other files using the preprocesser are unaffected.
 
-index.html: .index.html .scripts.gen.min.js .style.min.css .minify.pl
+index.html: .index.html _scripts.min.js _style.min.css .minify.pl meta.sh res/qaris res/tafasir processhelp.pl help.xmd res/*.svg
 	$A "$<" | $M | $P > "$@"
 
-.style.min.css: style.css
+_style.min.css: style.css
 	$C "$<" > "$@"
 
 # %.min.js: %.js
 # 	$J "$<" > "$@"
 
-.scripts.gen.min.js: scripts.jsx *.js res/*.js .index.html res/suar-names #res/[ui].zst
+_scripts.min.js: scripts.jsx [^_]*.js res/*.js .index.html res/suar-names #res/[ui].zst
 	$P "$<" | $J | perl -pe 's/;?\s*\Z//' > "$@"
 	# $P "$<" > "$@"
 
 .PHONEY: clean
 
 clean:
-	rm -f index.html a.gen.js data.gen.js scripts.min.js style.min.css .scripts.gen.min.js
+	rm -f index.html _style.min.css _scripts.min.js
