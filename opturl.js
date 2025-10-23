@@ -41,107 +41,107 @@ function parse_mv (mv) {
 }
 
 function __opturl (params) {
-  let dark             // dark mode: d/dark; l/light (default).
-  let color            // color of text: c/color = t/taj/tajweed (default); b/bas/basic; n/no/none.
-  let mv               // position of buttons: m/mv/mvbtns = b (bottom; default); r (right); l (left).
-  let quizmode         // quiz mode: q/qz/quizmode = u/uthm/uthmani (no-typing; default); i/imla/imlaai (typing)
-  let fbrate           // imlaai-mode feedback rate: 'l' (by letter; default), 'w' (by word), 'a' (by aaya)
-  let nolinebreaks     // uthmani-mode linebreaks between ayat (default: linebreaks)
-  let qari             // audio recitation qari's id
-  let qariurl          // user-provided audio recitation base_url
-  let teacher          // teacher mode (audio recitation before ayah): t/teach/teacher (true); n/noteach/noteacher (false; default)
-  let disableteacher   // remove teacher mode selector from the UI, teacher mode can still be set from the URL: dt/disableteacher
-  let disablequizmode  // remove quiz mode selector from the UI, quiz mode can still be set from the URL: dq/disablequizmode
-  let disablepreview   // disable the ability to preview ayat (doesn't prevent the use of the url param p/preview)
-  let disablecheat     // disable the ability to press '!' ten times to show one letter in imlaai mode
-  let highcontrast     // high-contrast, dark colorscheme
-  let lowcontrast      // use a lower contrast imlaai bg color when wrong (can be used with highcontrast)
-  let tafsir           // select tafsir; the ascii smallcase IDs found in odd-numbered lines in res/tafasir, eg 'katheer' or 'en_sahih'
-  let emulate          // keyboard layout emulation; see https://www.noureddin.dev/kbt/ (same ids, w/o '-ar')
-  let fullpage         // make imla_txt fill the entire page while quizzing, like Recite Desktop (PyQt5, in the `master` branch)
-  let noborder         // make imla_txt without border or outline
-  let nonumcolor       // disable colorization of ayat numbers in Uthmani mode
-  let notajweedlegend  // don't show the tajweed colors legend in Uthmani mode
-  let notitle          // hide recitation range in words, for random quizzing purposes (currently doesn't affect preview)
-  let wa               // text workarounds for Blink; search z.js for blink_engine
-  let cn               // continuation; ie, append a "phrase" from the next aaya if in the same sura
-  let zz               // enable embedded integration: zz (cannot be disabled if enabled)
-  let rr               // enable another kind of embedded integration
-  let words            // advance (show) first N words of the first aaya (only if embedded)
+  const o = {}
   params
     .map(p => p.split('='))
     //.reduce((obj, cur, i) => { i == 0 ? {} : (obj[cur[0]] = cur[1], obj), {})
     .forEach((e, i) => {
-      const is_of = (...params) => params.includes(e[0])
-           if (is_of('dark', 'd'))                   {            dark = true                               }
-      else if (is_of('light', 'l'))                  {            dark = false                              }
-      else if (is_of('color', 'c'))                  {           color = parse_color(e[1]) || color         }
-      else if (is_of('mvbtns', 'mv', 'm'))           {              mv = parse_mv(e[1]) || mv               }
-      else if (is_of('quizmode', 'qz', 'q'))         {        quizmode = parse_quizmode(e[1]) || quizmode   }
-      else if (is_of('txt'))                         {        quizmode = parse_quizmode('imlaai')           }
-      else if (is_of('byaaya'))                      {          fbrate = 'a'                                }
-      else if (is_of('byword'))                      {          fbrate = 'w'                                }
-      else if (is_of('byletter'))                    {          fbrate = 'l'                                }
-      else if (is_of('by'))                          {          fbrate = parse_fbrate(e[1]) || fbrate       }
-      else if (is_of(  'linebreaks'))                {    nolinebreaks = false                              }
-      else if (is_of('nolinebreaks'))                {    nolinebreaks = true                               }
-      else if (is_of('t',   'teach',   'teacher'))   {         teacher = true                               }
-      else if (is_of('n', 'noteach', 'noteacher'))   {         teacher = false                              }
-      else if (is_of('dt', 'disableteacher'))        {  disableteacher = true                               }
-      else if (is_of('dq', 'disablequizmode'))       { disablequizmode = true                               }
-      else if (is_of('dv', 'dp', 'disablepreview'))  {  disablepreview = true                               }
-      else if (is_of('dc', 'disablecheat'))          {    disablecheat = true                               }
-      else if (is_of('hc', 'highcontrast'))          {    highcontrast = true                               }
-      else if (is_of('lc', 'lowcontrast'))           {     lowcontrast = true                               }
-      else if (is_of('emu', 'emulate', 'emulation')) {         emulate = e[1]                               }
-      else if (is_of('qari'))                        {            qari = e[1]                               }
-      else if (is_of('qariurl'))                     {         qariurl = e[1]                               }
-      else if (is_of('tafsir'))                      {          tafsir = e[1]                               }
-      else if (is_of('fp', 'fullpage'))              {        fullpage = true                               }
-      else if (is_of('noborder'))                    {        noborder = true                               }
-      else if (is_of(  'nc',   'numcolor'))          {      nonumcolor = false                              }
-      else if (is_of('nonc', 'nonumcolor'))          {      nonumcolor = true                               }
-      else if (is_of(  'tl',   'tajweedlegend'))     { notajweedlegend = false                              }
-      else if (is_of('notl', 'notajweedlegend'))     { notajweedlegend = true                               }
-      else if (is_of('noti', 'notitle'))             {         notitle = true                               }
-      else if (is_of('showtitle'))                   {         notitle = false                              }
-      else if (is_of('wa'))                          {              wa = true                               }
-      else if (is_of('nowa'))                        {              wa = false                              }
-      else if (is_of('cn'))                          {              cn = true                               }
-      else if (is_of('zz'))                          {              zz = true                               }
-      else if (is_of('rr'))                          {              rr = true                               }
-      else if (is_of('words'))                       {           words = +e[1]                              }
+      const is_of = (params) => params.trim().split(/ +/).includes(e[0])
+      if (false) {}  // just for branching symmetry (something trailing commas)
+
+      // dark mode: d/dark; l/light (default).
+      else if (is_of('dark d'))   o.dark = true
+      else if (is_of('light l'))  o.dark = false
+
+      // color of text: c/color = t/taj/tajweed (default); b/bas/basic; n/no/none.
+      else if (is_of('color c'))  o.color = parse_color(e[1]) || o.color
+
+      // position of buttons: m/mv/mvbtns = b (bottom; default); r (right); l (left).
+      else if (is_of('mvbtns mv m'))  o.mv = parse_mv(e[1]) || o.mv
+
+      // quiz mode: q/qz/quizmode = u/uthm/uthmani (no-typing; default); i/imla/imlaai (typing)
+      else if (is_of('quizmode qz q'))  o.quizmode = parse_quizmode(e[1]) || o.quizmode
+      else if (is_of('txt'))            o.quizmode = 'imla'
+
+      // imlaai-mode feedback rate: 'l' (by letter; default), 'w' (by word), 'a' (by aaya)
+      else if (is_of('byaaya'))    o.fbrate = 'a'
+      else if (is_of('byword'))    o.fbrate = 'w'
+      else if (is_of('byletter'))  o.fbrate = 'l'
+      else if (is_of('by'))        o.fbrate = parse_fbrate(e[1]) || o.fbrate
+
+      // uthmani-mode linebreaks between ayat (default: linebreaks)
+      else if (is_of('  linebreaks'))  o.nolinebreaks = false
+      else if (is_of('nolinebreaks'))  o.nolinebreaks = true
+
+      // select tafsir; the ascii smallcase IDs found in odd-numbered lines in res/tafasir, eg 'katheer' or 'en_sahih'
+      else if (is_of('tafsir'))  o.tafsir = e[1]
+
+      // audio recitation qari's id
+      else if (is_of('qari'))  o.qari = e[1]
+
+      // user-provided audio recitation base_url
+      else if (is_of('qariurl'))  o.qariurl = e[1]
+
+      // teacher mode (audio recitation before ayah): t/teach/teacher (true); n/noteach/noteacher (false; default)
+      else if (is_of('  teacher   teach t'))  o.teacher = true
+      else if (is_of('noteacher noteach n'))  o.teacher = false
+
+      // remove teacher mode selector from the UI, teacher mode can still be set from the URL: dt/disableteacher
+      else if (is_of('disableteacher dt'))  o.disableteacher = true
+
+      // remove quiz mode selector from the UI, quiz mode can still be set from the URL: dq/disablequizmode
+      else if (is_of('disablequizmode dq'))  o.disablequizmode = true
+
+      // disable the ability to preview ayat (doesn't prevent the use of the url param p/preview)
+      else if (is_of('disablepreview dv dp'))  o.disablepreview = true
+
+      // disable the ability to press '!' ten times to show one letter in imlaai mode
+      else if (is_of('disablecheat dc'))  o.disablecheat = true
+
+      // keyboard layout emulation (for imlaai & searching); see https://www.noureddin.dev/kbt/ (same ids, w/o '-ar')
+      else if (is_of('emulation emulate emu'))  o.emulate = e[1]
+
+      // high-contrast, dark colorscheme (affects uthmani & imlaai)
+      else if (is_of('highcontrast hc'))  o.highcontrast = true
+
+      // use a lower contrast imlaai bg color when wrong (can be used with highcontrast)
+      else if (is_of('lowcontrast lc'))  o.lowcontrast = true
+
+      // make imla_txt fill the entire page while quizzing, like Recite Desktop (PyQt5, in the `master` branch)
+      else if (is_of('fullpage fp'))  o.fullpage = true
+
+      // make imla_txt without border or outline
+      else if (is_of('noborder'))  o.noborder = true
+
+      // disable colorization of ayat numbers in Uthmani mode
+      else if (is_of('  numcolor   nc'))  o.nonumcolor = false
+      else if (is_of('nonumcolor nonc'))  o.nonumcolor = true
+
+      // don't show the tajweed colors legend in Uthmani mode
+      else if (is_of('  tajweedlegend   tl'))  o.notajweedlegend = false
+      else if (is_of('notajweedlegend notl'))  o.notajweedlegend = true
+
+      // hide recitation range in words, for random quizzing purposes (currently doesn't affect preview)
+      else if (is_of('  notitle noti'))  o.notitle = true
+      else if (is_of('showtitle'))       o.notitle = false
+
+      // uthmani text workarounds for Blink; search z.js for blink_engine
+      else if (is_of('  wa'))  o.wa = true
+      else if (is_of('nowa'))  o.wa = false
+
+      // continuation; ie, append a "phrase" from the next aaya if in the same sura
+      else if (is_of('cn'))  o.cn = true
+
+      // enable embedded integration: zz (cannot be disabled if enabled)
+      else if (is_of('zz'))  o.zz = true
+
+      // enable another kind of embedded integration
+      else if (is_of('rr'))  o.rr = true
+
+      // advance (show) first N words of the first aaya (only if embedded)
+      else if (is_of('words'))  o.words = +e[1]
     })
-  let opts = {
-    dark,
-    color,
-    mv,
-    quizmode,
-    fbrate,
-    nolinebreaks,
-    teacher,
-    disableteacher,
-    disablequizmode,
-    disablepreview,
-    disablecheat,
-    highcontrast,
-    lowcontrast,
-    emulate,
-    qari,
-    qariurl,
-    tafsir,
-    fullpage,
-    noborder,
-    nonumcolor,
-    notajweedlegend,
-    notitle,
-    wa,
-    cn,
-    zz,
-    rr,
-    words,
-  }
-  return opts
+  return o
 }
 
 function update_options (el, param, stored, Default) {
@@ -159,93 +159,93 @@ function update_bool_default_true (el, param, stored) {
 }
 
 function parse_opturl () {
-  const opts = __opturl((L.search + L.hash).split(/[ ?#&]|%20/))
+  const o = __opturl((L.search + L.hash).split(/[ ?#&]|%20/))
   //
-  if (opts.quizmode == null) {
+  if (o.quizmode == null) {
     if (S.imla) {
       el_quizmode.value = 'imla'
       el_quizmode.onchange()
     }
   }
   else {
-    el_quizmode.value = opts.quizmode
+    el_quizmode.value = o.quizmode
     el_quizmode.onchange()
-    store_bool('imla', opts.quizmode === 'imla')
+    store_bool('imla', o.quizmode === 'imla')
   }
   //
-  if (opts.highcontrast) { el_body.classList.add('highcontrast') }
-  if (opts.lowcontrast)  { el_body.classList.add('lowcontrast') }
+  if (o.highcontrast) { el_body.classList.add('highcontrast') }
+  if (o.lowcontrast)  { el_body.classList.add('lowcontrast') }
   //
-  if (opts.dark == null && S.getItem('dark') == null) {  // no overriding; follow system preference initially
-    opts.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  if (o.dark == null && S.getItem('dark') == null) {  // no overriding; follow system preference initially
+    o.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
   }
   else {
-    if (opts.dark != null) { S.setItem('dark', opts.dark ? 'Y' : 'N') }
+    if (o.dark != null) { S.setItem('dark', o.dark ? 'Y' : 'N') }
   }
-  el_darkmode_input.checked = opts.dark || S.dark === 'Y'
+  el_darkmode_input.checked = o.dark || S.dark === 'Y'
   el_darkmode_input.onchange()
   //
   // TODO: add a url param for this '^_^
   window.prefers_reduced_motion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   //
-  if (opts.teacher == null) {
+  if (o.teacher == null) {
     el_teacher.checked = !!S.teacher
   }
   else {
-    el_teacher.checked = opts.teacher
-    store_bool('teacher', opts.teacher)
+    el_teacher.checked = o.teacher
+    store_bool('teacher', o.teacher)
   }
   //
-  update_options(el_tafsir_option, opts.tafsir, 'tafsir', 'ar_muyassar')
-  update_options(el_qaris,         opts.qari,   'qari',   '')
-  update_options(el_mvbtns_input,  opts.mv,     'mvbtns', 'b')
-  update_options(el_feedbackrate,  opts.fbrate, 'fbrate', 'l')
+  update_options(el_tafsir_option, o.tafsir, 'tafsir', 'ar_muyassar')
+  update_options(el_qaris,         o.qari,   'qari',   '')
+  update_options(el_mvbtns_input,  o.mv,     'mvbtns', 'b')
+  update_options(el_feedbackrate,  o.fbrate, 'fbrate', 'l')
   //
-  if (opts.qariurl) { el_qaris.value = '_' }  // an invalid value to hide "Without audio"
-  el_qariurl.value = opts.qariurl ? opts.qariurl : ''
+  if (o.qariurl) { el_qaris.value = '_' }  // an invalid value to hide "Without audio"
+  el_qariurl.value = o.qariurl ? o.qariurl : ''
   //
-  el_textclr_input.value = opts.color != null ? opts.color : S.notajweed ? 'no' : 'taj'
+  el_textclr_input.value = o.color != null ? o.color : S.notajweed ? 'no' : 'taj'
   if (el_textclr_input.value !== 'taj') { S.setItem('notajweed', 'Y') }
   el_textclr_input.onchange()
   //
-  update_bool_default_true(el_linebreaks_input, opts.nolinebreaks,    'nolinebreaks')
-  update_bool_default_true(el_ayatnum_input,    opts.nonumcolor,      'noayatnumcolor')
-  update_bool_default_true(el_tl_input,         opts.notajweedlegend, 'notajweedlegend')
+  update_bool_default_true(el_linebreaks_input, o.nolinebreaks,    'nolinebreaks')
+  update_bool_default_true(el_ayatnum_input,    o.nonumcolor,      'noayatnumcolor')
+  update_bool_default_true(el_tl_input,         o.notajweedlegend, 'notajweedlegend')
   //
   const hide = (e) => e.style.display = 'none'
   //
-  if (opts.disableteacher) {
+  if (o.disableteacher) {
     hide(el_teacher_option)
   }
   //
-  if (opts.disablequizmode) {
+  if (o.disablequizmode) {
     hide(el_quizmode_option)
     Qall('.mode_options_title').forEach(hide)
   }
   //
-  if (opts.disablepreview) {
+  if (o.disablepreview) {
     hide(el_show)
     // el_reshow is hidden in hide_selectors()
   }
   //
   // options that don't have a visible ui input (in addition to qariurl & high/low contrast)
-  window.allow_cheating = !opts.disablecheat  // cheating is allowed by default
-  window.dont_show_title = !!opts.notitle
-  window.random_recitation = !!opts.rr
-  window.get_continuation = !!opts.cn
-  window.is_embedded = window.random_recitation || !!opts.zz
-  if (opts.emulate && mappings[opts.emulate]) { window.emulate = opts.emulate }
-  if (opts.fullpage) { el_body.classList.add('fullpage') }
-  if (opts.noborder) { el_imla_txt.classList.add('noborder') }
-  if (window.is_embedded && opts.words && !isNaN(opts.words)) { window.show_words = opts.words }
+  window.allow_cheating = !o.disablecheat  // cheating is allowed by default
+  window.dont_show_title = !!o.notitle
+  window.random_recitation = !!o.rr
+  window.get_continuation = !!o.cn
+  window.is_embedded = window.random_recitation || !!o.zz
+  if (o.emulate && mappings[o.emulate]) { window.emulate = o.emulate }
+  if (o.fullpage) { el_body.classList.add('fullpage') }
+  if (o.noborder) { el_imla_txt.classList.add('noborder') }
+  if (window.is_embedded && o.words && !isNaN(o.words)) { window.show_words = o.words }
   //
   // text workarounds for Blink; search z.js for blink_engine
-  if (opts.wa != null) {
-    window.blink_engine = opts.wa
+  if (o.wa != null) {
+    window.blink_engine = o.wa
   }
   else {
     const ua = window.navigator.userAgent
-    window.blink_engine = ua.includes('Chrome') // || ua.includes('Safari') // Safari is even more broken
+    window.blink_engine = ua.includes('Chrome') // || ua.includes('Safari') // Safari is much more broken
   }
 }
 parse_opturl()
