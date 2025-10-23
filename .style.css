@@ -84,8 +84,8 @@ body {
   --L: #bb0066; --W: red;     --J: #ff8800;   --T: #c6b000;    --N: #00bb00;
   --X: #9595a0; --R: #2222e0; --Q: #009ea7;   --A: darkorange; --D: navy;
   /* sura name color */
-  --suraname-fill: #fb2;  /* light orange */
-  --suraname-stroke: maroon;
+  --suraname-fill: darkorange;
+  --suraname-stroke: #fb2;  /* light orange */
   --ipagebreak: hsl(80deg, 80%, 35%);
   --opagebreak: hsl(50deg, 80%, 35%);
   /* ayat number color */
