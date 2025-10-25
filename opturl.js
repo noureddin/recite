@@ -148,7 +148,7 @@ function __opturl (params) {
       else if (is_of('words'))  o.words = +e[1]
 
       // test the lengths of printed-like lines
-      else if (is_of('testlonglines'))  o.testlonglines = true
+      else if (is_of('testlinelengths'))  o.testlinelengths = true
 
     })
   return o
@@ -169,7 +169,7 @@ function update_bool_default_true (el, param, stored) {
 }
 
 function parse_opturl () {
-  const o = __opturl((L.search + L.hash).split(/[ ?#&]|%20/))
+  const o = __opturl((L.search + L.hash).split(/[ ?#&]|%20|%23/))
   //
   if (o.quizmode == null) {
     if (S.imla) {
@@ -259,8 +259,8 @@ function parse_opturl () {
     window.blink_engine = ua.includes('Chrome') // || ua.includes('Safari') // Safari is much more broken
   }
   //
-  if (o.testlonglines) {
-    addEventListener('load', testlonglines)
+  if (o.testlinelengths) {
+    addEventListener('load', testlinelengths)
   }
 }
 parse_opturl()

@@ -108,28 +108,47 @@ const set_aayaat = (el, len, v) => {
 
 // }}}
 
-// validate_aaya_sura_input {{{
-// called oninput and onblur with the element; only called for {sura,aaya}_{bgn,end} inputs.
-// may update the input fields.
-function validate_aaya_sura_input (ev) {
-  const el = ev.target
-  const blur = ev.type === 'blur'
-  const is_aaya = el === el_aaya_bgn || el === el_aaya_end
-  //
-  // if the changed field is sura_bgn
-  if (!blur && el === el_sura_bgn) {
+function validate_aaya_sura_input (ev) {  // {{{
+  // called onchange with the element; only called for {sura,aaya}_{bgn,end} selectors.
+  // may update the input fields.
+  if (ev.target.id === 'sura_bgn') {
     set_aayaat(el_aaya_bgn, sura_bgn_length(), 1)
     if (sura_end_val() < sura_bgn_val()) {
       el_sura_end.value = sura_bgn_val()
       set_aayaat(el_aaya_end, sura_end_length())
     }
   }
-  // if the changed field is sura_end
-  else if (!blur && el === el_sura_end) {
+  else if (ev.target.id === 'sura_end') {
     set_aayaat(el_aaya_end, sura_end_length())
     if (sura_end_val() < sura_bgn_val()) {
       el_sura_bgn.value = sura_end_val()
       set_aayaat(el_aaya_bgn, sura_bgn_length(), 1)
+    }
+  }
+  else if (sura_bgn_val() === sura_end_val() && aaya_bgn_val() > aaya_end_val()) {
+    // if the changed field is either aaya field AND both sura fields point to the same sura
+    if (ev.target.id === 'aaya_bgn') {
+      el_aaya_end.value = aaya_bgn_val()
+    }
+    else if (ev.target.id === 'aaya_end') {
+      el_aaya_bgn.value = aaya_end_val()
+    }
+  }
+}
+// }}}
+
+function validate_pages_input (ev) {  // {{{
+  // called onchange with the element; only called for page_{bgn,end} inputs..
+  // may update the input fields.
+  if (+ev.target.value === 0) {  // zero, empty string, or invalid string
+    ev.target.value = ev.target.id === 'page_bgn' ? el_page_end.value : el_page_bgn.value
+  }
+  if (+el_page_bgn.value > +el_page_end.value) {
+    if (ev.target.id === 'page_bgn') {
+      el_page_end.value = el_page_bgn.value
+    }
+    else {
+      el_page_bgn.value = el_page_end.value
     }
   }
 }
@@ -229,7 +248,7 @@ function kind_of_portion (last_two_chars) {
          ''  // normal word
 }  // }}}
 
-function valid_inputs (sura_bgn, aaya_bgn, sura_end, aaya_end) {  // {{{
+function valid_ayat_inputs (sura_bgn, aaya_bgn, sura_end, aaya_end) {  // {{{
   return (
     sura_bgn !== '' && aaya_bgn !== '' &&
     sura_end !== '' && aaya_end !== '' &&
@@ -237,6 +256,15 @@ function valid_inputs (sura_bgn, aaya_bgn, sura_end, aaya_end) {  // {{{
     (aaya_bgn <= aaya_end || sura_bgn < sura_end) &&
     1 <= aaya_bgn && aaya_bgn <= sura_length[sura_bgn] &&
     1 <= aaya_end && aaya_end <= sura_length[sura_end]
+  )
+}  // }}}
+
+function valid_pages_inputs (page_bgn, page_end) {  // {{{
+  return (
+    page_bgn !== '' && !isNaN(+page_bgn) &&
+    page_end !== '' && !isNaN(+page_end) &&
+    1 <= +page_bgn && +page_end <= 604 &&
+    +page_bgn <= +page_end
   )
 }  // }}}
 
@@ -265,6 +293,17 @@ function change_quizmode () {
     /* show */ el_uthm_options.style.display = 'block'
   }
   show_or_hide_uthmani_hints()
+}
+
+function change_tabchoices () {
+  if (el_tabchoice_ayat.checked) {
+    /* hide */ el_tab_pages.style.display = 'none'
+    /* show */ el_tab_ayat.style.display = 'block'
+  }
+  else {  /* tabchoice_page */
+    /* hide */ el_tab_ayat.style.display = 'none'
+    /* show */ el_tab_pages.style.display = 'block'
+  }
 }
 
 // removes tashkeel and ayat numbers

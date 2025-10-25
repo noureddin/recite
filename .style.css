@@ -206,11 +206,14 @@ label, label *, select, input, button {
 #uthm_txt * { font-family: inherit; font-size: inherit }
 #uthm_txt {
   font-family: var(--txt-font);
-  --size: 1.5rem; font-size: var(--size);  /* updated in resize() in logic.js */
+  --size: 1.5rem; font-size: 1.5rem;  /* pr-lines only adapt; non-pr modes have a static size */
   text-align: right;
   margin: 1rem 1rem;
   margin-bottom: 6rem;
   line-height: 2.7;  /* slightly wider than the default for Amiri Quran */
+}
+#uthm_txt.pr {
+  font-size: var(--size);  /* the variable is updated in resize() in logic.js */
 }
 #uthm_txt > pr-line.suraname { line-height: initial }
 #uthm_txt.done, #uthm_txt.sidebtns {
@@ -257,38 +260,98 @@ label, label *, select, input, button {
 /* search buttons in #selectors */
 .srcttl { font-family: inherit; color: inherit }
 .search { width: initial; padding: 0 1em }
-@media (max-width: 580px) { .search { padding: 0 0.25em } }
-@media (max-width: 440px) {
-.srcttl {  /* .sr-only -- hide visually but keep it for screenreaders */
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
-}
+@media (max-width: 510px) { .ss .search { padding: 0 0.25em } .ss .srcttl
+{ position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; } }  /* .sr-only -- hide visually but keep it for screenreaders */
+@media (max-width: 411px) { .ps .search { padding: 0 0.25em } .ps .srcttl
+{ position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; } }  /* .sr-only -- hide visually but keep it for screenreaders */
 
-.ss {
+.ss, .ps {
   display: block;
-  max-width: 20em;
-  min-width: 40%;
   white-space: nowrap;
   margin: 0.1em auto;
+  height: 3.2em;
+  padding: 0.6em 0;
 }
-#aaya_bgn, #aaya_end { width: 3em; }
-/* #sura_bgn, #sura_end { width: 6.5em; } */
-#sura_bgn, #sura_end { width: 35%; }
 
-@media (max-width: 359px) {
+.ss select, .ps input, .search {
+  height: 2rem;
+  vertical-align: middle;
+}
+
+#tab_ayat, #tab_pages {
+  padding: 0.35em 0;
+}
+
+#aaya_bgn, #aaya_end { width: 3em }
+#sura_bgn, #sura_end { width: max-content }
+
+@media (max-width: 400px) {
   .sura { display: none }
   .ss label:first-child { width: 1.6em }  /* من سورة and إلى سورة */
 }
 
-@media (max-width: 279px) {
+@media (max-width: 340px) {
   .aaya { display: none }
+}
+
+@media (max-width: 309px) {
+  .ps label { font-size: 95% }
+}
+
+#tabframe * {
+  box-sizing: border-box;
+}
+
+.ps label {
+  display: inline-block;
+  width: 8em;
+}
+
+.ps input {
+  font-family: KacstOne, serif;
+  display: inline-block;
+  width: 3em;  /* a space for 4.5 or 5.5 digits plus the arrows; tested on FF and Blink */
+}
+
+input:invalid {
+  outline: 0.1em solid #f00;
+}
+
+#tabchoices input { margin-left: 0 }
+#tabchoices label { padding-right: 0.25em }
+#tabchoices > span {
+  line-height: 2.5;
+  margin-right: 2em;  /* space between the choices */
+}
+#tabchoices > span:first-child { margin-right: 0 }
+
+@media (max-width: 359px) {
+  #tabchoices > span { margin-right: 1em }
+}
+@media (max-width: 319px) {
+  #tabchoices > span { margin-right: 0; display: block }
+}
+
+#tabframe {
+  --tabcolor: var(--opt-sep);
+  border-radius: 0.5em;
+  border: 0.1em solid var(--tabcolor);
+}
+
+#tabchoices {
+  border-bottom: 0.1em solid var(--tabcolor);
+  background: none !important;  /* for animation */
+}
+
+#tabframe.invalid,
+#tabframe.invalid #tabchoices {
+  animation: 3s invalid-selection;  /* the class is removed after the same duration, in logic.js */
+}
+
+@keyframes invalid-selection {
+  0%    { background: #f004; border-color: red }
+  33%   { background: #f004; border-color: red }
+  100%  { background: #f000; border-color: var(--opt-sep) }
 }
 
 #options .option { margin-top: 0.5em; }
@@ -303,20 +366,6 @@ label, label *, select, input, button {
   font-weight: normal;
   color: var(--opt-title);
 }
-
-#guide { display: none }  /* used for debugging */
-
-/* #options * { margin-top: 0 !important } */
-/* .mode_options_title { display: none !important } */
-/* #guide { */
-/*   display: block; */
-/*   width: 0; */
-/*   height: 10rem; */
-/*   color: red; */
-/*   position: absolute; */
-/*   top: 0; */
-/*   left: 15%; */
-/* } */
 
 #options {
   /* text-align: right; */
@@ -337,6 +386,47 @@ label, label *, select, input, button {
 #darkmode_option { width: 7em }
 #teacher_option { width: 14em }
 
+#guide { display: none }  /* used for debugging */
+/*
+#options * { margin-top: 0 !important }
+.mode_options { display: block !important }
+.mode_options_title { display: none !important }
+#guide {
+  display: block;
+  width: 0;
+  height: 15rem;
+  color: red;
+  position: absolute;
+  top: 0;
+  left: 15.5%;
+}
+/**/
+
+/*
+.option {
+  max-width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+}
+.option * {
+  flex-grow: 1;
+}
+.option label {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+/**/
+
+/** I still couldn't get flexbox to make the options take the entire line without the label, but NEVER to overflow the line; therefore I hard-code the widths **/
+
+#qaris         { width: calc(100% -  6.85em) }
+#quizmode      { width: calc(100% -  7.75em) }
+#mvbtns_input  { width: calc(100% -  9.30em) }
+#feedbackrate  { width: calc(100% -  8.55em) }
+.tafsir        { width: calc(100% -  7.90em) }
+#lines_input   { width: calc(100% -  6.80em) }
+#textclr_input { width: calc(100% -  6.50em) }
+
 .option.maybe-inline {
   display: inline-block;
   margin: 0 1em;
@@ -354,14 +444,6 @@ label, label *, select, input, button {
 .mode_options {
   padding: 0; margin: 0;
 }
-
-#qaris         { width: calc(100% -  6.80em) }
-#quizmode      { width: calc(100% -  7.35em) }
-#mvbtns_input  { width: calc(100% -  9.40em) }
-#lines_input   { width: calc(100% -  6.75em) }
-#textclr_input { width: calc(100% -  6.45em) }
-#feedbackrate  { width: calc(100% -  9.25em) }
-.tafsir        { width: calc(100% -  7.90em) }
 
 #imla_txt { background: var(--background); color: var(--txt); transition: background 1s }
 
@@ -454,7 +536,7 @@ button {
   }
 }
 
-button, select, input[type=checkbox] + label {
+button, select, input, input + label, label:has(+ input) {
   cursor: pointer;
 }
 
@@ -618,7 +700,7 @@ summary::marker { color: #c00; }
   padding: 0.5em;
 }
 
-select, .bh { margin: 0.5em 0 }
+.bh { margin: 0.5em 0 }
 hr { margin-top: 1em }
 
 .bh { display: flex; justify-content: center }
@@ -1106,6 +1188,10 @@ details[open] > .details-content {
 #uthm_txt.pr > pr-line.basmala {
   text-align-last: center;
 }
+#uthm_txt.anywidth > pr-line {
+  width: fit-content;
+  margin-right: 0;
+}
 
 /* phantoms are used to keep the words in the printed-lines positioned properly */
 
@@ -1136,6 +1222,10 @@ details[open] > .details-content {
 }
 page-break.i { color: var(--ipagebreak) }
 page-break.o { color: var(--opagebreak) }
+
+#uthm_txt.pr .nbsp {
+  display: none;
+}
 
 /* end: mosħaf lines */
 

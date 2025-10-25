@@ -100,6 +100,8 @@ const font_improve = (a) => a
 
 const unmark = (a) => font_improve(a.replace(/[#A-Z<>]+/g, '').replace(/[\x1d-\x1f\x03-\x06]/g, ' ').trim())  // showing aya in search & tafsir
 
+const NBSP = '<span_class="nbsp">&nbsp;</span>'  // used between <pr-line>s, thus becomes hidden when in pr-line mode.
+
 const parse_aaya = (a) => a
   .replace(/\x1f/g, '</pr-line> <pr-line_class="really-short">')
   .replace(/\x1e/g, '</pr-line> <pr-line_class="short">')
@@ -109,17 +111,13 @@ const parse_aaya = (a) => a
   .replace(/\x05/g, '<pr-line_class="short">')  // first aya in sura 2
   .replace(/\x06/g, '<pr-line_class="really-short">')  // first aya in sura 1
   // re-attach aaya mark to the prev word; it's separated in the text b/c an aya mark can start a line
-  .replace(/ (<pr-line[^<>]*>[0-9]+A<[^<>]*>D<[^<>]*>)/g, '_$1')                 // if starts a line
+  .replace(/ (<pr-line[^<>]*>[0-9]+A<[^<>]*>D<[^<>]*>)/g, NBSP+'$1')             // if starts a line
   .replace(/([0-9]+A<[^<>]*>D<[^<>]*><\/pr-line>) (<pr-line[^<>]*>)/g, '$1_$2')  // if ends a line
-  .replace(/ ([0-9]+A<[^<>]*>D<[^<>]*>)/g, '_$1')                                // anywhere else
+  .replace(/ ([0-9]+A<[^<>]*>D<[^<>]*>)/g, '&nbsp;$1')                           // anywhere (including eol)
   // re-attach rub-el-hizb mark to the next word
-  .replace(/(<pr-line[^<>]*>\u06de) /g, '$1_')                 // if starts a line
-  .replace(/(\u06de<\/pr-line>) (<pr-line[^<>]*>)/g, '$1_$2')  // if ends a line (non-existent)
-  .replace(/(\u06de) /g, '$1_')                                // anywhere else
+  .replace(/(\u06de) /g, '$1&nbsp;')  // always inside a line (ie, never ends a line)
   // re-attach sajda mark (it's now before the aaya mark) to the prev word
-  .replace(/ (<pr-line[^<>]*>\u06e9)/g, '_$1')                 // if starts a line
-  .replace(/(\u06e9<\/pr-line>) (<pr-line[^<>]*>)/g, '$1_$2')  // if ends a line
-  .replace(/ (\u06e9)/g, '_$1')                                // anywhere else
+  .replace(/ (\u06e9)/g, '&nbsp;$1')  // always inside a line (ie, never starts a line); and it's already attached to the aya mark (per the prev lines)
   // tajweed colorize
   .replace(/([A-Z])<([^>]+)>/g, '<span_class="$1">$2</span>')
 
@@ -163,7 +161,7 @@ function make_words_list (st, en, cn) {  // uthmani
       .slice(st-1, en)
       .reduce((arr, aya, i) => {
         aya = aya.replace(/A/, (i+st)+'A')  // for tafsir
-        const p = pages.indexOf(i+st-1)
+        const p = page_offset.indexOf(i+st-1)
         let pbr = arr.length && p !== -1 ? pagebreak_html(p) : ''
         let [prefix] = aya.match(/^([\x04-\x06 ]*)/)
         aya = aya.slice(prefix.length)
@@ -202,8 +200,7 @@ function make_words_list (st, en, cn) {  // uthmani
             // do nothing; ie keep the full aaya
           }
           else {
-            aya = aya.replace(/([\u06D6-\u06DB][\x1d-\x1f ]).*/, '$1')  // sakta (high seen) does NOT separate phrases
-            aya = aya.replace(/ $/, '')
+            aya = aya.replace(/([\u06D6-\u06DB][\x1d-\x1f ]).*/, '$1').replace(/ $/, '')  // sakta (high seen) does NOT separate phrases
           }
         }
         //
@@ -214,7 +211,7 @@ function make_words_list (st, en, cn) {  // uthmani
         }
         aya = font_improve(aya)
         //
-        if (window.blink_engine) {  // work around text rendering issues with Blink
+        if (window.blink_engine) {  // work around text rendering issues in Blink
           //
           //    U+0640 ARABIC TATWEEL
           //    U+0644 ARABIC LETTER LAM

@@ -24,7 +24,7 @@
   <!-- <hr id="guide"> -->
 
   <div id="darkmode_option" class="option maybe-inline">
-    <label for="darkmode_input">الوضع الليلي؟&ensp;</label><input id="darkmode_input" type="checkbox" onchange="change_dark()">
+    <label for="darkmode_input">الألوان الليلية؟&ensp;</label><input id="darkmode_input" type="checkbox" onchange="change_dark()">
   </div>
   <div id="teacher_option" class="option maybe-inline">
     <label for="teacher">معلم؟ (التلاوة الصوتية قبل الآية)&ensp;</label><input id="teacher" type="checkbox" onchange="change_teacher()">
@@ -41,14 +41,13 @@
 
   <hr class="opt-sep">
   <div id="quizmode_option" class="option">
-    <label for="quizmode">وضع التسميع:&ensp;</label><select id="quizmode" onchange="change_quizmode()">
+    <label for="quizmode">أسلوب التسميع:&ensp;</label><select id="quizmode" onchange="change_quizmode()">
       <option value="uthm" selected>عثماني (بلا كتابة) &mdash; تغييره يتطلب إعادة التسميع</option>
-      <option value="imla">إملائي (كتابة) &mdash; تغييره يتطلب إعادة التسميع</option>
+      <option value="imla">إملائي (بالكتابة) &mdash; تغييره يتطلب إعادة التسميع</option>
     </select>
   </div>
 
   <div class="mode_options" id="uthm_options">
-    <!-- <span id="uthm_options_title" class="mode_options_title">خيارات وضع التسميع العثماني (بلا كتابة):</span> -->
 
     <div class="option">
       <label for="mvbtns_input">موضع أزار التسميع:&ensp;</label><select id="mvbtns_input" onchange="change_mvbtns()">
@@ -61,10 +60,9 @@
   </div>
 
   <div class="mode_options" id="imla_options" style="display:none">
-    <!-- <span id="imla_options_title" class="mode_options_title">خيارات وضع التسميع الإملائي (كتابة):</span> -->
 
     <div class="option">
-      <label for="feedbackrate">مراجعة الأخطاء كل:&ensp;</label><select id="feedbackrate" onchange="change_feedbackrate()">
+      <label for="feedbackrate">تحقق الأخطاء كل:&ensp;</label><select id="feedbackrate" onchange="change_feedbackrate()">
         <option value="l" selected>حرف</option>
         <option value="w">كلمة (صعب)</option>
         <option value="a">آية (شديد الصعوبة)</option>
@@ -132,22 +130,50 @@
 
 <div id="selectors">
 
-  <div class=ss>
-    <label for="sura_bgn">من<span class="sura">&nbsp;سورة</span>:&thinsp;</label>
-    <select id="sura_bgn"></select>&thinsp;<label for="aaya_bgn"><span class="aaya">الآية:&thinsp;</span></label><select id="aaya_bgn"></select>&thinsp;<button class="search">🔍<span class="srcttl"> ابحث</span></button>
+  <div id="tabframe">
+
+    <div id="tabchoices">
+      <span><input type=radio name="tab" id="tabchoice_ayat" onchange="change_tabchoices()" checked><label for="tabchoice_ayat">&thinsp;بالسورة والآية</label></span>
+      <span><input type=radio name="tab" id="tabchoice_page" onchange="change_tabchoices()"><label for="tabchoice_page">&thinsp;بالصفحة</label></span>
+    </div>
+
+    <div id="tab_ayat">
+
+      <div class=ss><!-- inter-tag spaces are removed by .minify.pl -->
+        <label for="sura_bgn">من<span class="sura">&nbsp;سورة</span>:&thinsp;</label><select id="sura_bgn"></select>&thinsp;
+        <label for="aaya_bgn"><span class="aaya">الآية:&thinsp;</span></label><select id="aaya_bgn"></select>&thinsp;
+        <button class="search">🔍<span class="srcttl"> ابحث</span></button>
+      </div>
+
+      <div class=ss><!-- inter-tag spaces are removed by .minify.pl -->
+        <label for="sura_end">إلى<span class="sura">&nbsp;سورة</span>:&thinsp;</label><select id="sura_end"></select>&thinsp;
+        <label for="aaya_end"><span class="aaya">الآية:&thinsp;</span></label><select id="aaya_end"></select>&thinsp;
+        <button class="search">🔍<span class="srcttl"> ابحث</span></button>
+      </div>
+
+    </div>
+
+    <div id="tab_pages" style="display:none">
+
+      <div class=ps><!-- inter-tag spaces are removed by .minify.pl -->
+        <label for="page_bgn">من&nbsp;أول&nbsp;الصفحة</span>:&thinsp;</label><input type=number min=1 max=604 value=1 id="page_bgn">&thinsp;
+        <button class="search">🔍<span class="srcttl"> ابحث</span></button>
+      </div>
+
+      <div class=ps><!-- inter-tag spaces are removed by .minify.pl -->
+        <label for="page_end">إلى&nbsp;آخر&nbsp;الصفحة</span>:&thinsp;</label><input type=number min=1 max=604 value=1 id="page_end">&thinsp;
+        <button class="search">🔍<span class="srcttl"> ابحث</span></button>
+      </div>
+
+    </div>
   </div>
 
-  <div class=ss>
-    <label for="sura_end">إلى<span class="sura">&nbsp;سورة</span>:&thinsp;</label>
-    <select id="sura_end"></select>&thinsp;<label for="aaya_end"><span class="aaya">الآية:&thinsp;</span></label><select id="aaya_end"></select>&thinsp;<button class="search">🔍<span class="srcttl"> ابحث</span></button>
+  <div class=bh>
+    <button title="اختر الآيات التي تريد مراجعتها، ثم اضغط على هذا الزر لبدء الاختبار بغير رؤيتها أولا." id="ok">ابدأ&newline;الاختبار</button>
+    <button title="اختر الآيات التي تريد مراجعتها، ثم اضغط على هذا الزر لرؤيتها قبل بدء الاختبار." id="show">اعرض&newline;الآيات</button>
   </div>
 
-<div class=bh>
-  <button title="اختر الآيات التي تريد مراجعتها، ثم اضغط على هذا الزر لبدء الاختبار بغير رؤيتها أولا." id="ok">ابدأ&newline;الاختبار</button>
-  <button title="اختر الآيات التي تريد مراجعتها، ثم اضغط على هذا الزر لرؤيتها قبل بدء الاختبار." id="show">اعرض&newline;الآيات</button>
-</div>
-
-<hr>
+  <hr>
 
 </div>
 

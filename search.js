@@ -48,7 +48,7 @@ function arabic_fold (txt) {  // takes string, return a regex
 
 const sx_init_msg = '<center>أدخل جزءًا من&nbsp;آية للبحث&nbsp;عنها</center>'
 
-function show_search (el_sura, el_aaya) {
+function show_search (selectorcontainer) {
 
   // show search popup
   el_sxq.value = ''
@@ -56,6 +56,24 @@ function show_search (el_sura, el_aaya) {
   el_sxc.style.display = 'block'
   show_el(el_sxc)
   el_sxq.focus()
+
+  let updatefields
+  if (selectorcontainer.classList.contains('ss')) {
+    const [el_sura, el_aaya] = selectorcontainer.querySelectorAll('select')
+    updatefields = (i, su, ay) => {
+      el_sura.value = su;  validate_aaya_sura_input({ target: el_sura })  // updates the aayaat field
+      el_aaya.value = ay;  validate_aaya_sura_input({ target: el_aaya })  // updates the other pair of fields
+      close_search()
+    }
+  }
+  else {
+    const el_page = selectorcontainer.querySelector('input')
+    updatefields = (i, su, ay) => {
+      el_page.value = page_of(i+1)  // i is 0-based, but page_of expects 1-based
+      validate_pages_input({ target: el_page })  // updates the other field if needed
+      close_search()
+    }
+  }
 
   // find() is called only when these conditions are met:
   // 1. plain imlaai text is loaded
@@ -93,11 +111,7 @@ function show_search (el_sura, el_aaya) {
         const ay = i - sura_offset[su] + 1  // now this is 1-based ^_^'
         const anum = toarab(ay)
         const name = sura_name[su]
-        a.onclick = () => {
-          el_sura.value = su;  validate_aaya_sura_input({ target: el_sura })  // updates the aayaat field
-          el_aaya.value = ay;  validate_aaya_sura_input({ target: el_aaya })  // updates the other pair of fields
-          close_search()
-        }
+        a.onclick = () => updatefields(i, su, ay)
         a.append(
           make_elem('span', { className: 's_a', innerHTML: `سورة ${name} آية&nbsp;${anum}:` }),
           make_elem('span', { className: 'aya', innerHTML: '<span>يحمّل</span>' }),

@@ -5,18 +5,66 @@ let opts = {}
 const fullpage = el_body.classList.contains('fullpage')
 // ^ never changes because it can be set only from url params
 
+const indicate_invalid_inputs = (() => {
+  // you should never be able to trigger this; the validate_*_input() functions
+  // make sure you never have invalid inputs. but this is here if something slips.
+  const add = () => el_tabframe.classList.add('invalid')
+  const del = () => el_tabframe.classList.remove('invalid')
+  const has = () => el_tabframe.classList.contains('invalid')
+  let timeout_id = null
+  //
+  const indicate_invalid = () => { add(); timeout_id = setTimeout(del, 3000) }
+  // remove the class after the animation duration
+  //
+  return () => {
+    if (has()) {
+      del()
+      clearTimeout(timeout_id)
+      timeout_id = null
+      requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(indicate_invalid)))
+      // two rAFs are required for reliable removal & re-adding of the class; tested on FF & Blink; a third is added to be safe.
+    }
+    else {
+      indicate_invalid()
+    }
+  }
+})()
+
+function read_input_from_ui () {
+  if (el_tabchoice_ayat.checked) {
+    if (!valid_ayat_inputs(sura_bgn_val(), aaya_bgn_val(), sura_end_val(), aaya_end_val())) {
+      indicate_invalid_inputs()
+      return []
+    }
+    else {
+      const st = sura_offset[sura_bgn_val()] + aaya_bgn_val()
+      const en = sura_offset[sura_end_val()] + aaya_end_val()
+      return [st, en]
+    }
+  }
+  else {  // pages
+    const stpage = el_page_bgn.value
+    const enpage = el_page_end.value
+    if (!valid_pages_inputs(stpage, enpage)) {
+      indicate_invalid_inputs()
+      return []
+    }
+    else {
+      const st = page_offset[+stpage - 1] + 1
+      const en = page_offset[+enpage]
+      return [st, en]
+    }
+  }
+}
+
 function show_first () {
-  if (!valid_inputs(sura_bgn_val(), aaya_bgn_val(), sura_end_val(), aaya_end_val())) { return }
-  const st = sura_offset[sura_bgn_val()] + aaya_bgn_val()
-  const en = sura_offset[sura_end_val()] + aaya_end_val()
-  preview(st, en)
+  const [st, en] = read_input_from_ui()
+  if (st != null) { preview(st, en) }
 }
 
 function start_reciting () {
-  if (!valid_inputs(sura_bgn_val(), aaya_bgn_val(), sura_end_val(), aaya_end_val())) { return }
-  const st = sura_offset[sura_bgn_val()] + aaya_bgn_val()
-  const en = sura_offset[sura_end_val()] + aaya_end_val()
-  recite(st, en)
+  const [st, en] = read_input_from_ui()
+  if (st != null) { recite(st, en) }
 }
 
 function restart_reciting () {
@@ -49,27 +97,6 @@ el_tl.onclick = (ev) => {
     el_tl.Qall('text').forEach(t => show_el(t))
     show_el(el_tl.Q('line'))
     el_tl.Q('rect').setAttribute('width', 925)
-  }
-}
-
-function input_trigger_x (ev) {  // connected to {sura,aaya}_{bgn,end}.onkeyup
-
-  const id = ev.target.id
-  const key = ev.key
-
-  const on_ayat = id === 'aaya_bgn' || id === 'aaya_end'
-  const on_suar = id === 'sura_bgn' || id === 'sura_end'
-
-  // Enter on suar/ayat selection: set focus on the next element:
-  //   sura_bgn > aaya_bgn > sura_end > aaya_end > ok
-  // also, on the last element, get the next (ie first) word
-  if (key === 'Enter' && (on_ayat || on_suar)) {
-    (id === 'sura_bgn' ? el_aaya_bgn :
-     id === 'aaya_bgn' ? el_sura_end :
-     id === 'sura_end' ? el_aaya_end :
-     id === 'aaya_end' ? el_ok       :
-     1).focus()
-    return
   }
 }
 
@@ -181,7 +208,7 @@ function preview (st, en, from_url) {
   })
 }
 
-function testlonglines () {
+function testlinelengths () {
 
   hide_selectors('preview')
   requestAnimationFrame(() => {
@@ -203,19 +230,23 @@ function testlonglines () {
     el_uthm_txt.innerHTML = ''
     el_uthm_txt.classList.remove('done')
     el_uthm_txt.innerHTML = make_words_list(0, 6235).join('')
+    el_uthm_txt.classList.add('anywidth')  // remove width restriction on the lines; to see the real width of short lines
     el_uthm_txt.classList.add('pr')  // force printed-like lines, without affect user preference
     // almost all user choices & url params are ignored or irrelavant;
     // the only one that affects the results is the experimental gaps.
     el_uthm_txt.innerHTML = make_words_list(1, 6236).join('')
-    const lines = el_uthm_txt.querySelectorAll('pr-line')
+    const lines = Array.from(el_uthm_txt.querySelectorAll('pr-line'))
+      .filter(ln => ln.className === '')  // remove .short & .realy-short & .suraname lines
     if (lines.length === 0) { return }
-    const widths = Array.from(lines).map((ln,i) => [ln.scrollWidth, i]).sort((a,b) => b[0] - a[0])
+    const widths = lines.map((ln,i) => [ln.scrollWidth, i]).sort((a,b) => b[0] - a[0])  // calculate displayed width and sort
     console.log(lines[0].clientWidth)
     widths.slice(0,20).forEach(([wid,idx],n) =>
       console.log((n+1+'.').padStart(3, ' '), wid,
         lines[idx].innerHTML.replace(/<[^<>]*>/g, '').replace(/[\t\n]+/g, ' ').replace(/&nbsp;/g, '\xa0'))
     )
-    el_uthm_txt.innerHTML = ''; el_uthm_txt.append(...widths.slice(0,20).map(([wid,idx]) => lines[idx]))
+    el_uthm_txt.innerHTML = ''
+    el_uthm_txt.append(...widths.slice(0,20).map(([wid,idx]) => lines[idx]))
+    el_uthm_txt.append(...widths.slice(widths.length-20).map(([wid,idx]) => lines[idx]))
     // see `longestline_txt` near the end of this file, in the definition of onresize() and before it.
   })
 }
@@ -623,11 +654,21 @@ function init_inputs () {
   el_aaya_bgn.innerHTML = el_aaya_end.innerHTML = make_aayaat(sura_length[0])
   el_aaya_end.value   = sura_length[0]
   el_aaya_bgn.value   = 1
-  el_sura_bgn.value   = el_sura_end.value   = 0
+  el_sura_bgn.value   = el_sura_end.value = 0  // 0 = al-faatiha
+  // pages
+  el_page_bgn.onchange = el_page_end.onchange = validate_pages_input
+  el_page_bgn.onblue   = el_page_end.onblue   = validate_pages_input
   // suar/aayaat essential interactivity
-  el_sura_bgn.oninput = el_aaya_bgn.oninput = el_sura_end.oninput = el_aaya_end.oninput = validate_aaya_sura_input
-  el_sura_bgn.onblur  = el_aaya_bgn.onblur  = el_sura_end.onblur  = el_aaya_end.onblur  = validate_aaya_sura_input
-  el_sura_bgn.onkeyup = el_aaya_bgn.onkeyup = el_sura_end.onkeyup = el_aaya_end.onkeyup = input_trigger_x
+  el_sura_bgn.onchange = el_aaya_bgn.onchange = el_sura_end.onchange = el_aaya_end.onchange = validate_aaya_sura_input
+  el_sura_bgn.onkeyup  = el_aaya_bgn.onkeyup  = el_sura_end.onkeyup  = el_aaya_end.onkeyup  = (ev) => {
+    if (ev.key !== 'Enter') { return }
+    // Enter on suar/ayat selectors: set focus on the next selector (then submit):
+    //   sura_bgn > aaya_bgn > sura_end > aaya_end > ok
+    if (ev.target.id === 'sura_bgn') { el_aaya_bgn .focus() } else
+    if (ev.target.id === 'aaya_bgn') { el_sura_end .focus() } else
+    if (ev.target.id === 'sura_end') { el_aaya_end .focus() } else
+    if (ev.target.id === 'aaya_end') { el_ok       .focus() }
+  }
   // support keyboard searching the aayaat fields with ASCII numerals
   let k = '', t = 0
   el_aaya_bgn.onkeydown = el_aaya_end.onkeydown = (ev) => {
@@ -647,12 +688,7 @@ function init_inputs () {
     }
   }
   // searching
-  Qall('.search').forEach(el => el.onclick = ({ target }) => {
-    if (target.tagName === 'SPAN') { target = target.parentElement }
-    const el_aaya = target.previousElementSibling
-    const el_sura = el_aaya.previousElementSibling.previousElementSibling  // skip label
-    show_search(el_sura, el_aaya)
-  })
+  Qall('.ss, .ps').forEach(sel => { sel.querySelector('button.search').onclick = () => show_search(sel) })
 }
 
 const hide_selectors = function (quizmode) {  // quizmode must be 'preview', 'imla', 'uthm'
@@ -779,7 +815,7 @@ onload = function () {
   init_inputs()
   // To update the styles, as we don't reset these
   // inputs, so they keep their values on refresh:
-  Qall('input, select').forEach(e => e.onchange && e.onchange())
+  Qall('input, select').forEach(e => e.onchange && e.onchange({ target: e }))
   decode_contact()
   parse_ayaurl()
   el_imla_txt.spellcheck = false
@@ -815,23 +851,16 @@ function resize_imlaai_done () {
   el_imla_txt_container.style.height = (all - before - after - 0.1*one_em) + 'px'
 }
 
-const longestline_txt = 'یُرِیدُ ٱلۡإِنسَـٰنُ لِیَفۡجُرَ أَمَامَهُۥ ۝٥ یَسۡءَلُ أَیَّانَ یَوۡمُ ٱلۡقِیَـٰمَةِ ۝٦ فَإِذَا بَرِقَ ٱلۡبَصَرُ'
-// We use this line in onresize() to calibrate the font size.
-// It's not really the line of maximum scrollWidth, but it's the 7th.
-// With the clientWidth as 637, these are the longest 20 `scrollWidth`s
-// out of all the muṣħaf lines with the default font size (with the 7th bracketed):
-//   751 746 741 731 724 719 [715] 714 714 712
-//   710 708 707 705 704 704 703 703 702 702
-// Thus this avoids the outliers, while not noticeably overflow the few wider lines.
-// Using this instead of the line of max width also reduces the big inter-word space
-// in many lines.
+// const longestline_txt = 'یُرِیدُ ٱلۡإِنسَـٰنُ لِیَفۡجُرَ أَمَامَهُۥ ۝٥ یَسۡءَلُ أَیَّانَ یَوۡمُ ٱلۡقِیَـٰمَةِ ۝٦ فَإِذَا بَرِقَ ٱلۡبَصَرُ'
+// const longestline_txt = 'إِلَىٰ رَبِّهَا نَاظِرَةࣱ ۝٢٣ وَوُجُوهࣱ یَوۡمَئِذِۭ بَاسِرَةࣱ ۝٢٤ تَظُنُّ أَن یُفۡعَلَ بِهَا فَاقِرَةࣱ ۝٢٥'
+const longestline_txt = 'وَٱلۡأَرۡضِ ذَاتِ ٱلصَّدۡعِ ۝١٢ إِنَّهُۥ لَقَوۡلࣱ فَصۡلࣱ ۝١٣ وَمَا هُوَ بِٱلۡهَزۡلِ ۝١٤ إِنَّهُمۡ'
+// const longestline_txt = 'إِذۡ نَادَىٰهُ رَبُّهُۥ بِٱلۡوَادِ ٱلۡمُقَدَّسِ طُوًى ۝١٦ ٱذۡهَبۡ إِلَىٰ فِرۡعَوۡنَ إِنَّهُۥ طَغَىٰ ۝١٧'
+// We use this line in onresize() to calibrate the font size. But we calibrate for one among
+// the 20 widest lines, but not the first to not have too much space in most lines.
 
-const longestline_gaps_txt = 'یَوۡمَ تُبۡلَى ٱلسَّرَاۤئِرُ ۝٩ فَمَا لَهُۥ مِن قُوَّةࣲ وَلَا نَاصِرࣲ ۝١٠ وَٱلسَّمَاۤءِ ذَاتِ ٱلرَّجۡعِ ۝١١'
+// const longestline_gaps_txt = 'یَوۡمَ تُبۡلَى ٱلسَّرَاۤئِرُ ۝٩ فَمَا لَهُۥ مِن قُوَّةࣲ وَلَا نَاصِرࣲ ۝١٠ وَٱلسَّمَاۤءِ ذَاتِ ٱلرَّجۡعِ ۝١١'
+const longestline_gaps_txt = 'فَلَاۤ أُقۡسِمُ بِرَبِّ ٱلۡمَشَـٰرِقِ وَٱلۡمَغَـٰرِبِ إِنَّا لَقَـٰدِرُونَ ۝٤٠ عَلَىٰۤ أَن نُّبَدِّلَ خَیۡرࣰا مِّنۡهُمۡ'
 // But with the experimental gaps, more lines are longer than the longest line without gaps.
-// The longest 20 lines with gaps (with the 7th bracketed) are:
-//   933 925 923 917 908 908 [902] 901 897 889
-//   889 889 889 888 888 886 885 885 882 879
-// I choose the 7th line, as it's an empirically good compromise.
 
 const el_longest = document.createElement('pr-line')
 el_longest.innerText = window.uthmani_gaps ? longestline_gaps_txt : longestline_txt

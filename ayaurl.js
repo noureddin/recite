@@ -117,8 +117,8 @@ function pages_to_ayat (stpage, enpage) {  // each is 1-604
   if (stpage == null) { return }
   stpage = +stpage || 1; enpage = +enpage || MAX_PAGE
   if (stpage > MAX_PAGE || enpage > MAX_PAGE) { return }
-  let st = pages[+stpage - 1] + 1
-  let en = pages[+enpage]
+  let st = page_offset[+stpage - 1] + 1
+  let en = page_offset[+enpage]
   return [st, en]
 }
 
@@ -129,8 +129,8 @@ function juzs_to_ayat (stjuz, enjuz) {  // each is 1-30
   if (stjuz > MAX_JUZ || enjuz > MAX_JUZ) { return }
   // we multiply by 8, as we have only data for rubs.
   const ratio = MAX_RUB / MAX_JUZ  // 8
-  let st = rubs[((stjuz || 1)      - 1) * ratio] + 1
-  let en = rubs[((enjuz || MAX_JUZ)   ) * ratio]
+  let st = rub_offset[((stjuz || 1)      - 1) * ratio] + 1
+  let en = rub_offset[((enjuz || MAX_JUZ)   ) * ratio]
   return [st, en]
 }
 
@@ -159,8 +159,8 @@ function rubs_to_ayat (strub, enrub) {  // each is 1-240 or 1/1-60/4 or 1//1-30/
   const stidx = _rub2idx(strub)
   const enidx = _rub2idx(enrub)
   if (stidx == null || enidx == null) { return }
-  let st = rubs[(stidx || 1) - 1] + 1
-  let en = rubs[ enidx || 240   ]
+  let st = rub_offset[(stidx || 1) - 1] + 1
+  let en = rub_offset[ enidx || 240   ]
   return [st, en]
 }
 
@@ -182,8 +182,8 @@ function hizbs_to_ayat (sthizb, enhizb) {  // each is 1-240 or 1/1-60/4 or 1//1-
   if (stidx == null || enidx == null) { return }
   // we multiply by 4, as we have only data for rubs.
   const ratio = MAX_RUB / MAX_HIZB  // 4
-  let st = rubs[((stidx || 1) - 1) * ratio] + 1
-  let en = rubs[((enidx || 60)   ) * ratio]
+  let st = rub_offset[((stidx || 1) - 1) * ratio] + 1
+  let en = rub_offset[((enidx || 60)   ) * ratio]
   return [st, en]
 }
 
@@ -234,7 +234,7 @@ function __ayaurl (params) {
 }
 
 function parse_ayaurl () {
-  const [st, en, view] = __ayaurl((L.search + L.hash).split(/[ ?#&]|%20/))
+  const [st, en, view] = __ayaurl((L.search + L.hash).split(/[ ?#&]|%20|%23/))
   //
   // if no ayat are selected
   if (st == null || en == null) { return }
