@@ -806,10 +806,31 @@ const new_select = function () {
   }
 }
 
+const leave_quiz = function () {
+  const has_no_progress =  // now only affects Imlaai; Uthmani quizes are allowed to be lost, for now.
+    // done, in whatever mode
+    !el_endmsg.hidden ||
+    // Imlaai, with no content
+    !el_imla_txt_container.hidden && el_imla_txt.value === '' ||
+    // preview, or an Uthmani quiz
+    !el_uthm_txt.hidden
+    // // preview
+    // !el_uthm_txt.hidden && el_repeat.innerText.startsWith('ابدأ') ||
+    // // uthmani, with no content
+    // !el_uthm_txt.hidden && el_uthm_txt.innerHTML === ''
+  if (has_no_progress || confirm('هل تريد حقا بدء اختبار جديد وترك هذا؟')) {
+    removeEventListener('beforeunload', before_unload)
+    L.hash = ''
+    clear_screen()
+    return true
+  }
+  return false
+}
+
 el_new.onclick = new_select
 
-el_zzback.onclick   = () => { clear_screen(); window.random_recitation ? parent.rr_new()    : parent.zz_done()   }
-el_zzignore.onclick = () => { clear_screen(); window.random_recitation ? parent.rr_return() : parent.zz_ignore() }
+el_zzback.onclick   = () => { if (leave_quiz()) { window.random_recitation ? parent.rr_new()    : parent.zz_done()   } }
+el_zzignore.onclick = () => { if (leave_quiz()) { window.random_recitation ? parent.rr_return() : parent.zz_ignore() } }
 
 onload = function () {
   init_inputs()
