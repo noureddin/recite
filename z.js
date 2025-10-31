@@ -122,11 +122,9 @@ const parse_aaya = (a) => a
   .replace(/([A-Z])<([^>]+)>/g, '<span_class="$1">$2</span>')
 
 const pagebreak_html = (p) => {
-  let [cls, n] = p % 2 == 0
-    ? ['o', 3]
-    : ['i', 1]
-  const ante = '\u066d_'.repeat(n)
-  const post = '_\u066d'.repeat(n)
+  let [cls, ante, post] = p % 2
+    ? ['i', '', '_\u066d'.repeat(2)]
+    : ['o', '\u066d_'.repeat(4), '']
   if (p === 1) { cls += '_short' }
   return `<page-break_class="${cls}">${ ante + toarab(p) + post }</page-break>`
 }
