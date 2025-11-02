@@ -147,8 +147,13 @@ function __opturl (params) {
       // advance (show) first N words of the first aaya (only if embedded)
       else if (is_of('words'))  o.words = +e[1]
 
+      // development-related
+
       // test the lengths of printed-like lines
       else if (is_of('testlinelengths'))  o.testlinelengths = true
+
+      // debug audio recitation movement between ayat
+      else if (is_of('debugaudio'))  o.debugaudio = true
 
     })
   return o
@@ -261,6 +266,9 @@ function parse_opturl () {
   //
   if (o.testlinelengths) {
     addEventListener('load', testlinelengths)
+  }
+  if (o.debugaudio) {
+    audio.debugmode()
   }
 }
 parse_opturl()

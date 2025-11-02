@@ -161,7 +161,7 @@ const audio = (function () {  // {{{
   let base_url
   let cur_idx
 
-  const dbg = false
+  let debug = false
 
   function index (i) { return i != null ? i : cur_idx }
 
@@ -179,12 +179,12 @@ const audio = (function () {  // {{{
   function load (idx) {
     idx = index(idx)
     if (invalid_state(idx)) { return }
-    if (dbg) { return }
+    if (debug) { return }
     el_preloader.src = audio_url(idx)
   }
 
   function play () {
-    if (dbg) { console.log('play', list[cur_idx]); return }
+    if (debug) { console.log('play', list[cur_idx]); return }
     if (invalid_state()) { return }
     el_player.src = audio_url()
     el_player.addEventListener('loadeddata', () => load(cur_idx + 1))
@@ -199,7 +199,7 @@ const audio = (function () {  // {{{
   }
 
   function show_or_hide_player () {
-    dbg || invalid_state() ? hide_el(el_player) : show_el(el_player)
+    debug || invalid_state() ? hide_el(el_player) : show_el(el_player)
   }
 
   function update_qari (qari) {
@@ -208,6 +208,8 @@ const audio = (function () {  // {{{
   }
 
   return {
+
+    debugmode: function () { debug = true },
 
     update_qari: function (qari) {
       update_qari(qari)
@@ -235,8 +237,8 @@ const audio = (function () {  // {{{
     },
 
     set_index: function (i) { set_idx(i) },
-    next: function () { if (dbg) { console.log('next') } set_idx(cur_idx + 1) },
-    prev: function () { if (dbg) { console.log('prev') } set_idx(cur_idx - 1) },
+    next: function () { if (debug) { console.log('next') } set_idx(cur_idx + 1) },
+    prev: function () { if (debug) { console.log('prev') } set_idx(cur_idx - 1) },
 
   }
 })()  // }}}
