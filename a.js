@@ -37,6 +37,8 @@ const spinner = make_svgelem('svg', { id: 'spinner-svg', viewBox: '-50 -50 100 1
 spinner.appendChild(make_svgelem('circle', { id: 'spinner', cx: 0, cy: 0, r: 35, fill: 'none', 'stroke-width': '10', 'stroke-dasharray': '40 30' }))
 
 const L = location
+const urlparams = () => (L.search + L.hash).split(/[ ?#&]|%20|%23/)
+
 const S = localStorage
 // defaults are not stored:
 //   qari = none

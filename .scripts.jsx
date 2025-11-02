@@ -47,7 +47,7 @@ const zhash = {
 ////////////////////////////////////////////////////////////////////////////////
 // additional scripting
 
-if (!(L.search + L.hash).split(/[?&#]/).includes('nostats')) {
+if (!urlparams().includes('nostats')) {
   window.goatcounter = { path: L.href.replace(/[?#].*/,''), allow_frame: true }
   // privacy-friendly statistics, no tracking of personal data, no need for GDPR consent; see goatcounter.com
   document.body.append(make_elem('script', { Dataset: { goatcounter: 'https://recite.goatcounter.com/count' }, async: true, src: 'count.js' }))

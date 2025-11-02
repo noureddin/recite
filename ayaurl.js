@@ -234,7 +234,7 @@ function __ayaurl (params) {
 }
 
 function parse_ayaurl () {
-  const [st, en, view] = __ayaurl((L.search + L.hash).split(/[ ?#&]|%20|%23/))
+  const [st, en, view] = __ayaurl(urlparams())
   //
   // if no ayat are selected
   if (st == null || en == null) { return }

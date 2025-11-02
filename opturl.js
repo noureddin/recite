@@ -169,7 +169,7 @@ function update_bool_default_true (el, param, stored) {
 }
 
 function parse_opturl () {
-  const o = __opturl((L.search + L.hash).split(/[ ?#&]|%20|%23/))
+  const o = __opturl(urlparams())
   //
   if (o.quizmode == null) {
     if (S.imla) {
