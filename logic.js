@@ -140,7 +140,7 @@ function set_title (title) {
   let endtitle = title.replace(/^تم /, /* "[Well Done!] You have completed..." */ 'أتممت ')
   //
   if (title) {
-    if (window.get_continuation && !title.match(/كامل[ةت]/) && !title.match(/السور من/) && !title.match(/الأخيرة/)) {
+    if (window.get_connection && !title.match(/كامل[ةت]/) && !title.match(/السور من/) && !title.match(/الأخيرة/)) {
       htitle += ' مع الربط بما يليها'
       endtitle += ' مع\xa0الربط\xa0بما\xa0يليها'  // NBSP
     }
@@ -202,7 +202,7 @@ function preview (st, en, from_url) {
     el_uthm_txt.innerHTML = ''
     el_uthm_txt.classList.remove('done')
     show_or_hide_tajweedlegend()
-    el_uthm_txt.innerHTML = make_words_list(st, en, window.get_continuation).join('')
+    el_uthm_txt.innerHTML = make_words_list(st, en, window.get_connection).join('')
     // console.log(ascii_debug_uthm(el_uthm_txt.innerHTML))
     onresize()  // update uthmani font-size if lines=pr
   })
@@ -314,7 +314,7 @@ function _recite_imla () {
   const teacher = el_teacher.checked
 
   el_imla_txt.focus()
-  let correct_text = imlaai_ayat(st, en, window.get_continuation)
+  let correct_text = imlaai_ayat(st, en, window.get_connection)
   let pasted = false
 
   const get_current_aaya_index = () =>
@@ -527,7 +527,7 @@ function _recite_uthm () {
 
   onresize()  // update uthmani font-size if lines=pr
 
-  let words = make_words_list(st, en, window.get_continuation)
+  let words = make_words_list(st, en, window.get_connection)
 
   let utxt = ''
   const openphantom  = '<span class="phantom">'

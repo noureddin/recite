@@ -135,7 +135,7 @@ function __opturl (params) {
       else if (is_of('  wa'))  o.wa = true
       else if (is_of('nowa'))  o.wa = false
 
-      // continuation; ie, append a "phrase" from the next aaya if in the same sura
+      // connection; ie, append a "phrase" from the next aaya if in the same sura
       else if (is_of('cn'))  o.cn = true
 
       // enable embedded integration: zz (cannot be disabled if enabled)
@@ -243,7 +243,7 @@ function parse_opturl () {
   window.dont_show_title = !!o.notitle
   window.uthmani_gaps = !!o.gaps
   window.random_recitation = !!o.rr
-  window.get_continuation = !!o.cn
+  window.get_connection = !!o.cn
   window.is_embedded = window.random_recitation || !!o.zz
   if (o.emulate && mappings[o.emulate]) { window.emulate = o.emulate }
   if (o.fullpage) { el_body.classList.add('fullpage') }

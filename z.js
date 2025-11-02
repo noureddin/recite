@@ -73,14 +73,14 @@ function load_plain (callback) {
 
 function imlaai_ayat (st, en, cn) {
 
-  // continuation; ie, append a "phrase" from the next aaya if in the same sura
+  // connection; ie, append a "phrase" from the next aaya if in the same sura
   const last_aya_of_sura = sura_offset[sura_of(en)]  // offset of the next sura == end aaya of the current sura
-  if (cn && en < last_aya_of_sura) {  // don't continue if at the end of sura
+  if (cn && en < last_aya_of_sura) {  // don't connect if at the end of sura
     en += 1
   }
-  // in imlaai, append the entire next aaya. only 1356 ayat have a partial continuation (22% of the Quran).
+  // in imlaai, append the entire next aaya. only 1356 ayat have a partial connection (22% of the Quran).
   // but currently the imlaai mode has no concept of partial aaya, so the entire next aaya is added.
-  // continuation may not make a lot of sense in imlaai, but it's still useful for quizzing apps that embed Recite.
+  // connection may not make a lot of sense in imlaai, but it's still useful for quizzing apps that embed Recite.
 
   return (
     ayat.i
@@ -134,9 +134,9 @@ const pagebreak_html = (p) => {
 
 function make_words_list (st, en, cn) {  // uthmani
 
-  // continuation; ie, append a "phrase" from the next aaya if in the same sura
+  // connection; ie, append a "phrase" from the next aaya if in the same sura
   const last_aya_of_sura = sura_offset[sura_of(en)]  // offset of the next sura == end aaya of the current sura
-  if (cn && en < last_aya_of_sura) {  // don't continue if at the end of sura
+  if (cn && en < last_aya_of_sura) {  // don't connect if at the end of sura
     en += 1
   }
   else {
@@ -191,10 +191,10 @@ function make_words_list (st, en, cn) {  // uthmani
         }
         //
         if (cn && i === en-st) {
-          if (continuation_twophrases.has(en-1)) {
+          if (connection_twophrases.has(en-1)) {
             aya = aya.replace(/([\u06D6-\u06DB][\x1d-\x1f ].*?[\u06D6-\u06DB][\x1d-\x1f ]).*/, '$1')  // sakta (u06DC HIGH SEEN) does NOT separate phrases
           }
-          else if (continuation_fullaaya.has(en-1)) {
+          else if (connection_fullaaya.has(en-1)) {
             // do nothing; ie keep the full aaya
           }
           else {
