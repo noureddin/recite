@@ -99,10 +99,15 @@ function __opturl (params) {
       else if (is_of('disablequizmode dq'))  o.disablequizmode = true
 
       // disable the ability to preview ayat (doesn't prevent the use of the url param p/preview)
-      else if (is_of('disablepreview dv dp'))  o.disablepreview = true
+      else if (is_of('disablepreview dv'))  o.disablepreview = true
 
-      // disable the ability to press '!' ten times to show one letter in imlaai mode
+      else if (is_of('dp'))  console.warn('Recite URL parameter "dp" is deprecated; use "dv" or "disablepreview".')
+
+      // disable the ability to press '!' once to show one letter in imlaai mode, or '#' for a word
       else if (is_of('disablecheat dc'))  o.disablecheat = true
+
+      // disable the ability to paste a copied text in imlaai mode
+      else if (is_of('disablepaste'))  o.disablepaste = true
 
       // keyboard layout emulation (for imlaai & searching); see https://www.noureddin.dev/kbt/ (same ids, w/o '-ar')
       else if (is_of('emulation emulate emu'))  o.emulate = e[1]
@@ -245,6 +250,7 @@ function parse_opturl () {
   //
   // options that don't have a visible ui input (in addition to qariurl & high/low contrast)
   window.allow_cheating = !o.disablecheat  // cheating is allowed by default
+  window.allow_pasting = !o.disablepaste  // pasting is allowed by default
   window.dont_show_title = !!o.notitle
   window.uthmani_gaps = !!o.gaps
   window.random_recitation = !!o.rr

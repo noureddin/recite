@@ -543,7 +543,7 @@ function _recite_imla () {
   }
 
   el_imla_txt.oninput = txt_changed  // https://stackoverflow.com/a/14029861
-  el_imla_txt.onpaste = (e) => { pasted = true }
+  el_imla_txt.onpaste = (e) => { if (window.allow_pasting) { pasted = true } else { e.preventDefault() } }
 
   // these are set in Uthmani; need to override if used Uthmani before Imlaai without reloading the page
   document.onkeyup = null
