@@ -314,13 +314,30 @@ function _recite_imla () {
   const teacher = el_teacher.checked
 
   el_imla_txt.focus()
-  let correct_text = imlaai_ayat(st, en, window.get_connection)
+  const correct_text = imlaai_ayat(st, en, window.get_connection)
   let pasted = false
 
-  const get_current_aaya_index = () =>
-    el_imla_txt.value.split('\n').length - 2 + (teacher ? 1 : 0)
+  const append_annotation_if_exists = (offset, prefix, onlyreturn) => {
+    if (isNaN(+offset)) { console.warn('bad offset in append_annotation_if_exists(): '+offset); return "" }
+    // console.log('aaie', offset, prefix)
+    const slice = correct_text.slice(offset, offset+20)
+    // console.log(slice)
+    if (slice.startsWith('('+prefix)) {
+      const annot = slice.replace(/\)\n.*/s, ')\n')
+      if (onlyreturn) { return annot }
+      el_imla_txt.value += annot
+    }
+    return ""  // for using onlyreturn
+  }
 
-  const cursor_at_end = el_imla_txt.selectionStart === el_imla_txt.value.length
+  append_annotation_if_exists(0, 'سورة')
+
+  // console.log(correct_text)
+
+  const get_current_aaya_index = () =>
+    el_imla_txt.value.replace(/^\(.*?\)$\n/mg, '').split('\n').length - 2 + (teacher ? 1 : 0)
+
+  const cursor_at_end = () => el_imla_txt.selectionStart === el_imla_txt.value.length
   // selectionStart is guaranteed to be ≤ selectionEnd
 
   const __correct_position_of = (str, last_char) => {
@@ -357,14 +374,40 @@ function _recite_imla () {
     if (!el_endmsg.hidden) { return }
 
     if (pasted) {
-      el_imla_txt.value = el_imla_txt.value
+      let v = el_imla_txt.value
         // restore NBSP, because it's copied as a normal, ASCII space
         .replace(/ \u06dd/g, '\xa0\u06dd')
         // remove all invalid characters
-        .replace(/[^ \xA0\nء-غف-\u0652٠-٩\u06DD]+/g, '')
+        .replace(/[^ \xA0\nء-غف-\u0652٠-٩\u06DD()]+/g, '')  // keep () for annotations to be removed
+        // remove annotations
+        .replace(/\(.*?\)/g, '')
+        .replace(/[()]/g, '')
+        // removes tashkeel and ayat numbers (aka. remove_imla_additions())
+        .replace(/\xA0\u06DD[٠-٩]+/g, '').replace(/[\u064B-\u0652\xA0\u06DD٠-٩]+/g, '')
         // remove superfluous spaces (see below)
         .replace(/ +(\n)/g, '$1')
-        .replace(/(\A|\n| )[ \n]+/g, '$1')  // ⎵\n is matched before
+        .replace(/(^|\n| )[ \n]+/g, '$1')  // ⎵\n is matched before
+      // restore proper annotations
+      const pastedlines = v.split('\n')
+      const correctlines = correct_text.split('\n')
+      const correctplainlines = remove_imla_additions(correct_text).split('\n')
+      // console.log(pastedlines)
+      v = ''
+      for (let i = 0, j = 0, annot = ''; i < pastedlines.length; ++i) {
+        if (pastedlines[i] === correctplainlines[i]) {
+          annot = append_annotation_if_exists(v.length, 'سورة', true)
+          if (annot.length) { v += annot; ++j }
+          // console.log(pastedlines[i], '\n', correctlines[j])
+          v += correctlines[j] + '\n'; ++j
+          annot = append_annotation_if_exists(v.length, 'صفحة', true)
+          if (annot.length) { v += annot; ++j }
+        }
+        else {
+          v += pastedlines.slice(i).join('\n')
+          break
+        }
+      }
+      el_imla_txt.value = v
       pasted = false
     }
 
@@ -383,6 +426,10 @@ function _recite_imla () {
       el_imla_txt.value = el_imla_txt.value.slice(0,-2)+'\n'
     }
 
+    while (el_imla_txt.value.slice(-1) === ')') {
+      el_imla_txt.value = el_imla_txt.value.replace(/(?:^|\n).*$/, '')
+    }
+
     if (!imla_match(correct_text, el_imla_txt.value)) {
       // is the only problem is typing the last character as space instead of newline or vice versa?
       const input_last_char = el_imla_txt.value.slice(-1)
@@ -398,13 +445,16 @@ function _recite_imla () {
     }
     else {
       el_imla_txt_container.classList = ''
-      if (!cursor_at_end) { return }
+      if (!cursor_at_end()) { return }
       const last_char = el_imla_txt.value.slice(-1)
       if (last_char === '\n' || (el_feedbackrate.value !== 'a' && last_char === ' ')) {
         fix_imla_additions(last_char)
       }
-      if (last_char === '\n') {
+      if (last_char === '\n' || last_char === '') {
+        // console.log(el_imla_txt.value.length)
         audio.play(get_current_aaya_index())
+        append_annotation_if_exists(el_imla_txt.value.length, 'صفحة')
+        append_annotation_if_exists(el_imla_txt.value.length, 'سورة')
       }
       if (el_imla_txt.value === correct_text) {
         el_imla_txt.value = el_imla_txt.value.slice(0,-1)  // remove the last newline

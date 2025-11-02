@@ -184,8 +184,8 @@ const audio = (function () {  // {{{
   }
 
   function play () {
-    if (invalid_state()) { return }
     if (dbg) { console.log('play', list[cur_idx]); return }
+    if (invalid_state()) { return }
     el_player.src = audio_url()
     el_player.addEventListener('loadeddata', () => load(cur_idx + 1))
     el_player.play().catch(() => {})
@@ -308,9 +308,9 @@ function change_tabchoices () {
   }
 }
 
-// removes tashkeel and ayat numbers
+// removes tashkeel and ayat numbers and annotations
 const remove_imla_additions = (str) =>
-  str.replace(/[\u064B-\u0652\xA0\u06DD٠-٩]+/g, '')
+  str.replace(/\xA0\u06DD[٠-٩]+/g, '').replace(/[\u064B-\u0652\xA0\u06DD٠-٩]+/g, '').replace(/^\(.*?\)$\n/mg, '')
 
 function count_char (str, ch) {
   return str.replace(new RegExp('[^'+ch+']+', 'g'), '').length

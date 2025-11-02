@@ -82,10 +82,18 @@ function imlaai_ayat (st, en, cn) {
   // but currently the imlaai mode has no concept of partial aaya, so the entire next aaya is added.
   // connection may not make a lot of sense in imlaai, but it's still useful for quizzing apps that embed Recite.
 
+  const annotation = (pre, val) => '(' + pre + '\xa0' + val.replace(/ /g,'\xa0') + ')\n'
+
   return (
     ayat.i
       .slice(st-1,en)
-      .map(a => a.startsWith('#') ? a.replace('#', 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\n') : a)
+      .map((a,i) => {
+        const n = i+st-1; const p = page_of(n)
+        if (a.startsWith('#')) { a = a.replace('#', 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\n') }
+        if (a.endsWith('\u06dd\u0661')) { a = annotation('سورة', sura_name[ sura_of(n) ]) + a }
+        if (i > 0 && n === page_offset[p]) { a = annotation('صفحة', toarab(p)) + a }
+        return a
+      })
       .join('\n')
       + '\n'
   )
