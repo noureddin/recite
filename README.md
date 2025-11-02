@@ -147,6 +147,8 @@ Please note that all these parameters only change the default; all of them are s
 
 These are not changeable from the UI, only from the URL parameters; they are experimental features, too advanced, and/or too specific for almost all users.
 
+**Warning:** Don't rely too much on the "disable" params if your users or students can fiddle with the JavaScript console.
+
 - `qariurl=`: provide the url of your preferred audio recitation server, even a locally hosted one (e.g., `http://0.0.0.0:6236`, but NOT&nbsp;`file:///`). Makes the Qari selector empty. But changing the Qari selector overrides this. The given URL must be a full URL where ayat audio files can be found; e.g., one can append `/001001.mp3` to the given URL and find the first ayah of the first sura.
 
 - `hc`, or `highcontrast`: when enabled with the dark mode, it improves the contrast of most colors, including the tajweed colors.
@@ -162,19 +164,17 @@ These are not changeable from the UI, only from the URL parameters; they are exp
 
 - `dt`, or `disableteacher`: to remove teacher mode selector from the UI. The Teacher mode can still be set from the URL params. Useful to force a specific value for the option (e.g. no-teacher) in an embedding web app for example.
 
-    **Warning:** It's still changeable from the JavaScript console; I couldn't disable this yet.
-
 - `dv`, or `disablepreview`: to remove the preview buttons (which shows all the ayat you selected) from the front page and the quiz page. This can be used together with `p`/`preview` in order to show one preview before the quiz, without the ability to preview the ayat again later.
-
-    **Warning:** It's still changeable from the JavaScript console; I couldn't disable this yet.
 
 - `dq`, or `disablequizmode`: to remove quiz mode selector from the UI. The quiz mode can still be specified from the URL params. Useful to force a specific mode (e.g. Imlaai) in an embedding web app for example.
 
-    **Warning:** It's still changeable from the JavaScript console; I couldn't disable this yet.
+- `dc`, or `disablecheat`: to disable the cheating feature in Imlaai mode.
 
-- `dc`, or `disablecheat`: to disable the cheating feature in Imlaai mode. Cheating is pressing the `!` key ten times consecutively (when the input so far is correct) to automatically type the next correct letter for you.
+    Cheating is pressing `!` once to add the the next letter,
+    or `#` to complete the current word or add the next one,
+    if the entire input text is correct so far (or still empty).
 
-    **Warning:** It's still changeable from the JavaScript console; I couldn't disable this yet.
+- `disablepaste`: to disable the pasting in Imlaai mode.
 
 - `zz`: for integration into another app. Made primarily for [Zikr-uz-Zikr](https://github.com/noureddin/zz), but is generic enough to be used with other apps.
 
