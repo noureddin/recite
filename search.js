@@ -174,15 +174,10 @@ function show_search (selectorcontainer) {
   }
 
   el_sxq.onkeydown = (ev) => {
-    const unmodified = !ev.altKey && !ev.ctrlKey
-    if (unmodified && ev.key.length === 1) {
+    if (!ev.altKey && !ev.ctrlKey && ev.key.length === 1) {
       ev.preventDefault()
-      const k = window.emulate
-        && mappings[window.emulate]
-        && mappings[window.emulate][ev.code]
-         ? mappings[window.emulate][ev.code][+ev.shiftKey]
-         : ev.key
-      if (k.match(/^[ \nء-غف-\u0652]$|^ل[اأإآ]$/)) {  // the lam-alefs for emulated IBM kb
+      const k = intended_key(ev)  // handles emulation and filtering
+      if (k != null) {
         insert_in_field(el_sxq, k)
         el_sxq.oninput()
       }

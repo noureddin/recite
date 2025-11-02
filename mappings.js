@@ -1,17 +1,4 @@
-
-function insert_in_field (el, ch) {
-  if (!ch) { return }
-  // https://stackoverflow.com/a/11077016 and comments, with modifications
-  const st = el.selectionStart
-  const en = el.selectionEnd
-  //
-  const before = el.value.substring(0, st)
-  const after  = el.value.substring(en, el.value.length)
-  //
-  el.value = before + ch + after
-  // restore cursor position
-  el.selectionStart = el.selectionEnd = st + ch.length
-}
+'use strict'
 
 const mappings = {
   arak: {
@@ -166,4 +153,35 @@ const mappings = {
     Period: ['.', '<'],
     Slash: ['/', '؟'],
   },
+}
+
+function insert_in_field (el, ch) {
+  if (!ch) { return }
+  // https://stackoverflow.com/a/11077016 and comments, with modifications
+  const st = el.selectionStart
+  const en = el.selectionEnd
+  //
+  const before = el.value.substring(0, st)
+  const after  = el.value.substring(en, el.value.length)
+  //
+  el.value = before + ch + after
+  // restore cursor position
+  el.selectionStart = el.selectionEnd = st + ch.length
+}
+
+function intended_key (ev) {
+  const k = window.emulate
+    && mappings[window.emulate]
+    && mappings[window.emulate][ev.code]
+     ? mappings[window.emulate][ev.code][+ev.shiftKey]
+     : ev.key
+  if (k.match(/^[ \nء-غف-\u0652]$|^ل[اأإآ]$/)) { return k }  // the lam-alefs for emulated IBM kb
+  if (window.emulate == null) {
+    // if not emulating, but entered a non-Arabic letter → auto-emulate the mainstream kb
+    const kk
+      = mappings['ibm'][ev.code]
+      ? mappings['ibm'][ev.code][+ev.shiftKey]
+      : null
+    if (kk && kk.match(/^[ \nء-غف-\u0652]$|^ل[اأإآ]$/)) { return kk }
+  }
 }

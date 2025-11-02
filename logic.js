@@ -537,12 +537,8 @@ function _recite_imla () {
     // filtering & emulation
     if (unmodified && ev.key.length === 1) {
       ev.preventDefault()
-      const k = window.emulate
-        && mappings[window.emulate]
-        && mappings[window.emulate][ev.code]
-         ? mappings[window.emulate][ev.code][+ev.shiftKey]
-         : ev.key
-      if (k.match(/^[ \nء-غف-\u0652]$|^ل[اأإآ]$/)) {  // the lam-alefs for emulated IBM kb
+      const k = intended_key(ev)
+      if (k != null) {
         insert_in_field(el_imla_txt, k)
         txt_changed()
       }
