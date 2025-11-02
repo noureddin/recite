@@ -355,6 +355,10 @@ function _recite_imla () {
 
   const fix_imla_additions = (last_char) => {
     // pre-conditions: see __correct_position_of (with str=el_imla_txt.value)
+    if (last_char === '') {  // empty
+      // append_annotation_if_exists(0, 'سورة')
+      return
+    }
     const correct_end = __correct_position_of(el_imla_txt.value, last_char)
     if (el_imla_txt.selectionStart === el_imla_txt.value.length) {
       // cursor is at the end
@@ -474,56 +478,48 @@ function _recite_imla () {
 
   }
 
-  let bang = 0  // the '!' key
-  let commat = 0  // commercial-at, ie '@'
-  let since_last_bang = 0
-  let since_last_commat = 0
 
   el_imla_txt.onkeydown = (ev) => {
     const unmodified = !ev.altKey && !ev.ctrlKey
 
     // cheating -- enabled by default unless disablecheat is passed as a url param
-    if (unmodified && ev.key === '@' && window.allow_cheating && el_imla_txt.value === '') {
-      const now = (new Date()).getTime()
-      if (now - since_last_commat < 250) { return }
-      since_last_commat = now
-      commat += 1
-      if (commat === 3) {
-        commat = 0
-        // press '@' three times at the beggining to show exactly one word
-          el_imla_txt.value = correct_text.match(/^[^ \xA0]+. /)[0]
-          txt_changed()
-          imla_scroll_to_bottom()
+    // - the '!' key: one time to add the next letter
+    // - the '#' key: one time to add the next word (or complete the current one)
+    if (unmodified && ev.key === '#' && window.allow_cheating) {
+      ev.preventDefault()
+      // press '#' once to show exactly one word, or complete the current word (including following space or newline)
+      // see the long multi-line comment below in the bang branch
+      if (imla_match(correct_text, el_imla_txt.value, imlafilter_byletter)) {
+        fix_imla_additions( remove_imla_additions(el_imla_txt.value).slice(-1) )
+        // add one char; then while the last copied-to-input char not a space or newline: add one more
+        do {
+          el_imla_txt.value = correct_text.slice(0, el_imla_txt.value.length+1)
+        } while (el_imla_txt.value.slice(-1).match(/[ \n]/) == null)
+        txt_changed()
+        // scroll to bottom, to handle if the added letters caused moving to the next line
+        imla_scroll_to_bottom()
+        return
       }
     }
     else if (unmodified && ev.key === '!' && window.allow_cheating) {
       ev.preventDefault()
-      // enforce at least 0.25 sec between each keydown of bang
-      // because for some reason ev.repeat always returns false in my testing.
-      const now = (new Date()).getTime()
-      if (now - since_last_bang < 250) { return }
-      since_last_bang = now
-      bang += 1
-      if (bang === 10) {
-        bang = 0
-        // cheat one character, if all up to this point is correct.
-        // if the feedback rate is not letter, imla_match can succeed while the input is wrong,
-        // so fix_imla_additions would complete too many chars to match the last char and then add one;
-        // e.g., recite/?txt&by=word&1/1 (the first aaya in al-Fatiha): type only ي then hold '!'.
-        // also taking the last char blindly could take a tashkeel, which would cause the same issue.
-        // hence we first force imla_match to act as if it's by=letter for the first issue,
-        // then for the second issue we remove_imla_additions before taking the last char.
-        if (imla_match(correct_text, el_imla_txt.value, imlafilter_byletter)) {
-          fix_imla_additions( remove_imla_additions(el_imla_txt.value).slice(-1) )
-          // add one char; then while the last copied-to-input char is an addition (tashkeel etc): add one more
-          do {
-            el_imla_txt.value = correct_text.slice(0, el_imla_txt.value.length+1)
-          } while (remove_imla_additions(el_imla_txt.value.slice(-1)) === '')
-          txt_changed()
-          // scroll to bottom, to handle if the added letter caused moving to the next line
-          imla_scroll_to_bottom()
-          return
-        }
+      // cheat one character, if all up to this point is correct.
+      // if the feedback rate is not letter, imla_match can succeed while the input is wrong,
+      // so fix_imla_additions would complete too many chars to match the last char and then add one;
+      // e.g., recite/?txt&by=word&1/1 (the first aaya in al-Fatiha): type only ي then hold '!'.
+      // also taking the last char blindly could take a tashkeel, which would cause the same issue.
+      // hence we first force imla_match to act as if it's by=letter for the first issue,
+      // then for the second issue we remove_imla_additions before taking the last char.
+      if (imla_match(correct_text, el_imla_txt.value, imlafilter_byletter)) {
+        fix_imla_additions( remove_imla_additions(el_imla_txt.value).slice(-1) )
+        // add one char; then while the last copied-to-input char is an addition (tashkeel etc): add one more
+        do {
+          el_imla_txt.value = correct_text.slice(0, el_imla_txt.value.length+1)
+        } while (remove_imla_additions(el_imla_txt.value.slice(-1)) === '')
+        txt_changed()
+        // scroll to bottom, to handle if the added letter caused moving to the next line
+        imla_scroll_to_bottom()
+        return
       }
     }
     else {
