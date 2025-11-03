@@ -86,8 +86,7 @@ body {
   /* sura name color */
   --suraname-fill: darkorange;
   --suraname-stroke: #fb2;  /* light orange */
-  --ipagebreak: hsl(80deg, 80%, 35%);
-  --opagebreak: hsl(50deg, 80%, 35%);
+  --pagebreak: hsl(80deg, 80%, 45%);
   /* ayat number color */
   --A-shadow: 0.025em  0.025em  0.025em gold,
               0.025em -0.025em  0.025em gold,
@@ -127,6 +126,7 @@ body {
   /* tajweed */
   --L: #c60088;  --W: red    ;  --J: #ff8800;  --T: #ffc800;  --N: #00ff00;
   --X: #808080;  --R: #4477ff;  --Q: #00d6ff;  --A: #ff8c00;  --D: #ffffff;
+  --pagebreak: hsl(80deg, 80%, 35%);
   /* ayat number color */
   /* --A: #ff8c00; --D: #ffffff; */
   /* sura name color */
@@ -1219,9 +1219,8 @@ details[open] > .details-content {
   display: block;
   text-align-last: justify;
   margin: 0 auto;
+  color: var(--pagebreak);
 }
-page-break.i { color: var(--ipagebreak) }
-page-break.o { color: var(--opagebreak) }
 
 #uthm_txt.pr .nbsp {
   display: none;

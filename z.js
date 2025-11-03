@@ -131,8 +131,8 @@ const parse_aaya = (a) => a
 
 const pagebreak_html = (p) => {
   let [cls, ante, post] = p % 2
-    ? ['i', '', '_\u066d'.repeat(2)]
-    : ['o', '\u066d_'.repeat(4), '']
+    ? ['i', '\u25b6\u202f\u202f', '_\u066d'.repeat(2)]
+    : ['o', '\u066d_'.repeat(2), '\u202f\u202f\u25c0']
   if (p === 1) { cls += '_short' }
   return `<page-break_class="${cls}">${ ante + toarab(p) + post }</page-break>`
 }
