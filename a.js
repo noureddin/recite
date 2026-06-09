@@ -103,7 +103,7 @@ const aaya_end_val    = () => el_aaya_end.value === '' ? '' :             +el_aa
 
 const make_aayaat = (len) => range(len).map(a => `<option value="${a+1}">${toarab(a+1)}</option>`).join('')
 const set_aayaat = (el, len, v) => {
-  const oldval = aaya_bgn_val()
+  const oldval = aaya_bgn_val()  // TODO
   el.innerHTML = make_aayaat(len)
   if (v) { el.value = v } else { el.value = len }
 }
@@ -354,11 +354,9 @@ function show_or_hide_uthmani_hints () {
   const sel = !el_selectors.hidden
   const qz_uthm = el_quizmode.value === 'uthm'
   const preview = utx && el_uthm_txt.classList.contains('preview')
-  const prlines = el_lines_input.value === 'pr'
   //
   const visible = end && utx || preview || !end && sel && qz_uthm
   el_tafsirhint.hidden = !visible
-  el_prlinehint.hidden = !visible || prlines || S.getItem('pr')
 }
 
 function show_or_hide_tajweedlegend () {

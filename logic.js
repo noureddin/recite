@@ -187,7 +187,7 @@ function preview (st, en, from_url) {
   sync_ui(stpair, enpair)
 
   el_tafsirhint.className = ''
-  el_prlinehint.className = ''
+  el_irsaahint.hidden = true
   el_uthm_txt.style.textAlign = 'center'
   el_uthm_txt.append(spinner)
 
@@ -213,7 +213,6 @@ function testlinelengths () {
   hide_selectors('preview')
   requestAnimationFrame(() => {
     el_tafsirhint.hidden = true
-    el_prlinehint.hidden = true
     el_tl.style.display = 'none'  // hide tajweed legend
   })
 
@@ -281,6 +280,7 @@ function recite (st, en, from_url) {
   el_uthm_txt.style.textAlign = 'center'
   el_uthm_txt.append(spinner)
 
+  el_irsaahint.hidden = true
   const _recite = quizmode === 'imla' ? _recite_imla : _recite_uthm
   load(qz, _recite)
 }
@@ -522,13 +522,6 @@ function _recite_imla () {
         return
       }
     }
-    else {
-      // any key resets the counters; even a lone Shift.
-      bang = 0
-      commat = 0
-      since_last_bang = 0
-      since_last_commat = 0
-    }
 
     // filtering & emulation
     if (unmodified && ev.key.length === 1) {
@@ -565,7 +558,6 @@ function _recite_uthm () {
   audio.set_index(teacher ? 0 : -1)
 
   el_tafsirhint.className = ''
-  el_prlinehint.className = ''
 
   onresize()  // update uthmani font-size if lines=pr
 
@@ -819,7 +811,7 @@ const clear_screen = function () {
   document.onkeyup = null
   document.ondblclick = null
   el_tafsirhint.className = 'f'  // on the Front (empty) page
-  el_prlinehint.className = 'f'  // on the Front (empty) page
+  el_irsaahint.hidden = false
   // if was in imlaai mode
   el_imla_txt_container.hidden = true
   // if either mode
