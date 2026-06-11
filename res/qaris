@@ -19,7 +19,7 @@ Ibrahim_Akhdar_32kbps
 Ibrahim_Akhdar_64kbps
 إبراهيم الأخضر (جودة عالية)
 warsh/warsh_ibrahim_aldosary_128kbps
-إبراهيم الدوسري (ورش) (جودة فائقة)
+(ورش) إبراهيم الدوسري (جودة فائقة)
 Hudhaify_32kbps
 الحذيفي (جودة متوسطة)
 Hudhaify_64kbps
@@ -46,6 +46,8 @@ Minshawy_Mujawwad_64kbps
 المنشاوي (مجود) (جودة عالية)
 Minshawy_Mujawwad_192kbps
 المنشاوي (مجود) (جودة عالية فائقة)
+Parhizgar_48kbps
+پرهیزگار (جودة عالية متوسطة)
 Khaalid_Abdullaah_al-Qahtaanee_192kbps
 خالد القحطاني (جودة عالية فائقة)
 khalefa_al_tunaiji_64kbps
@@ -71,7 +73,7 @@ Abdul_Basit_Murattal_192kbps
 Abdul_Basit_Mujawwad_128kbps
 عبد الباسط عبد الصمد (مجود) (جودة فائقة)
 warsh/warsh_Abdul_Basit_128kbps
-عبد الباسط عبد الصمد (ورش) (جودة فائقة)
+(ورش) عبد الباسط عبد الصمد (جودة فائقة)
 Abdurrahmaan_As-Sudais_64kbps
 عبد الرحمن السديس (جودة عالية)
 Abdurrahmaan_As-Sudais_192kbps
@@ -139,8 +141,14 @@ Yasser_Ad-Dussary_128kbps
 Yaser_Salamah_128kbps
 ياسر سلامة (جودة فائقة)
 warsh/warsh_yassin_al_jazaery_64kbps
-ياسين الجزائري (ورش) (جودة عالية)
-English/Sahih_Intnl_Ibrahim_Walk_192kbps
-English: Saheeh International, Ibrahim Walk (+ Abdullah Basfar) (HD)
+(ورش) ياسين الجزائري (جودة عالية)
 MultiLanguage/Basfar_Walk_192kbps
-English: Saheeh International, Ibrahim Walk (HD)
+With English: Saheeh International, Ibrahim Walk (+ Abdullah Basfar) (HD)
+English/Sahih_Intnl_Ibrahim_Walk_192kbps
+English Only: Saheeh International, Ibrahim Walk (HD)
+translations/besim_korkut_ajet_po_ajet
+Bosnian: Besim Korkut
+translations/urdu_shamshad_ali_khan_46kbps
+اردو: شمشاد علی خان
+translations/urdu_farhat_hashmi
+Urdu: Farhat Hashmi (word for word translation)
