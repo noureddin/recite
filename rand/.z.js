@@ -1,10 +1,10 @@
 // partially from recite/z.js and fraed/.utils.js
 
-function z (lzma_file, callback) {
-  fetch(lzma_file)
+function z (path, callback) {  // zstd-compressed files
+  fetch(path)
     .then((res) => res.ok ? res.arrayBuffer() : null)
     .then((buf) => {
-      callback(LZMA.decompress(new Uint8Array(buf)).split('\n').slice(0,-1))
+      callback( (new TextDecoder).decode( fzstd.decompress(new Uint8Array(buf)) ).split('\n').slice(0,-1) )
     })
 }
 
@@ -21,22 +21,24 @@ String.prototype._count = function (rx) {  // must be /.../g (#matchAll is new-i
 
 // remove MOST mosħaf formatting signs
 // operates on the aayah string itself
-// copied from fraed/.utils.js unmark() with two modifications:
+// copied from fraed/.utils.js unmark() with two primary modifications:
 //   not removing the ayah end (but removing the ayah number), and removing our tajweed marks
 function unmark2 (aayah) {
   return (aayah
     // on the aayah level
-    .r(/[٠١٢٣٤٥٦٧٨٩]+/, '')  // remove ayah number (but keep ayah end)
-    .r(/[A-Z<>]+/g, '')  // our tajweed color-coding marks
+    .r(/[٠١٢٣٤٥٦٧٨٩]+/, "")  // remove ayah number (but keep ayah end)
+    .r(/[A-Z<>]+/g, "")  // our tajweed color-coding marks
     .r(/#/g, '# ')  // make basmala a separate word (because in Recite it is)
+    // printed-line marks
+    .r(/\s*[\x03-\x06\x1d-\x1f]\s*/g, ' ')
     //
-    .r(/\xa0\u06e9/, '')  // place of sajdah
-    .r(/\u06de\xa0/, '')  // start of rub el hizb
+    .r(/\xa0\u06e9/, "")  // place of sajdah
+    .r(/\u06de\s+/, "")  // start of rub el hizb
     // on the word level
-    .r(/[\u06d6-\u06dc]+(?=$| )/g, '')  // waqf signs ('+' for 036:052)
+    .r(/[\u06d6-\u06dc]+(?=$| )/g, "")  // waqf signs ('+' for 036:052)
     .r(/^(.)\u0651/g, '$1')  // remove initial shadda-of-idgham
     // on the character level
-    .r(/\u0305/g, '')  // combining overline
+    .r(/\u0305/g, "")  // combining overline
   )
 }
 
@@ -46,15 +48,15 @@ function unmark2 (aayah) {
 function deirab (word) {
   return (word
     // remove madd-monfasel & madd sela
-    .r(/[\u06e4-\u06e6]+$/g, '')
+    .r(/[\u06e4-\u06e6]+$/g, "")
     // remove final tashkeel (except shadda)
-    .r(/\u06e1$/,              '')    // jazm (quranic sukun)
-    .r(/[\u064e-\u0650]$/,     '')    // fatha, damma, kasra
-    .r(/[\u064c\u064d]$/,      '')    // tanween {damm, kasr}
-    .r(/[\u08f1\u08f2]$/,      '')    // open tanween {damm, kasr}
-    .r(/\u064f\u06e2$/,        '')    // iqlab tanween damm
-    .r(/\u0650\u06ed$/,        '')    // iqlab tanween kasr
-    .r(/\u06e2$/,              '')    // iqlab on final noon
+    .r(/\u06e1$/,              "")    // jazm (quranic sukun)
+    .r(/[\u064e-\u0650]$/,     "")    // fatha, damma, kasra
+    .r(/[\u064c\u064d]$/,      "")    // tanween {damm, kasr}
+    .r(/[\u08f1\u08f2]$/,      "")    // open tanween {damm, kasr}
+    .r(/\u064f\u06e2$/,        "")    // iqlab tanween damm
+    .r(/\u0650\u06ed$/,        "")    // iqlab tanween kasr
+    .r(/\u06e2$/,              "")    // iqlab on final noon
     .r(/(ا)\u06df$/,           '$1')  // remove rounded zero from final alef
     .r(/(ى)\u0670$/,           '$1')  // remove dagger alef from final alef maqsura
         // (its existence depends on the first letter of the next word)
@@ -78,7 +80,7 @@ const histogram = (arr) => {  // converts an array to a mapping of each value to
 //
 
 function load_prefixes (ayat, fn) {
-  z(`../../res/u.lzma`, (A) => {
+  z(`../../res/u.zst`, (A) => {
     const MAX_AYAT = 6236
 
     // note: unmark2() not fraed's unmark(), to keep the end-of-ayah mark
@@ -94,7 +96,7 @@ function load_prefixes (ayat, fn) {
     const max_ayat = new Set()  // when the unique prefix of an ayah is three complete ayat or more, it's quizzed at the max length of six ayat
 
     const prefix = (i, n) => {
-      if (n === 1) { return deirab(AA[i].replace(/ .*/, '')) }  // first word
+      if (n === 1) { return deirab(AA[i].replace(/ .*/, "")) }  // first word
       //
       const nwords = 1 + AA[i]._count(/ /g)
       //
@@ -138,6 +140,14 @@ function load_prefixes (ayat, fn) {
     //   if (p._count(/\u06dd/g) > 2) {
     //     // console.log(i+1, AA.slice(i,i+6).join('\n'))  // if tested with /?1-114, we can see it's safe to unconditionally extend the range (see button_attrs() in .s.js)
     //     console.log(i+1, p)
+    //   }
+    // }
+
+    // console.log(max_ayat)
+    // for (let i = 0; i < ans.length; ++i) {
+    //   if (ans[i]) {
+    //     const a = i - sura_offset[sura_of(i+1)-1] + 1
+    //     console.log(a, unmark2(A[i]).split(' ').slice(0,ans[i]).join(' '))
     //   }
     // }
 

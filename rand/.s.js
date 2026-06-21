@@ -24,7 +24,9 @@ const unblock_page = () => {
   K.style.display = 'none'
 }
 
-const recite = (url) => {
+const recite = (words, range) => {
+  const url = '../../?rr&notitle&nopr&q=u&cn&'
+            + (isdark() ? 'dark&' : 'light&') + 'words='+words + '&' + range
   if (R.style.display !== 'block') {  // if NOT starting a new one from inside Recite
     block_page()
     // showing transparently before loading, b/c tajweedlegend needs to know the page's height to show properly,
@@ -66,7 +68,7 @@ function button_attrs (rng) {
   // if (min_ayat.has(a) && z - a + 1 < min_ayat.get(a)) {
   //   rng = a + '-' + (a + min_ayat.get(a) - 1)
   // }
-  return `onclick="update(); recite('../../?rr&notitle&nopr&q=u&cn&words=${n}&${rng}'); return false" href="#" role="button"`
+  return `onclick="update(); recite(${n},'${rng}'); return false" href="#" role="button"`
 }
 
 

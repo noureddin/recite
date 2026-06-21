@@ -1,3 +1,43 @@
+// darkmode
+
+const set_dark = (dark) => {
+  document.body.classList.toggle('dark', dark)
+  for (let a of document.querySelectorAll('a[href*="&"]')) {
+    a.href = dark
+      ? a.href.replace(/&light&/g, '&dark&')
+      : a.href.replace(/&dark&/g, '&light&')
+  }
+}
+
+let u_dark  // user-defined during the session
+window.rr_set_dark = (dark) => {
+  u_dark = dark
+  set_dark(dark)
+}
+
+const m_dark = window.matchMedia('(prefers-color-scheme:dark)')
+
+let l_dark = localStorage.getItem('dark')
+// ^ it's truthy if there is a Recite preference ("Y" or "N"); it takes precedence over @media
+
+const isdark = () =>
+  u_dark != null ? u_dark
+  : l_dark ? l_dark === 'Y'
+    : m_dark.matches
+
+onfocus = () => {
+  l_dark = localStorage.getItem('dark')
+  set_dark(isdark())
+}
+
+if (l_dark) {
+  set_dark(l_dark === 'Y')
+}
+else {
+  m_dark.onchange = () => set_dark(isdark())
+  m_dark.onchange()
+}
+
 // utils
 
 const Qid = (id) => document.getElementById(id)

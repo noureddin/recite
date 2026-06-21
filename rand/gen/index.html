@@ -143,16 +143,14 @@
   a:hover { color: #08b }
   a:active { color: #0b0 }
 
-  @media (prefers-color-scheme: dark) {
-    body { background: #101016 !important; color: #eef }
-    a { color: #a0a8ff }
-    a:focus { color: #4cf }
-    a:hover { color: #2ff }
-    a:active { color: #2f2 }
-    button, select { filter: invert(1) }
-    #more { color: magenta /* inverted to green */ }
-    .rm   { color: cyan    /* inverted to red */ }
-  }
+  body.dark { background: #101016 !important; color: #eef }
+  body.dark a { color: #a0a8ff }
+  body.dark a:focus { color: #4cf }
+  body.dark a:hover { color: #2ff }
+  body.dark a:active { color: #2f2 }
+  body.dark button, select { filter: invert(1) }
+  body.dark #more { color: magenta /* inverted to green */ }
+  body.dark .rm   { color: cyan    /* inverted to red */ }
 
   /* believe or not: important is needed in body's background,
    * to reduce the probability of the browser flashing white on loading or reloading.
@@ -161,6 +159,22 @@
 </style>
 </head>
 <body>
+<script>
+const m_dark = window.matchMedia('(prefers-color-scheme:dark)')
+onfocus = () => {
+  const l_dark = localStorage.getItem('dark')
+  // ^ it's truthy if there is a Recite preference ("Y" or "N"); it takes precedence over @media
+  if (l_dark) {
+    document.body.classList.toggle('dark', l_dark === 'Y')
+    m_dark.onchange = null
+  }
+  else {
+    m_dark.onchange = () =>
+      document.body.classList.toggle('dark', m_dark.matches)
+    m_dark.onchange()
+  }
+}
+</script>
 
 <div id="content">
 <h1>.: رتّـــل راســـخًـا :.</h2>
@@ -247,14 +261,14 @@ if (given_ranges.length) {
 const el_more = document.getElementById('more')
 el_more.onclick = add_new_range
 
-function create_it (zz=false) {
+function create_it (strict=false) {
   let y = ''
   document.querySelectorAll('div.suar_range').forEach(r => {
     const [a, z] = Array.from(r.querySelectorAll('select')).map(e => +e.value)
     if (y) { y += ',' }
     y += a === z ? a : (a + '-' + z)
   })
-  window.open(`../${zz ? 's' : 'f'}/?${y}`, '_blank')
+  window.open(`../${strict ? 's' : 'f'}/?${y}`, '_blank')
 }
 
 </script>
